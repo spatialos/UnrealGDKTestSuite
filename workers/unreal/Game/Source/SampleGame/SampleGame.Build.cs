@@ -15,7 +15,6 @@ public class SampleGame : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"InputCore",
-				"HeadMountedDisplay",
 				"Sockets",
 				"OnlineSubsystemUtils",
 				"PhysXVehicles",

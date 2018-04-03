@@ -14,6 +14,3 @@ class UVehicleCppWheelRear : public UVehicleWheel
 public:
 	UVehicleCppWheelRear();
 };
-
-
-

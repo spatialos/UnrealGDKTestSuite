@@ -28,13 +28,26 @@
   },
   "external": {
     "default": {
-      "run_type": "EXECUTABLE_ZIP",
+      "run_type": "EXECUTABLE",
       "windows": {
-        "artifactName": "UnrealClient@Windows.zip",
-        "command": "./NUF/Binaries/Win64/NUF.exe",
+        "command": "${UNREAL_HOME}\\Engine\\Binaries\\Win64\\UE4Editor.exe",
         "arguments": [
-          "+workerType",
-          "UnrealClient"
+            "${IMPROBABLE_WORKER_DIR}/Game/SampleGame.uproject",
+            "-game",
+            "+workerType",
+            "UnrealClient",
+			"-stdout",
+			"-nowrite",
+			"-unattended",
+			"-nologtimes",
+			"-nopause",
+			"-noin",
+			"-messaging",
+			"-abslog=${IMPROBABLE_LOG_FILE}",
+            "-NoVerifyGC",
+			"-windowed",
+			"-ResX=800",
+			"-ResY=600"
         ]
       }
     }

@@ -14,6 +14,3 @@ class UVehicleCppWheelFront : public UVehicleWheel
 public:
 	UVehicleCppWheelFront();
 };
-
-
-
