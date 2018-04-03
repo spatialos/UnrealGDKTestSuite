@@ -1,4 +1,4 @@
-# Spatial GDK Sample Game: Unreal project demonstrating Spatial OS integration
+# Spatial GDK Sample Game: Unreal project demonstrating SpatialOS integration
 
 ## How to run:
 
