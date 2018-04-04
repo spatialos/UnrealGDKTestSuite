@@ -6,8 +6,7 @@
 - Set UNREAL_HOME environment variable to the engine fork location.
 - Set the uproject to use the engine fork.
 - Download the Spatial GDK code and tools from `https://github.com/improbable/native-unreal-framework`.
-- Copy the Spatial GDK module to `workers/unreal/Game/Source/`
-- Copy the Spatial GDK editor toolbar plugin to `workers/unreal/Game/Plugins/`
+- `create_spatialGDK_symlink.bat <Spatial GDK path>`
 - `spatial worker build --target=local`
 - `spatial local launch`
 - Launch PIE with dedicated server + 1 player.
