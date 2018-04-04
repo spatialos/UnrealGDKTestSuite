@@ -4,9 +4,10 @@
 
 - Build the engine fork, which can be found at `https://github.com/improbable/UnrealEngine`. Make sure to check out the `UnrealEngine417_NUF` branch.
 - Set UNREAL_HOME environment variable to the engine fork location.
-- Set the uproject to use the engine fork.
 - Download the Spatial GDK code and tools from `https://github.com/improbable/native-unreal-framework`.
+- `spatial worker codegen`
 - `create_spatialGDK_symlink.bat <Spatial GDK path>`
+- Set the uproject to use the engine fork.
 - `spatial worker build --target=local`
 - `spatial local launch`
 - Launch PIE with dedicated server + 1 player.

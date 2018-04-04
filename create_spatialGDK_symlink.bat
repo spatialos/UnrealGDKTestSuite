@@ -1,7 +1,7 @@
 @ECHO OFF
 
-set SPATIALGDK_PATH="%1\"
-set SPATIALGDK_PLUGINSPATH="%1\Plugins"
+set SPATIALGDK_PATH="%1"
+set SPATIALGDK_PLUGINSPATH="%1\Plugins\SpatialGDK"
 set SPATIALGDK_MODULEPATH="%1\SpatialGDK"
 
 if %SPATIALGDK_PATH% == "" (
@@ -24,9 +24,17 @@ if %PATH_VALID%==false (
 	exit 1
 )
 
-rmdir "%~dp0\workers\unreal\Game\Plugins"
-mklink /J "%~dp0\workers\unreal\Game\Plugins" %SPATIALGDK_PLUGINSPATH%
-rmdir "%~dp0\workers\unreal\Game\Source\SpatialGDK"
+REM Cleanup old symlinks
+rmdir "%~dp0\workers\unreal\Game\Plugins\SpatialGDK" 2>NUL
+rmdir "%~dp0\workers\unreal\Game\Source\SpatialGDK" 2>NUL
+
+REM Ensure plugins folder exists, mklink doesn't recursively create
+if not exist %~dp0\workers\unreal\Game\Plugins\ (
+	mkdir %~dp0\workers\unreal\Game\Plugins\
+)
+
+REM Make new symlinks
+mklink /J "%~dp0\workers\unreal\Game\Plugins\SpatialGDK" %SPATIALGDK_PLUGINSPATH%
 mklink /J "%~dp0\workers\unreal\Game\Source\SpatialGDK" %SPATIALGDK_MODULEPATH%
 
 echo Successfully created symlinks to %SPATIALGDK_PATH%
