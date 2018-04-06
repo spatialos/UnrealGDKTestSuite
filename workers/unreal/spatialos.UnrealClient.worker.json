@@ -1,7 +1,6 @@
 {
   "build": {
-    "tasks_filename": "Game/Intermediate/Improbable/spatialos.unreal.client.build.json",
-    "generated_build_scripts_type": "unreal"
+    "tasks_filename": "Game/Intermediate/Improbable/spatialos.unreal.client.build.json"
   },
   "bridge": {
     "worker_attribute_set": {
