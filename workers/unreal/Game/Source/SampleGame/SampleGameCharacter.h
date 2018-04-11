@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Commander.h"
+// #include "Commander.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
 #include "SampleGameCharacter.generated.h"
