@@ -72,6 +72,11 @@ Game/ThirdParty/Improbable/
 temp_worker_builds/
 Game/Plugins/SpatialOS
 
+#Generated code
+Game/Source/SampleGame/Generated/Usr/
+Game/Source/SampleGame/Generated/UClasses/
+Game/Source/SampleGame/Generated/Std/
+
 #SpatialGDK symlinked files
 Game/Plugins/SpatialGDK
 Game/Source/SpatialGDK
