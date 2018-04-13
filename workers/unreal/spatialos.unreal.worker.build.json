@@ -71,7 +71,7 @@
           "command": "Game/Binaries/ThirdParty/Improbable/CodeGeneration/UnrealCodeGenerator.exe",
           "arguments": [
             "--json-dir=Game/Intermediate/Improbable/json",
-            "--output-dir=Game/Source/SampleGame/Generated/UClasses"
+            "--output-dir=Game/Source/SpatialGDK/Generated/UClasses"
           ]
         }
       ]
