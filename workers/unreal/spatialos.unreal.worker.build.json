@@ -13,6 +13,13 @@
           ]
         },
         {
+          "name": "Patchup include paths",
+          "command": "cmd",
+          "arguments": [
+            "Game/Source/SpatialGDK/Scripts/fix_worker_sdk_includes.bat"
+          ]
+        },
+        {
           "name": "C++ standard library",
           "arguments": [
             "process_schema",
