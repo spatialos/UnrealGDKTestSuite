@@ -86,6 +86,13 @@
             "--json-dir=Game/Intermediate/Improbable/json",
             "--output-dir=Game/Source/SpatialGDK/Generated/UClasses"
           ]
+        },
+        {
+          "name": "Patchup dll exports",
+          "command": "bash",
+          "arguments": [
+            "Game/Source/SpatialGDK/Scripts/patch_sdk_code_gen.sh"
+          ]
         }
       ]
     },
