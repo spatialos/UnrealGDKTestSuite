@@ -10,15 +10,6 @@
       ]
     },
     {
-      "path": "Game/Source/SpatialGDK/WorkerSDK",
-      "type": "worker_sdk",
-      "packages": [
-        {
-          "name": "cpp-src"
-        }
-      ]
-    },
-    {
       "path": "Game/Binaries/ThirdParty/Improbable/Linux",
       "type": "worker_sdk",
       "packages": [
