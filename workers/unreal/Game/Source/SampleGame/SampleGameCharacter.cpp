@@ -12,6 +12,8 @@
 #include "SampleGameGameStateBase.h"
 #include "SpatialNetDriver.h"
 
+#include "TestCube.h"
+
 #include "UnrealNetwork.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -90,6 +92,73 @@ void ASampleGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	// handle touch devices
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &ASampleGameCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &ASampleGameCharacter::TouchStopped);
+
+    PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ASampleGameCharacter::Interact);
+	PlayerInputComponent->BindAction("SpawnCube", IE_Pressed, this, &ASampleGameCharacter::SpawnCubePressed);
+}
+
+void ASampleGameCharacter::Interact()
+{
+	// Note no authority checks required, since there is no such thing as a listen server!
+    FCollisionQueryParams traceParams = FCollisionQueryParams(FName(TEXT("SampleGame_Trace")), true, this);
+    traceParams.bTraceComplex = true;
+    traceParams.bTraceAsyncScene = true;
+    traceParams.bReturnPhysicalMaterial = false;
+
+    FHitResult hitResult(ForceInit);
+    FVector traceStart = GetFollowCamera()->GetComponentLocation();
+    const float kInteractDistance = 5000.0f;
+    FVector traceEnd = traceStart + GetFollowCamera()->GetForwardVector() * kInteractDistance;
+
+    bool didHit = GetWorld()->LineTraceSingleByChannel(
+        hitResult,
+        traceStart,
+        traceEnd,
+        ECC_Visibility,
+        traceParams);
+
+    if (!didHit)
+    {
+        return;
+    }
+
+    if (GEngine != nullptr)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
+            FString::Printf(TEXT("Interact with actor: %s"), *hitResult.GetActor()->GetName()));
+    }
+
+    ATestCube* interactableObject = Cast<ATestCube>(hitResult.GetActor());
+    if (interactableObject != nullptr)
+    {
+        interactableObject->Interact(this);
+    }
+}
+
+void ASampleGameCharacter::SpawnCubePressed()
+{
+	// Note no authority checks required, since there is no such thing as a listen server!
+	ServerSpawnCube();
+}
+
+bool ASampleGameCharacter::ServerSpawnCube_Validate()
+{
+	return true;
+}
+
+void ASampleGameCharacter::ServerSpawnCube_Implementation()
+{
+	if (TestActorTemplate == nullptr)
+	{
+		return;
+	}
+
+	FVector center = GetFollowCamera()->GetComponentLocation();
+	const float kSpawnDistance = 500.0f;
+	FVector spawnLocation = center + GetFollowCamera()->GetForwardVector() * kSpawnDistance;
+	FTransform spawnTranform(FRotator::ZeroRotator, spawnLocation);
+
+	GetWorld()->SpawnActor<ATestCube>(TestActorTemplate, spawnTranform);
 }
 
 void ASampleGameCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)

@@ -6,6 +6,7 @@
 #include "Commander.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
+#include "TestCube.h"
 #include "SampleGameCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -64,7 +65,14 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 
-	void Interact();
+    void Interact();
+	void SpawnCubePressed();
+
+    UFUNCTION(Server, Reliable, WithValidation)
+    void ServerSpawnCube();
+
+	UPROPERTY(EditAnywhere, Category = "Test")
+	TSubclassOf<ATestCube> TestActorTemplate;
 
 public:
 	/** Returns CameraBoom subobject **/
