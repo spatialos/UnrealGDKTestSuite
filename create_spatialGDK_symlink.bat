@@ -39,4 +39,3 @@ mklink /J "%~dp0\workers\unreal\Game\Source\SpatialGDK" %SPATIALGDK_MODULEPATH%
 
 echo Successfully created symlinks to %SPATIALGDK_PATH%
 
-exit 0
