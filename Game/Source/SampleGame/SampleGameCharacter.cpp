@@ -107,10 +107,7 @@ void ASampleGameCharacter::DebugCmd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("DebugCmd"));
 
-	TArray<FTestMixedStruct> TempArray;
-	TempArray.AddZeroed(4);
-
-	Server_TestFunc(TempArray);
+	Server_TestFunc();
 }
 
 void ASampleGameCharacter::TurnAtRate(float Rate)
