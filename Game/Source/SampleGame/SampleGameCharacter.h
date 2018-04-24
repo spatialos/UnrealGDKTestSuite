@@ -17,6 +17,31 @@ struct FTestMixedStruct
 
 	UPROPERTY()
 	float FVar;
+};
+
+USTRUCT(BlueprintType)
+struct FTestPODStruct
+{
+	GENERATED_BODY();
+
+	UPROPERTY()
+	float FVar;
+
+	UPROPERTY()
+	int IVar;
+
+	UPROPERTY()
+	double DVar;
+
+	void Increment()
+	{
+		FVar += 1.f;
+		IVar++;
+		DVar += 1.0;
+	}
+};
+
+
 
 	UPROPERTY()
 	float IVar;
@@ -75,6 +100,26 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	UPROPERTY(replicated)
+	TArray<float> TestPODArray;
+
+	UPROPERTY(replicated)
+	TArray<FTestMixedStruct> TestStructArray;
+
+	UPROPERTY(replicated)
+	TArray<FRepMovement> TestStructMovementArray;
+
+	UPROPERTY(Replicated)
+	FTestPODStruct TestPODStruct;
+
+	UPROPERTY(Replicated)
+	int TestBookend;
+
+	UFUNCTION(server, reliable, WithValidation)
+	void Server_TestFunc();
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UPROPERTY(ReplicatedUsing=OnRep_TestPODArray)
 	TArray<float> TestPODArray;
