@@ -86,6 +86,7 @@ void ASampleGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("TurnRate", this, &ASampleGameCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &ASampleGameCharacter::LookUpAtRate);
+	PlayerInputComponent->BindAction("DebugCmd", IE_Pressed, this, &ASampleGameCharacter::DebugCmd);
 
 	// handle touch devices
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &ASampleGameCharacter::TouchStarted);
@@ -100,6 +101,13 @@ void ASampleGameCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector L
 void ASampleGameCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
 	StopJumping();
+}
+
+void ASampleGameCharacter::DebugCmd()
+{
+	UE_LOG(LogTemp, Warning, TEXT("DebugCmd"));
+
+	Server_TestFunc();
 }
 
 void ASampleGameCharacter::TurnAtRate(float Rate)
@@ -141,4 +149,36 @@ void ASampleGameCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+}
+
+void ASampleGameCharacter::Server_TestFunc_Implementation()
+{
+	// modify replicated members to check network serialisation
+	static float Num = 101.f;
+	TestPODArray.Add(Num);
+	Num += 1.f;
+
+	TestStructMovementArray.Add(ReplicatedMovement);
+
+	static FTestPODStruct _TestPODStruct{5.f, 5, 5.0};
+	TestPODStruct = _TestPODStruct;
+	_TestPODStruct.Increment();
+
+	TestBookend += 1;
+}
+
+bool ASampleGameCharacter::Server_TestFunc_Validate()
+{
+	return true;
+}
+
+void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestPODArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestStructArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestStructMovementArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestPODStruct, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_SimulatedOnly);
 }
