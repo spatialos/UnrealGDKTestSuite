@@ -158,11 +158,22 @@ void ASampleGameCharacter::Server_TestFunc_Implementation()
 	TestPODArray.Add(Num);
 	Num += 1.f;
 
-	TestStructMovementArray.Add(ReplicatedMovement);
+	static FTestMixedStruct _TestMixedStruct{PlayerState, 42.f};
+	//TestMixedStructArray.Add(_TestMixedStruct);
+	_TestMixedStruct.Modify();
 
-	static FTestPODStruct _TestPODStruct{5.f, 5, 5.0};
+	static FTestPODStruct _TestPODStruct{ 5.f, 5, 5.0 };
+
+	TestPODStructArray.Add(_TestPODStruct);
+	_TestPODStruct.Modify();
+
+	TestNetSerializeArray.Add(ReplicatedMovement);
+
+	TestMixedStruct = _TestMixedStruct;
+	_TestMixedStruct.Modify();
+
 	TestPODStruct = _TestPODStruct;
-	_TestPODStruct.Increment();
+	_TestPODStruct.Modify();
 
 	TestBookend += 1;
 }
@@ -172,13 +183,27 @@ bool ASampleGameCharacter::Server_TestFunc_Validate()
 	return true;
 }
 
+void ASampleGameCharacter::OnRep_TestPODArray()
+{
+	FString TestString;
+	for (auto i : TestPODArray)
+	{
+		TestString.AppendInt(i);
+		TestString.AppendChar(' ');
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("TestPODArray updated - %s"), *TestString);
+}
+
 void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestPODArray, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestStructArray, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestStructMovementArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestPODStructArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestNetSerializeArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStruct, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestPODStruct, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_SimulatedOnly);
 }
