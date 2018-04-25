@@ -18,6 +18,15 @@ struct FTestMixedStruct
 
 	UPROPERTY()
 	float FVar;
+
+	UPROPERTY()
+	float IVar;
+
+	void Modify()
+	{
+		FVar += 1.f;
+		IVar++;
+	}
 };
 
 USTRUCT(BlueprintType)
@@ -34,7 +43,7 @@ struct FTestPODStruct
 	UPROPERTY()
 	double DVar;
 
-	void Increment()
+	void Modify()
 	{
 		FVar += 1.f;
 		IVar++;
@@ -69,14 +78,20 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
-	UPROPERTY(replicated)
+	UPROPERTY(ReplicatedUsing=OnRep_TestPODArray)
 	TArray<float> TestPODArray;
 
-	UPROPERTY(replicated)
-	TArray<FTestMixedStruct> TestStructArray;
+	UPROPERTY(Replicated)
+	TArray<FTestMixedStruct> TestMixedStructArray;
 
-	UPROPERTY(replicated)
-	TArray<FRepMovement> TestStructMovementArray;
+	UPROPERTY(Replicated)
+	TArray<FTestPODStruct> TestPODStructArray;
+
+	UPROPERTY(Replicated)
+	TArray<FRepMovement> TestNetSerializeArray;
+
+	UPROPERTY(Replicated)
+	FTestMixedStruct TestMixedStruct;
 
 	UPROPERTY(Replicated)
 	FTestPODStruct TestPODStruct;
@@ -86,6 +101,9 @@ public:
 
 	UFUNCTION(server, reliable, WithValidation)
 	void Server_TestFunc();
+
+	UFUNCTION()
+	void OnRep_TestPODArray();
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 

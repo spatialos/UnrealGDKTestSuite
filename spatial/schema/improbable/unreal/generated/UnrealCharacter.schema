@@ -54,12 +54,6 @@ component UnrealCharacterMultiClientRepData {
 	improbable.Vector3f field_reprootmotion_acceleration = 42; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	improbable.Vector3f field_reprootmotion_linearvelocity = 43; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	list<float> field_testpodarray = 44; // COND_SimulatedOnly // ::SampleGameCharacter
-	list<bytes> field_teststructarray = 45; // COND_SimulatedOnly // ::SampleGameCharacter
-	list<bytes> field_teststructmovementarray = 46; // COND_SimulatedOnly // ::SampleGameCharacter
-	float field_testpodstruct_fvar = 47; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
-	int32 field_testpodstruct_ivar = 48; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
-	bytes field_testpodstruct_dvar = 49; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
-	int32 field_testbookend = 50; // COND_SimulatedOnly // ::SampleGameCharacter
 	list<float> field_testpodarray = 44; // COND_SimulatedOnly // ::SampleGameCharacter
 	list<bytes> field_testmixedstructarray = 45; // COND_SimulatedOnly // ::SampleGameCharacter
 	list<bytes> field_testpodstructarray = 46; // COND_SimulatedOnly // ::SampleGameCharacter
