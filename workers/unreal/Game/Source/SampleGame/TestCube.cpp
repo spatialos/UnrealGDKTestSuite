@@ -26,7 +26,7 @@ ATestCube::ATestCube()
 void ATestCube::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	OnRep_Color1();
 }
 
 void ATestCube::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

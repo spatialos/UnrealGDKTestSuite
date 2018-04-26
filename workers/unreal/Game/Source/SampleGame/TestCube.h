@@ -37,7 +37,7 @@ protected:
 	void OnRep_Color1();
 
     UPROPERTY(ReplicatedUsing = OnRep_Color1)
-    bool bColor1 = false;
+    bool bColor1 = true;
 
     UPROPERTY(VisibleAnywhere)
     class UStaticMeshComponent* MeshComponent = nullptr;
