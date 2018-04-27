@@ -8,50 +8,6 @@
 #include "GameFramework/Character.h"
 #include "SampleGameCharacterSibling.generated.h"
 
-USTRUCT(BlueprintType)
-struct FTestMixedStruct
-{
-	GENERATED_BODY();
-
-	UPROPERTY(BlueprintReadOnly)
-	APlayerState* PS;
-
-	UPROPERTY()
-	float FVar;
-
-	UPROPERTY()
-	float IVar;
-
-	void Modify()
-	{
-		FVar += 1.f;
-		IVar++;
-	}
-};
-
-USTRUCT(BlueprintType)
-struct FTestPODStruct
-{
-	GENERATED_BODY();
-
-	UPROPERTY()
-	float FVar;
-
-	UPROPERTY()
-	int IVar;
-
-	UPROPERTY()
-	double DVar;
-
-	void Modify()
-	{
-		FVar += 1.f;
-		IVar++;
-		DVar += 1.0;
-	}
-};
-
-
 
 UCLASS(config=Game)
 class ASampleGameCharacterSibling : public ACharacter
@@ -77,35 +33,6 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
-
-	UPROPERTY(ReplicatedUsing=OnRep_TestPODArray)
-	TArray<float> TestPODArray;
-
-	UPROPERTY(Replicated)
-	TArray<FTestMixedStruct> TestMixedStructArray;
-
-	UPROPERTY(Replicated)
-	TArray<FTestPODStruct> TestPODStructArray;
-
-	UPROPERTY(Replicated)
-	TArray<FRepMovement> TestNetSerializeArray;
-
-	UPROPERTY(Replicated)
-	FTestMixedStruct TestMixedStruct;
-
-	UPROPERTY(Replicated)
-	FTestPODStruct TestPODStruct;
-
-	UPROPERTY(Replicated)
-	int TestBookend;
-
-	UFUNCTION(server, reliable, WithValidation)
-	void Server_TestFunc();
-
-	UFUNCTION()
-	void OnRep_TestPODArray();
-
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UPROPERTY(ReplicatedUsing=OnRep_TestPODArray)
 	TArray<float> TestPODArray;
