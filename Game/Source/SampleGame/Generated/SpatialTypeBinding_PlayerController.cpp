@@ -1704,9 +1704,15 @@ void USpatialTypeBinding_PlayerController::ClientVoiceHandshakeComplete_SendComm
 
 void USpatialTypeBinding_PlayerController::ClientUpdateMultipleLevelsStreamingStatus_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
+	FFrame& Stack = *RPCFrame;
+	// UNSUPPORTED TArray parameters (UArrayProperty LevelStatuses)
+	FFrame& Stack = *RPCFrame;
+	P_GET_TARRAY(FUpdateLevelStreamingLevelStatus, LevelStatuses)
 	// This struct is declared in PlayerController.generated.h (in a macro that is then put in PlayerController.h UCLASS macro)
 	PlayerController_eventClientUpdateMultipleLevelsStreamingStatus_Parms StructuredParams = *static_cast<PlayerController_eventClientUpdateMultipleLevelsStreamingStatus_Parms*>(Parameters);
 
+	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
+	auto Sender = [this, Connection, TargetObject, LevelStatuses]() mutable -> FRPCCommandRequestResult
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
@@ -1718,9 +1724,21 @@ void USpatialTypeBinding_PlayerController::ClientUpdateMultipleLevelsStreamingSt
 		}
 
 		// Build request.
+		improbable::unreal::UnrealClientUpdateMultipleLevelsStreamingStatusRequest Request;
+		// UNSUPPORTED TArray parameters (LevelStatuses)
+		improbable::unreal::UnrealClientUpdateMultipleLevelsStreamingStatusRequest Request;
 		improbable::unreal::generated::UnrealClientUpdateMultipleLevelsStreamingStatusRequest Request;
 		{
 			::worker::List<std::string> List;
+			for(int i = 0; i < LevelStatuses.Num(); i++)
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				FUpdateLevelStreamingLevelStatus::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelStreamingLevelStatus*>(&LevelStatuses[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			Request.set_field_levelstatuses(List);
+		}
 			for(int i = 0; i < StructuredParams.LevelStatuses.Num(); i++)
 			{
 				TArray<uint8> ValueData;
@@ -3680,9 +3698,15 @@ void USpatialTypeBinding_PlayerController::ServerVerifyViewTarget_SendCommand(wo
 
 void USpatialTypeBinding_PlayerController::ServerUpdateMultipleLevelsVisibility_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
+	FFrame& Stack = *RPCFrame;
+	// UNSUPPORTED TArray parameters (UArrayProperty LevelVisibilities)
+	FFrame& Stack = *RPCFrame;
+	P_GET_TARRAY(FUpdateLevelVisibilityLevelInfo, LevelVisibilities)
 	// This struct is declared in PlayerController.generated.h (in a macro that is then put in PlayerController.h UCLASS macro)
 	PlayerController_eventServerUpdateMultipleLevelsVisibility_Parms StructuredParams = *static_cast<PlayerController_eventServerUpdateMultipleLevelsVisibility_Parms*>(Parameters);
 
+	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
+	auto Sender = [this, Connection, TargetObject, LevelVisibilities]() mutable -> FRPCCommandRequestResult
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
@@ -3694,9 +3718,21 @@ void USpatialTypeBinding_PlayerController::ServerUpdateMultipleLevelsVisibility_
 		}
 
 		// Build request.
+		improbable::unreal::UnrealServerUpdateMultipleLevelsVisibilityRequest Request;
+		// UNSUPPORTED TArray parameters (LevelVisibilities)
+		improbable::unreal::UnrealServerUpdateMultipleLevelsVisibilityRequest Request;
 		improbable::unreal::generated::UnrealServerUpdateMultipleLevelsVisibilityRequest Request;
 		{
 			::worker::List<std::string> List;
+			for(int i = 0; i < LevelVisibilities.Num(); i++)
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				FUpdateLevelVisibilityLevelInfo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelVisibilityLevelInfo*>(&LevelVisibilities[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			Request.set_field_levelvisibilities(List);
+		}
 			for(int i = 0; i < StructuredParams.LevelVisibilities.Num(); i++)
 			{
 				TArray<uint8> ValueData;
@@ -4395,6 +4431,16 @@ void USpatialTypeBinding_PlayerController::ClientUpdateMultipleLevelsStreamingSt
 		// Extract from request data.
 		{
 			auto& List = Op.Request.field_levelstatuses();
+			LevelStatuses.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
+			{
+				auto& ValueDataStr = List[i];
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				FUpdateLevelStreamingLevelStatus::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&LevelStatuses[i]));
+			}
+		}
 			Parameters.LevelStatuses.SetNum(List.size());
 			for(int i = 0; i < List.size(); i++)
 			{
@@ -7569,6 +7615,16 @@ void USpatialTypeBinding_PlayerController::ServerUpdateMultipleLevelsVisibility_
 		// Extract from request data.
 		{
 			auto& List = Op.Request.field_levelvisibilities();
+			LevelVisibilities.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
+			{
+				auto& ValueDataStr = List[i];
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				FUpdateLevelVisibilityLevelInfo::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&LevelVisibilities[i]));
+			}
+		}
 			Parameters.LevelVisibilities.SetNum(List.size());
 			for(int i = 0; i < List.size(); i++)
 			{

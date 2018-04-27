@@ -107,7 +107,10 @@ void ASampleGameCharacter::DebugCmd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("DebugCmd"));
 
-	Server_TestFunc();
+	TArray<FTestMixedStruct> TempArray;
+	TempArray.AddZeroed(4);
+
+	Server_TestFunc(TempArray);
 }
 
 void ASampleGameCharacter::TurnAtRate(float Rate)
@@ -151,7 +154,7 @@ void ASampleGameCharacter::MoveRight(float Value)
 	}
 }
 
-void ASampleGameCharacter::Server_TestFunc_Implementation()
+void ASampleGameCharacter::Server_TestFunc_Implementation(const TArray<FTestMixedStruct>& StructArg)
 {
 	// modify replicated members to check network serialisation
 	static float Num = 101.f;
@@ -176,9 +179,11 @@ void ASampleGameCharacter::Server_TestFunc_Implementation()
 	_TestPODStruct.Modify();
 
 	TestBookend += 1;
+
+	UE_LOG(LogTemp, Warning, TEXT("RPC successfully called with an array of %d elements"), StructArg.Num());
 }
 
-bool ASampleGameCharacter::Server_TestFunc_Validate()
+bool ASampleGameCharacter::Server_TestFunc_Validate(const TArray<FTestMixedStruct>& StructArg)
 {
 	return true;
 }
