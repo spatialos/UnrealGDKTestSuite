@@ -142,3 +142,12 @@ void ASampleGameCharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
+
+void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestStructArray, COND_SimulatedOnlyNoReplay);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestStructMovementArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestStructStruct, COND_SimulatedOnly);
+}

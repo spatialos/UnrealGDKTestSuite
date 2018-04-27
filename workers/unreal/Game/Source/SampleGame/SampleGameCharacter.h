@@ -8,6 +8,22 @@
 #include "GameFramework/Character.h"
 #include "SampleGameCharacter.generated.h"
 
+USTRUCT(BlueprintType)
+struct FTestStruct
+{
+	GENERATED_BODY();
+
+public:
+	UPROPERTY(BlueprintReadOnly)
+		APlayerState* PS;
+
+	UPROPERTY()
+		float strength;
+
+	UPROPERTY()
+		int test;
+};
+
 UCLASS(config=Game)
 class ASampleGameCharacter : public ACharacter
 {
@@ -24,6 +40,7 @@ public:
 	ASampleGameCharacter();
 
 	virtual void BeginPlay() override;
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -71,5 +88,14 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UPROPERTY(replicated)
+		TArray<FTestStruct> TestStructArray;
+
+	UPROPERTY(replicated)
+		TArray<FRepMovement> TestStructMovementArray;
+
+	UPROPERTY(replicated)
+		FTestStruct TestStructStruct;
 };
 
