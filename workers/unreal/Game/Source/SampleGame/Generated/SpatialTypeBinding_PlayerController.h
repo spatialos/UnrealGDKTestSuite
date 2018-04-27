@@ -11,7 +11,6 @@
 #include <improbable/worker.h>
 #include "SpatialTypeBinding_PlayerController.generated.h"
 
-
 UCLASS()
 class USpatialTypeBinding_PlayerController : public USpatialTypeBinding
 {
@@ -90,6 +89,9 @@ class USpatialTypeBinding_PlayerController : public USpatialTypeBinding
     void ClientVoiceHandshakeComplete_SendCommand(worker::Connection* const Connection,
                                                   struct FFrame* const RPCFrame,
                                                   UObject* TargetObject);
+    void ClientUpdateMultipleLevelsStreamingStatus_SendCommand(worker::Connection* const Connection,
+                                                               struct FFrame* const RPCFrame,
+                                                               UObject* TargetObject);
     void ClientUpdateLevelStreamingStatus_SendCommand(worker::Connection* const Connection,
                                                       struct FFrame* const RPCFrame,
                                                       UObject* TargetObject);
@@ -129,6 +131,9 @@ class USpatialTypeBinding_PlayerController : public USpatialTypeBinding
     void ClientSetBlockOnAsyncLoading_SendCommand(worker::Connection* const Connection,
                                                   struct FFrame* const RPCFrame,
                                                   UObject* TargetObject);
+    void ClientReturnToMainMenuWithTextReason_SendCommand(worker::Connection* const Connection,
+                                                          struct FFrame* const RPCFrame,
+                                                          UObject* TargetObject);
     void ClientReturnToMainMenu_SendCommand(worker::Connection* const Connection,
                                             struct FFrame* const RPCFrame, UObject* TargetObject);
     void ClientRetryClientRestart_SendCommand(worker::Connection* const Connection,
@@ -204,6 +209,9 @@ class USpatialTypeBinding_PlayerController : public USpatialTypeBinding
                                           struct FFrame* const RPCFrame, UObject* TargetObject);
     void ServerVerifyViewTarget_SendCommand(worker::Connection* const Connection,
                                             struct FFrame* const RPCFrame, UObject* TargetObject);
+    void ServerUpdateMultipleLevelsVisibility_SendCommand(worker::Connection* const Connection,
+                                                          struct FFrame* const RPCFrame,
+                                                          UObject* TargetObject);
     void ServerUpdateLevelVisibility_SendCommand(worker::Connection* const Connection,
                                                  struct FFrame* const RPCFrame,
                                                  UObject* TargetObject);
@@ -253,6 +261,10 @@ class USpatialTypeBinding_PlayerController : public USpatialTypeBinding
     void ClientVoiceHandshakeComplete_OnCommandRequest(
         const worker::CommandRequestOp<improbable::unreal::UnrealPlayerControllerClientRPCs::
                                            Commands::Clientvoicehandshakecomplete>& Op);
+    void ClientUpdateMultipleLevelsStreamingStatus_OnCommandRequest(
+        const worker::CommandRequestOp<improbable::unreal::UnrealPlayerControllerClientRPCs::
+                                           Commands::Clientupdatemultiplelevelsstreamingstatus>&
+            Op);
     void ClientUpdateLevelStreamingStatus_OnCommandRequest(
         const worker::CommandRequestOp<improbable::unreal::UnrealPlayerControllerClientRPCs::
                                            Commands::Clientupdatelevelstreamingstatus>& Op);
@@ -312,6 +324,9 @@ class USpatialTypeBinding_PlayerController : public USpatialTypeBinding
     void ClientSetBlockOnAsyncLoading_OnCommandRequest(
         const worker::CommandRequestOp<improbable::unreal::UnrealPlayerControllerClientRPCs::
                                            Commands::Clientsetblockonasyncloading>& Op);
+    void ClientReturnToMainMenuWithTextReason_OnCommandRequest(
+        const worker::CommandRequestOp<improbable::unreal::UnrealPlayerControllerClientRPCs::
+                                           Commands::Clientreturntomainmenuwithtextreason>& Op);
     void ClientReturnToMainMenu_OnCommandRequest(
         const worker::CommandRequestOp<
             improbable::unreal::UnrealPlayerControllerClientRPCs::Commands::Clientreturntomainmenu>&
@@ -426,6 +441,9 @@ class USpatialTypeBinding_PlayerController : public USpatialTypeBinding
         const worker::CommandRequestOp<
             improbable::unreal::UnrealPlayerControllerServerRPCs::Commands::Serververifyviewtarget>&
             Op);
+    void ServerUpdateMultipleLevelsVisibility_OnCommandRequest(
+        const worker::CommandRequestOp<improbable::unreal::UnrealPlayerControllerServerRPCs::
+                                           Commands::Serverupdatemultiplelevelsvisibility>& Op);
     void ServerUpdateLevelVisibility_OnCommandRequest(
         const worker::CommandRequestOp<improbable::unreal::UnrealPlayerControllerServerRPCs::
                                            Commands::Serverupdatelevelvisibility>& Op);
@@ -490,6 +508,10 @@ class USpatialTypeBinding_PlayerController : public USpatialTypeBinding
     void ClientVoiceHandshakeComplete_OnCommandResponse(
         const worker::CommandResponseOp<improbable::unreal::UnrealPlayerControllerClientRPCs::
                                             Commands::Clientvoicehandshakecomplete>& Op);
+    void ClientUpdateMultipleLevelsStreamingStatus_OnCommandResponse(
+        const worker::CommandResponseOp<improbable::unreal::UnrealPlayerControllerClientRPCs::
+                                            Commands::Clientupdatemultiplelevelsstreamingstatus>&
+            Op);
     void ClientUpdateLevelStreamingStatus_OnCommandResponse(
         const worker::CommandResponseOp<improbable::unreal::UnrealPlayerControllerClientRPCs::
                                             Commands::Clientupdatelevelstreamingstatus>& Op);
@@ -549,6 +571,9 @@ class USpatialTypeBinding_PlayerController : public USpatialTypeBinding
     void ClientSetBlockOnAsyncLoading_OnCommandResponse(
         const worker::CommandResponseOp<improbable::unreal::UnrealPlayerControllerClientRPCs::
                                             Commands::Clientsetblockonasyncloading>& Op);
+    void ClientReturnToMainMenuWithTextReason_OnCommandResponse(
+        const worker::CommandResponseOp<improbable::unreal::UnrealPlayerControllerClientRPCs::
+                                            Commands::Clientreturntomainmenuwithtextreason>& Op);
     void ClientReturnToMainMenu_OnCommandResponse(
         const worker::CommandResponseOp<
             improbable::unreal::UnrealPlayerControllerClientRPCs::Commands::Clientreturntomainmenu>&
@@ -663,6 +688,9 @@ class USpatialTypeBinding_PlayerController : public USpatialTypeBinding
         const worker::CommandResponseOp<
             improbable::unreal::UnrealPlayerControllerServerRPCs::Commands::Serververifyviewtarget>&
             Op);
+    void ServerUpdateMultipleLevelsVisibility_OnCommandResponse(
+        const worker::CommandResponseOp<improbable::unreal::UnrealPlayerControllerServerRPCs::
+                                            Commands::Serverupdatemultiplelevelsvisibility>& Op);
     void ServerUpdateLevelVisibility_OnCommandResponse(
         const worker::CommandResponseOp<improbable::unreal::UnrealPlayerControllerServerRPCs::
                                             Commands::Serverupdatelevelvisibility>& Op);
