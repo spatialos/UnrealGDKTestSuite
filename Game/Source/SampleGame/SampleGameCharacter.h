@@ -132,7 +132,7 @@ public:
 	int TestBookend;
 
 	UFUNCTION(server, reliable, WithValidation)
-	void Server_TestFunc();
+	void Server_TestFunc(const TArray<FTestMixedStruct>& StructArg);
 
 	UFUNCTION()
 	void OnRep_TestPODArray();

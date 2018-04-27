@@ -7,4 +7,5 @@ import "improbable/unreal/core_types.schema";
 
 type UnrealServerTestFuncRequest {
 	uint32 target_subobject_offset = 1;
+	list<bytes> field_structarg = 2;
 }
