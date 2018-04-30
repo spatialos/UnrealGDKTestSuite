@@ -65,11 +65,37 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
     void Interact();
 	void SpawnCubePressed();
+	void DebugSpawnWeapon();
+
+	// [client] Triggers the equipped weapon to start firing.
+	void StartFire();
+
+	// [client] Triggers the equipped weapon to stop firing.
+	void StopFire();
+
+	// Returns the currently equipped weapon, or nullptr if there isn't one.
+	class AWeapon* GetEquippedWeapon();
 
     UFUNCTION(Server, Reliable, WithValidation)
     void ServerSpawnCube();
+
+	// List of weapons the player currently has.
+	UPROPERTY(Replicated)
+	TArray<class AWeapon*> WeaponInventory;
+
+	UPROPERTY(Replicated)
+	class AWeapon* EquippedWeapon = nullptr;
+
+	// Index of the currently equipped weapon.
+	UPROPERTY(Replicated)
+	int EquippedWeaponIndex = -1;
+
+	UPROPERTY(EditAnywhere, Category = "Test")
+	TSubclassOf<AWeapon> StarterWeapon;
 
 	UPROPERTY(EditAnywhere, Category = "Test")
 	TSubclassOf<ATestCube> TestActorTemplate;

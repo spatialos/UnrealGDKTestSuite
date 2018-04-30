@@ -13,6 +13,8 @@
 #include "SpatialNetDriver.h"
 
 #include "TestCube.h"
+#include "Weapons/AutomaticInstantWeapon.h"
+#include "Weapons/Weapon.h"
 
 #include "UnrealNetwork.h"
 
@@ -66,6 +68,8 @@ ASampleGameCharacter::ASampleGameCharacter()
 void ASampleGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// DebugSpawnWeapon();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -95,6 +99,20 @@ void ASampleGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
     PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ASampleGameCharacter::Interact);
 	PlayerInputComponent->BindAction("SpawnCube", IE_Pressed, this, &ASampleGameCharacter::SpawnCubePressed);
+
+	PlayerInputComponent->BindAction("SpawnWeapon", IE_Pressed, this, &ASampleGameCharacter::DebugSpawnWeapon);
+
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ASampleGameCharacter::StartFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ASampleGameCharacter::StopFire);
+}
+
+void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASampleGameCharacter, WeaponInventory);
+	DOREPLIFETIME(ASampleGameCharacter, EquippedWeaponIndex);
+	DOREPLIFETIME(ASampleGameCharacter, EquippedWeapon);
 }
 
 void ASampleGameCharacter::Interact()
@@ -137,8 +155,68 @@ void ASampleGameCharacter::Interact()
 
 void ASampleGameCharacter::SpawnCubePressed()
 {
-	// Note no authority checks required, since there is no such thing as a listen server!
+	// Note no authority check required, since there is no such thing as a listen server!
 	ServerSpawnCube();
+}
+
+void ASampleGameCharacter::DebugSpawnWeapon()
+{
+	if (StarterWeapon == nullptr)
+	{
+		UE_LOG(LogClass, Log, TEXT("No starter weapon defined."));
+		return;
+	}
+
+	if (!HasAuthority()) return;
+
+	// Create a starter weapon.
+	AWeapon* startWeapon = GetWorld()->SpawnActor<AAutomaticInstantWeapon>(AAutomaticInstantWeapon::StaticClass(), GetActorTransform());
+	startWeapon->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+	// Add and equip the starter weapon.
+	//WeaponInventory.Add(startWeapon);
+	//EquippedWeaponIndex = WeaponInventory.Num() - 1;
+	FTimerHandle tHandle;
+	FTimerDelegate tDelegate;
+	tDelegate.BindLambda([this, startWeapon]() {
+		UE_LOG(LogClass, Log, TEXT("Tried to set equipped weapon for character %s to %s."), *this->GetName(), *startWeapon->GetName());
+		EquippedWeapon = startWeapon;
+		EquippedWeaponIndex++;
+	});
+	GetWorld()->GetTimerManager().SetTimer(tHandle, tDelegate, 2.0f, false);
+	//EquippedWeapon = startWeapon;
+}
+
+void ASampleGameCharacter::StartFire()
+{
+	AWeapon* equippedWeapon = GetEquippedWeapon();
+	if (equippedWeapon != nullptr)
+	{
+		equippedWeapon->StartFire();
+	}
+}
+
+void ASampleGameCharacter::StopFire()
+{
+	AWeapon* equippedWeapon = GetEquippedWeapon();
+	if (equippedWeapon != nullptr)
+	{
+		equippedWeapon->StopFire();
+	}
+}
+
+AWeapon* ASampleGameCharacter::GetEquippedWeapon()
+{
+	return EquippedWeapon;
+
+	// TODO(davedolben): switch to this once dynamic arrays work properly
+	/*
+	if (EquippedWeaponIndex < 0 || EquippedWeaponIndex >= WeaponInventory.Num())
+	{
+		return nullptr;
+	}
+	return WeaponInventory[EquippedWeaponIndex];
+	*/
 }
 
 bool ASampleGameCharacter::ServerSpawnCube_Validate()
@@ -148,6 +226,9 @@ bool ASampleGameCharacter::ServerSpawnCube_Validate()
 
 void ASampleGameCharacter::ServerSpawnCube_Implementation()
 {
+	DebugSpawnWeapon();
+	return;
+
 	if (TestActorTemplate == nullptr)
 	{
 		return;

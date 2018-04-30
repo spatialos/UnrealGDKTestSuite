@@ -15,6 +15,7 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 #include "SampleGameCharacter.h"
+#include "Weapons/Weapon.h"
 
 #include "UnrealSampleGameCharacterSingleClientRepDataAddComponentOp.h"
 #include "UnrealSampleGameCharacterMultiClientRepDataAddComponentOp.h"
@@ -69,6 +70,9 @@ const FRepHandlePropertyMap& USpatialTypeBinding_SampleGameCharacter::GetRepHand
 		HandleToPropertyMap.Add(41, FRepHandleData(Class, {"RepRootMotion", "AuthoritativeRootMotion"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(42, FRepHandleData(Class, {"RepRootMotion", "Acceleration"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(43, FRepHandleData(Class, {"RepRootMotion", "LinearVelocity"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(44, FRepHandleData(Class, {"WeaponInventory"}, COND_None, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(45, FRepHandleData(Class, {"EquippedWeapon"}, COND_None, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(46, FRepHandleData(Class, {"EquippedWeaponIndex"}, COND_None, REPNOTIFY_OnChanged));
 	}
 	return HandleToPropertyMap;
 }
@@ -195,7 +199,13 @@ void USpatialTypeBinding_SampleGameCharacter::UnbindFromView()
 
 worker::Entity USpatialTypeBinding_SampleGameCharacter::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
 {
-	checkf(GetRepHandlePropertyMap().Num() >= InitialChanges.RepChanged.Num() - 1, TEXT("Attempting to replicate more properties than typebinding is aware of. Have additional replicated properties been added in a subobject?"))
+	// Validate replication list.
+	const uint16 RepHandlePropertyMapCount = GetRepHandlePropertyMap().Num();
+	for (auto& Rep : InitialChanges.RepChanged)
+	{
+		checkf(Rep <= RepHandlePropertyMapCount, TEXT("Attempting to replicate a property with a handle that the type binding is not aware of. Have additional replicated properties been added in a non generated child object?"))
+	}
+
 	// Setup initial data.
 	improbable::unreal::UnrealSampleGameCharacterSingleClientRepData::Data SingleClientData;
 	improbable::unreal::UnrealSampleGameCharacterSingleClientRepData::Update SingleClientUpdate;
@@ -373,6 +383,13 @@ void USpatialTypeBinding_SampleGameCharacter::BuildSpatialComponentUpdate(
 				ServerSendUpdate_MultiClient(Data, HandleIterator.Handle, Cmd.Property, Channel, MultiClientUpdate);
 				bMultiClientUpdateChanged = true;
 				break;
+			}
+			if (Cmd.Type == REPCMD_DynamicArray)
+			{
+				if (!HandleIterator.JumpOverArray())
+				{
+					break;
+				}
 			}
 		}
 	}
@@ -856,6 +873,66 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			const FVector_NetQuantize10& Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(Data));
 
 			OutUpdate.set_field_reprootmotion_linearvelocity(improbable::Vector3f(Value.X, Value.Y, Value.Z));
+			break;
+		}
+		case 44: // field_weaponinventory
+		{
+			const TArray<AWeapon*>& Value = *(reinterpret_cast<TArray<AWeapon*> const*>(Data));
+
+			{
+				::worker::List<improbable::unreal::UnrealObjectRef> List;
+				for(int i = 0; i < Value.Num(); i++)
+				{
+					if (Value[i] != nullptr)
+					{
+						FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value[i]);
+						improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+						if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+						{
+							Interop->QueueOutgoingObjectRepUpdate_Internal(Value[i], Channel, 44);
+						}
+						else
+						{
+							List.emplace_back(ObjectRef);
+						}
+					}
+					else
+					{
+						List.emplace_back(SpatialConstants::NULL_OBJECT_REF);
+					}
+				}
+				OutUpdate.set_field_weaponinventory(List);
+			}
+			break;
+		}
+		case 45: // field_equippedweapon
+		{
+			AWeapon* Value = *(reinterpret_cast<AWeapon* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 45);
+				}
+				else
+				{
+					OutUpdate.set_field_equippedweapon(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_equippedweapon(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 46: // field_equippedweaponindex
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_equippedweaponindex(Value);
 			break;
 		}
 	default:
@@ -2207,6 +2284,143 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Value.Y = Vector.y();
 				Value.Z = Vector.z();
 			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_weaponinventory().empty())
+	{
+		// field_weaponinventory
+		uint16 Handle = 44;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			TArray<AWeapon*> Value = *(reinterpret_cast<TArray<AWeapon*> *>(PropertyData));
+
+			{
+				auto& List = (*Update.field_weaponinventory().data());
+				Value.SetNum(List.size());
+				for(int i = 0; i < List.size(); i++)
+				{
+					{
+						improbable::unreal::UnrealObjectRef ObjectRef = List[i];
+						check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+						if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+						{
+							Value[i] = nullptr;
+						}
+						else
+						{
+							FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+							if (NetGUID.IsValid())
+							{
+								UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+								checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+								Value[i] = dynamic_cast<AWeapon*>(Object_Raw);
+								checkf(Value[i], TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+							}
+							else
+							{
+								UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+									*Interop->GetSpatialOS()->GetWorkerId(),
+									*ObjectRefToString(ObjectRef),
+									*ActorChannel->Actor->GetName(),
+									ActorChannel->GetEntityId().ToSpatialEntityId(),
+									*RepData->Property->GetName(),
+									Handle);
+								//bWriteObjectProperty = false;
+								Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+							}
+						}
+					}
+				}
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_equippedweapon().empty())
+	{
+		// field_equippedweapon
+		uint16 Handle = 45;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			AWeapon* Value = *(reinterpret_cast<AWeapon* const*>(PropertyData));
+
+			{
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_equippedweapon().data());
+				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				{
+					Value = nullptr;
+				}
+				else
+				{
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+					if (NetGUID.IsValid())
+					{
+						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						Value = dynamic_cast<AWeapon*>(Object_Raw);
+						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					}
+					else
+					{
+						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+							*Interop->GetSpatialOS()->GetWorkerId(),
+							*ObjectRefToString(ObjectRef),
+							*ActorChannel->Actor->GetName(),
+							ActorChannel->GetEntityId().ToSpatialEntityId(),
+							*RepData->Property->GetName(),
+							Handle);
+						bWriteObjectProperty = false;
+						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					}
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
+		}
+	}
+	if (!Update.field_equippedweaponindex().empty())
+	{
+		// field_equippedweaponindex
+		uint16 Handle = 46;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_equippedweaponindex().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 

@@ -5,7 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
-#include "Net/UnrealNetwork.h"
+#include "UnrealNetwork.h"
 
 
 // Sets default values

@@ -5,11 +5,11 @@ package improbable.unreal;
 import "improbable/vector3.schema";
 import "improbable/unreal/core_types.schema";
 
-component UnrealTestCubeSingleClientRepData {
-	id = 100035;
+component UnrealAutomaticInstantWeaponSingleClientRepData {
+	id = 100030;
 }
-component UnrealTestCubeMultiClientRepData {
-	id = 100036;
+component UnrealAutomaticInstantWeaponMultiClientRepData {
+	id = 100031;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
 	bool field_btearoff = 3; // COND_None // ::Actor
@@ -25,17 +25,17 @@ component UnrealTestCubeMultiClientRepData {
 	UnrealObjectRef field_owner = 13; // COND_None // ::Actor
 	uint32 field_role = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
-	bool field_bcolor1 = 16; // COND_None // ::TestCube
 }
-component UnrealTestCubeMigratableData {
-	id = 100037;
+component UnrealAutomaticInstantWeaponMigratableData {
+	id = 100032;
 }
-import "improbable/unreal/generated/UnrealTestCubeTypes.schema";
+import "improbable/unreal/generated/UnrealInstantWeaponTypes.schema";
 
-component UnrealTestCubeClientRPCs {
-	id = 100038;
+component UnrealAutomaticInstantWeaponClientRPCs {
+	id = 100033;
 }
-component UnrealTestCubeServerRPCs {
-	id = 100039;
-	command UnrealRPCCommandResponse serverinteract(UnrealServerInteractRequest);
+component UnrealAutomaticInstantWeaponServerRPCs {
+	id = 100034;
+	command UnrealRPCCommandResponse serverdidmiss(UnrealServerDidMissRequest);
+	command UnrealRPCCommandResponse serverdidhit(UnrealServerDidHitRequest);
 }
