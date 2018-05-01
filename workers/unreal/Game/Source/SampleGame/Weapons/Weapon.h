@@ -33,6 +33,8 @@ protected:
 	// [client] Executes a single fire of the weapon.
 	// Not implemented in AWeapon.
 	virtual void DoFire() PURE_VIRTUAL(AWeapon::DoFire,);
+
+	class ASampleGameCharacter* GetCharacter();
 	
 	// The current state of the weapon.
 	// Not replicated, but instead updated on server and client by RPCs.

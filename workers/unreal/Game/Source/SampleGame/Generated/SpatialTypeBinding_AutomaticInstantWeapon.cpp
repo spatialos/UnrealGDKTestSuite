@@ -42,6 +42,8 @@ const FRepHandlePropertyMap& USpatialTypeBinding_AutomaticInstantWeapon::GetRepH
 		HandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, COND_None, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, COND_None, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(16, FRepHandleData(Class, {"HitNotify", "Location"}, COND_None, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(17, FRepHandleData(Class, {"HitNotify", "HitActor"}, COND_None, REPNOTIFY_OnChanged));
 	}
 	return HandleToPropertyMap;
 }
@@ -515,6 +517,36 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerSendUpdate_MultiClient(co
 			else
 			{
 				OutUpdate.set_field_instigator(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 16: // field_hitnotify_location
+		{
+			const FVector& Value = *(reinterpret_cast<FVector const*>(Data));
+
+			OutUpdate.set_field_hitnotify_location(improbable::Vector3f(Value.X, Value.Y, Value.Z));
+			break;
+		}
+		case 17: // field_hitnotify_hitactor
+		{
+			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 17);
+				}
+				else
+				{
+					OutUpdate.set_field_hitnotify_hitactor(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_hitnotify_hitactor(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
@@ -1055,6 +1087,89 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ReceiveUpdate_MultiClient(USpat
 			}
 		}
 	}
+	if (!Update.field_hitnotify_location().empty())
+	{
+		// field_hitnotify_location
+		uint16 Handle = 16;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FVector Value = *(reinterpret_cast<FVector const*>(PropertyData));
+
+			{
+				auto& Vector = (*Update.field_hitnotify_location().data());
+				Value.X = Vector.x();
+				Value.Y = Vector.y();
+				Value.Z = Vector.z();
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_hitnotify_hitactor().empty())
+	{
+		// field_hitnotify_hitactor
+		uint16 Handle = 17;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
+
+			{
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_hitnotify_hitactor().data());
+				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				{
+					Value = nullptr;
+				}
+				else
+				{
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+					if (NetGUID.IsValid())
+					{
+						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						Value = dynamic_cast<AActor*>(Object_Raw);
+						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					}
+					else
+					{
+						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+							*Interop->GetSpatialOS()->GetWorkerId(),
+							*ObjectRefToString(ObjectRef),
+							*ActorChannel->Actor->GetName(),
+							ActorChannel->GetEntityId().ToSpatialEntityId(),
+							*RepData->Property->GetName(),
+							Handle);
+						bWriteObjectProperty = false;
+						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					}
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
+		}
+	}
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies);
 }
 
@@ -1079,6 +1194,25 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_SendCommand(worke
 
 		// Build request.
 		improbable::unreal::UnrealServerDidMissRequest Request;
+		Request.set_field_hitinfo_location(improbable::Vector3f(HitInfo.Location.X, HitInfo.Location.Y, HitInfo.Location.Z));
+		if (HitInfo.HitActor != nullptr)
+		{
+			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(HitInfo.HitActor);
+			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+			{
+				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerDidMiss queued. HitInfo.HitActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+				return {HitInfo.HitActor};
+			}
+			else
+			{
+				Request.set_field_hitinfo_hitactor(ObjectRef);
+			}
+		}
+		else
+		{
+			Request.set_field_hitinfo_hitactor(SpatialConstants::NULL_OBJECT_REF);
+		}
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1109,6 +1243,25 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_SendCommand(worker
 
 		// Build request.
 		improbable::unreal::UnrealServerDidHitRequest Request;
+		Request.set_field_hitinfo_location(improbable::Vector3f(HitInfo.Location.X, HitInfo.Location.Y, HitInfo.Location.Z));
+		if (HitInfo.HitActor != nullptr)
+		{
+			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(HitInfo.HitActor);
+			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+			{
+				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerDidHit queued. HitInfo.HitActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+				return {HitInfo.HitActor};
+			}
+			else
+			{
+				Request.set_field_hitinfo_hitactor(ObjectRef);
+			}
+		}
+		else
+		{
+			Request.set_field_hitinfo_hitactor(SpatialConstants::NULL_OBJECT_REF);
+		}
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1151,6 +1304,38 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_OnCommandRequest(
 		FInstantHitInfo HitInfo;
 
 		// Extract from request data.
+		{
+			auto& Vector = Op.Request.field_hitinfo_location();
+			HitInfo.Location.X = Vector.x();
+			HitInfo.Location.Y = Vector.y();
+			HitInfo.Location.Z = Vector.z();
+		}
+		{
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_hitinfo_hitactor();
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				HitInfo.HitActor = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					HitInfo.HitActor = dynamic_cast<AActor*>(Object_Raw);
+					checkf(HitInfo.HitActor, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+				}
+				else
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerDidMiss_OnCommandRequest: HitInfo.HitActor %s is not resolved on this worker."),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef));
+					return {ObjectRef};
+				}
+			}
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerDidMiss, target: %s %s"),
@@ -1196,6 +1381,38 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_OnCommandRequest(c
 		FInstantHitInfo HitInfo;
 
 		// Extract from request data.
+		{
+			auto& Vector = Op.Request.field_hitinfo_location();
+			HitInfo.Location.X = Vector.x();
+			HitInfo.Location.Y = Vector.y();
+			HitInfo.Location.Z = Vector.z();
+		}
+		{
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_hitinfo_hitactor();
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				HitInfo.HitActor = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					HitInfo.HitActor = dynamic_cast<AActor*>(Object_Raw);
+					checkf(HitInfo.HitActor, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+				}
+				else
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerDidHit_OnCommandRequest: HitInfo.HitActor %s is not resolved on this worker."),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef));
+					return {ObjectRef};
+				}
+			}
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerDidHit, target: %s %s"),

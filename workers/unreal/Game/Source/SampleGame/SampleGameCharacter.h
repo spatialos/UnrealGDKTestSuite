@@ -84,8 +84,8 @@ protected:
     void ServerSpawnCube();
 
 	// List of weapons the player currently has.
-	UPROPERTY(Replicated)
-	TArray<class AWeapon*> WeaponInventory;
+	//UPROPERTY(Replicated)
+	//TArray<class AWeapon*> WeaponInventory;
 
 	UPROPERTY(Replicated)
 	class AWeapon* EquippedWeapon = nullptr;

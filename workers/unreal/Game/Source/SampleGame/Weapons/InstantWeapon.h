@@ -12,6 +12,13 @@ struct FInstantHitInfo
 {
 	GENERATED_USTRUCT_BODY()
 
+	// Location of the hit in world space.
+	UPROPERTY()
+	FVector Location;
+
+	// Actor that was hit, or nullptr if nothing was hit.
+	UPROPERTY()
+	AActor* HitActor = nullptr;
 };
 
 
@@ -41,6 +48,10 @@ protected:
 
 	// Runs a line trace and triggers the server RPC for hits.
 	virtual void DoFire() override;
+
+	// Performs a line trace and populates OutHitInfo based on the results.
+	// Returns true if it hits anything, false otherwise.
+	bool DoLineTrace(FInstantHitInfo& OutHitInfo);
 
 	// Responds to a change in the HitNotify property, used as a broadcast event for displaying hit effects.
 	UFUNCTION()

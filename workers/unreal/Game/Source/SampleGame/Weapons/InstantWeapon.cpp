@@ -2,6 +2,9 @@
 
 #include "InstantWeapon.h"
 
+#include "CollisionQueryParams.h"
+#include "Engine/World.h"
+#include "SampleGameCharacter.h"
 #include "UnrealNetwork.h"
 
 
@@ -16,14 +19,55 @@ void AInstantWeapon::DoFire()
 {
 	if (HasAuthority())
 	{
-		// No reason for this to be running on the server.
 		return;
 	}
 
-	// Do line trace
-	// Send to server
 	FInstantHitInfo hitInfo;
-	ServerDidHit(hitInfo);
+	if (DoLineTrace(hitInfo))
+	{
+		ServerDidHit(hitInfo);
+	} else
+	{
+		ServerDidMiss(hitInfo);
+	}
+}
+
+bool AInstantWeapon::DoLineTrace(FInstantHitInfo& OutHitInfo)
+{
+	FCollisionQueryParams traceParams = FCollisionQueryParams(FName(TEXT("SampleGame_Trace")), true, this);
+	traceParams.bTraceComplex = true;
+	traceParams.bTraceAsyncScene = true;
+	traceParams.bReturnPhysicalMaterial = false;
+
+	ASampleGameCharacter* character = GetCharacter();
+	FHitResult hitResult(ForceInit);
+	FVector traceStart = character->GetFollowCamera()->GetComponentLocation();
+	const float kInteractDistance = 5000.0f;
+	FVector traceEnd = traceStart + character->GetFollowCamera()->GetForwardVector() * kInteractDistance;
+
+	bool didHit = GetWorld()->LineTraceSingleByChannel(
+		hitResult,
+		traceStart,
+		traceEnd,
+		ECC_Visibility,
+		traceParams);
+
+	if (!didHit)
+	{
+		return false;
+ 	}
+
+	UE_LOG(LogClass, Log, TEXT("Line trace hit actor: %s"), *hitResult.Actor->GetName());
+	
+	OutHitInfo.Location = hitResult.ImpactPoint;
+	if (hitResult.GetActor()->GetIsReplicated())
+	{
+		OutHitInfo.HitActor = hitResult.GetActor();
+	} else
+	{
+		OutHitInfo.HitActor = nullptr;
+	}
+	return true;
 }
 
 bool AInstantWeapon::ServerDidHit_Validate(const FInstantHitInfo& HitInfo)
@@ -33,7 +77,13 @@ bool AInstantWeapon::ServerDidHit_Validate(const FInstantHitInfo& HitInfo)
 
 void AInstantWeapon::ServerDidHit_Implementation(const FInstantHitInfo& HitInfo)
 {
-	UE_LOG(LogClass, Log, TEXT("AInstantWeapon server: shot weapon"))
+	if (HitInfo.HitActor == nullptr)
+	{
+		UE_LOG(LogClass, Log, TEXT("AInstantWeapon server: hit %s"), *HitInfo.Location.ToString())
+	} else
+	{
+		UE_LOG(LogClass, Log, TEXT("AInstantWeapon server: hit actor %s"), *HitInfo.HitActor->GetName())
+	}
 }
 
 bool AInstantWeapon::ServerDidMiss_Validate(const FInstantHitInfo& HitInfo)

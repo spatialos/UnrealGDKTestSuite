@@ -2,6 +2,9 @@
 
 #include "Weapon.h"
 
+#include "Engine/World.h"
+#include "SampleGameCharacter.h"
+
 
 AWeapon::AWeapon()
 {
@@ -13,5 +16,17 @@ AWeapon::AWeapon()
 
 	LocationComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	SetRootComponent(LocationComponent);
+}
+
+class ASampleGameCharacter* AWeapon::GetCharacter()
+{
+	// TODO: retain a reference to the owning character
+
+	APlayerController* controller = GetWorld()->GetFirstPlayerController();
+	if (controller == nullptr)
+	{
+		return nullptr;
+	}
+	return Cast<ASampleGameCharacter>(controller->GetPawn());
 }
 

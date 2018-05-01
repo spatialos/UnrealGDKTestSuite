@@ -69,7 +69,11 @@ void ASampleGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// DebugSpawnWeapon();
+	if (HasAuthority())
+	{
+		// TODO: need to solve for this happening when loading characters on a new worker
+		DebugSpawnWeapon();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -110,7 +114,7 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ASampleGameCharacter, WeaponInventory);
+	//DOREPLIFETIME(ASampleGameCharacter, WeaponInventory);
 	DOREPLIFETIME(ASampleGameCharacter, EquippedWeaponIndex);
 	DOREPLIFETIME(ASampleGameCharacter, EquippedWeapon);
 }
@@ -226,9 +230,6 @@ bool ASampleGameCharacter::ServerSpawnCube_Validate()
 
 void ASampleGameCharacter::ServerSpawnCube_Implementation()
 {
-	DebugSpawnWeapon();
-	return;
-
 	if (TestActorTemplate == nullptr)
 	{
 		return;

@@ -7,7 +7,11 @@ import "improbable/unreal/core_types.schema";
 
 type UnrealServerDidMissRequest {
 	uint32 target_subobject_offset = 1;
+	improbable.Vector3f field_hitinfo_location = 2;
+	UnrealObjectRef field_hitinfo_hitactor = 3;
 }
 type UnrealServerDidHitRequest {
 	uint32 target_subobject_offset = 1;
+	improbable.Vector3f field_hitinfo_location = 2;
+	UnrealObjectRef field_hitinfo_hitactor = 3;
 }

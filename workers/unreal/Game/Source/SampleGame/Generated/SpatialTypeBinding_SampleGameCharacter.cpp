@@ -70,9 +70,8 @@ const FRepHandlePropertyMap& USpatialTypeBinding_SampleGameCharacter::GetRepHand
 		HandleToPropertyMap.Add(41, FRepHandleData(Class, {"RepRootMotion", "AuthoritativeRootMotion"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(42, FRepHandleData(Class, {"RepRootMotion", "Acceleration"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(43, FRepHandleData(Class, {"RepRootMotion", "LinearVelocity"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(44, FRepHandleData(Class, {"WeaponInventory"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(45, FRepHandleData(Class, {"EquippedWeapon"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(46, FRepHandleData(Class, {"EquippedWeaponIndex"}, COND_None, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(44, FRepHandleData(Class, {"EquippedWeapon"}, COND_None, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(45, FRepHandleData(Class, {"EquippedWeaponIndex"}, COND_None, REPNOTIFY_OnChanged));
 	}
 	return HandleToPropertyMap;
 }
@@ -875,37 +874,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			OutUpdate.set_field_reprootmotion_linearvelocity(improbable::Vector3f(Value.X, Value.Y, Value.Z));
 			break;
 		}
-		case 44: // field_weaponinventory
-		{
-			const TArray<AWeapon*>& Value = *(reinterpret_cast<TArray<AWeapon*> const*>(Data));
-
-			{
-				::worker::List<improbable::unreal::UnrealObjectRef> List;
-				for(int i = 0; i < Value.Num(); i++)
-				{
-					if (Value[i] != nullptr)
-					{
-						FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value[i]);
-						improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-						if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-						{
-							Interop->QueueOutgoingObjectRepUpdate_Internal(Value[i], Channel, 44);
-						}
-						else
-						{
-							List.emplace_back(ObjectRef);
-						}
-					}
-					else
-					{
-						List.emplace_back(SpatialConstants::NULL_OBJECT_REF);
-					}
-				}
-				OutUpdate.set_field_weaponinventory(List);
-			}
-			break;
-		}
-		case 45: // field_equippedweapon
+		case 44: // field_equippedweapon
 		{
 			AWeapon* Value = *(reinterpret_cast<AWeapon* const*>(Data));
 
@@ -915,7 +884,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 45);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 44);
 				}
 				else
 				{
@@ -928,7 +897,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			}
 			break;
 		}
-		case 46: // field_equippedweaponindex
+		case 45: // field_equippedweaponindex
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
@@ -2295,69 +2264,10 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_weaponinventory().empty())
-	{
-		// field_weaponinventory
-		uint16 Handle = 44;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			TArray<AWeapon*> Value = *(reinterpret_cast<TArray<AWeapon*> *>(PropertyData));
-
-			{
-				auto& List = (*Update.field_weaponinventory().data());
-				Value.SetNum(List.size());
-				for(int i = 0; i < List.size(); i++)
-				{
-					{
-						improbable::unreal::UnrealObjectRef ObjectRef = List[i];
-						check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-						if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
-						{
-							Value[i] = nullptr;
-						}
-						else
-						{
-							FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-							if (NetGUID.IsValid())
-							{
-								UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-								checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-								Value[i] = dynamic_cast<AWeapon*>(Object_Raw);
-								checkf(Value[i], TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-							}
-							else
-							{
-								UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-									*Interop->GetSpatialOS()->GetWorkerId(),
-									*ObjectRefToString(ObjectRef),
-									*ActorChannel->Actor->GetName(),
-									ActorChannel->GetEntityId().ToSpatialEntityId(),
-									*RepData->Property->GetName(),
-									Handle);
-								//bWriteObjectProperty = false;
-								Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-							}
-						}
-					}
-				}
-			}
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
 	if (!Update.field_equippedweapon().empty())
 	{
 		// field_equippedweapon
-		uint16 Handle = 45;
+		uint16 Handle = 44;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2413,7 +2323,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_equippedweaponindex().empty())
 	{
 		// field_equippedweaponindex
-		uint16 Handle = 46;
+		uint16 Handle = 45;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
