@@ -57,7 +57,12 @@ protected:
 	UFUNCTION()
 	virtual void OnRep_HitNotify();
 
+	// Replicated property used to notify clients of a shot, for visualization.
 	UPROPERTY(ReplicatedUsing = OnRep_HitNotify)
 	FInstantHitInfo HitNotify;
+
+	// Maximum range of the weapon's hitscan.
+	UPROPERTY(EditAnywhere, Category = "Shooting")
+	float MaxRange = 50000.0f;
 	
 };

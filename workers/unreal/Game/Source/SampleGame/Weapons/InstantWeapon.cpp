@@ -42,8 +42,7 @@ bool AInstantWeapon::DoLineTrace(FInstantHitInfo& OutHitInfo)
 	ASampleGameCharacter* character = GetCharacter();
 	FHitResult hitResult(ForceInit);
 	FVector traceStart = character->GetFollowCamera()->GetComponentLocation();
-	const float kInteractDistance = 5000.0f;
-	FVector traceEnd = traceStart + character->GetFollowCamera()->GetForwardVector() * kInteractDistance;
+	FVector traceEnd = traceStart + character->GetFollowCamera()->GetForwardVector() * MaxRange;
 
 	bool didHit = GetWorld()->LineTraceSingleByChannel(
 		hitResult,

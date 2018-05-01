@@ -13,7 +13,6 @@
 #include "SpatialNetDriver.h"
 
 #include "TestCube.h"
-#include "Weapons/AutomaticInstantWeapon.h"
 #include "Weapons/Weapon.h"
 
 #include "UnrealNetwork.h"
@@ -174,7 +173,7 @@ void ASampleGameCharacter::DebugSpawnWeapon()
 	if (!HasAuthority()) return;
 
 	// Create a starter weapon.
-	AWeapon* startWeapon = GetWorld()->SpawnActor<AAutomaticInstantWeapon>(AAutomaticInstantWeapon::StaticClass(), GetActorTransform());
+	AWeapon* startWeapon = GetWorld()->SpawnActor<AWeapon>(StarterWeapon, GetActorTransform());
 	startWeapon->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 
 	// Add and equip the starter weapon.
