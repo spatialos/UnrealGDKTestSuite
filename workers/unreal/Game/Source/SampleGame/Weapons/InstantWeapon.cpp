@@ -49,7 +49,7 @@ bool AInstantWeapon::DoLineTrace(FInstantHitInfo& OutHitInfo)
 		hitResult,
 		traceStart,
 		traceEnd,
-		ECC_Visibility,
+		ECC_WorldStatic,
 		traceParams);
 
 	if (!didHit)
@@ -93,7 +93,7 @@ bool AInstantWeapon::ServerDidMiss_Validate(const FInstantHitInfo& HitInfo)
 
 void AInstantWeapon::ServerDidMiss_Implementation(const FInstantHitInfo& HitInfo)
 {
-
+	UE_LOG(LogClass, Log, TEXT("Shot missed"));
 }
 
 void AInstantWeapon::OnRep_HitNotify()
