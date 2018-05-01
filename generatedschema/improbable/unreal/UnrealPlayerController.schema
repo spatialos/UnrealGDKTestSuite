@@ -34,8 +34,8 @@ component UnrealPlayerControllerMigratableData {
 	id = 100012;
 	UnrealObjectRef field_acknowledgedpawn = 1;
 }
-import "improbable/unreal/generated/UnrealPlayerControllerTypes.schema";
-import "improbable/unreal/generated/UnrealControllerTypes.schema";
+import "improbable/unreal/UnrealPlayerControllerTypes.schema";
+import "improbable/unreal/UnrealControllerTypes.schema";
 
 component UnrealPlayerControllerClientRPCs {
 	id = 100013;

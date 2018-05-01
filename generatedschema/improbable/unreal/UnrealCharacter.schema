@@ -60,7 +60,7 @@ component UnrealCharacterMigratableData {
 	uint32 field_charactermovement_movementmode = 2;
 	uint32 field_charactermovement_custommovementmode = 3;
 }
-import "improbable/unreal/generated/UnrealCharacterTypes.schema";
+import "improbable/unreal/UnrealCharacterTypes.schema";
 
 component UnrealCharacterClientRPCs {
 	id = 100023;
