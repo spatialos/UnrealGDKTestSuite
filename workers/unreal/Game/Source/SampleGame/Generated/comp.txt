@@ -2,9 +2,7 @@
 // Note that this file has been generated automatically
 
 #include "SpatialTypeBinding_Character.h"
-
-#include "GameFramework/PlayerState.h"
-#include "NetworkGuid.h"
+#include "Engine.h"
 
 #include "SpatialOS.h"
 #include "EntityBuilder.h"
