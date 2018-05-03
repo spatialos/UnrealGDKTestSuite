@@ -42,8 +42,6 @@ class SAMPLEGAME_API AInstantWeapon : public AWeapon
 	GENERATED_BODY()
 	
 public:
-	AInstantWeapon();
-
 	// RPC for telling the server that we fired and hit something.
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDidHit(const FInstantHitInfo& HitInfo);
@@ -57,8 +55,6 @@ public:
 	void ServerDidMiss_Implementation(const FInstantHitInfo& HitInfo);
 
 protected:
-	FInstantHitInfo LastHitInfo;
-	virtual void Tick(float DeltaSeconds) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	// Runs a line trace and triggers the server RPC for hits.
@@ -86,9 +82,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	float MaxRange = 50000.0f;
 
+	// Template for the particle system to spawn in the world on hits.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	class UParticleSystem* HitFXTemplate = nullptr;
 
+	// If true, draws debug line traces for hitscan shots.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	bool bDrawDebugLineTrace = false;
 };

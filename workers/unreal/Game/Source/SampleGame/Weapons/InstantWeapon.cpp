@@ -9,28 +9,6 @@
 #include "UnrealNetwork.h"
 
 
-
-AInstantWeapon::AInstantWeapon()
-{
-	PrimaryActorTick.bCanEverTick = true;
-}
-
-void AInstantWeapon::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	if (HitNotify.HitActor != LastHitInfo.HitActor)
-	{
-		UE_LOG(LogClass, Log, TEXT("Actor changed"));
-	}
-	const float kLocationTolerance = 10 * 10;
-	if (FVector::DistSquared(HitNotify.Location, LastHitInfo.Location) > kLocationTolerance)
-	{
-		UE_LOG(LogClass, Log, TEXT("Location changed from %s to %s"), *LastHitInfo.Location.ToString(), *HitNotify.Location.ToString());
-	}
-	LastHitInfo = HitNotify;
-}
-
 void AInstantWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
