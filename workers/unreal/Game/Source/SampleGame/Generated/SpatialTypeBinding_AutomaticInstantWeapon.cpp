@@ -42,8 +42,9 @@ const FRepHandlePropertyMap& USpatialTypeBinding_AutomaticInstantWeapon::GetRepH
 		HandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, COND_None, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, COND_None, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(16, FRepHandleData(Class, {"HitNotify", "Location"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(17, FRepHandleData(Class, {"HitNotify", "HitActor"}, COND_None, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(16, FRepHandleData(Class, {"HitNotify", "Location"}, COND_SkipOwner, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(17, FRepHandleData(Class, {"HitNotify", "HitActor"}, COND_SkipOwner, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(18, FRepHandleData(Class, {"HitNotify", "RandomSeed"}, COND_SkipOwner, REPNOTIFY_OnChanged));
 	}
 	return HandleToPropertyMap;
 }
@@ -548,6 +549,13 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerSendUpdate_MultiClient(co
 			{
 				OutUpdate.set_field_hitnotify_hitactor(SpatialConstants::NULL_OBJECT_REF);
 			}
+			break;
+		}
+		case 18: // field_hitnotify_randomseed
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_hitnotify_randomseed(Value);
 			break;
 		}
 	default:
@@ -1170,6 +1178,28 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ReceiveUpdate_MultiClient(USpat
 			}
 		}
 	}
+	if (!Update.field_hitnotify_randomseed().empty())
+	{
+		// field_hitnotify_randomseed
+		uint16 Handle = 18;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_hitnotify_randomseed().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies);
 }
 
@@ -1213,6 +1243,7 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_SendCommand(worke
 		{
 			Request.set_field_hitinfo_hitactor(SpatialConstants::NULL_OBJECT_REF);
 		}
+		Request.set_field_hitinfo_randomseed(HitInfo.RandomSeed);
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1262,6 +1293,7 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_SendCommand(worker
 		{
 			Request.set_field_hitinfo_hitactor(SpatialConstants::NULL_OBJECT_REF);
 		}
+		Request.set_field_hitinfo_randomseed(HitInfo.RandomSeed);
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1336,6 +1368,7 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_OnCommandRequest(
 				}
 			}
 		}
+		HitInfo.RandomSeed = Op.Request.field_hitinfo_randomseed();
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerDidMiss, target: %s %s"),
@@ -1413,6 +1446,7 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_OnCommandRequest(c
 				}
 			}
 		}
+		HitInfo.RandomSeed = Op.Request.field_hitinfo_randomseed();
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerDidHit, target: %s %s"),

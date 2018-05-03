@@ -18,7 +18,18 @@ struct FInstantHitInfo
 
 	// Actor that was hit, or nullptr if nothing was hit.
 	UPROPERTY()
-	AActor* HitActor = nullptr;
+	AActor* HitActor;
+
+	// Currently this is only used to ensure that the struct gets replicated even if the above properties don't change.
+	// In the future it could also be used to reproduce pseudorandom values on client and server (as Epic's ShooterGame does).
+	UPROPERTY()
+	int32 RandomSeed;
+
+	FInstantHitInfo() :
+		Location(FVector{ 0,0,0 }),
+		HitActor(nullptr),
+		RandomSeed(0)
+	{}
 };
 
 
@@ -31,6 +42,8 @@ class SAMPLEGAME_API AInstantWeapon : public AWeapon
 	GENERATED_BODY()
 	
 public:
+	AInstantWeapon();
+
 	// RPC for telling the server that we fired and hit something.
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDidHit(const FInstantHitInfo& HitInfo);
@@ -44,14 +57,22 @@ public:
 	void ServerDidMiss_Implementation(const FInstantHitInfo& HitInfo);
 
 protected:
+	FInstantHitInfo LastHitInfo;
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	// Runs a line trace and triggers the server RPC for hits.
 	virtual void DoFire() override;
 
-	// Performs a line trace and populates OutHitInfo based on the results.
+	// [client] Performs a line trace and populates OutHitInfo based on the results.
 	// Returns true if it hits anything, false otherwise.
 	bool DoLineTrace(FInstantHitInfo& OutHitInfo);
+
+	// [server] Notifies clients of a hit.
+	void NotifyClientsOfHit(const FInstantHitInfo& HitInfo);
+
+	// [client] Spawns the hit FX in the world.
+	void SpawnHitFX(const FInstantHitInfo& HitInfo);
 
 	// Responds to a change in the HitNotify property, used as a broadcast event for displaying hit effects.
 	UFUNCTION()
@@ -62,7 +83,9 @@ protected:
 	FInstantHitInfo HitNotify;
 
 	// Maximum range of the weapon's hitscan.
-	UPROPERTY(EditAnywhere, Category = "Shooting")
+	UPROPERTY(EditAnywhere, Category = "Weapons")
 	float MaxRange = 50000.0f;
-	
+
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	class UParticleSystem* HitFXTemplate = nullptr;
 };

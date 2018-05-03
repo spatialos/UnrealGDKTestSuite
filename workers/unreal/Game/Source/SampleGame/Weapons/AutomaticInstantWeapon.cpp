@@ -7,6 +7,8 @@
 
 void AAutomaticInstantWeapon::BeginPlay()
 {
+	Super::BeginPlay();
+
 	NextShotTimerDelegate.BindLambda([&]() {
 		DoFire();
 	});

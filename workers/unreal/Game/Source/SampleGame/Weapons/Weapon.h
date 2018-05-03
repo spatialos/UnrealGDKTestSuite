@@ -34,6 +34,7 @@ protected:
 	// Not implemented in AWeapon.
 	virtual void DoFire() PURE_VIRTUAL(AWeapon::DoFire,);
 
+	// Get the character actor for this weapon, or nullptr if there isn't one.
 	class ASampleGameCharacter* GetCharacter();
 	
 	// The current state of the weapon.
