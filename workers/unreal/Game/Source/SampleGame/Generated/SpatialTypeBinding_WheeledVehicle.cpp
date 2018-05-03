@@ -1250,10 +1250,10 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_Migratable(USpatialActorC
 {
 }
 
-void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject)
+void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in WheeledVehicleMovementComponent.generated.h (in a macro that is then put in WheeledVehicleMovementComponent.h UCLASS macro)
-	WheeledVehicleMovementComponent_eventServerUpdateState_Parms StructuredParams = *static_cast<WheeledVehicleMovementComponent_eventServerUpdateState_Parms*>(Params);
+	WheeledVehicleMovementComponent_eventServerUpdateState_Parms StructuredParams = *static_cast<WheeledVehicleMovementComponent_eventServerUpdateState_Parms*>(Parameters);
 
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{

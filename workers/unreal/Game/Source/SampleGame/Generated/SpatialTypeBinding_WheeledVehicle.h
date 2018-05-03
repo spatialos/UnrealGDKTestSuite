@@ -59,7 +59,7 @@ private:
 	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealWheeledVehicleMigratableData::Update& Update) const;
 
 	// RPC command sender functions.
-	void ServerUpdateState_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
+	void ServerUpdateState_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
 	void ServerUpdateState_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::UnrealWheeledVehicleServerRPCs::Commands::Serverupdatestate>& Op);

@@ -59,21 +59,21 @@ private:
 	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealCharacterMigratableData::Update& Update) const;
 
 	// RPC command sender functions.
-	void RootMotionDebugClientPrintOnScreen_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ClientVeryShortAdjustPosition_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ClientCheatWalk_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ClientCheatGhost_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ClientCheatFly_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ClientAdjustRootMotionSourcePosition_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ClientAdjustRootMotionPosition_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ClientAdjustPosition_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ClientAckGoodMove_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ServerMoveOld_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ServerMoveNoBase_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ServerMoveDualNoBase_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ServerMoveDualHybridRootMotion_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ServerMoveDual_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
-	void ServerMove_SendCommand(worker::Connection* const Connection, void* Params, UObject* TargetObject);
+	void RootMotionDebugClientPrintOnScreen_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ClientVeryShortAdjustPosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ClientCheatWalk_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ClientCheatGhost_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ClientCheatFly_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ClientAdjustRootMotionSourcePosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ClientAdjustRootMotionPosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ClientAdjustPosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ClientAckGoodMove_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ServerMoveOld_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ServerMoveNoBase_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ServerMoveDualNoBase_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ServerMoveDualHybridRootMotion_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ServerMoveDual_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ServerMove_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
 	void RootMotionDebugClientPrintOnScreen_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::UnrealCharacterClientRPCs::Commands::Rootmotiondebugclientprintonscreen>& Op);
