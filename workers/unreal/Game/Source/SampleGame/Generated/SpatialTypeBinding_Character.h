@@ -7,7 +7,7 @@
 #include <improbable/view.h>
 #include <improbable/unreal/core_types.h>
 #include <improbable/unreal/unreal_metadata.h>
-#include <improbable/unreal/UnrealCharacter.h>
+#include <improbable/unreal/generated/UnrealCharacter.h>
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_Character.generated.h"
