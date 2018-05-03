@@ -32,7 +32,7 @@ component UnrealWheeledVehicleMultiClientRepData {
 component UnrealWheeledVehicleMigratableData {
 	id = 100027;
 }
-import "improbable/unreal/UnrealWheeledVehicleMovementComponentTypes.schema";
+import "improbable/unreal/generated/UnrealWheeledVehicleMovementComponentTypes.schema";
 
 component UnrealWheeledVehicleClientRPCs {
 	id = 100028;
