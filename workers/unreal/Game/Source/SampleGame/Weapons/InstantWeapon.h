@@ -88,4 +88,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	class UParticleSystem* HitFXTemplate = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	bool bDrawDebugLineTrace = false;
 };

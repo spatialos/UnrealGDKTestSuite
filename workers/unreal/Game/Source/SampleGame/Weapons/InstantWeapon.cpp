@@ -58,15 +58,30 @@ void AInstantWeapon::DoFire()
 
 bool AInstantWeapon::DoLineTrace(FInstantHitInfo& OutHitInfo)
 {
+	ASampleGameCharacter* character = GetCharacter();
+
 	FCollisionQueryParams traceParams = FCollisionQueryParams(FName(TEXT("SampleGame_Trace")), true, this);
 	traceParams.bTraceComplex = true;
 	traceParams.bTraceAsyncScene = true;
 	traceParams.bReturnPhysicalMaterial = false;
+	traceParams.AddIgnoredActor(this);
+	traceParams.AddIgnoredActor(character);
 
-	ASampleGameCharacter* character = GetCharacter();
+	const FName kTraceTag("SampleGameTrace");
+	static bool didDo = false;
+	if (!didDo)
+	{
+		GetWorld()->DebugDrawTraceTag = kTraceTag;
+	}
+
+	if (bDrawDebugLineTrace)
+	{
+		traceParams.TraceTag = kTraceTag;
+	}
+
 	FHitResult hitResult(ForceInit);
-	FVector traceStart = character->GetFollowCamera()->GetComponentLocation();
-	FVector traceEnd = traceStart + character->GetFollowCamera()->GetForwardVector() * MaxRange;
+	FVector traceStart = character->GetLineTraceStart();
+	FVector traceEnd = traceStart + character->GetLineTraceDirection() * MaxRange;
 
 	bool didHit = GetWorld()->LineTraceSingleByChannel(
 		hitResult,

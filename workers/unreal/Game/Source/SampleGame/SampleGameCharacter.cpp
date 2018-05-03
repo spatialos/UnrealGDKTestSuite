@@ -252,6 +252,16 @@ void ASampleGameCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector L
 	StopJumping();
 }
 
+FVector ASampleGameCharacter::GetLineTraceStart()
+{
+	return GetFollowCamera()->GetComponentLocation();
+}
+
+FVector ASampleGameCharacter::GetLineTraceDirection()
+{
+	return GetFollowCamera()->GetForwardVector();
+}
+
 void ASampleGameCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information

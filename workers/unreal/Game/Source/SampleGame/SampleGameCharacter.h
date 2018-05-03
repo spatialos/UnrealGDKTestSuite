@@ -60,6 +60,14 @@ protected:
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
+public:
+	// Returns a position from which to start a line trace.
+	// Use this so your line trace doesn't collide with the player character.
+	FVector GetLineTraceStart();
+
+	// Returns the direction in which to perform a line trace so it lines up with the center of the crosshair.
+	FVector GetLineTraceDirection();
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

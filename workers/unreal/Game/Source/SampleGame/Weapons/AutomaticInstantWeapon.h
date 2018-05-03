@@ -23,8 +23,8 @@ public:
 
 protected:
 	// Interval between shots, in seconds.
-	UPROPERTY(EditAnywhere, Category = "Weapon")
-	float ShotInterval = 0.1f;
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	float ShotInterval = 0.2f;
 
 private:
 	void ClearTimerIfRunning();
