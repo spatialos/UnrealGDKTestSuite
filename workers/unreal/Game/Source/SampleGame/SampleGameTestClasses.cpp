@@ -9,3 +9,8 @@ AS_TestUnderscoreClassName::AS_TestUnderscoreClassName()
 {
 	
 }
+
+void AS_TestUnderscoreClassName::ClientUnderscoreRPC_Implementation()
+{
+
+}

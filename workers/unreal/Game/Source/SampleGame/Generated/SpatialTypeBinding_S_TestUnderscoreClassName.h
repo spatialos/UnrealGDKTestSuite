@@ -2,6 +2,7 @@
 // Note that this file has been generated automatically
 #pragma once
 
+#include "CoreMinimal.h"
 #include <improbable/worker.h>
 #include <improbable/view.h>
 #include <improbable/unreal/core_types.h>
@@ -58,8 +59,11 @@ private:
 	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::Update& Update) const;
 
 	// RPC command sender functions.
+	void ClientUnderscoreRPC_SendCommand(worker::Connection* const Connection, struct FFrame* const RPCFrame, UObject* TargetObject);
 
 	// RPC command request handler functions.
+	void ClientUnderscoreRPC_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>& Op);
 
 	// RPC command response handler functions.
+	void ClientUnderscoreRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>& Op);
 };

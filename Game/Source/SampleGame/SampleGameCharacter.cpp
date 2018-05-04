@@ -188,6 +188,11 @@ bool ASampleGameCharacter::Server_TestFunc_Validate(const TArray<FTestMixedStruc
 	return true;
 }
 
+// void ASampleGameCharacter::Client_TestConstArgs_Implementation(FConstStruct ConstStruct)
+// {
+// 
+// }
+
 void ASampleGameCharacter::OnRep_TestPODArray()
 {
 	FString TestString;
@@ -210,5 +215,9 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestNetSerializeArray, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStruct, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestPODStruct, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestObjectArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayReplication, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayStructReplication, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_SimulatedOnly);
 }

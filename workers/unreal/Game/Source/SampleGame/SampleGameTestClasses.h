@@ -16,5 +16,8 @@ class AS_TestUnderscoreClassName : public AActor
 
 public:
 	AS_TestUnderscoreClassName();
+
+	UFUNCTION(Client, Reliable)
+	void ClientUnderscoreRPC();
 };
 
