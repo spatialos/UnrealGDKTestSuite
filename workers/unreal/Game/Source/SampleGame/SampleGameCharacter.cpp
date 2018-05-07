@@ -68,10 +68,20 @@ void ASampleGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Only spawn a new starter weapon if we're authoritative and don't already have one.
 	if (HasAuthority())
 	{
-		// TODO: need to solve for this happening when loading characters on a new worker
-		DebugSpawnWeapon();
+		// Short delay as a workaround for UNR-218, which prevents replicated variables from being set when BeginPlay is called.
+		FTimerHandle timerHandle;
+		FTimerDelegate timerDelegate;
+		timerDelegate.BindLambda([this]() {
+			UE_LOG(LogClass, Log, TEXT("%s EquippedWeapon: %s"), *this->GetName(), EquippedWeapon == nullptr ? TEXT("nullptr") : *EquippedWeapon->GetName());
+			if (GetEquippedWeapon() == nullptr)
+			{
+				SpawnStarterWeapon();
+			}
+		});
+		GetWorld()->GetTimerManager().SetTimer(timerHandle, timerDelegate, 0.2f, false);
 	}
 }
 
@@ -102,8 +112,6 @@ void ASampleGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
     PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ASampleGameCharacter::Interact);
 	PlayerInputComponent->BindAction("SpawnCube", IE_Pressed, this, &ASampleGameCharacter::SpawnCubePressed);
-
-	PlayerInputComponent->BindAction("SpawnWeapon", IE_Pressed, this, &ASampleGameCharacter::DebugSpawnWeapon);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ASampleGameCharacter::StartFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ASampleGameCharacter::StopFire);
@@ -162,7 +170,7 @@ void ASampleGameCharacter::SpawnCubePressed()
 	ServerSpawnCube();
 }
 
-void ASampleGameCharacter::DebugSpawnWeapon()
+void ASampleGameCharacter::SpawnStarterWeapon()
 {
 	if (StarterWeapon == nullptr)
 	{
@@ -179,15 +187,14 @@ void ASampleGameCharacter::DebugSpawnWeapon()
 	// Add and equip the starter weapon.
 	//WeaponInventory.Add(startWeapon);
 	//EquippedWeaponIndex = WeaponInventory.Num() - 1;
-	FTimerHandle tHandle;
-	FTimerDelegate tDelegate;
-	tDelegate.BindLambda([this, startWeapon]() {
-		UE_LOG(LogClass, Log, TEXT("Tried to set equipped weapon for character %s to %s."), *this->GetName(), *startWeapon->GetName());
+
+	//FTimerHandle tHandle;
+	//FTimerDelegate tDelegate;
+	//tDelegate.BindLambda([this, startWeapon]() {
+		UE_LOG(LogClass, Log, TEXT("Set weapon for character %s to %s"), *this->GetName(), *startWeapon->GetName());
 		EquippedWeapon = startWeapon;
-		EquippedWeaponIndex++;
-	});
-	GetWorld()->GetTimerManager().SetTimer(tHandle, tDelegate, 2.0f, false);
-	//EquippedWeapon = startWeapon;
+	//});
+	//GetWorld()->GetTimerManager().SetTimer(tHandle, tDelegate, 2.0f, false);
 }
 
 void ASampleGameCharacter::StartFire()

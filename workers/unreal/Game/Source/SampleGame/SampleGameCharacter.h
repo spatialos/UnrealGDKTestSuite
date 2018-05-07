@@ -76,7 +76,7 @@ protected:
 
     void Interact();
 	void SpawnCubePressed();
-	void DebugSpawnWeapon();
+	void SpawnStarterWeapon();
 
 	// [client] Triggers the equipped weapon to start firing.
 	void StartFire();
@@ -94,7 +94,7 @@ protected:
 	//UPROPERTY(Replicated)
 	//TArray<class AWeapon*> WeaponInventory;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(VisibleAnywhere, Replicated)
 	class AWeapon* EquippedWeapon = nullptr;
 
 	// Index of the currently equipped weapon.
