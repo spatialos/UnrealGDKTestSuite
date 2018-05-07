@@ -42,6 +42,8 @@ class SAMPLEGAME_API AInstantWeapon : public AWeapon
 	GENERATED_BODY()
 	
 public:
+	AInstantWeapon();
+
 	// RPC for telling the server that we fired and hit something.
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDidHit(const FInstantHitInfo& HitInfo);
@@ -81,6 +83,13 @@ protected:
 	// Maximum range of the weapon's hitscan.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	float MaxRange = 50000.0f;
+
+	// Base damage done to others by a single shot.
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	float ShotBaseDamage = 10.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	TSubclassOf<UDamageType> DamageTypeClass;
 
 	// Template for the particle system to spawn in the world on hits.
 	UPROPERTY(EditAnywhere, Category = "Weapons")

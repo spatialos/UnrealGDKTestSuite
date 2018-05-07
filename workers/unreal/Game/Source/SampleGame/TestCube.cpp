@@ -22,6 +22,30 @@ ATestCube::ATestCube()
     MeshComponent->SetupAttachment(GetRootComponent());
 }
 
+// Called every frame
+void ATestCube::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+float ATestCube::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	UE_LOG(LogClass, Log, TEXT("%s took %f damage from %s via %s"), *this->GetName(), DamageAmount, *EventInstigator->GetName(), *DamageCauser->GetName());
+	return DamageAmount;
+}
+
+void ATestCube::Interact(ACharacter* Interactor)
+{
+    if (HasAuthority())
+    {
+        ToggleColor();
+    } else
+    {
+        ServerInteract();
+    }
+}
+
 // Called when the game starts or when spawned
 void ATestCube::BeginPlay()
 {
@@ -34,24 +58,6 @@ void ATestCube::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
     DOREPLIFETIME(ATestCube, bColor1);
-}
-
-// Called every frame
-void ATestCube::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-void ATestCube::Interact(ACharacter* Interactor)
-{
-    if (HasAuthority())
-    {
-        ToggleColor();
-    } else
-    {
-        ServerInteract();
-    }
 }
 
 bool ATestCube::ServerInteract_Validate()

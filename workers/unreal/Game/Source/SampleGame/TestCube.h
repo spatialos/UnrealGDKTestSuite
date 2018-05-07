@@ -12,22 +12,19 @@ class SAMPLEGAME_API ATestCube : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ATestCube();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
     void Interact(class ACharacter* Interactor);
 
 protected:
+	virtual void BeginPlay() override;
+
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
     UFUNCTION(Server, Reliable, WithValidation)
     void ServerInteract();
 

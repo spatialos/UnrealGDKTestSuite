@@ -9,6 +9,12 @@
 #include "UnrealNetwork.h"
 
 
+AInstantWeapon::AInstantWeapon()
+{
+	// Set the default damage class to a generic one.
+	DamageTypeClass = UDamageType::StaticClass();
+}
+
 void AInstantWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -113,10 +119,15 @@ void AInstantWeapon::ServerDidHit_Implementation(const FInstantHitInfo& HitInfo)
 {
 	if (HitInfo.HitActor == nullptr)
 	{
-		UE_LOG(LogClass, Log, TEXT("AInstantWeapon server: hit %s"), *HitInfo.Location.ToString())
+		UE_LOG(LogClass, Log, TEXT("AInstantWeapon server: hit %s"), *HitInfo.Location.ToString());
 	} else
 	{
-		UE_LOG(LogClass, Log, TEXT("AInstantWeapon server: hit actor %s"), *HitInfo.HitActor->GetName())
+		UE_LOG(LogClass, Log, TEXT("AInstantWeapon server: hit actor %s"), *HitInfo.HitActor->GetName());
+		
+		FDamageEvent DmgEvent;
+		DmgEvent.DamageTypeClass = DamageTypeClass;
+
+		HitInfo.HitActor->TakeDamage(ShotBaseDamage, DmgEvent, GetCharacter()->GetController(), this);
 	}
 	NotifyClientsOfHit(HitInfo);
 }
