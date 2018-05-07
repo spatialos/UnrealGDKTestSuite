@@ -13,6 +13,11 @@ if ! isWindows ; then
   exit 0
 fi
 
+if [ -z "${UNREAL_GDK_BRANCH+x}" ]; then
+  echo "The UNREAL_GDK_BRANCH variable was not set, using master as default."
+  UNREAL_GDK_BRANCH="master"
+fi
+
 markStartOfBlock "$0"
 
 markStartOfBlock "Clean gdk build directory"
@@ -31,7 +36,7 @@ markStartOfBlock "Clone the GDK from github"
 
 pushd "build/"
 
-git clone git@github.com:improbable/unreal-gdk.git -b feature/UNR-210-setup-script
+git clone git@github.com:improbable/unreal-gdk.git -b UNREAL_GDK_BRANCH
 
 popd
 
@@ -49,7 +54,7 @@ markEndOfBlock "Run the GDK setup script"
 
 markStartOfBlock "Build the SampleGame"
 
-runSpatial build --target=local
+# runSpatial build --target=local
 
 markEndOfBlock "Build the SampleGame"
 
