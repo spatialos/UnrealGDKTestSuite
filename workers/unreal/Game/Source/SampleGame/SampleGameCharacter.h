@@ -9,7 +9,7 @@
 
 UCLASS(config=Game)
 class ASampleGameCharacter : public ACharacter
-{}
+{
 	GENERATED_BODY()
 
 	/** Camera boom positioning the camera behind the character */
