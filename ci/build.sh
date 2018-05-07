@@ -36,7 +36,7 @@ markStartOfBlock "Clone the GDK from github"
 
 pushd "build/"
 
-git clone git@github.com:improbable/unreal-gdk.git -b UNREAL_GDK_BRANCH
+git clone git@github.com:improbable/unreal-gdk.git -b ${UNREAL_GDK_BRANCH}
 
 popd
 
