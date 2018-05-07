@@ -54,7 +54,7 @@ markEndOfBlock "Run the GDK setup script"
 
 markStartOfBlock "Build the SampleGame"
 
-# runSpatial build --target=local
+runSpatial build --target=local
 
 markEndOfBlock "Build the SampleGame"
 

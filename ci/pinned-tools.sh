@@ -49,3 +49,16 @@ function runSpatial() {
   forceSpatialCliStructureV2
   spatial "$@" "${default_flags[@]}"
 }
+
+# The current version of Unreal.
+UNREAL_VERSION="419-SpatialGDK"
+UNREAL_HOME="C:/Unreal/UnrealEngine-${UNREAL_VERSION}"
+
+# LINUX_MULTIARCH_ROOT is used by Unreal when cross compiling Linux workers
+# as Unreal only builds on windows otherwise. The Linux cross compiling tools
+# should be automatically installed by puppet as part of the Unreal Engine
+# installation.
+LINUX_MULTIARCH_ROOT="${UNREAL_HOME}/ClangToolchain"
+
+export UNREAL_HOME
+export LINUX_MULTIARCH_ROOT
