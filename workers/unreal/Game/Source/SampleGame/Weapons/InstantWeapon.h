@@ -72,6 +72,9 @@ protected:
 	// [client] Spawns the hit FX in the world.
 	void SpawnHitFX(const FInstantHitInfo& HitInfo);
 
+	// [server] Validates the hit. Returns true if it's valid, false otherwise.
+	bool ValidateHit(const FInstantHitInfo& HitInfo);
+
 	// Responds to a change in the HitNotify property, used as a broadcast event for displaying hit effects.
 	UFUNCTION()
 	virtual void OnRep_HitNotify();
@@ -87,6 +90,10 @@ protected:
 	// Base damage done to others by a single shot.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	float ShotBaseDamage = 10.0f;
+
+	// Tolerance, in world units, to add to the bounding box of an actor when validating hits.
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	float HitValidationTolerance = 50.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	TSubclassOf<UDamageType> DamageTypeClass;

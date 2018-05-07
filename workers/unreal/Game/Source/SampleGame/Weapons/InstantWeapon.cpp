@@ -110,6 +110,37 @@ void AInstantWeapon::SpawnHitFX(const FInstantHitInfo& HitInfo)
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFXTemplate, HitInfo.Location, FRotator::ZeroRotator, true);
 }
 
+bool AInstantWeapon::ValidateHit(const FInstantHitInfo& HitInfo)
+{
+	if (HitInfo.HitActor == nullptr)
+	{
+		// Shouldn't be validating shots that didn't hit an actor, this doesn't make sense.
+		return false;
+	}
+
+	// Get the bounding box of the actor we hit.
+	const FBox HitBox = HitInfo.HitActor->GetComponentsBoundingBox();
+
+	// Calculate the extent of the box along all 3 axes an add a tolerance factor.
+	FVector BoxExtent = 0.5 * (HitBox.Max - HitBox.Min) + (HitValidationTolerance * FVector::OneVector);
+	FVector BoxCenter = (HitBox.Max + HitBox.Min) * 0.5;
+
+	// Avoid precision errors for really thin objects.
+	BoxExtent.X = FMath::Max(20.0f, BoxExtent.X);
+	BoxExtent.Y = FMath::Max(20.0f, BoxExtent.Y);
+	BoxExtent.Z = FMath::Max(20.0f, BoxExtent.Z);
+
+	// Check whether the hit is within the box + tolerance.
+	if (FMath::Abs(HitInfo.Location.X - BoxCenter.X) > BoxExtent.X ||
+		FMath::Abs(HitInfo.Location.Y - BoxCenter.Y) > BoxExtent.Y ||
+		FMath::Abs(HitInfo.Location.Z - BoxCenter.Z) > BoxExtent.Z)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 bool AInstantWeapon::ServerDidHit_Validate(const FInstantHitInfo& HitInfo)
 {
 	return true;
@@ -117,19 +148,34 @@ bool AInstantWeapon::ServerDidHit_Validate(const FInstantHitInfo& HitInfo)
 
 void AInstantWeapon::ServerDidHit_Implementation(const FInstantHitInfo& HitInfo)
 {
+	bool bDoNotifyHit = false;
+
 	if (HitInfo.HitActor == nullptr)
 	{
-		UE_LOG(LogClass, Log, TEXT("AInstantWeapon server: hit %s"), *HitInfo.Location.ToString());
-	} else
-	{
-		UE_LOG(LogClass, Log, TEXT("AInstantWeapon server: hit actor %s"), *HitInfo.HitActor->GetName());
-		
-		FDamageEvent DmgEvent;
-		DmgEvent.DamageTypeClass = DamageTypeClass;
-
-		HitInfo.HitActor->TakeDamage(ShotBaseDamage, DmgEvent, GetCharacter()->GetController(), this);
+		UE_LOG(LogClass, Log, TEXT("%s server: hit environment %s"), *this->GetName(), *HitInfo.Location.ToString());
+		bDoNotifyHit = true;
 	}
-	NotifyClientsOfHit(HitInfo);
+	else
+	{
+		if (ValidateHit(HitInfo)) {
+			UE_LOG(LogClass, Log, TEXT("%s server: hit actor %s"), *this->GetName(), *HitInfo.HitActor->GetName());
+
+			FDamageEvent DmgEvent;
+			DmgEvent.DamageTypeClass = DamageTypeClass;
+
+			HitInfo.HitActor->TakeDamage(ShotBaseDamage, DmgEvent, GetCharacter()->GetController(), this);
+			bDoNotifyHit = true;
+		}
+		else
+		{
+			UE_LOG(LogClass, Log, TEXT("%s server: rejected hit of actor %s"), *this->GetName(), *HitInfo.HitActor->GetName());
+		}
+	}
+
+	if (bDoNotifyHit)
+	{
+		NotifyClientsOfHit(HitInfo);
+	}
 }
 
 bool AInstantWeapon::ServerDidMiss_Validate(const FInstantHitInfo& HitInfo)
