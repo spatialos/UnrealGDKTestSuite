@@ -31,16 +31,6 @@ function getPlatformName() {
   fi
 }
 
-function isTeamCity() {
-  # -n == string comparison "not null"
-  [ -n "${TEAMCITY_CAPTURE_ENV+x}" ]
-}
-
-function isNotTeamCity() {
-  # -z == string comparison "null, that is, 0-length"
-  [ -z "${TEAMCITY_CAPTURE_ENV+x}" ]
-}
-
 function runSpatial() {
   local default_flags=(
     "--log_level=debug"
