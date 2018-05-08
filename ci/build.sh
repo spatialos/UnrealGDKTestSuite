@@ -36,7 +36,7 @@ markStartOfBlock "Clone the GDK from github"
 
 pushd "build/"
 
-git clone git@github.com:improbable/unreal-gdk.git -b feature/UNR-210-setup-script
+git clone git@github.com:improbable/unreal-gdk.git -b ${UNREAL_GDK_BRANCH}
 
 popd
 
@@ -46,6 +46,7 @@ markStartOfBlock "Run the GDK setup script"
 
 pushd "build/unreal-gdk"
 
+# Run the setup script with the root of the SampleGame as the install path.
 ./setup.sh ../../
 
 popd
