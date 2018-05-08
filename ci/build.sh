@@ -24,7 +24,7 @@ markStartOfBlock "Clean gdk build directory"
 
 rm -rf build/unreal-gdk/
 
-markEndOfBlock "Make gdk build directory"
+markEndOfBlock "Clean gdk build directory"
 
 markStartOfBlock "Make gdk build directory"
 
@@ -36,7 +36,7 @@ markStartOfBlock "Clone the GDK from github"
 
 pushd "build/"
 
-git clone git@github.com:improbable/unreal-gdk.git -b ${UNREAL_GDK_BRANCH}
+git clone git@github.com:improbable/unreal-gdk.git -b feature/UNR-210-setup-script
 
 popd
 
