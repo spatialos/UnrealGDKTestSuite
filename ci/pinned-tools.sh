@@ -41,7 +41,7 @@ function runSpatial() {
 }
 
 # The current version of Unreal.
-if not [ -z "${UNREAL_HOME+x}" ]; then
+if [ -z "${UNREAL_HOME+x}" ]; then
   UNREAL_VERSION="419-SpatialGDK"
   export UNREAL_HOME="C:/Unreal/UnrealEngine-${UNREAL_VERSION}"
 fi
@@ -50,6 +50,6 @@ fi
 # as Unreal only builds on windows otherwise. The Linux cross compiling tools
 # should be automatically installed by puppet as part of the Unreal Engine
 # installation.
-if not [ -z "${LINUX_MULTIARCH_ROOT+x}" ]; then
+if [ -z "${LINUX_MULTIARCH_ROOT+x}" ]; then
   export LINUX_MULTIARCH_ROOT="${UNREAL_HOME}/ClangToolchain"
 fi
