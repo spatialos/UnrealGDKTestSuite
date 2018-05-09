@@ -1,7 +1,7 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
 
-#include "SpatialTypeBinding_AutomaticInstantWeapon.h"
+#include "SpatialTypeBinding_InstantWeapon.h"
 
 #include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
@@ -16,19 +16,18 @@
 #include "SpatialPackageMapClient.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
-#include "Weapons/AutomaticInstantWeapon.h"
 #include "Weapons/InstantWeapon.h"
 
-#include "UnrealAutomaticInstantWeaponSingleClientRepDataAddComponentOp.h"
-#include "UnrealAutomaticInstantWeaponMultiClientRepDataAddComponentOp.h"
-#include "UnrealAutomaticInstantWeaponMigratableDataAddComponentOp.h"
+#include "UnrealInstantWeaponSingleClientRepDataAddComponentOp.h"
+#include "UnrealInstantWeaponMultiClientRepDataAddComponentOp.h"
+#include "UnrealInstantWeaponMigratableDataAddComponentOp.h"
 
-const FRepHandlePropertyMap& USpatialTypeBinding_AutomaticInstantWeapon::GetRepHandlePropertyMap() const
+const FRepHandlePropertyMap& USpatialTypeBinding_InstantWeapon::GetRepHandlePropertyMap() const
 {
 	static FRepHandlePropertyMap HandleToPropertyMap;
 	if (HandleToPropertyMap.Num() == 0)
 	{
-		UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("AutomaticInstantWeapon"));
+		UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("InstantWeapon"));
 		HandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, COND_None, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(2, FRepHandleData(Class, {"bReplicateMovement"}, COND_None, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, COND_None, REPNOTIFY_OnChanged));
@@ -51,37 +50,37 @@ const FRepHandlePropertyMap& USpatialTypeBinding_AutomaticInstantWeapon::GetRepH
 	return HandleToPropertyMap;
 }
 
-const FMigratableHandlePropertyMap& USpatialTypeBinding_AutomaticInstantWeapon::GetMigratableHandlePropertyMap() const
+const FMigratableHandlePropertyMap& USpatialTypeBinding_InstantWeapon::GetMigratableHandlePropertyMap() const
 {
 	static FMigratableHandlePropertyMap HandleToPropertyMap;
 	return HandleToPropertyMap;
 }
 
-UClass* USpatialTypeBinding_AutomaticInstantWeapon::GetBoundClass() const
+UClass* USpatialTypeBinding_InstantWeapon::GetBoundClass() const
 {
-	return AAutomaticInstantWeapon::StaticClass();
+	return AInstantWeapon::StaticClass();
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap)
+void USpatialTypeBinding_InstantWeapon::Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap)
 {
 	Super::Init(InInterop, InPackageMap);
 
-	RPCToSenderMap.Emplace("ServerDidMiss", &USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_SendCommand);
-	RPCToSenderMap.Emplace("ServerDidHit", &USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_SendCommand);
+	RPCToSenderMap.Emplace("ServerDidMiss", &USpatialTypeBinding_InstantWeapon::ServerDidMiss_SendCommand);
+	RPCToSenderMap.Emplace("ServerDidHit", &USpatialTypeBinding_InstantWeapon::ServerDidHit_SendCommand);
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::BindToView()
+void USpatialTypeBinding_InstantWeapon::BindToView()
 {
 	TSharedPtr<worker::View> View = Interop->GetSpatialOS()->GetView().Pin();
 	ViewCallbacks.Init(View);
 
 	if (Interop->GetNetDriver()->GetNetMode() == NM_Client)
 	{
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::UnrealInstantWeaponSingleClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::UnrealInstantWeaponSingleClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::UnrealInstantWeaponSingleClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -89,11 +88,11 @@ void USpatialTypeBinding_AutomaticInstantWeapon::BindToView()
 			check(ActorChannel);
 			ReceiveUpdate_SingleClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::UnrealAutomaticInstantWeaponMultiClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::UnrealAutomaticInstantWeaponMultiClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::UnrealInstantWeaponMultiClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::UnrealInstantWeaponMultiClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::UnrealAutomaticInstantWeaponMultiClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::UnrealInstantWeaponMultiClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -101,11 +100,11 @@ void USpatialTypeBinding_AutomaticInstantWeapon::BindToView()
 			check(ActorChannel);
 			ReceiveUpdate_MultiClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::UnrealAutomaticInstantWeaponMigratableData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::UnrealAutomaticInstantWeaponMigratableData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::UnrealInstantWeaponMigratableData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::UnrealInstantWeaponMigratableData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::UnrealAutomaticInstantWeaponMigratableData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::UnrealInstantWeaponMigratableData::ComponentId))
 			{
 				return;
 			}
@@ -115,19 +114,19 @@ void USpatialTypeBinding_AutomaticInstantWeapon::BindToView()
 		}));
 	}
 
-	using ServerRPCCommandTypes = improbable::unreal::UnrealAutomaticInstantWeaponServerRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverdidmiss>(std::bind(&USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverdidhit>(std::bind(&USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverdidmiss>(std::bind(&USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverdidhit>(std::bind(&USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_OnCommandResponse, this, std::placeholders::_1)));
+	using ServerRPCCommandTypes = improbable::unreal::UnrealInstantWeaponServerRPCs::Commands;
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverdidmiss>(std::bind(&USpatialTypeBinding_InstantWeapon::ServerDidMiss_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverdidhit>(std::bind(&USpatialTypeBinding_InstantWeapon::ServerDidHit_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverdidmiss>(std::bind(&USpatialTypeBinding_InstantWeapon::ServerDidMiss_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverdidhit>(std::bind(&USpatialTypeBinding_InstantWeapon::ServerDidHit_OnCommandResponse, this, std::placeholders::_1)));
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::UnbindFromView()
+void USpatialTypeBinding_InstantWeapon::UnbindFromView()
 {
 	ViewCallbacks.Reset();
 }
 
-worker::Entity USpatialTypeBinding_AutomaticInstantWeapon::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
+worker::Entity USpatialTypeBinding_InstantWeapon::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
 {
 	// Validate replication list.
 	const uint16 RepHandlePropertyMapCount = GetRepHandlePropertyMap().Num();
@@ -137,14 +136,14 @@ worker::Entity USpatialTypeBinding_AutomaticInstantWeapon::CreateActorEntity(con
 	}
 
 	// Setup initial data.
-	improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData::Data SingleClientData;
-	improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::UnrealInstantWeaponSingleClientRepData::Data SingleClientData;
+	improbable::unreal::UnrealInstantWeaponSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::UnrealAutomaticInstantWeaponMultiClientRepData::Data MultiClientData;
-	improbable::unreal::UnrealAutomaticInstantWeaponMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::UnrealInstantWeaponMultiClientRepData::Data MultiClientData;
+	improbable::unreal::UnrealInstantWeaponMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::UnrealAutomaticInstantWeaponMigratableData::Data MigratableData;
-	improbable::unreal::UnrealAutomaticInstantWeaponMigratableData::Update MigratableDataUpdate;
+	improbable::unreal::UnrealInstantWeaponMigratableData::Data MigratableData;
+	improbable::unreal::UnrealInstantWeaponMigratableData::Update MigratableDataUpdate;
 	bool bMigratableDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 	SingleClientUpdate.ApplyTo(SingleClientData);
@@ -196,22 +195,22 @@ worker::Entity USpatialTypeBinding_AutomaticInstantWeapon::CreateActorEntity(con
 		.SetPersistence(true)
 		.SetReadAcl(AnyUnrealWorkerOrClient)
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
-		.AddComponent<improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData>(SingleClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::UnrealAutomaticInstantWeaponMultiClientRepData>(MultiClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::UnrealAutomaticInstantWeaponMigratableData>(MigratableData, WorkersOnly)
-		.AddComponent<improbable::unreal::UnrealAutomaticInstantWeaponClientRPCs>(improbable::unreal::UnrealAutomaticInstantWeaponClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::UnrealAutomaticInstantWeaponServerRPCs>(improbable::unreal::UnrealAutomaticInstantWeaponServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::UnrealInstantWeaponSingleClientRepData>(SingleClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::UnrealInstantWeaponMultiClientRepData>(MultiClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::UnrealInstantWeaponMigratableData>(MigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::UnrealInstantWeaponClientRPCs>(improbable::unreal::UnrealInstantWeaponClientRPCs::Data{}, OwningClientOnly)
+		.AddComponent<improbable::unreal::UnrealInstantWeaponServerRPCs>(improbable::unreal::UnrealInstantWeaponServerRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
+void USpatialTypeBinding_InstantWeapon::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
 {
 	// Build SpatialOS updates.
-	improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::UnrealInstantWeaponSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::UnrealAutomaticInstantWeaponMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::UnrealInstantWeaponMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::UnrealAutomaticInstantWeaponMigratableData::Update MigratableDataUpdate;
+	improbable::unreal::UnrealInstantWeaponMigratableData::Update MigratableDataUpdate;
 	bool bMigratableDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 
@@ -219,70 +218,70 @@ void USpatialTypeBinding_AutomaticInstantWeapon::SendComponentUpdates(const FPro
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	if (bSingleClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::UnrealInstantWeaponSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
 	}
 	if (bMultiClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::UnrealAutomaticInstantWeaponMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::UnrealInstantWeaponMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
 	if (bMigratableDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::UnrealAutomaticInstantWeaponMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::UnrealInstantWeaponMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
 	}
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::SendRPCCommand(UObject* TargetObject, const UFunction* const Function, FFrame* const Frame)
+void USpatialTypeBinding_InstantWeapon::SendRPCCommand(UObject* TargetObject, const UFunction* const Function, void* Parameters)
 {
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	auto SenderFuncIterator = RPCToSenderMap.Find(Function->GetFName());
 	checkf(*SenderFuncIterator, TEXT("Sender for %s has not been registered with RPCToSenderMap."), *Function->GetFName().ToString());
-	(this->*(*SenderFuncIterator))(Connection.Get(), Frame, TargetObject);
+	(this->*(*SenderFuncIterator))(Connection.Get(), Parameters, TargetObject);
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
+void USpatialTypeBinding_InstantWeapon::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
 {
-	auto* SingleClientAddOp = Cast<UUnrealAutomaticInstantWeaponSingleClientRepDataAddComponentOp>(AddComponentOp);
+	auto* SingleClientAddOp = Cast<UUnrealInstantWeaponSingleClientRepDataAddComponentOp>(AddComponentOp);
 	if (SingleClientAddOp)
 	{
-		auto Update = improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
+		auto Update = improbable::unreal::UnrealInstantWeaponSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
 		ReceiveUpdate_SingleClient(Channel, Update);
 	}
-	auto* MultiClientAddOp = Cast<UUnrealAutomaticInstantWeaponMultiClientRepDataAddComponentOp>(AddComponentOp);
+	auto* MultiClientAddOp = Cast<UUnrealInstantWeaponMultiClientRepDataAddComponentOp>(AddComponentOp);
 	if (MultiClientAddOp)
 	{
-		auto Update = improbable::unreal::UnrealAutomaticInstantWeaponMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
+		auto Update = improbable::unreal::UnrealInstantWeaponMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
 		ReceiveUpdate_MultiClient(Channel, Update);
 	}
-	auto* MigratableDataAddOp = Cast<UUnrealAutomaticInstantWeaponMigratableDataAddComponentOp>(AddComponentOp);
+	auto* MigratableDataAddOp = Cast<UUnrealInstantWeaponMigratableDataAddComponentOp>(AddComponentOp);
 	if (MigratableDataAddOp)
 	{
-		auto Update = improbable::unreal::UnrealAutomaticInstantWeaponMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
+		auto Update = improbable::unreal::UnrealInstantWeaponMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
 		ReceiveUpdate_Migratable(Channel, Update);
 	}
 }
 
-worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_AutomaticInstantWeapon::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
+worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_InstantWeapon::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
 {
 	worker::Map<worker::ComponentId, worker::InterestOverride> Interest;
 	if (bIsClient)
 	{
 		if (!bAutonomousProxy)
 		{
-			Interest.emplace(improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData::ComponentId, worker::InterestOverride{false});
+			Interest.emplace(improbable::unreal::UnrealInstantWeaponSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::UnrealAutomaticInstantWeaponMigratableData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::UnrealInstantWeaponMigratableData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::BuildSpatialComponentUpdate(
+void USpatialTypeBinding_InstantWeapon::BuildSpatialComponentUpdate(
 	const FPropertyChangeState& Changes,
 	USpatialActorChannel* Channel,
-	improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData::Update& SingleClientUpdate,
+	improbable::unreal::UnrealInstantWeaponSingleClientRepData::Update& SingleClientUpdate,
 	bool& bSingleClientUpdateChanged,
-	improbable::unreal::UnrealAutomaticInstantWeaponMultiClientRepData::Update& MultiClientUpdate,
+	improbable::unreal::UnrealInstantWeaponMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::UnrealAutomaticInstantWeaponMigratableData::Update& MigratableDataUpdate,
+	improbable::unreal::UnrealInstantWeaponMigratableData::Update& MigratableDataUpdate,
 	bool& bMigratableDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
@@ -340,11 +339,11 @@ void USpatialTypeBinding_AutomaticInstantWeapon::BuildSpatialComponentUpdate(
 	}
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_InstantWeapon::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::UnrealInstantWeaponSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::UnrealAutomaticInstantWeaponMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_InstantWeapon::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::UnrealInstantWeaponMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -566,24 +565,24 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerSendUpdate_MultiClient(co
 	}
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::UnrealAutomaticInstantWeaponMigratableData::Update& OutUpdate) const
+void USpatialTypeBinding_InstantWeapon::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::UnrealInstantWeaponMigratableData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealAutomaticInstantWeaponSingleClientRepData::Update& Update) const
+void USpatialTypeBinding_InstantWeapon::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealInstantWeaponSingleClientRepData::Update& Update) const
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TArray<UProperty*> RepNotifies;
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies);
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealAutomaticInstantWeaponMultiClientRepData::Update& Update) const
+void USpatialTypeBinding_InstantWeapon::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealInstantWeaponMultiClientRepData::Update& Update) const
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TSet<UProperty*> RepNotifies;
 
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
-	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::UnrealAutomaticInstantWeaponClientRPCs::ComponentId);
+	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::UnrealInstantWeaponClientRPCs::ComponentId);
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
@@ -1204,16 +1203,16 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ReceiveUpdate_MultiClient(USpat
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealAutomaticInstantWeaponMigratableData::Update& Update) const
+void USpatialTypeBinding_InstantWeapon::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealInstantWeaponMigratableData::Update& Update) const
 {
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_SendCommand(worker::Connection* const Connection, struct FFrame* const RPCFrame, UObject* TargetObject)
+void USpatialTypeBinding_InstantWeapon::ServerDidMiss_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
-	FFrame& Stack = *RPCFrame;
-	P_GET_STRUCT(FInstantHitInfo, HitInfo)
+	// This struct is declared in InstantWeapon.generated.h (in a macro that is then put in InstantWeapon.h UCLASS macro)
+	InstantWeapon_eventServerDidMiss_Parms StructuredParams = *static_cast<InstantWeapon_eventServerDidMiss_Parms*>(Parameters);
 
-	auto Sender = [this, Connection, TargetObject, HitInfo]() mutable -> FRPCCommandRequestResult
+	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
 		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
@@ -1225,15 +1224,15 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_SendCommand(worke
 
 		// Build request.
 		improbable::unreal::UnrealServerDidMissRequest Request;
-		Request.set_field_hitinfo_location(improbable::Vector3f(HitInfo.Location.X, HitInfo.Location.Y, HitInfo.Location.Z));
-		if (HitInfo.HitActor != nullptr)
+		Request.set_field_hitinfo_location(improbable::Vector3f(StructuredParams.HitInfo.Location.X, StructuredParams.HitInfo.Location.Y, StructuredParams.HitInfo.Location.Z));
+		if (StructuredParams.HitInfo.HitActor != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(HitInfo.HitActor);
+			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.HitInfo.HitActor);
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerDidMiss queued. HitInfo.HitActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {HitInfo.HitActor};
+				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerDidMiss queued. StructuredParams.HitInfo.HitActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+				return {StructuredParams.HitInfo.HitActor};
 			}
 			else
 			{
@@ -1244,7 +1243,7 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_SendCommand(worke
 		{
 			Request.set_field_hitinfo_hitactor(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_hitinfo_randomseed(HitInfo.RandomSeed);
+		Request.set_field_hitinfo_randomseed(StructuredParams.HitInfo.RandomSeed);
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1252,18 +1251,18 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_SendCommand(worke
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::UnrealAutomaticInstantWeaponServerRPCs::Commands::Serverdidmiss>(TargetObjectRef.entity(), Request, 0);
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::UnrealInstantWeaponServerRPCs::Commands::Serverdidmiss>(TargetObjectRef.entity(), Request, 0);
 		return {RequestId.Id};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_SendCommand(worker::Connection* const Connection, struct FFrame* const RPCFrame, UObject* TargetObject)
+void USpatialTypeBinding_InstantWeapon::ServerDidHit_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
-	FFrame& Stack = *RPCFrame;
-	P_GET_STRUCT(FInstantHitInfo, HitInfo)
+	// This struct is declared in InstantWeapon.generated.h (in a macro that is then put in InstantWeapon.h UCLASS macro)
+	InstantWeapon_eventServerDidHit_Parms StructuredParams = *static_cast<InstantWeapon_eventServerDidHit_Parms*>(Parameters);
 
-	auto Sender = [this, Connection, TargetObject, HitInfo]() mutable -> FRPCCommandRequestResult
+	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
 		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
@@ -1275,15 +1274,15 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_SendCommand(worker
 
 		// Build request.
 		improbable::unreal::UnrealServerDidHitRequest Request;
-		Request.set_field_hitinfo_location(improbable::Vector3f(HitInfo.Location.X, HitInfo.Location.Y, HitInfo.Location.Z));
-		if (HitInfo.HitActor != nullptr)
+		Request.set_field_hitinfo_location(improbable::Vector3f(StructuredParams.HitInfo.Location.X, StructuredParams.HitInfo.Location.Y, StructuredParams.HitInfo.Location.Z));
+		if (StructuredParams.HitInfo.HitActor != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(HitInfo.HitActor);
+			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.HitInfo.HitActor);
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerDidHit queued. HitInfo.HitActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {HitInfo.HitActor};
+				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerDidHit queued. StructuredParams.HitInfo.HitActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+				return {StructuredParams.HitInfo.HitActor};
 			}
 			else
 			{
@@ -1294,7 +1293,7 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_SendCommand(worker
 		{
 			Request.set_field_hitinfo_hitactor(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_hitinfo_randomseed(HitInfo.RandomSeed);
+		Request.set_field_hitinfo_randomseed(StructuredParams.HitInfo.RandomSeed);
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1302,13 +1301,13 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_SendCommand(worker
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::UnrealAutomaticInstantWeaponServerRPCs::Commands::Serverdidhit>(TargetObjectRef.entity(), Request, 0);
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::UnrealInstantWeaponServerRPCs::Commands::Serverdidhit>(TargetObjectRef.entity(), Request, 0);
 		return {RequestId.Id};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::UnrealAutomaticInstantWeaponServerRPCs::Commands::Serverdidmiss>& Op)
+void USpatialTypeBinding_InstantWeapon::ServerDidMiss_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::UnrealInstantWeaponServerRPCs::Commands::Serverdidmiss>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -1321,34 +1320,29 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_OnCommandRequest(
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
-		UObject* TargetObjectUntyped = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		AAutomaticInstantWeapon* TargetObject = Cast<AAutomaticInstantWeapon>(TargetObjectUntyped);
-		checkf(TargetObjectUntyped, TEXT("%s: ServerDidMiss_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: ServerDidMiss_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
-		checkf(TargetObject, TEXT("%s: ServerDidMiss_OnCommandRequest: Object Ref %s (NetGUID %s) is the wrong type. Name: %s"),
-			*Interop->GetSpatialOS()->GetWorkerId(),
-			*ObjectRefToString(TargetObjectRef),
-			*TargetNetGUID.ToString(),
-			*TargetObjectUntyped->GetName());
 
 		// Declare parameters.
-		FInstantHitInfo HitInfo;
+		// This struct is declared in InstantWeapon.generated.h (in a macro that is then put in InstantWeapon.h UCLASS macro)
+		InstantWeapon_eventServerDidMiss_Parms Parameters;
 
 		// Extract from request data.
 		{
 			auto& Vector = Op.Request.field_hitinfo_location();
-			HitInfo.Location.X = Vector.x();
-			HitInfo.Location.Y = Vector.y();
-			HitInfo.Location.Z = Vector.z();
+			Parameters.HitInfo.Location.X = Vector.x();
+			Parameters.HitInfo.Location.Y = Vector.y();
+			Parameters.HitInfo.Location.Z = Vector.z();
 		}
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_hitinfo_hitactor();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				HitInfo.HitActor = nullptr;
+				Parameters.HitInfo.HitActor = nullptr;
 			}
 			else
 			{
@@ -1357,36 +1351,46 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_OnCommandRequest(
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-					HitInfo.HitActor = dynamic_cast<AActor*>(Object_Raw);
-					checkf(HitInfo.HitActor, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Parameters.HitInfo.HitActor = dynamic_cast<AActor*>(Object_Raw);
+					checkf(Parameters.HitInfo.HitActor, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerDidMiss_OnCommandRequest: HitInfo.HitActor %s is not resolved on this worker."),
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerDidMiss_OnCommandRequest: Parameters.HitInfo.HitActor %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
 				}
 			}
 		}
-		HitInfo.RandomSeed = Op.Request.field_hitinfo_randomseed();
+		Parameters.HitInfo.RandomSeed = Op.Request.field_hitinfo_randomseed();
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerDidMiss, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		TargetObject->ServerDidMiss_Implementation(HitInfo);
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("ServerDidMiss"))))
+		{
+			TargetObject->ProcessEvent(Function, &Parameters);
+		}
+		else
+		{
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerDidMiss_OnCommandRequest: Function not found. Object: %s, Function: ServerDidMiss."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::UnrealAutomaticInstantWeaponServerRPCs::Commands::Serverdidmiss>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::UnrealInstantWeaponServerRPCs::Commands::Serverdidmiss>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::UnrealAutomaticInstantWeaponServerRPCs::Commands::Serverdidhit>& Op)
+void USpatialTypeBinding_InstantWeapon::ServerDidHit_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::UnrealInstantWeaponServerRPCs::Commands::Serverdidhit>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -1399,34 +1403,29 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_OnCommandRequest(c
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
-		UObject* TargetObjectUntyped = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		AAutomaticInstantWeapon* TargetObject = Cast<AAutomaticInstantWeapon>(TargetObjectUntyped);
-		checkf(TargetObjectUntyped, TEXT("%s: ServerDidHit_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: ServerDidHit_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
-		checkf(TargetObject, TEXT("%s: ServerDidHit_OnCommandRequest: Object Ref %s (NetGUID %s) is the wrong type. Name: %s"),
-			*Interop->GetSpatialOS()->GetWorkerId(),
-			*ObjectRefToString(TargetObjectRef),
-			*TargetNetGUID.ToString(),
-			*TargetObjectUntyped->GetName());
 
 		// Declare parameters.
-		FInstantHitInfo HitInfo;
+		// This struct is declared in InstantWeapon.generated.h (in a macro that is then put in InstantWeapon.h UCLASS macro)
+		InstantWeapon_eventServerDidHit_Parms Parameters;
 
 		// Extract from request data.
 		{
 			auto& Vector = Op.Request.field_hitinfo_location();
-			HitInfo.Location.X = Vector.x();
-			HitInfo.Location.Y = Vector.y();
-			HitInfo.Location.Z = Vector.z();
+			Parameters.HitInfo.Location.X = Vector.x();
+			Parameters.HitInfo.Location.Y = Vector.y();
+			Parameters.HitInfo.Location.Z = Vector.z();
 		}
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_hitinfo_hitactor();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				HitInfo.HitActor = nullptr;
+				Parameters.HitInfo.HitActor = nullptr;
 			}
 			else
 			{
@@ -1435,41 +1434,51 @@ void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_OnCommandRequest(c
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-					HitInfo.HitActor = dynamic_cast<AActor*>(Object_Raw);
-					checkf(HitInfo.HitActor, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Parameters.HitInfo.HitActor = dynamic_cast<AActor*>(Object_Raw);
+					checkf(Parameters.HitInfo.HitActor, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerDidHit_OnCommandRequest: HitInfo.HitActor %s is not resolved on this worker."),
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerDidHit_OnCommandRequest: Parameters.HitInfo.HitActor %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
 				}
 			}
 		}
-		HitInfo.RandomSeed = Op.Request.field_hitinfo_randomseed();
+		Parameters.HitInfo.RandomSeed = Op.Request.field_hitinfo_randomseed();
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerDidHit, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		TargetObject->ServerDidHit_Implementation(HitInfo);
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("ServerDidHit"))))
+		{
+			TargetObject->ProcessEvent(Function, &Parameters);
+		}
+		else
+		{
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerDidHit_OnCommandRequest: Function not found. Object: %s, Function: ServerDidHit."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::UnrealAutomaticInstantWeaponServerRPCs::Commands::Serverdidhit>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::UnrealInstantWeaponServerRPCs::Commands::Serverdidhit>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidMiss_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::UnrealAutomaticInstantWeaponServerRPCs::Commands::Serverdidmiss>& Op)
+void USpatialTypeBinding_InstantWeapon::ServerDidMiss_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::UnrealInstantWeaponServerRPCs::Commands::Serverdidmiss>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerDidMiss"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_AutomaticInstantWeapon::ServerDidHit_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::UnrealAutomaticInstantWeaponServerRPCs::Commands::Serverdidhit>& Op)
+void USpatialTypeBinding_InstantWeapon::ServerDidHit_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::UnrealInstantWeaponServerRPCs::Commands::Serverdidhit>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerDidHit"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }

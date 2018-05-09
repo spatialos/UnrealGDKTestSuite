@@ -15,6 +15,39 @@ AInstantWeapon::AInstantWeapon()
 	DamageTypeClass = UDamageType::StaticClass();
 }
 
+void AInstantWeapon::StartFire()
+{
+	if (CurrentState == EWeaponState::Idle)
+	{
+		CurrentState = EWeaponState::Firing;
+
+		// Fire a shot right away.
+		DoFire();
+
+		// Set a timer to execute the next shot.
+		ClearTimerIfRunning();
+		GetWorldTimerManager().SetTimer(NextShotTimer, NextShotTimerDelegate, ShotInterval, true);
+	}
+}
+
+void AInstantWeapon::StopFire()
+{
+	if (CurrentState == EWeaponState::Firing)
+	{
+		CurrentState = EWeaponState::Idle;
+		ClearTimerIfRunning();
+	}
+}
+
+void AInstantWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+
+	NextShotTimerDelegate.BindLambda([&]() {
+		DoFire();
+	});
+}
+
 void AInstantWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -191,4 +224,12 @@ void AInstantWeapon::ServerDidMiss_Implementation(const FInstantHitInfo& HitInfo
 void AInstantWeapon::OnRep_HitNotify()
 {
 	SpawnHitFX(HitNotify);
+}
+
+void AInstantWeapon::ClearTimerIfRunning()
+{
+	if (NextShotTimer.IsValid())
+	{
+		GetWorldTimerManager().ClearTimer(NextShotTimer);
+	}
 }

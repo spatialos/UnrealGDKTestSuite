@@ -44,6 +44,10 @@ class SAMPLEGAME_API AInstantWeapon : public AWeapon
 public:
 	AInstantWeapon();
 
+	virtual void StartFire() override;
+
+	virtual void StopFire() override;
+
 	// RPC for telling the server that we fired and hit something.
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDidHit(const FInstantHitInfo& HitInfo);
@@ -57,10 +61,12 @@ public:
 	void ServerDidMiss_Implementation(const FInstantHitInfo& HitInfo);
 
 protected:
+	virtual void BeginPlay() override;
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	// Runs a line trace and triggers the server RPC for hits.
-	virtual void DoFire() override;
+	virtual void DoFire();
 
 	// [client] Performs a line trace and populates OutHitInfo based on the results.
 	// Returns true if it hits anything, false otherwise.
@@ -83,6 +89,10 @@ protected:
 	UPROPERTY(ReplicatedUsing = OnRep_HitNotify)
 	FInstantHitInfo HitNotify;
 
+	// Interval between shots, in seconds.
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	float ShotInterval = 0.2f;
+
 	// Maximum range of the weapon's hitscan.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	float MaxRange = 50000.0f;
@@ -95,6 +105,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	float HitValidationTolerance = 50.0f;
 
+	// Type of damage to send to hit actors.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	TSubclassOf<UDamageType> DamageTypeClass;
 
@@ -105,4 +116,13 @@ protected:
 	// If true, draws debug line traces for hitscan shots.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	bool bDrawDebugLineTrace = false;
+
+private:
+	void ClearTimerIfRunning();
+
+	// Timer that handles firing the next shot.
+	FTimerHandle NextShotTimer;
+
+	// Delegate for running the next shot method.
+	FTimerDelegate NextShotTimerDelegate;
 };

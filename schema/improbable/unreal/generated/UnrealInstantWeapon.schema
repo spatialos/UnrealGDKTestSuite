@@ -5,10 +5,10 @@ package improbable.unreal;
 import "improbable/vector3.schema";
 import "improbable/unreal/core_types.schema";
 
-component UnrealAutomaticInstantWeaponSingleClientRepData {
+component UnrealInstantWeaponSingleClientRepData {
 	id = 100035;
 }
-component UnrealAutomaticInstantWeaponMultiClientRepData {
+component UnrealInstantWeaponMultiClientRepData {
 	id = 100036;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
@@ -29,15 +29,15 @@ component UnrealAutomaticInstantWeaponMultiClientRepData {
 	UnrealObjectRef field_hitnotify_hitactor = 17; // COND_SkipOwner // InstantHitInfo::HitNotify::InstantWeapon
 	int32 field_hitnotify_randomseed = 18; // COND_SkipOwner // InstantHitInfo::HitNotify::InstantWeapon
 }
-component UnrealAutomaticInstantWeaponMigratableData {
+component UnrealInstantWeaponMigratableData {
 	id = 100037;
 }
 import "improbable/unreal/generated/UnrealInstantWeaponTypes.schema";
 
-component UnrealAutomaticInstantWeaponClientRPCs {
+component UnrealInstantWeaponClientRPCs {
 	id = 100038;
 }
-component UnrealAutomaticInstantWeaponServerRPCs {
+component UnrealInstantWeaponServerRPCs {
 	id = 100039;
 	command UnrealRPCCommandResponse serverdidmiss(UnrealServerDidMissRequest);
 	command UnrealRPCCommandResponse serverdidhit(UnrealServerDidHitRequest);

@@ -30,10 +30,6 @@ public:
 	virtual void StopFire() PURE_VIRTUAL(AWeapon::StopFire,);
 
 protected:
-	// [client] Executes a single fire of the weapon.
-	// Not implemented in AWeapon.
-	virtual void DoFire() PURE_VIRTUAL(AWeapon::DoFire,);
-
 	// Get the character actor for this weapon, or nullptr if there isn't one.
 	class ASampleGameCharacter* GetCharacter();
 	
