@@ -42,6 +42,16 @@ popd
 
 markEndOfBlock "Clone the GDK from github"
 
+markStartOfBlock "Build the GDK script"
+
+pushd "build/unreal-gdk/ci"
+
+./build.sh
+
+popd
+
+markEndOfBlock "Build the GDK script"
+
 markStartOfBlock "Run the GDK setup script"
 
 pushd "build/unreal-gdk"
