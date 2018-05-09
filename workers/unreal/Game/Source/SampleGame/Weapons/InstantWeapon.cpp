@@ -13,6 +13,8 @@ AInstantWeapon::AInstantWeapon()
 {
 	// Set the default damage class to a generic one.
 	DamageTypeClass = UDamageType::StaticClass();
+
+	ShotVisualizationDelayTolerance = FTimespan::FromMilliseconds(3000.0f);
 }
 
 void AInstantWeapon::StartFire()
@@ -154,7 +156,7 @@ void AInstantWeapon::NotifyClientsOfHit(const FInstantHitInfo& HitInfo)
 	// Updating this replicated property should trigger OnRep_HitNotify on all clients except the owning one.
 	HitNotify.HitActor = HitInfo.HitActor;
 	HitNotify.Location = HitInfo.Location;
-	HitNotify.RandomSeed = FMath::Rand();
+	HitNotify.Timestamp = FDateTime::UtcNow();
 }
 
 void AInstantWeapon::SpawnHitFX(const FInstantHitInfo& HitInfo)
@@ -247,7 +249,10 @@ void AInstantWeapon::ServerDidMiss_Implementation(const FInstantHitInfo& HitInfo
 
 void AInstantWeapon::OnRep_HitNotify()
 {
-	SpawnHitFX(HitNotify);
+	if (FDateTime::UtcNow() < HitNotify.Timestamp + ShotVisualizationDelayTolerance)
+	{
+		SpawnHitFX(HitNotify);
+	}
 }
 
 void AInstantWeapon::ClearTimerIfRunning()

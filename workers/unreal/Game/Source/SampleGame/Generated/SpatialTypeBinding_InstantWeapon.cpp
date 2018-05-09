@@ -45,7 +45,7 @@ const FRepHandlePropertyMap& USpatialTypeBinding_InstantWeapon::GetRepHandleProp
 		HandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(16, FRepHandleData(Class, {"HitNotify", "Location"}, COND_SkipOwner, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(17, FRepHandleData(Class, {"HitNotify", "HitActor"}, COND_SkipOwner, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(18, FRepHandleData(Class, {"HitNotify", "RandomSeed"}, COND_SkipOwner, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(18, FRepHandleData(Class, {"HitNotify", "Timestamp"}, COND_SkipOwner, REPNOTIFY_OnChanged));
 	}
 	return HandleToPropertyMap;
 }
@@ -552,11 +552,17 @@ void USpatialTypeBinding_InstantWeapon::ServerSendUpdate_MultiClient(const uint8
 			}
 			break;
 		}
-		case 18: // field_hitnotify_randomseed
+		case 18: // field_hitnotify_timestamp
 		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+			const FDateTime& Value = *(reinterpret_cast<FDateTime const*>(Data));
 
-			OutUpdate.set_field_hitnotify_randomseed(Value);
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool Success;
+				(const_cast<FDateTime&>(Value)).NetSerialize(ValueDataWriter, PackageMap, Success);
+				OutUpdate.set_field_hitnotify_timestamp(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 	default:
@@ -1178,17 +1184,24 @@ void USpatialTypeBinding_InstantWeapon::ReceiveUpdate_MultiClient(USpatialActorC
 			}
 		}
 	}
-	if (!Update.field_hitnotify_randomseed().empty())
+	if (!Update.field_hitnotify_timestamp().empty())
 	{
-		// field_hitnotify_randomseed
+		// field_hitnotify_timestamp
 		uint16 Handle = 18;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+			FDateTime Value = *(reinterpret_cast<FDateTime const*>(PropertyData));
 
-			Value = (*Update.field_hitnotify_randomseed().data());
+			{
+				auto& ValueDataStr = (*Update.field_hitnotify_timestamp().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1243,7 +1256,6 @@ void USpatialTypeBinding_InstantWeapon::ServerDidMiss_SendCommand(worker::Connec
 		{
 			Request.set_field_hitinfo_hitactor(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_hitinfo_randomseed(StructuredParams.HitInfo.RandomSeed);
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1293,7 +1305,6 @@ void USpatialTypeBinding_InstantWeapon::ServerDidHit_SendCommand(worker::Connect
 		{
 			Request.set_field_hitinfo_hitactor(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_hitinfo_randomseed(StructuredParams.HitInfo.RandomSeed);
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1363,7 +1374,6 @@ void USpatialTypeBinding_InstantWeapon::ServerDidMiss_OnCommandRequest(const wor
 				}
 			}
 		}
-		Parameters.HitInfo.RandomSeed = Op.Request.field_hitinfo_randomseed();
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerDidMiss, target: %s %s"),
@@ -1446,7 +1456,6 @@ void USpatialTypeBinding_InstantWeapon::ServerDidHit_OnCommandRequest(const work
 				}
 			}
 		}
-		Parameters.HitInfo.RandomSeed = Op.Request.field_hitinfo_randomseed();
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerDidHit, target: %s %s"),

@@ -20,15 +20,15 @@ struct FInstantHitInfo
 	UPROPERTY()
 	AActor* HitActor;
 
-	// Currently this is only used to ensure that the struct gets replicated even if the above properties don't change.
-	// In the future it could also be used to reproduce pseudorandom values on client and server (as Epic's ShooterGame does).
+	// Used to ensure that the struct gets replicated even if the above properties don't change.
+	// Also used to make sure that only recent shots get visualized.
 	UPROPERTY()
-	int32 RandomSeed;
+	FDateTime Timestamp;
 
 	FInstantHitInfo() :
 		Location(FVector{ 0,0,0 }),
 		HitActor(nullptr),
-		RandomSeed(0)
+		Timestamp(0)
 	{}
 };
 
@@ -142,6 +142,10 @@ private:
 	// Template for the particle system to spawn in the world on hits.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	class UParticleSystem* HitFXTemplate = nullptr;
+
+	// Tolerance, in seconds, after which we will no longer visualize a shot notification.
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	FTimespan ShotVisualizationDelayTolerance;
 
 	// If true, draws debug line traces for hitscan shots.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
