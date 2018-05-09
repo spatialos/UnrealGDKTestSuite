@@ -71,40 +71,14 @@ struct FCArrayStruct
 	float CFloatArray[8];
 };
 
-
-
-	UPROPERTY()
-	float IVar;
-
-	void Modify()
-	{
-		FVar += 1.f;
-		IVar++;
-	}
-};
-
-USTRUCT(BlueprintType)
-struct FTestPODStruct
+UENUM()
+enum class ETestEnum : uint8
 {
-	GENERATED_BODY();
+	Enum_0,
+	Enum_1,
 
-	UPROPERTY()
-	float FVar;
-
-	UPROPERTY()
-	int IVar;
-
-	UPROPERTY()
-	double DVar;
-
-	void Modify()
-	{
-		FVar += 1.f;
-		IVar++;
-		DVar += 1.0;
-	}
+	Enum_Count UMETA(Hidden),
 };
-
 
 UCLASS(config=Game)
 class ASampleGameCharacter : public ACharacter
@@ -150,54 +124,32 @@ public:
 	FTestPODStruct TestPODStruct;
 
 	UPROPERTY(Replicated)
-	TArray<UObject*> TestObjectArray;
+	TArray<ETestEnum> TestEnumArray;
+
+	//UPROPERTY(Replicated)
+	//TArray<UObject*> TestObjectArray;
+
+	//UPROPERTY(Replicated)
+	//int TestCArrayReplication[8];
+
+	//UPROPERTY(Replicated)
+	//FCArrayStruct TestCArrayStructReplication;
+
+	//UPROPERTY(Replicated)
+	//FTestMixedStruct TestMixedStructCArrayReplication[8];
 
 	UPROPERTY(Replicated)
-	int TestCArrayReplication[8];
-
-	UPROPERTY(Replicated)
-	FCArrayStruct TestCArrayStructReplication;
-
-	UPROPERTY(Replicated)
-	FTestMixedStruct TestMixedStructCArrayReplication[8];
+	ETestEnum TestEnum;
 
 	UPROPERTY(Replicated)
 	int TestBookend;
-
-	UFUNCTION(server, reliable, WithValidation)
-	void Server_TestFunc(const TArray<FTestMixedStruct>& StructArg);
 
 	//UFUNCTION(Client, Reliable)
 	//void Client_TestConstArgs(FConstStruct ConstStruct);
 
-	UFUNCTION()
-	void OnRep_TestPODArray();
-
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-	UPROPERTY(ReplicatedUsing=OnRep_TestPODArray)
-	TArray<float> TestPODArray;
-
-	UPROPERTY(Replicated)
-	TArray<FTestMixedStruct> TestMixedStructArray;
-
-	UPROPERTY(Replicated)
-	TArray<FTestPODStruct> TestPODStructArray;
-
-	UPROPERTY(Replicated)
-	TArray<FRepMovement> TestNetSerializeArray;
-
-	UPROPERTY(Replicated)
-	FTestMixedStruct TestMixedStruct;
-
-	UPROPERTY(Replicated)
-	FTestPODStruct TestPODStruct;
-
-	UPROPERTY(Replicated)
-	int TestBookend;
-
 	UFUNCTION(server, reliable, WithValidation)
-	void Server_TestFunc(const TArray<FTestMixedStruct>& StructArg);
+	//void Server_TestFunc(const TArray<FTestMixedStruct>& StructArg);
+	void Server_TestFunc();
 
 	UFUNCTION()
 	void OnRep_TestPODArray();

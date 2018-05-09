@@ -5,11 +5,11 @@ package improbable.unreal;
 import "improbable/vector3.schema";
 import "improbable/unreal/core_types.schema";
 
-component UnrealSampleGameCharacterSiblingSingleClientRepData {
-	id = 100030;
+component UnrealSampleGameCharacterSingleClientRepData {
+	id = 100020;
 }
-component UnrealSampleGameCharacterSiblingMultiClientRepData {
-	id = 100031;
+component UnrealSampleGameCharacterMultiClientRepData {
+	id = 100021;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
 	bool field_btearoff = 3; // COND_None // ::Actor
@@ -53,17 +53,28 @@ component UnrealSampleGameCharacterSiblingMultiClientRepData {
 	bytes field_reprootmotion_authoritativerootmotion = 41; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	improbable.Vector3f field_reprootmotion_acceleration = 42; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	improbable.Vector3f field_reprootmotion_linearvelocity = 43; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
-	list<float> field_testpodarray = 44; // COND_SimulatedOnly // ::SampleGameCharacterSibling
-	int32 field_testbookend = 45; // COND_SimulatedOnly // ::SampleGameCharacterSibling
+	list<float> field_testpodarray = 44; // COND_SimulatedOnly // ::SampleGameCharacter
+	list<bytes> field_testmixedstructarray = 45; // COND_SimulatedOnly // ::SampleGameCharacter
+	list<bytes> field_testpodstructarray = 46; // COND_SimulatedOnly // ::SampleGameCharacter
+	list<bytes> field_testnetserializearray = 47; // COND_SimulatedOnly // ::SampleGameCharacter
+	UnrealObjectRef field_testmixedstruct_ps = 48; // COND_SimulatedOnly // TestMixedStruct::TestMixedStruct::SampleGameCharacter
+	float field_testmixedstruct_fvar = 49; // COND_SimulatedOnly // TestMixedStruct::TestMixedStruct::SampleGameCharacter
+	float field_testmixedstruct_ivar = 50; // COND_SimulatedOnly // TestMixedStruct::TestMixedStruct::SampleGameCharacter
+	float field_testpodstruct_fvar = 51; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
+	int32 field_testpodstruct_ivar = 52; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
+	bytes field_testpodstruct_dvar = 53; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
+	list<bytes> field_testenumarray = 54; // COND_SimulatedOnly // ::SampleGameCharacter
+	bytes field_testenum = 55; // COND_SimulatedOnly // ::SampleGameCharacter
+	int32 field_testbookend = 56; // COND_SimulatedOnly // ::SampleGameCharacter
 }
-component UnrealSampleGameCharacterSiblingMigratableData {
-	id = 100032;
+component UnrealSampleGameCharacterMigratableData {
+	id = 100022;
 }
-import "improbable/unreal/generated/UnrealSampleGameCharacterSiblingTypes.schema";
+import "improbable/unreal/generated/UnrealSampleGameCharacterTypes.schema";
 import "improbable/unreal/generated/UnrealCharacterTypes.schema";
 
-component UnrealSampleGameCharacterSiblingClientRPCs {
-	id = 100033;
+component UnrealSampleGameCharacterClientRPCs {
+	id = 100023;
 	command UnrealRPCCommandResponse rootmotiondebugclientprintonscreen(UnrealRootMotionDebugClientPrintOnScreenRequest);
 	command UnrealRPCCommandResponse clientveryshortadjustposition(UnrealClientVeryShortAdjustPositionRequest);
 	command UnrealRPCCommandResponse clientcheatwalk(UnrealClientCheatWalkRequest);
@@ -74,9 +85,9 @@ component UnrealSampleGameCharacterSiblingClientRPCs {
 	command UnrealRPCCommandResponse clientadjustposition(UnrealClientAdjustPositionRequest);
 	command UnrealRPCCommandResponse clientackgoodmove(UnrealClientAckGoodMoveRequest);
 }
-component UnrealSampleGameCharacterSiblingServerRPCs {
-	id = 100034;
-	command UnrealRPCCommandResponse servertestfuncsibling(UnrealServerTestFuncSiblingRequest);
+component UnrealSampleGameCharacterServerRPCs {
+	id = 100024;
+	command UnrealRPCCommandResponse servertestfunc(UnrealServerTestFuncRequest);
 	command UnrealRPCCommandResponse servermoveold(UnrealServerMoveOldRequest);
 	command UnrealRPCCommandResponse servermovenobase(UnrealServerMoveNoBaseRequest);
 	command UnrealRPCCommandResponse servermovedualnobase(UnrealServerMoveDualNoBaseRequest);

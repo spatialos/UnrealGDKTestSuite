@@ -16,6 +16,7 @@
 #include "SpatialPackageMapClient.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+#include "SampleGameTestClasses.h"
 
 #include "UnrealSTestUnderscoreClassNameSingleClientRepDataAddComponentOp.h"
 #include "UnrealSTestUnderscoreClassNameMultiClientRepDataAddComponentOp.h"
@@ -528,7 +529,6 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ServerSendUpdate_Migratable(
 void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& Update) const
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
-
 	TArray<UProperty*> RepNotifies;
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies);
 }
@@ -536,8 +536,8 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_SingleClient(U
 void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& Update) const
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
+	TSet<UProperty*> RepNotifies;
 
-	TArray<UProperty*> RepNotifies;
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
 	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs::ComponentId);
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
@@ -1052,7 +1052,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(US
 			}
 		}
 	}
-	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies);
+	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
 }
 
 void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::Update& Update) const

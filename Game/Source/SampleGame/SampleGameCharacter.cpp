@@ -59,6 +59,9 @@ ASampleGameCharacter::ASampleGameCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	TestPODStructArray.AddDefaulted(5);
+	TestEnumArray.AddDefaulted(5);
 }
 
 void ASampleGameCharacter::BeginPlay()
@@ -110,7 +113,8 @@ void ASampleGameCharacter::DebugCmd()
 	TArray<FTestMixedStruct> TempArray;
 	TempArray.AddZeroed(4);
 
-	Server_TestFunc(TempArray);
+	Server_TestFunc();
+	//Server_TestFunc(TempArray);
 }
 
 void ASampleGameCharacter::TurnAtRate(float Rate)
@@ -154,7 +158,8 @@ void ASampleGameCharacter::MoveRight(float Value)
 	}
 }
 
-void ASampleGameCharacter::Server_TestFunc_Implementation(const TArray<FTestMixedStruct>& StructArg)
+//void ASampleGameCharacter::Server_TestFunc_Implementation(const TArray<FTestMixedStruct>& StructArg)
+void ASampleGameCharacter::Server_TestFunc_Implementation()
 {
 	// modify replicated members to check network serialisation
 	static float Num = 101.f;
@@ -167,7 +172,7 @@ void ASampleGameCharacter::Server_TestFunc_Implementation(const TArray<FTestMixe
 
 	static FTestPODStruct _TestPODStruct{ 5.f, 5, 5.0 };
 
-	TestPODStructArray.Add(_TestPODStruct);
+	//TestPODStructArray.Add(_TestPODStruct);
 	_TestPODStruct.Modify();
 
 	TestNetSerializeArray.Add(ReplicatedMovement);
@@ -180,10 +185,11 @@ void ASampleGameCharacter::Server_TestFunc_Implementation(const TArray<FTestMixe
 
 	TestBookend += 1;
 
-	UE_LOG(LogTemp, Warning, TEXT("RPC successfully called with an array of %d elements"), StructArg.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("RPC successfully called with an array of %d elements"), StructArg.Num());
 }
 
-bool ASampleGameCharacter::Server_TestFunc_Validate(const TArray<FTestMixedStruct>& StructArg)
+//bool ASampleGameCharacter::Server_TestFunc_Validate(const TArray<FTestMixedStruct>& StructArg)
+bool ASampleGameCharacter::Server_TestFunc_Validate()
 {
 	return true;
 }
@@ -215,9 +221,11 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestNetSerializeArray, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStruct, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestPODStruct, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestObjectArray, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayReplication, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayStructReplication, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestEnumArray, COND_SimulatedOnly);
+	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestObjectArray, COND_SimulatedOnly);
+	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayReplication, COND_SimulatedOnly);
+	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayStructReplication, COND_SimulatedOnly);
+	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestEnum, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_SimulatedOnly);
 }
