@@ -7,6 +7,7 @@
 #include "Weapon.generated.h"
 
 
+// TODO: change to a class enum
 enum EWeaponState
 {
 	Idle,
@@ -34,7 +35,6 @@ protected:
 	class ASampleGameCharacter* GetCharacter();
 	
 	// The current state of the weapon.
-	// Not replicated, but instead updated on server and client by RPCs.
 	EWeaponState CurrentState = EWeaponState::Idle;
 
 	// Set up a root component so this actor can have a position in the world.

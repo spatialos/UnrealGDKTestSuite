@@ -68,6 +68,7 @@ protected:
 	// Runs a line trace and triggers the server RPC for hits.
 	virtual void DoFire();
 
+private:
 	// [client] Performs a line trace and populates OutHitInfo based on the results.
 	// Returns true if it hits anything, false otherwise.
 	bool DoLineTrace(FInstantHitInfo& OutHitInfo);
@@ -85,13 +86,42 @@ protected:
 	UFUNCTION()
 	virtual void OnRep_HitNotify();
 
+	void ClearTimerIfRunning();
+
+	// Actually stops the weapon firing.
+	void StopFiring();
+
+	// Returns true if the weapon is a burst-fire weapon.
+	bool IsBurstFire();
+
+	// Returns true if the weapon is fully-automatic.
+	bool IsFullyAutomatic();
+
 	// Replicated property used to notify clients of a shot, for visualization.
 	UPROPERTY(ReplicatedUsing = OnRep_HitNotify)
 	FInstantHitInfo HitNotify;
 
-	// Interval between shots, in seconds.
+	// Minimum time between bursts (or shots, if in single-shot or automatic mode), in seconds.
+	// 0 = as fast as you can pull the trigger
 	UPROPERTY(EditAnywhere, Category = "Weapons")
-	float ShotInterval = 0.2f;
+	float BurstInterval = 0.5f;
+
+	// Number of shots in a single burst.
+	// 0  = full-auto
+	// 1  = single-shot
+	// >1 = burst fire
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	int32 BurstCount = 1;
+
+	// Interval between individual shots within a burst, in seconds.
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	float BurstShotInterval = 0.2f;
+
+	// Time (in seconds since start of level) since the last burst fire. Used for limiting fire rate.
+	float LastBurstTime = 0.0f;
+
+	// Number of shots remaining in the current burst.
+	int32 BurstShotsRemaining = 0;
 
 	// Maximum range of the weapon's hitscan.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
@@ -116,9 +146,6 @@ protected:
 	// If true, draws debug line traces for hitscan shots.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
 	bool bDrawDebugLineTrace = false;
-
-private:
-	void ClearTimerIfRunning();
 
 	// Timer that handles firing the next shot.
 	FTimerHandle NextShotTimer;

@@ -17,25 +17,40 @@ AInstantWeapon::AInstantWeapon()
 
 void AInstantWeapon::StartFire()
 {
-	if (CurrentState == EWeaponState::Idle)
+	float Now = UGameplayStatics::GetRealTimeSeconds(GetWorld());
+	if (CurrentState == EWeaponState::Idle && Now > LastBurstTime + BurstInterval)
 	{
 		CurrentState = EWeaponState::Firing;
+
+		// Initialize the burst.
+		LastBurstTime = Now;
+		BurstShotsRemaining = BurstCount;
 
 		// Fire a shot right away.
 		DoFire();
 
-		// Set a timer to execute the next shot.
 		ClearTimerIfRunning();
-		GetWorldTimerManager().SetTimer(NextShotTimer, NextShotTimerDelegate, ShotInterval, true);
+		if (IsFullyAutomatic())
+		{
+			GetWorldTimerManager().SetTimer(NextShotTimer, NextShotTimerDelegate, BurstInterval, true);
+		}
+		else if (IsBurstFire())
+		{
+			GetWorldTimerManager().SetTimer(NextShotTimer, NextShotTimerDelegate, BurstShotInterval, true);
+		}
+		else
+		{
+			CurrentState = EWeaponState::Idle;
+		}
 	}
 }
 
 void AInstantWeapon::StopFire()
 {
-	if (CurrentState == EWeaponState::Firing)
+	// Can't force stop a burst.
+	if (CurrentState == EWeaponState::Firing && !IsBurstFire())
 	{
-		CurrentState = EWeaponState::Idle;
-		ClearTimerIfRunning();
+		StopFiring();
 	}
 }
 
@@ -70,6 +85,15 @@ void AInstantWeapon::DoFire()
 	} else
 	{
 		ServerDidMiss(hitInfo);
+	}
+
+	if (IsBurstFire())
+	{
+		--BurstShotsRemaining;
+		if (BurstShotsRemaining <= 0)
+		{
+			StopFiring();
+		}
 	}
 }
 
@@ -232,4 +256,20 @@ void AInstantWeapon::ClearTimerIfRunning()
 	{
 		GetWorldTimerManager().ClearTimer(NextShotTimer);
 	}
+}
+
+void AInstantWeapon::StopFiring()
+{
+	CurrentState = EWeaponState::Idle;
+	ClearTimerIfRunning();
+}
+
+bool AInstantWeapon::IsBurstFire()
+{
+	return BurstCount > 1;
+}
+
+bool AInstantWeapon::IsFullyAutomatic()
+{
+	return BurstCount < 1;
 }
