@@ -1,0 +1,6 @@
+package improbable.unreal.gdk;
+
+component PlayerControlClient
+{
+    id = 100005;
+}
