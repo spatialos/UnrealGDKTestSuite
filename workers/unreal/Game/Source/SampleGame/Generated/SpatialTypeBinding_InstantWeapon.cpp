@@ -16,6 +16,7 @@
 #include "SpatialPackageMapClient.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+#include "SampleGameCharacter.h"
 #include "Weapons/InstantWeapon.h"
 
 #include "UnrealInstantWeaponSingleClientRepDataAddComponentOp.h"
