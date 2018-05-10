@@ -7,8 +7,7 @@
 #include "Weapon.generated.h"
 
 
-// TODO: change to a class enum
-enum EWeaponState
+enum class EWeaponState : uint8
 {
 	Idle,
 	Firing
@@ -23,21 +22,28 @@ public:
 	AWeapon();
 
 	// [client] Starts firing the weapon.
-	// Not implemented in AWeapon.
 	virtual void StartFire() PURE_VIRTUAL(AWeapon::StartFire,);
 
 	// [client] Stops firing the weapon.
-	// Not implemented in AWeapon.
 	virtual void StopFire() PURE_VIRTUAL(AWeapon::StopFire,);
 
+	class ASampleGameCharacter* GetOwningCharacter();
+	void SetOwningCharacter(class ASampleGameCharacter* NewCharacter);
+
 protected:
-	// Get the character actor for this weapon, or nullptr if there isn't one.
-	class ASampleGameCharacter* GetCharacter();
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	EWeaponState GetWeaponState();
+	void SetWeaponState(EWeaponState NewState);
 	
-	// The current state of the weapon.
+private:
 	EWeaponState CurrentState = EWeaponState::Idle;
 
 	// Set up a root component so this actor can have a position in the world.
 	class USceneComponent* LocationComponent = nullptr;
+
+	// Character that currently owns this weapon.
+	UPROPERTY(Replicated)
+	class ASampleGameCharacter* OwningCharacter = nullptr;
 	
 };

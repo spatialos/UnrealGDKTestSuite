@@ -4,6 +4,7 @@
 
 #include "Engine/World.h"
 #include "SampleGameCharacter.h"
+#include "UnrealNetwork.h"
 
 
 AWeapon::AWeapon()
@@ -11,22 +12,35 @@ AWeapon::AWeapon()
 	PrimaryActorTick.bCanEverTick = false;
 	
 	bReplicates = true;
-	// Note that this appears not to work for child actors.
 	bReplicateMovement = true;
 
 	LocationComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	SetRootComponent(LocationComponent);
 }
 
-class ASampleGameCharacter* AWeapon::GetCharacter()
+class ASampleGameCharacter* AWeapon::GetOwningCharacter()
 {
-	// TODO: retain a reference to the owning character
-
-	APlayerController* controller = GetWorld()->GetFirstPlayerController();
-	if (controller == nullptr)
-	{
-		return nullptr;
-	}
-	return Cast<ASampleGameCharacter>(controller->GetPawn());
+	return OwningCharacter;
 }
 
+void AWeapon::SetOwningCharacter(ASampleGameCharacter* NewCharacter)
+{
+	OwningCharacter = NewCharacter;
+}
+
+void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AWeapon, OwningCharacter);
+}
+
+EWeaponState AWeapon::GetWeaponState()
+{
+	return CurrentState;
+}
+
+void AWeapon::SetWeaponState(EWeaponState NewState)
+{
+	CurrentState = NewState;
+}

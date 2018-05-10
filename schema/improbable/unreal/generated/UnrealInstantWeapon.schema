@@ -25,9 +25,10 @@ component UnrealInstantWeaponMultiClientRepData {
 	UnrealObjectRef field_owner = 13; // COND_None // ::Actor
 	uint32 field_role = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
-	improbable.Vector3f field_hitnotify_location = 16; // COND_SkipOwner // InstantHitInfo::HitNotify::InstantWeapon
-	UnrealObjectRef field_hitnotify_hitactor = 17; // COND_SkipOwner // InstantHitInfo::HitNotify::InstantWeapon
-	bytes field_hitnotify_timestamp = 18; // COND_SkipOwner // InstantHitInfo::HitNotify::InstantWeapon
+	UnrealObjectRef field_owningcharacter = 16; // COND_None // ::Weapon
+	improbable.Vector3f field_hitnotify_location = 17; // COND_SkipOwner // InstantHitInfo::HitNotify::InstantWeapon
+	UnrealObjectRef field_hitnotify_hitactor = 18; // COND_SkipOwner // InstantHitInfo::HitNotify::InstantWeapon
+	bytes field_hitnotify_timestamp = 19; // COND_SkipOwner // InstantHitInfo::HitNotify::InstantWeapon
 }
 component UnrealInstantWeaponMigratableData {
 	id = 100037;

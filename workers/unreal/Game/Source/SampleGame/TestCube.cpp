@@ -5,33 +5,27 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "SampleGameLogging.h"
 #include "UnrealNetwork.h"
 
 
 // Sets default values
 ATestCube::ATestCube()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
     bReplicates = true;
 
     BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
     SetRootComponent(BoxComponent);
+
     MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
     MeshComponent->SetupAttachment(GetRootComponent());
 }
 
-// Called every frame
-void ATestCube::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 float ATestCube::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	UE_LOG(LogClass, Log, TEXT("%s took %f damage from %s via %s"), *this->GetName(), DamageAmount, *EventInstigator->GetName(), *DamageCauser->GetName());
+	UE_LOG(LogSampleGame, Log, TEXT("%s took %f damage from %s via %s"), *this->GetName(), DamageAmount, *EventInstigator->GetName(), *DamageCauser->GetName());
 	return DamageAmount;
 }
 
@@ -40,7 +34,8 @@ void ATestCube::Interact(ACharacter* Interactor)
     if (HasAuthority())
     {
         ToggleColor();
-    } else
+    }
+	else
     {
         ServerInteract();
     }
@@ -77,11 +72,13 @@ void ATestCube::ToggleColor()
 
 void ATestCube::OnRep_Color1()
 {
-	// TODO: check if I'm a client
-	if (MaterialInstanceDynamic == nullptr)
+	if (GetNetMode() != NM_DedicatedServer)
 	{
-		MaterialInstanceDynamic = MeshComponent->CreateAndSetMaterialInstanceDynamic(0);
+		if (MaterialInstanceDynamic == nullptr)
+		{
+			MaterialInstanceDynamic = MeshComponent->CreateAndSetMaterialInstanceDynamic(0);
+		}
+		MaterialInstanceDynamic->SetVectorParameterValue(FName("BaseColor"), bColor1 ? Color1 : Color2);
 	}
-	MaterialInstanceDynamic->SetVectorParameterValue(FName("BaseColor"), bColor1 ? Color1 : Color2);
 }
 

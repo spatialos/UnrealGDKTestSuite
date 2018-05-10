@@ -43,9 +43,10 @@ const FRepHandlePropertyMap& USpatialTypeBinding_InstantWeapon::GetRepHandleProp
 		HandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, COND_None, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, COND_None, REPNOTIFY_OnChanged));
 		HandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(16, FRepHandleData(Class, {"HitNotify", "Location"}, COND_SkipOwner, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(17, FRepHandleData(Class, {"HitNotify", "HitActor"}, COND_SkipOwner, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(18, FRepHandleData(Class, {"HitNotify", "Timestamp"}, COND_SkipOwner, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(16, FRepHandleData(Class, {"OwningCharacter"}, COND_None, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(17, FRepHandleData(Class, {"HitNotify", "Location"}, COND_SkipOwner, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(18, FRepHandleData(Class, {"HitNotify", "HitActor"}, COND_SkipOwner, REPNOTIFY_OnChanged));
+		HandleToPropertyMap.Add(19, FRepHandleData(Class, {"HitNotify", "Timestamp"}, COND_SkipOwner, REPNOTIFY_OnChanged));
 	}
 	return HandleToPropertyMap;
 }
@@ -522,14 +523,37 @@ void USpatialTypeBinding_InstantWeapon::ServerSendUpdate_MultiClient(const uint8
 			}
 			break;
 		}
-		case 16: // field_hitnotify_location
+		case 16: // field_owningcharacter
+		{
+			ASampleGameCharacter* Value = *(reinterpret_cast<ASampleGameCharacter* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 16);
+				}
+				else
+				{
+					OutUpdate.set_field_owningcharacter(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_owningcharacter(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 17: // field_hitnotify_location
 		{
 			const FVector& Value = *(reinterpret_cast<FVector const*>(Data));
 
 			OutUpdate.set_field_hitnotify_location(improbable::Vector3f(Value.X, Value.Y, Value.Z));
 			break;
 		}
-		case 17: // field_hitnotify_hitactor
+		case 18: // field_hitnotify_hitactor
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
 
@@ -539,7 +563,7 @@ void USpatialTypeBinding_InstantWeapon::ServerSendUpdate_MultiClient(const uint8
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 17);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 18);
 				}
 				else
 				{
@@ -552,7 +576,7 @@ void USpatialTypeBinding_InstantWeapon::ServerSendUpdate_MultiClient(const uint8
 			}
 			break;
 		}
-		case 18: // field_hitnotify_timestamp
+		case 19: // field_hitnotify_timestamp
 		{
 			const FDateTime& Value = *(reinterpret_cast<FDateTime const*>(Data));
 
@@ -1101,10 +1125,66 @@ void USpatialTypeBinding_InstantWeapon::ReceiveUpdate_MultiClient(USpatialActorC
 			}
 		}
 	}
+	if (!Update.field_owningcharacter().empty())
+	{
+		// field_owningcharacter
+		uint16 Handle = 16;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			ASampleGameCharacter* Value = *(reinterpret_cast<ASampleGameCharacter* const*>(PropertyData));
+
+			{
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owningcharacter().data());
+				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				{
+					Value = nullptr;
+				}
+				else
+				{
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+					if (NetGUID.IsValid())
+					{
+						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						Value = dynamic_cast<ASampleGameCharacter*>(Object_Raw);
+						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					}
+					else
+					{
+						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+							*Interop->GetSpatialOS()->GetWorkerId(),
+							*ObjectRefToString(ObjectRef),
+							*ActorChannel->Actor->GetName(),
+							ActorChannel->GetEntityId().ToSpatialEntityId(),
+							*RepData->Property->GetName(),
+							Handle);
+						bWriteObjectProperty = false;
+						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					}
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
+		}
+	}
 	if (!Update.field_hitnotify_location().empty())
 	{
 		// field_hitnotify_location
-		uint16 Handle = 16;
+		uint16 Handle = 17;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1131,7 +1211,7 @@ void USpatialTypeBinding_InstantWeapon::ReceiveUpdate_MultiClient(USpatialActorC
 	if (!Update.field_hitnotify_hitactor().empty())
 	{
 		// field_hitnotify_hitactor
-		uint16 Handle = 17;
+		uint16 Handle = 18;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1187,7 +1267,7 @@ void USpatialTypeBinding_InstantWeapon::ReceiveUpdate_MultiClient(USpatialActorC
 	if (!Update.field_hitnotify_timestamp().empty())
 	{
 		// field_hitnotify_timestamp
-		uint16 Handle = 18;
+		uint16 Handle = 19;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{

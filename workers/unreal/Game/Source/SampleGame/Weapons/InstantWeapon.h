@@ -7,6 +7,9 @@
 #include "InstantWeapon.generated.h"
 
 
+// Tag for weapon line trace visualization.
+const FName kTraceTag("SampleGameTrace");
+
 USTRUCT()
 struct FInstantHitInfo
 {
@@ -34,7 +37,9 @@ struct FInstantHitInfo
 
 
 /**
- * 
+ * AInstantWeapon implements hitscan shooting for a single-shot, burst-fire, or full-auto weapon.
+ * Hit detection is entirely client-side, with loose server validation.
+ * Shot timing and rate-limiting is entirely client-side, with no server validation.
  */
 UCLASS()
 class SAMPLEGAME_API AInstantWeapon : public AWeapon
@@ -54,7 +59,7 @@ public:
 	bool ServerDidHit_Validate(const FInstantHitInfo& HitInfo);
 	void ServerDidHit_Implementation(const FInstantHitInfo& HitInfo);
 
-	// RPC for telling the server that we fired and did not hit something.
+	// RPC for telling the server that we fired and did not hit anything.
 	UFUNCTION(Server, Unreliable, WithValidation)
 	void ServerDidMiss(const FInstantHitInfo& HitInfo);
 	bool ServerDidMiss_Validate(const FInstantHitInfo& HitInfo);
@@ -65,7 +70,7 @@ protected:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	// Runs a line trace and triggers the server RPC for hits.
+	// [client] Runs a line trace and triggers the server RPC for hits.
 	virtual void DoFire();
 
 private:
@@ -82,13 +87,14 @@ private:
 	// [server] Validates the hit. Returns true if it's valid, false otherwise.
 	bool ValidateHit(const FInstantHitInfo& HitInfo);
 
-	// Responds to a change in the HitNotify property, used as a broadcast event for displaying hit effects.
+	// [client] Responds to a change in the HitNotify property, used as a broadcast event for displaying hit effects.
 	UFUNCTION()
 	virtual void OnRep_HitNotify();
 
+	// [client] Clears the NextShotTimer if it's running.
 	void ClearTimerIfRunning();
 
-	// Actually stops the weapon firing.
+	// [client] Actually stops the weapon firing.
 	void StopFiring();
 
 	// Returns true if the weapon is a burst-fire weapon.

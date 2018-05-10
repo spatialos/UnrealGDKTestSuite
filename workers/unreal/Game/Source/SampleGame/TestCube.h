@@ -14,10 +14,9 @@ class SAMPLEGAME_API ATestCube : public AActor
 public:	
 	ATestCube();
 
-	virtual void Tick(float DeltaTime) override;
-
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+	// [client + server] Interact with this cube. In this case, will toggle the cube's color.
     void Interact(class ACharacter* Interactor);
 
 protected:
@@ -49,5 +48,4 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	FLinearColor Color2 = FLinearColor::Yellow;
-	
 };

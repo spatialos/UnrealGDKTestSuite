@@ -6,6 +6,7 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "SampleGameCharacter.h"
+#include "SampleGameLogging.h"
 #include "UnrealNetwork.h"
 
 
@@ -20,9 +21,9 @@ AInstantWeapon::AInstantWeapon()
 void AInstantWeapon::StartFire()
 {
 	float Now = UGameplayStatics::GetRealTimeSeconds(GetWorld());
-	if (CurrentState == EWeaponState::Idle && Now > LastBurstTime + BurstInterval)
+	if (GetWeaponState() == EWeaponState::Idle && Now > LastBurstTime + BurstInterval)
 	{
-		CurrentState = EWeaponState::Firing;
+		SetWeaponState(EWeaponState::Firing);
 
 		// Initialize the burst.
 		LastBurstTime = Now;
@@ -42,7 +43,7 @@ void AInstantWeapon::StartFire()
 		}
 		else
 		{
-			CurrentState = EWeaponState::Idle;
+			SetWeaponState(EWeaponState::Idle);
 		}
 	}
 }
@@ -50,7 +51,7 @@ void AInstantWeapon::StartFire()
 void AInstantWeapon::StopFire()
 {
 	// Can't force stop a burst.
-	if (CurrentState == EWeaponState::Firing && !IsBurstFire())
+	if (GetWeaponState() == EWeaponState::Firing && !IsBurstFire())
 	{
 		StopFiring();
 	}
@@ -63,6 +64,8 @@ void AInstantWeapon::BeginPlay()
 	NextShotTimerDelegate.BindLambda([&]() {
 		DoFire();
 	});
+
+	GetWorld()->DebugDrawTraceTag = kTraceTag;
 }
 
 void AInstantWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -79,14 +82,15 @@ void AInstantWeapon::DoFire()
 		return;
 	}
 
-	FInstantHitInfo hitInfo;
-	if (DoLineTrace(hitInfo))
+	FInstantHitInfo HitInfo;
+	if (DoLineTrace(HitInfo))
 	{
-		ServerDidHit(hitInfo);
-		SpawnHitFX(hitInfo);  // Spawn the hit fx locally
-	} else
+		ServerDidHit(HitInfo);
+		SpawnHitFX(HitInfo);  // Spawn the hit fx locally
+	}
+	else
 	{
-		ServerDidMiss(hitInfo);
+		ServerDidMiss(HitInfo);
 	}
 
 	if (IsBurstFire())
@@ -101,49 +105,42 @@ void AInstantWeapon::DoFire()
 
 bool AInstantWeapon::DoLineTrace(FInstantHitInfo& OutHitInfo)
 {
-	ASampleGameCharacter* character = GetCharacter();
+	ASampleGameCharacter* Character = GetOwningCharacter();
 
-	FCollisionQueryParams traceParams = FCollisionQueryParams(FName(TEXT("SampleGame_Trace")), true, this);
-	traceParams.bTraceComplex = true;
-	traceParams.bTraceAsyncScene = true;
-	traceParams.bReturnPhysicalMaterial = false;
-	traceParams.AddIgnoredActor(this);
-	traceParams.AddIgnoredActor(character);
-
-	const FName kTraceTag("SampleGameTrace");
-	static bool didDo = false;
-	if (!didDo)
-	{
-		GetWorld()->DebugDrawTraceTag = kTraceTag;
-	}
+	FCollisionQueryParams TraceParams;
+	TraceParams.bTraceComplex = true;
+	TraceParams.bTraceAsyncScene = true;
+	TraceParams.bReturnPhysicalMaterial = false;
+	TraceParams.AddIgnoredActor(this);
+	TraceParams.AddIgnoredActor(Character);
 
 	if (bDrawDebugLineTrace)
 	{
-		traceParams.TraceTag = kTraceTag;
+		TraceParams.TraceTag = kTraceTag;
 	}
 
-	FHitResult hitResult(ForceInit);
-	FVector traceStart = character->GetLineTraceStart();
-	FVector traceEnd = traceStart + character->GetLineTraceDirection() * MaxRange;
+	FHitResult HitResult(ForceInit);
+	FVector TraceStart = Character->GetLineTraceStart();
+	FVector TraceEnd = TraceStart + Character->GetLineTraceDirection() * MaxRange;
 
-	bool didHit = GetWorld()->LineTraceSingleByChannel(
-		hitResult,
-		traceStart,
-		traceEnd,
+	bool bDidHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		TraceStart,
+		TraceEnd,
 		ECC_WorldStatic,
-		traceParams);
+		TraceParams);
 
-	if (!didHit)
+	if (!bDidHit)
 	{
 		return false;
  	}
 
-	UE_LOG(LogClass, Log, TEXT("Line trace hit actor: %s"), *hitResult.Actor->GetName());
+	UE_LOG(LogSampleGame, Log, TEXT("Line trace hit actor: %s"), *HitResult.Actor->GetName());
 	
-	OutHitInfo.Location = hitResult.ImpactPoint;
-	if (hitResult.GetActor()->GetIsReplicated())
+	OutHitInfo.Location = HitResult.ImpactPoint;
+	if (HitResult.GetActor()->GetIsReplicated())
 	{
-		OutHitInfo.HitActor = hitResult.GetActor();
+		OutHitInfo.HitActor = HitResult.GetActor();
 	} else
 	{
 		OutHitInfo.HitActor = nullptr;
@@ -153,7 +150,6 @@ bool AInstantWeapon::DoLineTrace(FInstantHitInfo& OutHitInfo)
 
 void AInstantWeapon::NotifyClientsOfHit(const FInstantHitInfo& HitInfo)
 {
-	// Updating this replicated property should trigger OnRep_HitNotify on all clients except the owning one.
 	HitNotify.HitActor = HitInfo.HitActor;
 	HitNotify.Location = HitInfo.Location;
 	HitNotify.Timestamp = FDateTime::UtcNow();
@@ -173,7 +169,6 @@ bool AInstantWeapon::ValidateHit(const FInstantHitInfo& HitInfo)
 {
 	if (HitInfo.HitActor == nullptr)
 	{
-		// Shouldn't be validating shots that didn't hit an actor, this doesn't make sense.
 		return false;
 	}
 
@@ -211,23 +206,23 @@ void AInstantWeapon::ServerDidHit_Implementation(const FInstantHitInfo& HitInfo)
 
 	if (HitInfo.HitActor == nullptr)
 	{
-		UE_LOG(LogClass, Log, TEXT("%s server: hit environment %s"), *this->GetName(), *HitInfo.Location.ToString());
+		UE_LOG(LogSampleGame, Log, TEXT("%s server: hit environment %s"), *this->GetName(), *HitInfo.Location.ToString());
 		bDoNotifyHit = true;
 	}
 	else
 	{
 		if (ValidateHit(HitInfo)) {
-			UE_LOG(LogClass, Log, TEXT("%s server: hit actor %s"), *this->GetName(), *HitInfo.HitActor->GetName());
+			UE_LOG(LogSampleGame, Log, TEXT("%s server: hit actor %s"), *this->GetName(), *HitInfo.HitActor->GetName());
 
 			FDamageEvent DmgEvent;
 			DmgEvent.DamageTypeClass = DamageTypeClass;
 
-			HitInfo.HitActor->TakeDamage(ShotBaseDamage, DmgEvent, GetCharacter()->GetController(), this);
+			HitInfo.HitActor->TakeDamage(ShotBaseDamage, DmgEvent, GetOwningCharacter()->GetController(), this);
 			bDoNotifyHit = true;
 		}
 		else
 		{
-			UE_LOG(LogClass, Log, TEXT("%s server: rejected hit of actor %s"), *this->GetName(), *HitInfo.HitActor->GetName());
+			UE_LOG(LogSampleGame, Log, TEXT("%s server: rejected hit of actor %s"), *this->GetName(), *HitInfo.HitActor->GetName());
 		}
 	}
 
@@ -244,7 +239,7 @@ bool AInstantWeapon::ServerDidMiss_Validate(const FInstantHitInfo& HitInfo)
 
 void AInstantWeapon::ServerDidMiss_Implementation(const FInstantHitInfo& HitInfo)
 {
-	UE_LOG(LogClass, Log, TEXT("Shot missed"));
+	UE_LOG(LogSampleGame, Log, TEXT("Shot missed"));
 }
 
 void AInstantWeapon::OnRep_HitNotify()
@@ -265,7 +260,7 @@ void AInstantWeapon::ClearTimerIfRunning()
 
 void AInstantWeapon::StopFiring()
 {
-	CurrentState = EWeaponState::Idle;
+	SetWeaponState(EWeaponState::Idle);
 	ClearTimerIfRunning();
 }
 

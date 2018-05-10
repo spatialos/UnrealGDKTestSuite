@@ -20,6 +20,7 @@ class ASampleGameCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
 public:
 	ASampleGameCharacter();
 
@@ -74,8 +75,14 @@ protected:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+private:
+	// [client] Checks if the crosshair is pointing at an interactable object, and if so, calls Interact() on it.
     void Interact();
-	void SpawnCubePressed();
+
+	// [client] Tells the server to spawn a test cube.
+	void SpawnCube();
+
+	// [server] Spawns a starter weapon and attaches it to the character.
 	void SpawnStarterWeapon();
 
 	// [client] Triggers the equipped weapon to start firing.
@@ -87,25 +94,24 @@ protected:
 	// Returns the currently equipped weapon, or nullptr if there isn't one.
 	class AWeapon* GetEquippedWeapon();
 
+	// RPC to tell the server to spawn a test cube.
     UFUNCTION(Server, Reliable, WithValidation)
     void ServerSpawnCube();
-
-	// List of weapons the player currently has.
-	//UPROPERTY(Replicated)
-	//TArray<class AWeapon*> WeaponInventory;
 
 	UPROPERTY(VisibleAnywhere, Replicated)
 	class AWeapon* EquippedWeapon = nullptr;
 
-	// Index of the currently equipped weapon.
-	UPROPERTY(Replicated)
-	int EquippedWeaponIndex = -1;
+	// Weapon to spawn the player with initially.
+	UPROPERTY(EditAnywhere, Category = "SampleGame")
+	TSubclassOf<AWeapon> StarterWeaponTemplate;
 
-	UPROPERTY(EditAnywhere, Category = "Test")
-	TSubclassOf<AWeapon> StarterWeapon;
+	// Cube to spawn when the player presses "SpawnCube".
+	UPROPERTY(EditAnywhere, Category = "SampleGame")
+	TSubclassOf<ATestCube> TestCubeTemplate;
 
-	UPROPERTY(EditAnywhere, Category = "Test")
-	TSubclassOf<ATestCube> TestActorTemplate;
+	// Maximum distance at which the player can interact with objects.
+	UPROPERTY(EditAnywhere, Category = "SampleGame")
+	float InteractDistance = 500.0f;
 
 public:
 	/** Returns CameraBoom subobject **/
