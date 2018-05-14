@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "SampleGameGameStateBase.h"
 #include "SampleGameLogging.h"
+#include "SampleGamePlayerController.h"
 #include "SpatialNetDriver.h"
 #include "TestCube.h"
 #include "UnrealNetwork.h"
@@ -87,6 +88,8 @@ void ASampleGameCharacter::BeginPlay()
 			}
 		});
 		GetWorld()->GetTimerManager().SetTimer(timerHandle, timerDelegate, 0.2f, false);
+
+		CurrentHealth = MaxHealth;
 	}
 }
 
@@ -120,6 +123,9 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ASampleGameCharacter, EquippedWeapon);
+
+	// Only replicate health to the owning client.
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, CurrentHealth, COND_AutonomousOnly);
 }
 
 void ASampleGameCharacter::Interact()
@@ -226,6 +232,18 @@ void ASampleGameCharacter::ServerSpawnCube_Implementation()
 	GetWorld()->SpawnActor<ATestCube>(TestCubeTemplate, SpawnTranform);
 }
 
+void ASampleGameCharacter::OnRep_CurrentHealth()
+{
+	if (GetNetMode() != NM_DedicatedServer)
+	{
+		ASampleGamePlayerController* PC = Cast<ASampleGamePlayerController>(GetController());
+		if (PC)
+		{
+			PC->UpdateHealthUI(CurrentHealth, MaxHealth);
+		}
+	}
+}
+
 FVector ASampleGameCharacter::GetLineTraceStart() const
 {
 	return GetFollowCamera()->GetComponentLocation();
@@ -234,6 +252,19 @@ FVector ASampleGameCharacter::GetLineTraceStart() const
 FVector ASampleGameCharacter::GetLineTraceDirection() const
 {
 	return GetFollowCamera()->GetForwardVector();
+}
+
+float ASampleGameCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float DamageDealt = Damage;
+	if (DamageDealt > CurrentHealth)
+	{
+		DamageDealt = CurrentHealth;
+	}
+
+	CurrentHealth -= DamageDealt;
+
+	return DamageDealt;
 }
 
 void ASampleGameCharacter::TurnAtRate(float Rate)

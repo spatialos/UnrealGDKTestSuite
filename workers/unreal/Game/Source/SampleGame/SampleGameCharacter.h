@@ -62,6 +62,8 @@ public:
 	// Returns the direction in which to perform a line trace so it lines up with the center of the crosshair.
 	FVector GetLineTraceDirection() const;
 
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -92,6 +94,9 @@ private:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSpawnCube();
 
+	UFUNCTION()
+	void OnRep_CurrentHealth();
+
 	UPROPERTY(VisibleAnywhere, Replicated)
 	class AWeapon* EquippedWeapon;
 
@@ -104,8 +109,16 @@ private:
 	TSubclassOf<ATestCube> TestCubeTemplate;
 
 	// Maximum distance at which the player can interact with objects.
-	UPROPERTY(EditAnywhere, Category = "SampleGame")
+	UPROPERTY(EditAnywhere, Category = "SampleGame", meta = (ClampMin = "0.0"))
 	float InteractDistance;
+
+	// Max health this character can have.
+	UPROPERTY(EditAnywhere, Category = "SampleGame", meta = (ClampMin = "0.0"))
+	float MaxHealth = 100.0f;
+
+	// Current health of the character, can be at most MaxHealth.
+	UPROPERTY(ReplicatedUsing = OnRep_CurrentHealth, VisibleAnywhere, Category = "SampleGame")
+	float CurrentHealth = 0.0f;
 
 public:
 	/** Returns CameraBoom subobject **/
