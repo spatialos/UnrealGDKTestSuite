@@ -14,13 +14,18 @@ ATestCube::ATestCube()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-    bReplicates = true;
+	bReplicates = true;
 
-    BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
-    SetRootComponent(BoxComponent);
+	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	SetRootComponent(BoxComponent);
 
-    MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
-    MeshComponent->SetupAttachment(GetRootComponent());
+	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
+	MeshComponent->SetupAttachment(GetRootComponent());
+
+	bColor1 = true;
+	MaterialInstanceDynamic = nullptr;
+	Color1 = FLinearColor::Blue;
+	Color2 = FLinearColor::Yellow;
 }
 
 float ATestCube::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
@@ -31,14 +36,14 @@ float ATestCube::TakeDamage(float DamageAmount, struct FDamageEvent const& Damag
 
 void ATestCube::Interact(ACharacter* Interactor)
 {
-    if (HasAuthority())
-    {
-        ToggleColor();
-    }
+	if (HasAuthority())
+	{
+		ToggleColor();
+	}
 	else
-    {
-        ServerInteract();
-    }
+	{
+		ServerInteract();
+	}
 }
 
 // Called when the game starts or when spawned
@@ -50,24 +55,24 @@ void ATestCube::BeginPlay()
 
 void ATestCube::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-    DOREPLIFETIME(ATestCube, bColor1);
+	DOREPLIFETIME(ATestCube, bColor1);
 }
 
 bool ATestCube::ServerInteract_Validate()
 {
-    return true;
+	return true;
 }
 
 void ATestCube::ServerInteract_Implementation()
 {
-    ToggleColor();
+	ToggleColor();
 }
 
 void ATestCube::ToggleColor()
 {
-    bColor1 = !bColor1;
+	bColor1 = !bColor1;
 }
 
 void ATestCube::OnRep_Color1()

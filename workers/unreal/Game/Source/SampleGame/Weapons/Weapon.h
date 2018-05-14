@@ -37,13 +37,13 @@ protected:
 	void SetWeaponState(EWeaponState NewState);
 	
 private:
-	EWeaponState CurrentState = EWeaponState::Idle;
+	EWeaponState CurrentState;
 
 	// Set up a root component so this actor can have a position in the world.
-	class USceneComponent* LocationComponent = nullptr;
+	class USceneComponent* LocationComponent;
 
 	// Character that currently owns this weapon.
 	UPROPERTY(Replicated)
-	class ASampleGameCharacter* OwningCharacter = nullptr;
+	class ASampleGameCharacter* OwningCharacter;
 	
 };

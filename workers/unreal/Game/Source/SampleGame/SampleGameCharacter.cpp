@@ -63,6 +63,9 @@ ASampleGameCharacter::ASampleGameCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	EquippedWeapon = nullptr;
+	InteractDistance = 500.0f;
 }
 
 void ASampleGameCharacter::BeginPlay()

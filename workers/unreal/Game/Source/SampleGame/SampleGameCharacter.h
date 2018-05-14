@@ -99,7 +99,7 @@ private:
     void ServerSpawnCube();
 
 	UPROPERTY(VisibleAnywhere, Replicated)
-	class AWeapon* EquippedWeapon = nullptr;
+	class AWeapon* EquippedWeapon;
 
 	// Weapon to spawn the player with initially.
 	UPROPERTY(EditAnywhere, Category = "SampleGame")
@@ -111,7 +111,7 @@ private:
 
 	// Maximum distance at which the player can interact with objects.
 	UPROPERTY(EditAnywhere, Category = "SampleGame")
-	float InteractDistance = 500.0f;
+	float InteractDistance;
 
 public:
 	/** Returns CameraBoom subobject **/

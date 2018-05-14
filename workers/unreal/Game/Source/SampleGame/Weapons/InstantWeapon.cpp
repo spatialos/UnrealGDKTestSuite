@@ -12,10 +12,18 @@
 
 AInstantWeapon::AInstantWeapon()
 {
-	// Set the default damage class to a generic one.
-	DamageTypeClass = UDamageType::StaticClass();
-
+	BurstInterval = 0.5f;
+	BurstCount = 1;
+	BurstShotInterval = 0.2f;
+	LastBurstTime = 0.0f;
+	BurstShotsRemaining = 0;
+	MaxRange = 50000.0f;
+	ShotBaseDamage = 10.0f;
+	HitValidationTolerance = 50.0f;
+	DamageTypeClass = UDamageType::StaticClass();  // generic damage type
+	HitFXTemplate = nullptr;
 	ShotVisualizationDelayTolerance = FTimespan::FromMilliseconds(3000.0f);
+	bDrawDebugLineTrace = false;
 }
 
 void AInstantWeapon::StartFire()

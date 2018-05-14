@@ -5,6 +5,12 @@
 #include "Engine/Canvas.h"
 
 
+ASampleGameHUD::ASampleGameHUD()
+{
+	CrosshairWidth = 2.0f;
+	CrosshairHeight = 2.0f;
+}
+
 void ASampleGameHUD::DrawHUD()
 {
 	Super::DrawHUD();

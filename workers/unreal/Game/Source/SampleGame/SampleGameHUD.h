@@ -15,13 +15,15 @@ class SAMPLEGAME_API ASampleGameHUD : public AHUD
 	GENERATED_BODY()
 	
 public:
+	ASampleGameHUD();
+
 	virtual void DrawHUD() override;
 
 	UPROPERTY(EditAnywhere)
-	float CrosshairWidth = 2.0f;
+	float CrosshairWidth;
 	
 	UPROPERTY(EditAnywhere)
-	float CrosshairHeight = 2.0f;
+	float CrosshairHeight;
 	
 protected:
 	void DrawCrosshair();

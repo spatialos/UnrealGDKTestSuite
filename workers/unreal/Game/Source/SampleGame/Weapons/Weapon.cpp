@@ -16,6 +16,9 @@ AWeapon::AWeapon()
 
 	LocationComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	SetRootComponent(LocationComponent);
+
+	CurrentState = EWeaponState::Idle;
+	OwningCharacter = nullptr;
 }
 
 class ASampleGameCharacter* AWeapon::GetOwningCharacter()

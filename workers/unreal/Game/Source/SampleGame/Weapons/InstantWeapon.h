@@ -110,36 +110,36 @@ private:
 	// Minimum time between bursts (or shots, if in single-shot or automatic mode), in seconds.
 	// 0 = as fast as you can pull the trigger
 	UPROPERTY(EditAnywhere, Category = "Weapons")
-	float BurstInterval = 0.5f;
+	float BurstInterval;
 
 	// Number of shots in a single burst.
 	// 0  = full-auto
 	// 1  = single-shot
 	// >1 = burst fire
 	UPROPERTY(EditAnywhere, Category = "Weapons")
-	int32 BurstCount = 1;
+	int32 BurstCount;
 
 	// Interval between individual shots within a burst, in seconds.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
-	float BurstShotInterval = 0.2f;
+	float BurstShotInterval;
 
 	// Time (in seconds since start of level) since the last burst fire. Used for limiting fire rate.
-	float LastBurstTime = 0.0f;
+	float LastBurstTime;
 
 	// Number of shots remaining in the current burst.
-	int32 BurstShotsRemaining = 0;
+	int32 BurstShotsRemaining;
 
 	// Maximum range of the weapon's hitscan.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
-	float MaxRange = 50000.0f;
+	float MaxRange;
 
 	// Base damage done to others by a single shot.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
-	float ShotBaseDamage = 10.0f;
+	float ShotBaseDamage;
 
 	// Tolerance, in world units, to add to the bounding box of an actor when validating hits.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
-	float HitValidationTolerance = 50.0f;
+	float HitValidationTolerance;
 
 	// Type of damage to send to hit actors.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
@@ -147,7 +147,7 @@ private:
 
 	// Template for the particle system to spawn in the world on hits.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
-	class UParticleSystem* HitFXTemplate = nullptr;
+	class UParticleSystem* HitFXTemplate;
 
 	// Tolerance, in seconds, after which we will no longer visualize a shot notification.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
@@ -155,7 +155,7 @@ private:
 
 	// If true, draws debug line traces for hitscan shots.
 	UPROPERTY(EditAnywhere, Category = "Weapons")
-	bool bDrawDebugLineTrace = false;
+	bool bDrawDebugLineTrace;
 
 	// Timer that handles firing the next shot.
 	FTimerHandle NextShotTimer;

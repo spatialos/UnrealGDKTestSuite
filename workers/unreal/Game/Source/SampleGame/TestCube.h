@@ -17,35 +17,35 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	// [client + server] Interact with this cube. In this case, will toggle the cube's color.
-    void Interact(class ACharacter* Interactor);
+	void Interact(class ACharacter* Interactor);
 
 protected:
 	virtual void BeginPlay() override;
 
-    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-    UFUNCTION(Server, Reliable, WithValidation)
-    void ServerInteract();
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerInteract();
 
-    void ToggleColor();
+	void ToggleColor();
 
 	UFUNCTION()
 	void OnRep_Color1();
 
-    UPROPERTY(ReplicatedUsing = OnRep_Color1)
-    bool bColor1 = true;
+	UPROPERTY(ReplicatedUsing = OnRep_Color1)
+	bool bColor1;
 
-    UPROPERTY(VisibleAnywhere)
-    class UStaticMeshComponent* MeshComponent = nullptr;
+	UPROPERTY(VisibleAnywhere)
+	class UStaticMeshComponent* MeshComponent;
 
-    UPROPERTY(VisibleAnywhere)
-    class UBoxComponent* BoxComponent = nullptr;
+	UPROPERTY(VisibleAnywhere)
+	class UBoxComponent* BoxComponent;
 
-	class UMaterialInstanceDynamic* MaterialInstanceDynamic = nullptr;
-
-	UPROPERTY(EditAnywhere)
-	FLinearColor Color1 = FLinearColor::Blue;
+	class UMaterialInstanceDynamic* MaterialInstanceDynamic;
 
 	UPROPERTY(EditAnywhere)
-	FLinearColor Color2 = FLinearColor::Yellow;
+	FLinearColor Color1;
+
+	UPROPERTY(EditAnywhere)
+	FLinearColor Color2;
 };
