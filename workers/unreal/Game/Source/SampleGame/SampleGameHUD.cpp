@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "SampleGameHUD.h"
 
@@ -18,7 +18,7 @@ void ASampleGameHUD::DrawHUD()
 
 void ASampleGameHUD::DrawCrosshair()
 {
-	float centerX = Canvas->ClipX / 2.0f;
-	float centerY = Canvas->ClipY / 2.0f;
-	DrawRect(FLinearColor::White, centerX, centerY, CrosshairWidth, CrosshairHeight);
+	float CenterX = Canvas->ClipX / 2.0f;
+	float CenterY = Canvas->ClipY / 2.0f;
+	DrawRect(FLinearColor::White, CenterX, CenterY, CrosshairWidth, CrosshairHeight);
 }
