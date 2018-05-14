@@ -98,10 +98,16 @@ private:
 	void StopFiring();
 
 	// Returns true if the weapon is a burst-fire weapon.
-	bool IsBurstFire();
+	FORCEINLINE bool IsBurstFire()
+	{
+		return BurstCount > 1;
+	}
 
 	// Returns true if the weapon is fully-automatic.
-	bool IsFullyAutomatic();
+	FORCEINLINE bool IsFullyAutomatic()
+	{
+		return BurstCount < 1;
+	}
 
 	// Replicated property used to notify clients of a shot, for visualization.
 	UPROPERTY(ReplicatedUsing = OnRep_HitNotify)

@@ -142,14 +142,13 @@ bool AInstantWeapon::DoLineTrace(FInstantHitInfo& OutHitInfo)
 	{
 		return false;
  	}
-
-	UE_LOG(LogSampleGame, Log, TEXT("Line trace hit actor: %s"), *HitResult.Actor->GetName());
 	
 	OutHitInfo.Location = HitResult.ImpactPoint;
 	if (HitResult.GetActor()->GetIsReplicated())
 	{
 		OutHitInfo.HitActor = HitResult.GetActor();
-	} else
+	}
+	else
 	{
 		OutHitInfo.HitActor = nullptr;
 	}
@@ -158,6 +157,8 @@ bool AInstantWeapon::DoLineTrace(FInstantHitInfo& OutHitInfo)
 
 void AInstantWeapon::NotifyClientsOfHit(const FInstantHitInfo& HitInfo)
 {
+	check(GetNetMode() < NM_Client);
+
 	HitNotify.HitActor = HitInfo.HitActor;
 	HitNotify.Location = HitInfo.Location;
 	HitNotify.Timestamp = FDateTime::UtcNow();
@@ -175,6 +176,8 @@ void AInstantWeapon::SpawnHitFX(const FInstantHitInfo& HitInfo)
 
 bool AInstantWeapon::ValidateHit(const FInstantHitInfo& HitInfo)
 {
+	check(GetNetMode() < NM_Client);
+
 	if (HitInfo.HitActor == nullptr)
 	{
 		return false;
@@ -214,13 +217,12 @@ void AInstantWeapon::ServerDidHit_Implementation(const FInstantHitInfo& HitInfo)
 
 	if (HitInfo.HitActor == nullptr)
 	{
-		UE_LOG(LogSampleGame, Log, TEXT("%s server: hit environment %s"), *this->GetName(), *HitInfo.Location.ToString());
 		bDoNotifyHit = true;
 	}
 	else
 	{
-		if (ValidateHit(HitInfo)) {
-			UE_LOG(LogSampleGame, Log, TEXT("%s server: hit actor %s"), *this->GetName(), *HitInfo.HitActor->GetName());
+		if (ValidateHit(HitInfo))
+		{
 
 			FDamageEvent DmgEvent;
 			DmgEvent.DamageTypeClass = DamageTypeClass;
@@ -230,7 +232,7 @@ void AInstantWeapon::ServerDidHit_Implementation(const FInstantHitInfo& HitInfo)
 		}
 		else
 		{
-			UE_LOG(LogSampleGame, Log, TEXT("%s server: rejected hit of actor %s"), *this->GetName(), *HitInfo.HitActor->GetName());
+			UE_LOG(LogSampleGame, Verbose, TEXT("%s server: rejected hit of actor %s"), *this->GetName(), *HitInfo.HitActor->GetName());
 		}
 	}
 
@@ -247,11 +249,12 @@ bool AInstantWeapon::ServerDidMiss_Validate(const FInstantHitInfo& HitInfo)
 
 void AInstantWeapon::ServerDidMiss_Implementation(const FInstantHitInfo& HitInfo)
 {
-	UE_LOG(LogSampleGame, Log, TEXT("Shot missed"));
+	UE_LOG(LogSampleGame, Verbose, TEXT("Shot missed"));
 }
 
 void AInstantWeapon::OnRep_HitNotify()
 {
+	// This check is in place to ignore when this method gets called on initial checkout of the actor.
 	if (FDateTime::UtcNow() < HitNotify.Timestamp + ShotVisualizationDelayTolerance)
 	{
 		SpawnHitFX(HitNotify);
@@ -270,14 +273,4 @@ void AInstantWeapon::StopFiring()
 {
 	SetWeaponState(EWeaponState::Idle);
 	ClearTimerIfRunning();
-}
-
-bool AInstantWeapon::IsBurstFire()
-{
-	return BurstCount > 1;
-}
-
-bool AInstantWeapon::IsFullyAutomatic()
-{
-	return BurstCount < 1;
 }
