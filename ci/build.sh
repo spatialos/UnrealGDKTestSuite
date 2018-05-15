@@ -4,7 +4,6 @@ set -e -u -x -o pipefail
 
 cd "$(dirname "$0")/../"
 
-source ci/force_spatial_cli_structure.sh
 source ci/pinned-tools.sh
 source ci/profiling.sh
 
@@ -55,7 +54,7 @@ markEndOfBlock "Run the GDK setup script"
 
 markStartOfBlock "Build the SampleGame"
 
-runSpatial build --target=local
+workers/unreal/Game/Scripts/Build.bat --local
 
 markEndOfBlock "Build the SampleGame"
 
