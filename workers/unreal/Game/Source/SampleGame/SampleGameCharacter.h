@@ -54,19 +54,13 @@ protected:
 	 */
 	void LookUpAtRate(float Rate);
 
-	/** Handler for when a touch input begins. */
-	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/** Handler for when a touch input stops. */
-	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
 public:
 	// Returns a position from which to start a line trace.
 	// Use this so your line trace doesn't collide with the player character.
-	FVector GetLineTraceStart();
+	FVector GetLineTraceStart() const;
 
 	// Returns the direction in which to perform a line trace so it lines up with the center of the crosshair.
-	FVector GetLineTraceDirection();
+	FVector GetLineTraceDirection() const;
 
 protected:
 	// APawn interface
@@ -77,7 +71,7 @@ protected:
 
 private:
 	// [client] Checks if the crosshair is pointing at an interactable object, and if so, calls Interact() on it.
-    void Interact();
+	void Interact();
 
 	// [client] Tells the server to spawn a test cube.
 	void SpawnCube();
@@ -92,11 +86,11 @@ private:
 	void StopFire();
 
 	// Returns the currently equipped weapon, or nullptr if there isn't one.
-	class AWeapon* GetEquippedWeapon();
+	class AWeapon* GetEquippedWeapon() const;
 
 	// RPC to tell the server to spawn a test cube.
-    UFUNCTION(Server, Reliable, WithValidation)
-    void ServerSpawnCube();
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSpawnCube();
 
 	UPROPERTY(VisibleAnywhere, Replicated)
 	class AWeapon* EquippedWeapon;

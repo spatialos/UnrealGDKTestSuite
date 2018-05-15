@@ -21,7 +21,7 @@ AWeapon::AWeapon()
 	OwningCharacter = nullptr;
 }
 
-class ASampleGameCharacter* AWeapon::GetOwningCharacter()
+class ASampleGameCharacter* AWeapon::GetOwningCharacter() const
 {
 	return OwningCharacter;
 }
@@ -38,7 +38,7 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 	DOREPLIFETIME(AWeapon, OwningCharacter);
 }
 
-EWeaponState AWeapon::GetWeaponState()
+EWeaponState AWeapon::GetWeaponState() const
 {
 	return CurrentState;
 }

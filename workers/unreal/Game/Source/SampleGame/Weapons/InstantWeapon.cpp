@@ -28,6 +28,8 @@ AInstantWeapon::AInstantWeapon()
 
 void AInstantWeapon::StartFire()
 {
+	check(GetNetMode() == NM_Client);
+
 	float Now = UGameplayStatics::GetRealTimeSeconds(GetWorld());
 	if (GetWeaponState() == EWeaponState::Idle && Now > LastBurstTime + BurstInterval)
 	{
@@ -51,13 +53,15 @@ void AInstantWeapon::StartFire()
 		}
 		else
 		{
-			SetWeaponState(EWeaponState::Idle);
+			StopFiring();
 		}
 	}
 }
 
 void AInstantWeapon::StopFire()
 {
+	check(GetNetMode() == NM_Client);
+
 	// Can't force stop a burst.
 	if (GetWeaponState() == EWeaponState::Firing && !IsBurstFire())
 	{
@@ -85,10 +89,7 @@ void AInstantWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 void AInstantWeapon::DoFire()
 {
-	if (HasAuthority())
-	{
-		return;
-	}
+	check(GetNetMode() == NM_Client);
 
 	FInstantHitInfo HitInfo;
 	if (DoLineTrace(HitInfo))
@@ -144,14 +145,8 @@ bool AInstantWeapon::DoLineTrace(FInstantHitInfo& OutHitInfo)
  	}
 	
 	OutHitInfo.Location = HitResult.ImpactPoint;
-	if (HitResult.GetActor()->GetIsReplicated())
-	{
-		OutHitInfo.HitActor = HitResult.GetActor();
-	}
-	else
-	{
-		OutHitInfo.HitActor = nullptr;
-	}
+	OutHitInfo.HitActor = HitResult.GetActor();
+
 	return true;
 }
 
@@ -166,7 +161,7 @@ void AInstantWeapon::NotifyClientsOfHit(const FInstantHitInfo& HitInfo)
 
 void AInstantWeapon::SpawnHitFX(const FInstantHitInfo& HitInfo)
 {
-	if (GetWorld()->GetNetMode() == NM_DedicatedServer || HitFXTemplate == nullptr)
+	if (GetNetMode() < NM_Client || HitFXTemplate == nullptr)
 	{
 		return;
 	}
@@ -263,6 +258,8 @@ void AInstantWeapon::OnRep_HitNotify()
 
 void AInstantWeapon::ClearTimerIfRunning()
 {
+	check(GetNetMode() == NM_Client);
+
 	if (NextShotTimer.IsValid())
 	{
 		GetWorldTimerManager().ClearTimer(NextShotTimer);
@@ -271,6 +268,8 @@ void AInstantWeapon::ClearTimerIfRunning()
 
 void AInstantWeapon::StopFiring()
 {
+	check(GetNetMode() == NM_Client);
+
 	SetWeaponState(EWeaponState::Idle);
 	ClearTimerIfRunning();
 }

@@ -27,13 +27,13 @@ public:
 	// [client] Stops firing the weapon.
 	virtual void StopFire() PURE_VIRTUAL(AWeapon::StopFire,);
 
-	class ASampleGameCharacter* GetOwningCharacter();
+	class ASampleGameCharacter* GetOwningCharacter() const;
 	void SetOwningCharacter(class ASampleGameCharacter* NewCharacter);
 
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	EWeaponState GetWeaponState();
+	EWeaponState GetWeaponState() const;
 	void SetWeaponState(EWeaponState NewState);
 	
 private:

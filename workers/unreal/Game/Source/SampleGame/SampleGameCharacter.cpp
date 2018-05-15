@@ -108,10 +108,6 @@ void ASampleGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &ASampleGameCharacter::LookUpAtRate);
 
-	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &ASampleGameCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &ASampleGameCharacter::TouchStopped);
-
     PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ASampleGameCharacter::Interact);
 	PlayerInputComponent->BindAction("SpawnCube", IE_Pressed, this, &ASampleGameCharacter::SpawnCube);
 
@@ -206,7 +202,7 @@ void ASampleGameCharacter::StopFire()
 	}
 }
 
-AWeapon* ASampleGameCharacter::GetEquippedWeapon()
+AWeapon* ASampleGameCharacter::GetEquippedWeapon() const
 {
 	return EquippedWeapon;
 }
@@ -230,22 +226,12 @@ void ASampleGameCharacter::ServerSpawnCube_Implementation()
 	GetWorld()->SpawnActor<ATestCube>(TestCubeTemplate, SpawnTranform);
 }
 
-void ASampleGameCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	Jump();
-}
-
-void ASampleGameCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	StopJumping();
-}
-
-FVector ASampleGameCharacter::GetLineTraceStart()
+FVector ASampleGameCharacter::GetLineTraceStart() const
 {
 	return GetFollowCamera()->GetComponentLocation();
 }
 
-FVector ASampleGameCharacter::GetLineTraceDirection()
+FVector ASampleGameCharacter::GetLineTraceDirection() const
 {
 	return GetFollowCamera()->GetForwardVector();
 }

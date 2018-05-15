@@ -50,6 +50,10 @@ void ATestCube::Interact(ACharacter* Interactor)
 void ATestCube::BeginPlay()
 {
 	Super::BeginPlay();
+	if (GetNetMode() != NM_DedicatedServer)
+	{
+		MaterialInstanceDynamic = MeshComponent->CreateAndSetMaterialInstanceDynamic(0);
+	}
 	OnRep_Color1();
 }
 
@@ -79,10 +83,6 @@ void ATestCube::OnRep_Color1()
 {
 	if (GetNetMode() != NM_DedicatedServer)
 	{
-		if (MaterialInstanceDynamic == nullptr)
-		{
-			MaterialInstanceDynamic = MeshComponent->CreateAndSetMaterialInstanceDynamic(0);
-		}
 		MaterialInstanceDynamic->SetVectorParameterValue(FName("BaseColor"), bColor1 ? Color1 : Color2);
 	}
 }
