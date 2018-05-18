@@ -77,7 +77,8 @@ Game/ThirdParty/Improbable/
 temp_worker_builds/
 Game/Plugins/SpatialOS
 
-#SpatialGDK symlinked files
+# SpatialGDK symlinked files
 Game/Plugins/SpatialGDK
 Game/Source/SpatialGDK
 Game/Scripts
+spatial/schema/improbable/unreal/gdk

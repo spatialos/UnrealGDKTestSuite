@@ -1,6 +1,19 @@
 {
   "build": {
-    "tasks_filename": "Game/Scripts/spatialos.unreal.worker.build.json"
+    "tasks": [
+      {
+        "name": "Codegen",
+        "steps": [{"name": "No-op", "command": "echo", "arguments": ["No-op."]}]
+      },
+      {
+        "name": "build",
+        "steps": [{"name": "No-op", "command": "echo", "arguments": ["No-op."]}]
+      },
+      {
+        "name": "clean",
+        "steps": [{"name": "No-op", "command": "echo", "arguments": ["No-op."]}]
+      }
+    ]
   },
   "bridge": {
     "worker_attribute_set": {
@@ -79,33 +92,6 @@
         "-abslog=${IMPROBABLE_LOG_FILE}",
         "-NoVerifyGC"
       ]
-    }
-  },
-  "external": {
-    "default": {
-      "run_type": "EXECUTABLE",
-      "windows": {
-        "command": "${UNREAL_HOME}\\Engine\\Binaries\\Win64\\UE4Editor.exe",
-        "arguments": [
-          "${IMPROBABLE_WORKER_DIR}/Game/SampleGame.uproject",
-          "-server",
-          "+workerType",
-          "UnrealWorker",
-          "-stdout",
-          "-nowrite",
-          "-unattended",
-          "-nologtimes",
-          "-nopause",
-          "-noin",
-          "-messaging",
-          "-SaveToUserDir",
-          "-abslog=${IMPROBABLE_LOG_FILE}",
-          "-NoVerifyGC",
-          "-windowed",
-          "-ResX=400",
-          "-ResY=300"
-        ]
-      }
     }
   }
 }

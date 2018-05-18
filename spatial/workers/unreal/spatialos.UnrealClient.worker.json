@@ -1,0 +1,41 @@
+{
+  "build": {
+    "tasks": [
+      {
+        "name": "Codegen",
+        "steps": [{"name": "No-op", "command": "echo", "arguments": ["No-op."]}]
+      },
+      {
+        "name": "build",
+        "steps": [{"name": "No-op", "command": "echo", "arguments": ["No-op."]}]
+      },
+      {
+        "name": "clean",
+        "steps": [{"name": "No-op", "command": "echo", "arguments": ["No-op."]}]
+      }
+    ]
+  },
+  "bridge": {
+    "worker_attribute_set": {
+      "attributes": [
+        "UnrealClient"
+      ]
+    },
+    "entity_interest": {
+      "range_entity_interest": {
+        "radius": 50
+      }
+    },
+    "streaming_query": [
+      {
+        "global_component_streaming_query": {
+          "component_name": "improbable.unreal.UnrealLevel"
+        }
+      }
+    ],
+    "component_delivery": {
+      "default": "RELIABLE_ORDERED",
+      "checkout_all_initially": true
+    }
+  }
+}

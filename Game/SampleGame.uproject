@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{D2ACD56A-4CD6-4F23-BD0E-B59A373728D7}",
+	"EngineAssociation": "{3CEB792D-4973-1B96-9E4E-DFA70AD979C7}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -17,18 +17,5 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
-	],
-	"PostBuildSteps":
-	{
-		"Win64": [
-			"cd /D \"$(ProjectDir)\"",
-			"Binaries\\ThirdParty\\Improbable\\Programs\\unreal_packager package --engineDir=\"$(EngineDir)\" --project=\"$(ProjectFile)\" --platform=\"$(TargetPlatform)\" --target=\"$(TargetType)\" --configuration=\"$(TargetConfiguration)\" -- -allmaps",
-			"exit /B %ERRORLEVEL%"
-		],
-		"Linux": [
-			"cd /D \"$(ProjectDir)\"",
-			"Binaries\\ThirdParty\\Improbable\\Programs\\unreal_packager package --engineDir=\"$(EngineDir)\" --project=\"$(ProjectFile)\" --platform=\"$(TargetPlatform)\" --target=\"$(TargetType)\" --configuration=\"$(TargetConfiguration)\" -- -allmaps",
-			"exit /B %ERRORLEVEL%"
-		]
-	}
+	]
 }
