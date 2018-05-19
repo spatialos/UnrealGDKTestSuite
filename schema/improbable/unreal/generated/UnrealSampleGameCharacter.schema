@@ -1,6 +1,6 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal;
+package improbable.unreal.generated;
 
 import "improbable/vector3.schema";
 import "improbable/unreal/core_types.schema";
@@ -65,7 +65,7 @@ component UnrealSampleGameCharacterMultiClientRepData {
 	bytes field_testpodstruct_dvar = 53; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
 	list<bytes> field_testenumarray = 54; // COND_SimulatedOnly // ::SampleGameCharacter
 	bytes field_testenum = 55; // COND_SimulatedOnly // ::SampleGameCharacter
-	int32 field_testbookend = 56; // COND_SimulatedOnly // ::SampleGameCharacter
+	int32 field_testbookend = 56; // COND_None // ::SampleGameCharacter
 }
 component UnrealSampleGameCharacterMigratableData {
 	id = 100022;
@@ -75,23 +75,23 @@ import "improbable/unreal/generated/UnrealCharacterTypes.schema";
 
 component UnrealSampleGameCharacterClientRPCs {
 	id = 100023;
-	command UnrealRPCCommandResponse rootmotiondebugclientprintonscreen(UnrealRootMotionDebugClientPrintOnScreenRequest);
-	command UnrealRPCCommandResponse clientveryshortadjustposition(UnrealClientVeryShortAdjustPositionRequest);
-	command UnrealRPCCommandResponse clientcheatwalk(UnrealClientCheatWalkRequest);
-	command UnrealRPCCommandResponse clientcheatghost(UnrealClientCheatGhostRequest);
-	command UnrealRPCCommandResponse clientcheatfly(UnrealClientCheatFlyRequest);
-	command UnrealRPCCommandResponse clientadjustrootmotionsourceposition(UnrealClientAdjustRootMotionSourcePositionRequest);
-	command UnrealRPCCommandResponse clientadjustrootmotionposition(UnrealClientAdjustRootMotionPositionRequest);
-	command UnrealRPCCommandResponse clientadjustposition(UnrealClientAdjustPositionRequest);
-	command UnrealRPCCommandResponse clientackgoodmove(UnrealClientAckGoodMoveRequest);
+	command UnrealRPCCommandResponse samplegamecharacterrootmotiondebugclientprintonscreen(UnrealRootMotionDebugClientPrintOnScreenRequest);
+	command UnrealRPCCommandResponse samplegamecharacterclientveryshortadjustposition(UnrealClientVeryShortAdjustPositionRequest);
+	command UnrealRPCCommandResponse samplegamecharacterclientcheatwalk(UnrealClientCheatWalkRequest);
+	command UnrealRPCCommandResponse samplegamecharacterclientcheatghost(UnrealClientCheatGhostRequest);
+	command UnrealRPCCommandResponse samplegamecharacterclientcheatfly(UnrealClientCheatFlyRequest);
+	command UnrealRPCCommandResponse samplegamecharacterclientadjustrootmotionsourceposition(UnrealClientAdjustRootMotionSourcePositionRequest);
+	command UnrealRPCCommandResponse samplegamecharacterclientadjustrootmotionposition(UnrealClientAdjustRootMotionPositionRequest);
+	command UnrealRPCCommandResponse samplegamecharacterclientadjustposition(UnrealClientAdjustPositionRequest);
+	command UnrealRPCCommandResponse samplegamecharacterclientackgoodmove(UnrealClientAckGoodMoveRequest);
 }
 component UnrealSampleGameCharacterServerRPCs {
 	id = 100024;
-	command UnrealRPCCommandResponse servertestfunc(UnrealServerTestFuncRequest);
-	command UnrealRPCCommandResponse servermoveold(UnrealServerMoveOldRequest);
-	command UnrealRPCCommandResponse servermovenobase(UnrealServerMoveNoBaseRequest);
-	command UnrealRPCCommandResponse servermovedualnobase(UnrealServerMoveDualNoBaseRequest);
-	command UnrealRPCCommandResponse servermovedualhybridrootmotion(UnrealServerMoveDualHybridRootMotionRequest);
-	command UnrealRPCCommandResponse servermovedual(UnrealServerMoveDualRequest);
-	command UnrealRPCCommandResponse servermove(UnrealServerMoveRequest);
+	command UnrealRPCCommandResponse samplegamecharacterservertestfunc(UnrealServerTestFuncRequest);
+	command UnrealRPCCommandResponse samplegamecharacterservermoveold(UnrealServerMoveOldRequest);
+	command UnrealRPCCommandResponse samplegamecharacterservermovenobase(UnrealServerMoveNoBaseRequest);
+	command UnrealRPCCommandResponse samplegamecharacterservermovedualnobase(UnrealServerMoveDualNoBaseRequest);
+	command UnrealRPCCommandResponse samplegamecharacterservermovedualhybridrootmotion(UnrealServerMoveDualHybridRootMotionRequest);
+	command UnrealRPCCommandResponse samplegamecharacterservermovedual(UnrealServerMoveDualRequest);
+	command UnrealRPCCommandResponse samplegamecharacterservermove(UnrealServerMoveRequest);
 }

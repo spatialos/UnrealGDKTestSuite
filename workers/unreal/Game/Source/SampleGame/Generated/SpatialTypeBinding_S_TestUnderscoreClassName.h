@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include <improbable/worker.h>
 #include <improbable/view.h>
-#include <improbable/unreal/core_types.h>
-#include <improbable/unreal/unreal_metadata.h>
+#include <improbable/unreal/gdk/core_types.h>
+#include <improbable/unreal/gdk/unreal_metadata.h>
 #include <improbable/unreal/generated/UnrealSTestUnderscoreClassName.h>
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
@@ -29,7 +29,7 @@ public:
 
 	worker::Entity CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const override;
 	void SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const override;
-	void SendRPCCommand(UObject* TargetObject, const UFunction* const Function, FFrame* const Frame) override;
+	void SendRPCCommand(UObject* TargetObject, const UFunction* const Function, void* Parameters) override;
 
 	void ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const override;
 	worker::Map<worker::ComponentId, worker::InterestOverride> GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const override;
@@ -38,25 +38,25 @@ private:
 	improbable::unreal::callbacks::FScopedViewCallbacks ViewCallbacks;
 
 	// RPC to sender map.
-	using FRPCSender = void (USpatialTypeBinding_S_TestUnderscoreClassName::*)(worker::Connection* const, struct FFrame* const, UObject*);
+	using FRPCSender = void (USpatialTypeBinding_S_TestUnderscoreClassName::*)(worker::Connection* const, void*, UObject*);
 	TMap<FName, FRPCSender> RPCToSenderMap;
 
 	// Component update helper functions.
 	void BuildSpatialComponentUpdate(
 		const FPropertyChangeState& Changes,
 		USpatialActorChannel* Channel,
-		improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& SingleClientUpdate,
+		improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& SingleClientUpdate,
 		bool& bSingleClientUpdateChanged,
-		improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& MultiClientUpdate,
+		improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& MultiClientUpdate,
 		bool& bMultiClientUpdateChanged,
-		improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::Update& MigratableDataUpdate,
+		improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::Update& MigratableDataUpdate,
 		bool& bMigratableDataUpdateChanged) const;
-	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::Update& OutUpdate) const;
-	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& Update) const;
-	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& Update) const;
-	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::Update& Update) const;
+	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::Update& OutUpdate) const;
+	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& Update) const;
+	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& Update) const;
+	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::Update& Update) const;
 
 	// RPC command sender functions.
 	void ClientUnderscoreRPC_SendCommand(worker::Connection* const Connection, struct FFrame* const RPCFrame, UObject* TargetObject);

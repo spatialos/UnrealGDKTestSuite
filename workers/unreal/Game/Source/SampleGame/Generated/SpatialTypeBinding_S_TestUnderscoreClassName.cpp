@@ -72,11 +72,11 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::BindToView()
 
 	if (Interop->GetNetDriver()->GetNetMode() == NM_Client)
 	{
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -84,11 +84,11 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::BindToView()
 			check(ActorChannel);
 			ReceiveUpdate_SingleClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -96,11 +96,11 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::BindToView()
 			check(ActorChannel);
 			ReceiveUpdate_MultiClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::ComponentId))
 			{
 				return;
 			}
@@ -130,14 +130,14 @@ worker::Entity USpatialTypeBinding_S_TestUnderscoreClassName::CreateActorEntity(
 	}
 
 	// Setup initial data.
-	improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::Data SingleClientData;
-	improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::Data SingleClientData;
+	improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData::Data MultiClientData;
-	improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData::Data MultiClientData;
+	improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::Data MigratableData;
-	improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::Update MigratableDataUpdate;
+	improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::Data MigratableData;
+	improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::Update MigratableDataUpdate;
 	bool bMigratableDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 	SingleClientUpdate.ApplyTo(SingleClientData);
@@ -189,22 +189,22 @@ worker::Entity USpatialTypeBinding_S_TestUnderscoreClassName::CreateActorEntity(
 		.SetPersistence(true)
 		.SetReadAcl(AnyUnrealWorkerOrClient)
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
-		.AddComponent<improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData>(SingleClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData>(MultiClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData>(MigratableData, WorkersOnly)
-		.AddComponent<improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs>(improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::UnrealSTestUnderscoreClassNameServerRPCs>(improbable::unreal::UnrealSTestUnderscoreClassNameServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData>(SingleClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData>(MultiClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData>(MigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs>(improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Data{}, OwningClientOnly)
+		.AddComponent<improbable::unreal::generated::UnrealSTestUnderscoreClassNameServerRPCs>(improbable::unreal::generated::UnrealSTestUnderscoreClassNameServerRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
 void USpatialTypeBinding_S_TestUnderscoreClassName::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
 {
 	// Build SpatialOS updates.
-	improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::Update MigratableDataUpdate;
+	improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::Update MigratableDataUpdate;
 	bool bMigratableDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 
@@ -212,24 +212,24 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::SendComponentUpdates(const F
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	if (bSingleClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
 	}
 	if (bMultiClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
 	if (bMigratableDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
 	}
 }
 
-void USpatialTypeBinding_S_TestUnderscoreClassName::SendRPCCommand(UObject* TargetObject, const UFunction* const Function, FFrame* const Frame)
+void USpatialTypeBinding_S_TestUnderscoreClassName::SendRPCCommand(UObject* TargetObject, const UFunction* const Function, void* Parameters)
 {
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	auto SenderFuncIterator = RPCToSenderMap.Find(Function->GetFName());
 	checkf(*SenderFuncIterator, TEXT("Sender for %s has not been registered with RPCToSenderMap."), *Function->GetFName().ToString());
-	(this->*(*SenderFuncIterator))(Connection.Get(), Frame, TargetObject);
+	(this->*(*SenderFuncIterator))(Connection.Get(), Parameters, TargetObject);
 }
 
 void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
@@ -237,19 +237,19 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveAddComponent(USpatial
 	auto* SingleClientAddOp = Cast<UUnrealSTestUnderscoreClassNameSingleClientRepDataAddComponentOp>(AddComponentOp);
 	if (SingleClientAddOp)
 	{
-		auto Update = improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
 		ReceiveUpdate_SingleClient(Channel, Update);
 	}
 	auto* MultiClientAddOp = Cast<UUnrealSTestUnderscoreClassNameMultiClientRepDataAddComponentOp>(AddComponentOp);
 	if (MultiClientAddOp)
 	{
-		auto Update = improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
 		ReceiveUpdate_MultiClient(Channel, Update);
 	}
 	auto* MigratableDataAddOp = Cast<UUnrealSTestUnderscoreClassNameMigratableDataAddComponentOp>(AddComponentOp);
 	if (MigratableDataAddOp)
 	{
-		auto Update = improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
+		auto Update = improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
 		ReceiveUpdate_Migratable(Channel, Update);
 	}
 }
@@ -261,9 +261,9 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_S
 	{
 		if (!bAutonomousProxy)
 		{
-			Interest.emplace(improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::ComponentId, worker::InterestOverride{false});
+			Interest.emplace(improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
@@ -271,11 +271,11 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_S
 void USpatialTypeBinding_S_TestUnderscoreClassName::BuildSpatialComponentUpdate(
 	const FPropertyChangeState& Changes,
 	USpatialActorChannel* Channel,
-	improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& SingleClientUpdate,
+	improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& SingleClientUpdate,
 	bool& bSingleClientUpdateChanged,
-	improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& MultiClientUpdate,
+	improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::Update& MigratableDataUpdate,
+	improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::Update& MigratableDataUpdate,
 	bool& bMigratableDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
@@ -333,11 +333,11 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::BuildSpatialComponentUpdate(
 	}
 }
 
-void USpatialTypeBinding_S_TestUnderscoreClassName::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_S_TestUnderscoreClassName::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_S_TestUnderscoreClassName::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_S_TestUnderscoreClassName::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -522,24 +522,24 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ServerSendUpdate_MultiClient
 	}
 }
 
-void USpatialTypeBinding_S_TestUnderscoreClassName::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::Update& OutUpdate) const
+void USpatialTypeBinding_S_TestUnderscoreClassName::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& Update) const
+void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& Update) const
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TArray<UProperty*> RepNotifies;
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies);
 }
 
-void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& Update) const
+void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& Update) const
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TSet<UProperty*> RepNotifies;
 
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
-	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs::ComponentId);
+	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::ComponentId);
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
@@ -721,7 +721,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(US
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						Value = dynamic_cast<AActor*>(Object_Raw);
+						Value = Cast<AActor>(Object_Raw);
 						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
@@ -880,7 +880,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(US
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						Value = dynamic_cast<USceneComponent*>(Object_Raw);
+						Value = Cast<USceneComponent>(Object_Raw);
 						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
@@ -936,7 +936,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(US
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						Value = dynamic_cast<AActor*>(Object_Raw);
+						Value = Cast<AActor>(Object_Raw);
 						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
@@ -1021,7 +1021,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(US
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						Value = dynamic_cast<APawn*>(Object_Raw);
+						Value = Cast<APawn>(Object_Raw);
 						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
@@ -1055,7 +1055,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(US
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::UnrealSTestUnderscoreClassNameMigratableData::Update& Update) const
+void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::Update& Update) const
 {
 }
 

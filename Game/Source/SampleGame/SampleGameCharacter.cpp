@@ -227,5 +227,5 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayStructReplication, COND_SimulatedOnly);
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestEnum, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_None);
 }

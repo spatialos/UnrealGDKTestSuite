@@ -1724,7 +1724,6 @@ void USpatialTypeBinding_PlayerController::ClientUpdateMultipleLevelsStreamingSt
 		}
 
 		// Build request.
-		improbable::unreal::UnrealClientUpdateMultipleLevelsStreamingStatusRequest Request;
 		// UNSUPPORTED TArray parameters (LevelStatuses)
 		improbable::unreal::UnrealClientUpdateMultipleLevelsStreamingStatusRequest Request;
 		improbable::unreal::generated::UnrealClientUpdateMultipleLevelsStreamingStatusRequest Request;
@@ -3718,7 +3717,6 @@ void USpatialTypeBinding_PlayerController::ServerUpdateMultipleLevelsVisibility_
 		}
 
 		// Build request.
-		improbable::unreal::UnrealServerUpdateMultipleLevelsVisibilityRequest Request;
 		// UNSUPPORTED TArray parameters (LevelVisibilities)
 		improbable::unreal::UnrealServerUpdateMultipleLevelsVisibilityRequest Request;
 		improbable::unreal::generated::UnrealServerUpdateMultipleLevelsVisibilityRequest Request;
