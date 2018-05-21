@@ -103,6 +103,7 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RPCToSenderMap.Emplace("ClientAdjustPosition", &USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendCommand);
 	RPCToSenderMap.Emplace("ClientAckGoodMove", &USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendCommand);
 	RPCToSenderMap.Emplace("ServerSpawnCube", &USpatialTypeBinding_SampleGameCharacter::ServerSpawnCube_SendCommand);
+	RPCToSenderMap.Emplace("DebugResetCharacter", &USpatialTypeBinding_SampleGameCharacter::DebugResetCharacter_SendCommand);
 	RPCToSenderMap.Emplace("ServerMoveOld", &USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendCommand);
 	RPCToSenderMap.Emplace("ServerMoveNoBase", &USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendCommand);
 	RPCToSenderMap.Emplace("ServerMoveDualNoBase", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendCommand);
@@ -178,6 +179,7 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView()
 
 	using ServerRPCCommandTypes = improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands;
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterserverspawncube>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerSpawnCube_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterdebugresetcharacter>(std::bind(&USpatialTypeBinding_SampleGameCharacter::DebugResetCharacter_OnCommandRequest, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandRequest, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandRequest, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandRequest, this, std::placeholders::_1)));
@@ -185,6 +187,7 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView()
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedual>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandRequest, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandRequest, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterserverspawncube>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerSpawnCube_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterdebugresetcharacter>(std::bind(&USpatialTypeBinding_SampleGameCharacter::DebugResetCharacter_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandResponse, this, std::placeholders::_1)));
@@ -2761,6 +2764,33 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSpawnCube_SendCommand(worker
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
 }
 
+void USpatialTypeBinding_SampleGameCharacter::DebugResetCharacter_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+{
+	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
+	{
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+		{
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC DebugResetCharacter queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
+		}
+
+		// Build request.
+		improbable::unreal::generated::UnrealDebugResetCharacterRequest Request;
+
+		// Send command request.
+		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: DebugResetCharacter, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterdebugresetcharacter>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+	};
+	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+}
+
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
@@ -3707,6 +3737,50 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSpawnCube_OnCommandRequest(c
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
+void USpatialTypeBinding_SampleGameCharacter::DebugResetCharacter_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterdebugresetcharacter>& Op)
+{
+	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: DebugResetCharacter_OnCommandRequest: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: DebugResetCharacter_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Call implementation.
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: DebugResetCharacter, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("DebugResetCharacter"))))
+		{
+			TargetObject->ProcessEvent(Function, nullptr);
+		}
+		else
+		{
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: DebugResetCharacter_OnCommandRequest: Function not found. Object: %s, Function: DebugResetCharacter."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		// Send command response.
+		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
+		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterdebugresetcharacter>(Op.RequestId, {});
+		return {};
+	};
+	Interop->SendCommandResponse_Internal(Receiver);
+}
+
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
@@ -4256,6 +4330,11 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandRespons
 void USpatialTypeBinding_SampleGameCharacter::ServerSpawnCube_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterserverspawncube>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerSpawnCube"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
+}
+
+void USpatialTypeBinding_SampleGameCharacter::DebugResetCharacter_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterdebugresetcharacter>& Op)
+{
+	Interop->HandleCommandResponse_Internal(TEXT("DebugResetCharacter"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)

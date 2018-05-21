@@ -17,8 +17,7 @@ class SAMPLEGAME_API ASampleGamePlayerController : public APlayerController
 public:
 	void UpdateHealthUI(float NewHealth, float MaxHealth);
 
-protected:
-	virtual void BeginPlay() override;
+	virtual void SetPawn(APawn* InPawn) override;
 
 private:
 	// UI class to draw in-game.

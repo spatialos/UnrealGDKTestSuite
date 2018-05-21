@@ -2,6 +2,8 @@
 
 #include "SampleGamePlayerController.h"
 
+#include "SampleGameCharacter.h"
+#include "SampleGameLogging.h"
 #include "UI/SampleGameUI.h"
 
 
@@ -11,15 +13,45 @@ void ASampleGamePlayerController::UpdateHealthUI(float NewHealth, float MaxHealt
 	{
 		SampleGameUI->UpdateHealth(NewHealth, MaxHealth);
 	}
+	else
+	{
+		UE_LOG(LogSampleGame, Log, TEXT("Couldn't find SampleGameUI for controller: %s"), *this->GetName());
+	}
 }
 
-void ASampleGamePlayerController::BeginPlay()
+void ASampleGamePlayerController::SetPawn(APawn* InPawn)
 {
-	Super::BeginPlay();
+	Super::SetPawn(InPawn);
 
-	if (GetNetMode() != NM_DedicatedServer && UITemplate != nullptr)
+	if (GetNetMode() == NM_DedicatedServer)
 	{
-		SampleGameUI = CreateWidget<USampleGameUI>(this, UITemplate);
-		SampleGameUI->AddToViewport();
+		return;
+	}
+
+	if (InPawn == nullptr)
+	{
+		if (SampleGameUI != nullptr && SampleGameUI->IsVisible())
+		{
+			SampleGameUI->RemoveFromViewport();
+		}
+	}
+	else
+	{
+		if (SampleGameUI == nullptr)
+		{
+			check(UITemplate != nullptr);
+			SampleGameUI = CreateWidget<USampleGameUI>(this, UITemplate);
+		}
+
+		if (!SampleGameUI->IsVisible())
+		{
+			SampleGameUI->AddToViewport();
+		}
+
+		ASampleGameCharacter* Character = Cast<ASampleGameCharacter>(InPawn);
+		if (Character != nullptr)
+		{
+			UpdateHealthUI(Character->GetCurrentHealth(), Character->GetMaxHealth());
+		}
 	}
 }

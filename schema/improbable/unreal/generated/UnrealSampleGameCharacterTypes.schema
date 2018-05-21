@@ -8,3 +8,6 @@ import "improbable/unreal/gdk/core_types.schema";
 type UnrealServerSpawnCubeRequest {
 	uint32 target_subobject_offset = 1;
 }
+type UnrealDebugResetCharacterRequest {
+	uint32 target_subobject_offset = 1;
+}

@@ -113,6 +113,7 @@ void ASampleGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
     PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ASampleGameCharacter::Interact);
 	PlayerInputComponent->BindAction("SpawnCube", IE_Pressed, this, &ASampleGameCharacter::SpawnCube);
+	PlayerInputComponent->BindAction("DebugResetCharacter", IE_Pressed, this, &ASampleGameCharacter::DebugResetCharacter);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ASampleGameCharacter::StartFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ASampleGameCharacter::StopFire);
@@ -232,6 +233,16 @@ void ASampleGameCharacter::ServerSpawnCube_Implementation()
 	GetWorld()->SpawnActor<ATestCube>(TestCubeTemplate, SpawnTranform);
 }
 
+bool ASampleGameCharacter::DebugResetCharacter_Validate()
+{
+	return true;
+}
+
+void ASampleGameCharacter::DebugResetCharacter_Implementation()
+{
+	CurrentHealth = MaxHealth;
+}
+
 void ASampleGameCharacter::OnRep_CurrentHealth()
 {
 	if (GetNetMode() != NM_DedicatedServer)
@@ -240,6 +251,10 @@ void ASampleGameCharacter::OnRep_CurrentHealth()
 		if (PC)
 		{
 			PC->UpdateHealthUI(CurrentHealth, MaxHealth);
+		}
+		else
+		{
+			UE_LOG(LogSampleGame, Log, TEXT("Couldn't find a player controller for character: %s"), *this->GetName());
 		}
 	}
 }

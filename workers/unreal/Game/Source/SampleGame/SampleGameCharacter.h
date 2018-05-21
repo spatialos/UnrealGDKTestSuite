@@ -64,6 +64,16 @@ public:
 
 	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
+	FORCEINLINE float GetCurrentHealth() const
+	{
+		return CurrentHealth;
+	}
+
+	FORCEINLINE float GetMaxHealth() const
+	{
+		return MaxHealth;
+	}
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -93,6 +103,10 @@ private:
 	// RPC to tell the server to spawn a test cube.
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSpawnCube();
+
+	// Debug RPC to tell the server to reset all of the characters stats (weapons, health, etc.)
+	UFUNCTION(Server, Reliable, WithValidation)
+	void DebugResetCharacter();
 
 	UFUNCTION()
 	void OnRep_CurrentHealth();
