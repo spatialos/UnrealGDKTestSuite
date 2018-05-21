@@ -115,6 +115,11 @@ void AInstantWeapon::DoFire()
 bool AInstantWeapon::DoLineTrace(FInstantHitInfo& OutHitInfo)
 {
 	ASampleGameCharacter* Character = GetOwningCharacter();
+	if (Character == nullptr)
+	{
+		UE_LOG(LogSampleGame, Verbose, TEXT("Weapon %s does not have an owning character"), *this->GetName());
+		return false;
+	}
 
 	FCollisionQueryParams TraceParams;
 	TraceParams.bTraceComplex = true;

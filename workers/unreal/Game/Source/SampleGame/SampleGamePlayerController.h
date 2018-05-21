@@ -15,8 +15,11 @@ class SAMPLEGAME_API ASampleGamePlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
+	// Updates the health UI with a new value.
 	void UpdateHealthUI(float NewHealth, float MaxHealth);
 
+	// Overrides AController::SetPawn, which should be called on the client and server whenever the controller
+	// possesses (or unpossesses) a pawn.
 	virtual void SetPawn(APawn* InPawn) override;
 
 private:
@@ -24,6 +27,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = "SampleGameUI")
 	TSubclassOf<class USampleGameUI> UITemplate;
 
-	class USampleGameUI* SampleGameUI = nullptr;
+	// The current game UI.
+	UPROPERTY(Transient)
+	class USampleGameUI* SampleGameUI;
 
 };

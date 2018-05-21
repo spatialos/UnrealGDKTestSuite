@@ -67,6 +67,8 @@ ASampleGameCharacter::ASampleGameCharacter()
 
 	EquippedWeapon = nullptr;
 	InteractDistance = 500.0f;
+	MaxHealth = 100.0f;
+	CurrentHealth = 0.0f;
 }
 
 void ASampleGameCharacter::BeginPlay()

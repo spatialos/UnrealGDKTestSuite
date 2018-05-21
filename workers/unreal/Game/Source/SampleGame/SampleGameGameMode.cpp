@@ -3,7 +3,7 @@
 #include "SampleGameGameMode.h"
 #include "UObject/ConstructorHelpers.h"
 
-#include "SampleGameHUD.h"
+#include "UI/SampleGameHUD.h"
 
 ASampleGameGameMode::ASampleGameGameMode()
 {

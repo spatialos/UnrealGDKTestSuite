@@ -17,6 +17,7 @@ public:
 	void UpdateHealth(float NewHealth, float MaxHealth);
 
 protected:
+	// Blueprint event called whenever the current health value is updated.
 	UFUNCTION(BlueprintImplementableEvent, Category = "SampleGameUI")
 	void UpdateHealthBar();
 

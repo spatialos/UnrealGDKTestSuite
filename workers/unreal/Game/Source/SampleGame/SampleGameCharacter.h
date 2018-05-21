@@ -128,11 +128,11 @@ private:
 
 	// Max health this character can have.
 	UPROPERTY(EditAnywhere, Category = "SampleGame", meta = (ClampMin = "0.0"))
-	float MaxHealth = 100.0f;
+	float MaxHealth;
 
 	// Current health of the character, can be at most MaxHealth.
 	UPROPERTY(ReplicatedUsing = OnRep_CurrentHealth, VisibleAnywhere, Category = "SampleGame")
-	float CurrentHealth = 0.0f;
+	float CurrentHealth;
 
 public:
 	/** Returns CameraBoom subobject **/
