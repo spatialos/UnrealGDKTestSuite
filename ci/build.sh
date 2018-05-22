@@ -20,48 +20,35 @@ fi
 markStartOfBlock "$0"
 
 markStartOfBlock "Clean gdk build directory"
-
 rm -rf build/unreal-gdk/
-
 markEndOfBlock "Clean gdk build directory"
 
 markStartOfBlock "Make gdk build directory"
-
 mkdir -p "build/"
-
 markEndOfBlock "Make gdk build directory"
 
 markStartOfBlock "Clone the GDK from github"
-
 pushd "build/"
-
-git clone git@github.com:improbable/unreal-gdk.git -b ${UNREAL_GDK_BRANCH}
-
+  git clone git@github.com:improbable/unreal-gdk.git -b ${UNREAL_GDK_BRANCH} --single-branch
 popd
-
 markEndOfBlock "Clone the GDK from github"
 
 markStartOfBlock "Run the GDK setup script"
-
-pushd "build/unreal-gdk"
-
-# Run the setup script with the root of the SampleGame as the install path.
-./setup.sh ../../
-
-popd
-
+  pushd "build/unreal-gdk"
+    # Run the setup script with the root of the SampleGame as the install path.
+    ./setup.sh ../..
+  popd
 markEndOfBlock "Run the GDK setup script"
 
 markStartOfBlock "Build the SampleGame"
+  pushd spatial
+    # Back-compat:
+    # Run spatial build so we get schema downloaded so that `spatial local launch` works.
+    spatial build
+  popd
 
-# Back-compat:
-# Run spatial build so we get schema downloaded so that `spatial local launch` works.
-pushd spatial/workers/unreal
-spatial build
-popd
-
-workers/unreal/Game/Scripts/Build.bat SampleGameEditor Win64 Development Game/SampleGame.uproject
-
+  # Build the Editor to ensure everything compiles.
+  Game/Scripts/Build.bat "SampleGameEditor" "Win64" "Development" "Game/SampleGame.uproject"
 markEndOfBlock "Build the SampleGame"
 
 markEndOfBlock "$0"

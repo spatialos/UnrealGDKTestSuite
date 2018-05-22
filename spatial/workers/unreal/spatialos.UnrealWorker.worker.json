@@ -41,7 +41,7 @@
   "managed": {
     "windows": {
       "artifact_name": "UnrealEditor@Windows.zip",
-      "command": "StartServer.bat",
+      "command": "StartEditor.bat",
       "arguments": [
         "ThirdPersonExampleMap",
         "-server",
@@ -72,7 +72,7 @@
     },
     "linux": {
       "artifact_name": "UnrealWorker@Linux.zip",
-      "command": "StartServer.sh",
+      "command": "StartWorker.sh",
       "arguments": [
         "${IMPROBABLE_WORKER_ID}",
         "SampleGame",
