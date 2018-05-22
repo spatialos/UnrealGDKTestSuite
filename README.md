@@ -58,6 +58,6 @@ TODO [JIRA ticket DEV-2087](https://improbableio.atlassian.net/browse/DEV-2087)
 ## Contribute
 TODO [JIRA ticket DEV-2087](https://improbableio.atlassian.net/browse/DEV-2087)
 
-##Support
+## Support
 TODO [JIRA ticket DEV-2087](https://improbableio.atlassian.net/browse/DEV-2087)
 
