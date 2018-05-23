@@ -40,10 +40,7 @@ private:
 	using FRPCSender = void (USpatialTypeBinding_PlayerState::*)(worker::Connection* const, void*, UObject*);
 	TMap<FName, FRPCSender> RPCToSenderMap;
 
-	// Map from Handle to FRepHandleData.
 	FRepHandlePropertyMap RepHandleToPropertyMap;
-
-	// Map from Handle to FMigratableHandleData.
 	FMigratableHandlePropertyMap MigratableHandleToPropertyMap;
 
 	// Component update helper functions.
