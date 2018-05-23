@@ -36,12 +36,6 @@ markStartOfBlock "Run the GDK setup script"
 markEndOfBlock "Run the GDK setup script"
 
 markStartOfBlock "Build the SampleGame"
-  pushd spatial
-    # Back-compat:
-    # Run spatial build so we get schema downloaded so that `spatial local launch` works.
-    spatial build
-  popd
-
   # Build each target to ensure scripts are correct, skipping code generation on all but the first to save some time.
   Game/Scripts/Build.bat "SampleGameEditor" "Win64" "Development" "Game/SampleGame.uproject"
   if [[ ! -f "spatial/build/assembly/worker/UnrealEditor@Windows.zip" ]]; then
