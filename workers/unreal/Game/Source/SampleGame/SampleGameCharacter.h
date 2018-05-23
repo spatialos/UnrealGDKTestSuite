@@ -115,24 +115,24 @@ private:
 	class AWeapon* EquippedWeapon;
 
 	// Weapon to spawn the player with initially.
-	UPROPERTY(EditAnywhere, Category = "SampleGame")
+	UPROPERTY(EditDefaultsOnly, Category = "Weapons")
 	TSubclassOf<AWeapon> StarterWeaponTemplate;
 
 	// Cube to spawn when the player presses "SpawnCube".
-	UPROPERTY(EditAnywhere, Category = "SampleGame")
+	UPROPERTY(EditDefaultsOnly, Category = "SampleGameDebugging")
 	TSubclassOf<ATestCube> TestCubeTemplate;
 
 	// Maximum distance at which the player can interact with objects.
-	UPROPERTY(EditAnywhere, Category = "SampleGame", meta = (ClampMin = "0.0"))
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction", meta = (ClampMin = "0.0"))
 	float InteractDistance;
 
 	// Max health this character can have.
-	UPROPERTY(EditAnywhere, Category = "SampleGame", meta = (ClampMin = "0.0"))
-	float MaxHealth;
+	UPROPERTY(EditDefaultsOnly, Category = "Health", meta = (ClampMin = "1"))
+	int32 MaxHealth;
 
 	// Current health of the character, can be at most MaxHealth.
-	UPROPERTY(ReplicatedUsing = OnRep_CurrentHealth, VisibleAnywhere, Category = "SampleGame")
-	float CurrentHealth;
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_CurrentHealth, Category = "Health")
+	int32 CurrentHealth;
 
 public:
 	/** Returns CameraBoom subobject **/

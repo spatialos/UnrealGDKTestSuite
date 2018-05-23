@@ -1,10 +1,17 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "SampleGameUI.h"
 
 
-void USampleGameUI::UpdateHealth(float NewHealth, float MaxHealth)
+void USampleGameUI::UpdateHealth(int32 NewHealth, int32 MaxHealth)
 {
-	CurrentHealth = NewHealth / MaxHealth;
+	if (MaxHealth > 0)
+	{
+		CurrentHealth = static_cast<float>(NewHealth) / static_cast<float>(MaxHealth);
+	}
+	else
+	{
+		CurrentHealth = 0.0f;
+	}
 	UpdateHealthBar();
 }

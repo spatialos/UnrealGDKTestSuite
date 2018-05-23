@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #pragma once
 
@@ -14,7 +14,7 @@ class SAMPLEGAME_API USampleGameUI : public UUserWidget
 	
 public:
 	// Updates the UI's health value.
-	void UpdateHealth(float NewHealth, float MaxHealth);
+	void UpdateHealth(int32 NewHealth, int32 MaxHealth);
 
 protected:
 	// Blueprint event called whenever the current health value is updated.

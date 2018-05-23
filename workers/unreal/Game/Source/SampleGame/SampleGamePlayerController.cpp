@@ -7,7 +7,7 @@
 #include "UI/SampleGameUI.h"
 
 
-void ASampleGamePlayerController::UpdateHealthUI(float NewHealth, float MaxHealth)
+void ASampleGamePlayerController::UpdateHealthUI(int32 NewHealth, int32 MaxHealth)
 {
 	if (SampleGameUI)
 	{

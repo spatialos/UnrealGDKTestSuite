@@ -16,7 +16,7 @@ class SAMPLEGAME_API ASampleGamePlayerController : public APlayerController
 
 public:
 	// Updates the health UI with a new value.
-	void UpdateHealthUI(float NewHealth, float MaxHealth);
+	void UpdateHealthUI(int32 NewHealth, int32 MaxHealth);
 
 	// Overrides AController::SetPawn, which should be called on the client and server whenever the controller
 	// possesses (or unpossesses) a pawn.

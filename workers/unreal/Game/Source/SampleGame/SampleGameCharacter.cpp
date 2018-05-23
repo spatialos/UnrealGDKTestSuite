@@ -67,8 +67,8 @@ ASampleGameCharacter::ASampleGameCharacter()
 
 	EquippedWeapon = nullptr;
 	InteractDistance = 500.0f;
-	MaxHealth = 100.0f;
-	CurrentHealth = 0.0f;
+	MaxHealth = 100;
+	CurrentHealth = 0;
 }
 
 void ASampleGameCharacter::BeginPlay()
@@ -78,18 +78,17 @@ void ASampleGameCharacter::BeginPlay()
 	// Only spawn a new starter weapon if we're authoritative and don't already have one.
 	if (HasAuthority())
 	{
-		// Short delay as a workaround for UNR-218, which prevents replicated variables from being set when BeginPlay is called.
-		// TODO(UNR-218): fix this once UNR-218 is solved
-		FTimerHandle timerHandle;
-		FTimerDelegate timerDelegate;
-		timerDelegate.BindLambda([this]() {
+		// Short delay as a workaround for actor references potentially not being resolved when this actor gets checked out.
+		FTimerHandle TimerHandle;
+		FTimerDelegate TimerDelegate;
+		TimerDelegate.BindLambda([this]() {
 			UE_LOG(LogSampleGame, Log, TEXT("%s EquippedWeapon: %s"), *this->GetName(), EquippedWeapon == nullptr ? TEXT("nullptr") : *EquippedWeapon->GetName());
 			if (GetEquippedWeapon() == nullptr)
 			{
 				SpawnStarterWeapon();
 			}
 		});
-		GetWorld()->GetTimerManager().SetTimer(timerHandle, timerDelegate, 0.2f, false);
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.2f, false);
 
 		CurrentHealth = MaxHealth;
 	}
@@ -256,7 +255,7 @@ void ASampleGameCharacter::OnRep_CurrentHealth()
 		}
 		else
 		{
-			UE_LOG(LogSampleGame, Log, TEXT("Couldn't find a player controller for character: %s"), *this->GetName());
+			UE_LOG(LogSampleGame, Warning, TEXT("Couldn't find a player controller for character: %s"), *this->GetName());
 		}
 	}
 }
@@ -273,14 +272,8 @@ FVector ASampleGameCharacter::GetLineTraceDirection() const
 
 float ASampleGameCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	float DamageDealt = Damage;
-	if (DamageDealt > CurrentHealth)
-	{
-		DamageDealt = CurrentHealth;
-	}
-
+	int32 DamageDealt = FMath::Min(static_cast<int32>(Damage), CurrentHealth);
 	CurrentHealth -= DamageDealt;
-
 	return DamageDealt;
 }
 
