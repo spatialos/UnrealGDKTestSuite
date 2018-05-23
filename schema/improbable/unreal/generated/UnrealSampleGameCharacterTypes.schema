@@ -5,6 +5,10 @@ package improbable.unreal.generated;
 import "improbable/vector3.schema";
 import "improbable/unreal/gdk/core_types.schema";
 
+type UnrealClientTestConstArgsRequest {
+	uint32 target_subobject_offset = 1;
+	UnrealObjectRef field_conststruct_constobj = 2;
+}
 type UnrealServerTestFuncRequest {
 	uint32 target_subobject_offset = 1;
 }

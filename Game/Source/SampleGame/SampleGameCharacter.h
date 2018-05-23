@@ -144,8 +144,8 @@ public:
 	UPROPERTY(Replicated)
 	int TestBookend;
 
-	//UFUNCTION(Client, Reliable)
-	//void Client_TestConstArgs(FConstStruct ConstStruct);
+	UFUNCTION(Client, Reliable)
+	void Client_TestConstArgs(FConstStruct ConstStruct);
 
 	UFUNCTION(server, reliable, WithValidation)
 	//void Server_TestFunc(const TArray<FTestMixedStruct>& StructArg);

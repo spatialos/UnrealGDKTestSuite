@@ -194,10 +194,10 @@ bool ASampleGameCharacter::Server_TestFunc_Validate()
 	return true;
 }
 
-// void ASampleGameCharacter::Client_TestConstArgs_Implementation(FConstStruct ConstStruct)
-// {
-// 
-// }
+ void ASampleGameCharacter::Client_TestConstArgs_Implementation(FConstStruct ConstStruct)
+ {
+ 
+ }
 
 void ASampleGameCharacter::OnRep_TestPODArray()
 {
