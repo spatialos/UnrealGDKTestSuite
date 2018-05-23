@@ -18,8 +18,8 @@ class USpatialTypeBinding_PlayerState : public USpatialTypeBinding
 	GENERATED_BODY()
 
 public:
+	const FRepHandlePropertyMap& GetRepHandlePropertyMap() const override;
 	const FMigratableHandlePropertyMap& GetMigratableHandlePropertyMap() const override;
-
 	UClass* GetBoundClass() const override;
 
 	void Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap) override;
@@ -40,8 +40,11 @@ private:
 	using FRPCSender = void (USpatialTypeBinding_PlayerState::*)(worker::Connection* const, void*, UObject*);
 	TMap<FName, FRPCSender> RPCToSenderMap;
 
-	// Map from RepHandle to UProperty.
+	// Map from Handle to FRepHandleData.
 	FRepHandlePropertyMap RepHandleToPropertyMap;
+
+	// Map from Handle to FMigratableHandleData.
+	FMigratableHandlePropertyMap MigratableHandleToPropertyMap;
 
 	// Component update helper functions.
 	void BuildSpatialComponentUpdate(

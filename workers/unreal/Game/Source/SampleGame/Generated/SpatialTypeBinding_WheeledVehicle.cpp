@@ -23,10 +23,14 @@
 #include "UnrealWheeledVehicleMultiClientRepDataAddComponentOp.h"
 #include "UnrealWheeledVehicleMigratableDataAddComponentOp.h"
 
+const FRepHandlePropertyMap& USpatialTypeBinding_WheeledVehicle::GetRepHandlePropertyMap() const
+{
+	return RepHandleToPropertyMap;
+}
+
 const FMigratableHandlePropertyMap& USpatialTypeBinding_WheeledVehicle::GetMigratableHandlePropertyMap() const
 {
-	static FMigratableHandlePropertyMap HandleToPropertyMap;
-	return HandleToPropertyMap;
+	return MigratableHandleToPropertyMap;
 }
 
 UClass* USpatialTypeBinding_WheeledVehicle::GetBoundClass() const
@@ -41,6 +45,8 @@ void USpatialTypeBinding_WheeledVehicle::Init(USpatialInterop* InInterop, USpati
 	RPCToSenderMap.Emplace("ServerUpdateState", &USpatialTypeBinding_WheeledVehicle::ServerUpdateState_SendCommand);
 
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("WheeledVehicle"));
+
+	// Populate RepHandleToPropertyMap.
 	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(2, FRepHandleData(Class, {"bReplicateMovement"}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, COND_None, REPNOTIFY_OnChanged));
@@ -119,10 +125,10 @@ void USpatialTypeBinding_WheeledVehicle::UnbindFromView()
 worker::Entity USpatialTypeBinding_WheeledVehicle::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
 {
 	// Validate replication list.
-	const uint16 RepHandleToPropertyMapCount = RepHandleToPropertyMap.Num();
+	const uint16 RepHandlePropertyMapCount = GetRepHandlePropertyMap().Num();
 	for (auto& Rep : InitialChanges.RepChanged)
 	{
-		checkf(Rep <= RepHandleToPropertyMapCount, TEXT("Attempting to replicate a property with a handle that the type binding is not aware of. Have additional replicated properties been added in a non generated child object?"))
+		checkf(Rep <= RepHandlePropertyMapCount, TEXT("Attempting to replicate a property with a handle that the type binding is not aware of. Have additional replicated properties been added in a non generated child object?"))
 	}
 
 	// Setup initial data.
@@ -279,6 +285,7 @@ void USpatialTypeBinding_WheeledVehicle::BuildSpatialComponentUpdate(
 	improbable::unreal::generated::UnrealWheeledVehicleMigratableData::Update& MigratableDataUpdate,
 	bool& bMigratableDataUpdateChanged) const
 {
+	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
 	const FMigratableHandlePropertyMap& MigPropertyMap = GetMigratableHandlePropertyMap();
 	if (Changes.RepChanged.Num() > 0)
 	{
@@ -288,7 +295,7 @@ void USpatialTypeBinding_WheeledVehicle::BuildSpatialComponentUpdate(
 		while (HandleIterator.NextHandle())
 		{
 			const FRepLayoutCmd& Cmd = Changes.RepCmds[HandleIterator.CmdIndex];
-			const FRepHandleData& PropertyMapData = RepHandleToPropertyMap[HandleIterator.Handle];
+			const FRepHandleData& PropertyMapData = RepPropertyMap[HandleIterator.Handle];
 			const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData) + HandleIterator.ArrayOffset;
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -593,13 +600,14 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
 	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::UnrealWheeledVehicleClientRPCs::ComponentId);
+	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
 	if (!Update.field_bhidden().empty())
 	{
 		// field_bhidden
 		uint16 Handle = 1;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -621,7 +629,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_breplicatemovement
 		uint16 Handle = 2;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -643,7 +651,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_btearoff
 		uint16 Handle = 3;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -665,7 +673,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_bcanbedamaged
 		uint16 Handle = 4;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -687,14 +695,14 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_remoterole
 		uint16 Handle = 5;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			// On the client, we need to swap Role/RemoteRole.
 			if (!bIsServer)
 			{
 				Handle = 14;
-				RepData = &RepHandleToPropertyMap[Handle];
+				RepData = &HandleToPropertyMap[Handle];
 			}
 
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -723,7 +731,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_replicatedmovement
 		uint16 Handle = 6;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -752,7 +760,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_attachmentreplication_attachparent
 		uint16 Handle = 7;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
@@ -808,7 +816,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_attachmentreplication_locationoffset
 		uint16 Handle = 8;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -835,7 +843,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_attachmentreplication_relativescale3d
 		uint16 Handle = 9;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -862,7 +870,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_attachmentreplication_rotationoffset
 		uint16 Handle = 10;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -889,7 +897,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_attachmentreplication_attachsocket
 		uint16 Handle = 11;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -911,7 +919,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_attachmentreplication_attachcomponent
 		uint16 Handle = 12;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
@@ -967,7 +975,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_owner
 		uint16 Handle = 13;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
@@ -1023,14 +1031,14 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_role
 		uint16 Handle = 14;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			// On the client, we need to swap Role/RemoteRole.
 			if (!bIsServer)
 			{
 				Handle = 5;
-				RepData = &RepHandleToPropertyMap[Handle];
+				RepData = &HandleToPropertyMap[Handle];
 			}
 
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1052,7 +1060,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_instigator
 		uint16 Handle = 15;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
@@ -1108,7 +1116,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_playerstate
 		uint16 Handle = 16;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
@@ -1164,7 +1172,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_remoteviewpitch
 		uint16 Handle = 17;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1186,7 +1194,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 	{
 		// field_controller
 		uint16 Handle = 18;
-		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
