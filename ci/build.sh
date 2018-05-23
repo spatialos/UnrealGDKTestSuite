@@ -21,23 +21,18 @@ markStartOfBlock "$0"
 
 markStartOfBlock "Clean gdk build directory"
 rm -rf build/unreal-gdk/
+mkdir -p build
 markEndOfBlock "Clean gdk build directory"
 
-markStartOfBlock "Make gdk build directory"
-mkdir -p "build/"
-markEndOfBlock "Make gdk build directory"
-
 markStartOfBlock "Clone the GDK from github"
-pushd "build/"
-  git clone git@github.com:improbable/unreal-gdk.git -b ${UNREAL_GDK_BRANCH} --single-branch
-popd
+git clone git@github.com:improbable/unreal-gdk.git -b ${UNREAL_GDK_BRANCH} --single-branch "build/unreal-gdk"
 markEndOfBlock "Clone the GDK from github"
 
 markStartOfBlock "Run the GDK setup script"
   pushd "build/unreal-gdk"
-    # Run the setup script with the root of the SampleGame as the install path.
-    ./setup.sh ../..
+    ci/build.sh
   popd
+  ./create_gdk_symlink.bat "build/unreal-gdk"
 markEndOfBlock "Run the GDK setup script"
 
 markStartOfBlock "Build the SampleGame"
@@ -47,8 +42,24 @@ markStartOfBlock "Build the SampleGame"
     spatial build
   popd
 
-  # Build the Editor to ensure everything compiles.
+  # Build each target to ensure scripts are correct, skipping code generation on all but the first to save some time.
   Game/Scripts/Build.bat "SampleGameEditor" "Win64" "Development" "Game/SampleGame.uproject"
+  if [[ ! -f "spatial/build/assembly/worker/UnrealEditor@Windows.zip" ]]; then
+    echo "Editor was not properly built."
+    exit 1
+  fi
+
+  Game/Scripts/Build.bat "SampleGameServer" "Linux" "Development" "Game/SampleGame.uproject" --skip-codegen
+  if [[ ! -f "spatial/build/assembly/worker/UnrealServer@Linux.zip" ]]; then
+    echo "Linux Server was not properly built."
+    exit 1
+  fi
+
+  Game/Scripts/Build.bat "SampleGame" "Win64" "Development" "Game/SampleGame.uproject" --skip-codegen
+  if [[ ! -f "spatial/build/assembly/worker/UnrealClient@Windows.zip" ]]; then
+     echo "Client was not properly built."
+     exit 1
+  fi
 markEndOfBlock "Build the SampleGame"
 
 markEndOfBlock "$0"

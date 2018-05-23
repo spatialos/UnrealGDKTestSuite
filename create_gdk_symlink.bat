@@ -42,7 +42,7 @@ rmdir "%~dp0\Game\Plugins\SpatialGDK" 2>NUL
 rmdir "%~dp0\Game\Source\SpatialGDK" 2>NUL
 rmdir "%~dp0\Game\Scripts" 2>NUL
 rmdir "%~dp0\Game\Binaries\ThirdParty\Improbable" 2>NUL
-rmdir "%~dp0\schema\improbable\unreal\gdk" 2>NUL
+rmdir "%~dp0\spatial\schema\improbable\unreal\gdk" 2>NUL
 
 REM Ensure plugins folder exists, mklink doesn't recursively create
 if not exist %~dp0\Game\Plugins\ (
@@ -64,7 +64,7 @@ mklink /J "%~dp0\Game\Plugins\SpatialGDK" %SPATIALGDK_PLUGINSPATH%
 mklink /J "%~dp0\Game\Source\SpatialGDK" %SPATIALGDK_MODULEPATH%
 mklink /J "%~dp0\Game\Scripts" %SPATIALGDK_SCRIPTSPATH%
 mklink /J "%~dp0\Game\Binaries\ThirdParty\Improbable" %SPATIALGDK_BINARIESPATH%
-mklink /J "%~dp0\schema\improbable\unreal\gdk" %SPATIALGDK_SCHEMAPATH%
+mklink /J "%~dp0\spatial\schema\improbable\unreal\gdk" %SPATIALGDK_SCHEMAPATH%
 
 echo Successfully created symlinks to %SPATIALGDK_PATH%
 
