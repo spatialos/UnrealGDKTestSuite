@@ -44,7 +44,7 @@ Once you have downloaded the sample game in this repository, follow these instru
 
 **NOTES**:
 
-* The interop code and schema generated for marshalling updates and RPCs has been committed directly to the source tree in `Game/Source/SampleGame/Generated and schema/improbable/unreal/generated respectively`. This means you only need to re-run the commandlet if you have changed the code generator.
+* The interop code and schema generated for marshalling updates and RPCs has been committed directly to the source tree in `Game/Source/SampleGame/Generated` and `schema/improbable/unreal/generated respectively`. This means you only need to re-run the commandlet if you have changed the code generator.
 * There are two non-load-balanced launch scripts to assist your development:
     * 'one_worker_test.json' tests that managed workers launch correctly and ensures that entities never cross worker boundaries.
     * 'two_worker_test.json' provides a static non-overlapping worker boundary between two workers to assist your entity migration testing. As worker boundaries don't overlap, workers have no knowledge of an entity which is under the authority of a different worker.

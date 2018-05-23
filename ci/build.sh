@@ -20,12 +20,12 @@ fi
 markStartOfBlock "$0"
 
 markStartOfBlock "Clean gdk build directory"
-rm -rf build/unreal-gdk/
-mkdir -p build
+  rm -rf build/unreal-gdk/
+  mkdir -p build
 markEndOfBlock "Clean gdk build directory"
 
 markStartOfBlock "Clone the GDK from github"
-git clone git@github.com:improbable/unreal-gdk.git -b ${UNREAL_GDK_BRANCH} --single-branch "build/unreal-gdk"
+  git clone git@github.com:improbable/unreal-gdk.git -b ${UNREAL_GDK_BRANCH} --single-branch "build/unreal-gdk"
 markEndOfBlock "Clone the GDK from github"
 
 markStartOfBlock "Run the GDK setup script"
