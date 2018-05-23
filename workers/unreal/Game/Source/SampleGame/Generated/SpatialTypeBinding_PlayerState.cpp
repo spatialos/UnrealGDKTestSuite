@@ -21,42 +21,6 @@
 #include "UnrealPlayerStateMultiClientRepDataAddComponentOp.h"
 #include "UnrealPlayerStateMigratableDataAddComponentOp.h"
 
-const FRepHandlePropertyMap& USpatialTypeBinding_PlayerState::GetRepHandlePropertyMap() const
-{
-	static FRepHandlePropertyMap HandleToPropertyMap;
-	if (HandleToPropertyMap.Num() == 0)
-	{
-		UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("PlayerState"));
-		HandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(2, FRepHandleData(Class, {"bReplicateMovement"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(4, FRepHandleData(Class, {"bCanBeDamaged"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(5, FRepHandleData(Class, {"RemoteRole"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(6, FRepHandleData(Class, {"ReplicatedMovement"}, COND_SimulatedOrPhysics, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(7, FRepHandleData(Class, {"AttachmentReplication", "AttachParent"}, COND_Custom, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(8, FRepHandleData(Class, {"AttachmentReplication", "LocationOffset"}, COND_Custom, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(9, FRepHandleData(Class, {"AttachmentReplication", "RelativeScale3D"}, COND_Custom, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(10, FRepHandleData(Class, {"AttachmentReplication", "RotationOffset"}, COND_Custom, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(11, FRepHandleData(Class, {"AttachmentReplication", "AttachSocket"}, COND_Custom, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(12, FRepHandleData(Class, {"AttachmentReplication", "AttachComponent"}, COND_Custom, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(16, FRepHandleData(Class, {"Score"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(17, FRepHandleData(Class, {"Ping"}, COND_SkipOwner, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(18, FRepHandleData(Class, {"PlayerId"}, COND_InitialOnly, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(19, FRepHandleData(Class, {"bFromPreviousLevel"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(20, FRepHandleData(Class, {"bIsABot"}, COND_InitialOnly, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(21, FRepHandleData(Class, {"bIsInactive"}, COND_InitialOnly, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(22, FRepHandleData(Class, {"bIsSpectator"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(23, FRepHandleData(Class, {"bOnlySpectator"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(24, FRepHandleData(Class, {"StartTime"}, COND_None, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(25, FRepHandleData(Class, {"UniqueId"}, COND_InitialOnly, REPNOTIFY_OnChanged));
-		HandleToPropertyMap.Add(26, FRepHandleData(Class, {"PlayerNamePrivate"}, COND_None, REPNOTIFY_OnChanged));
-	}
-	return HandleToPropertyMap;
-}
-
 const FMigratableHandlePropertyMap& USpatialTypeBinding_PlayerState::GetMigratableHandlePropertyMap() const
 {
 	static FMigratableHandlePropertyMap HandleToPropertyMap;
@@ -72,6 +36,34 @@ void USpatialTypeBinding_PlayerState::Init(USpatialInterop* InInterop, USpatialP
 {
 	Super::Init(InInterop, InPackageMap);
 
+
+	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("PlayerState"));
+	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(2, FRepHandleData(Class, {"bReplicateMovement"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(4, FRepHandleData(Class, {"bCanBeDamaged"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(5, FRepHandleData(Class, {"RemoteRole"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(6, FRepHandleData(Class, {"ReplicatedMovement"}, COND_SimulatedOrPhysics, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(7, FRepHandleData(Class, {"AttachmentReplication", "AttachParent"}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(8, FRepHandleData(Class, {"AttachmentReplication", "LocationOffset"}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(9, FRepHandleData(Class, {"AttachmentReplication", "RelativeScale3D"}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(10, FRepHandleData(Class, {"AttachmentReplication", "RotationOffset"}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(11, FRepHandleData(Class, {"AttachmentReplication", "AttachSocket"}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(12, FRepHandleData(Class, {"AttachmentReplication", "AttachComponent"}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"Score"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"Ping"}, COND_SkipOwner, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"PlayerId"}, COND_InitialOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"bFromPreviousLevel"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"bIsABot"}, COND_InitialOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"bIsInactive"}, COND_InitialOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"bIsSpectator"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(23, FRepHandleData(Class, {"bOnlySpectator"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(24, FRepHandleData(Class, {"StartTime"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(25, FRepHandleData(Class, {"UniqueId"}, COND_InitialOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"PlayerNamePrivate"}, COND_None, REPNOTIFY_OnChanged));
 }
 
 void USpatialTypeBinding_PlayerState::BindToView()
@@ -128,10 +120,10 @@ void USpatialTypeBinding_PlayerState::UnbindFromView()
 worker::Entity USpatialTypeBinding_PlayerState::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
 {
 	// Validate replication list.
-	const uint16 RepHandlePropertyMapCount = GetRepHandlePropertyMap().Num();
+	const uint16 RepHandleToPropertyMapCount = RepHandleToPropertyMap.Num();
 	for (auto& Rep : InitialChanges.RepChanged)
 	{
-		checkf(Rep <= RepHandlePropertyMapCount, TEXT("Attempting to replicate a property with a handle that the type binding is not aware of. Have additional replicated properties been added in a non generated child object?"))
+		checkf(Rep <= RepHandleToPropertyMapCount, TEXT("Attempting to replicate a property with a handle that the type binding is not aware of. Have additional replicated properties been added in a non generated child object?"))
 	}
 
 	// Setup initial data.
@@ -288,7 +280,6 @@ void USpatialTypeBinding_PlayerState::BuildSpatialComponentUpdate(
 	improbable::unreal::generated::UnrealPlayerStateMigratableData::Update& MigratableDataUpdate,
 	bool& bMigratableDataUpdateChanged) const
 {
-	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
 	const FMigratableHandlePropertyMap& MigPropertyMap = GetMigratableHandlePropertyMap();
 	if (Changes.RepChanged.Num() > 0)
 	{
@@ -298,7 +289,7 @@ void USpatialTypeBinding_PlayerState::BuildSpatialComponentUpdate(
 		while (HandleIterator.NextHandle())
 		{
 			const FRepLayoutCmd& Cmd = Changes.RepCmds[HandleIterator.CmdIndex];
-			const FRepHandleData& PropertyMapData = RepPropertyMap[HandleIterator.Handle];
+			const FRepHandleData& PropertyMapData = RepHandleToPropertyMap[HandleIterator.Handle];
 			const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData) + HandleIterator.ArrayOffset;
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -633,14 +624,13 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
 	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::UnrealPlayerStateClientRPCs::ComponentId);
-	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
 	if (!Update.field_bhidden().empty())
 	{
 		// field_bhidden
 		uint16 Handle = 1;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -662,7 +652,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_breplicatemovement
 		uint16 Handle = 2;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -684,7 +674,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_btearoff
 		uint16 Handle = 3;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -706,7 +696,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_bcanbedamaged
 		uint16 Handle = 4;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -728,14 +718,14 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_remoterole
 		uint16 Handle = 5;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			// On the client, we need to swap Role/RemoteRole.
 			if (!bIsServer)
 			{
 				Handle = 14;
-				RepData = &HandleToPropertyMap[Handle];
+				RepData = &RepHandleToPropertyMap[Handle];
 			}
 
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -764,7 +754,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_replicatedmovement
 		uint16 Handle = 6;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -793,7 +783,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_attachmentreplication_attachparent
 		uint16 Handle = 7;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
@@ -849,7 +839,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_attachmentreplication_locationoffset
 		uint16 Handle = 8;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -876,7 +866,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_attachmentreplication_relativescale3d
 		uint16 Handle = 9;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -903,7 +893,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_attachmentreplication_rotationoffset
 		uint16 Handle = 10;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -930,7 +920,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_attachmentreplication_attachsocket
 		uint16 Handle = 11;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -952,7 +942,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_attachmentreplication_attachcomponent
 		uint16 Handle = 12;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
@@ -1008,7 +998,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_owner
 		uint16 Handle = 13;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
@@ -1064,14 +1054,14 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_role
 		uint16 Handle = 14;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			// On the client, we need to swap Role/RemoteRole.
 			if (!bIsServer)
 			{
 				Handle = 5;
-				RepData = &HandleToPropertyMap[Handle];
+				RepData = &RepHandleToPropertyMap[Handle];
 			}
 
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1093,7 +1083,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_instigator
 		uint16 Handle = 15;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
@@ -1149,7 +1139,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_score
 		uint16 Handle = 16;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1171,7 +1161,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_ping
 		uint16 Handle = 17;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1193,7 +1183,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_playerid
 		uint16 Handle = 18;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1215,7 +1205,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_bfrompreviouslevel
 		uint16 Handle = 19;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1237,7 +1227,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_bisabot
 		uint16 Handle = 20;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1259,7 +1249,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_bisinactive
 		uint16 Handle = 21;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1281,7 +1271,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_bisspectator
 		uint16 Handle = 22;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1303,7 +1293,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_bonlyspectator
 		uint16 Handle = 23;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1325,7 +1315,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_starttime
 		uint16 Handle = 24;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1347,7 +1337,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_uniqueid
 		uint16 Handle = 25;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
@@ -1376,7 +1366,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 	{
 		// field_playernameprivate
 		uint16 Handle = 26;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		const FRepHandleData* RepData = &RepHandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
