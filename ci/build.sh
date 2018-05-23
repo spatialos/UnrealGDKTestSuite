@@ -50,7 +50,7 @@ markStartOfBlock "Build the SampleGame"
   fi
 
   Game/Scripts/Build.bat "SampleGameServer" "Linux" "Development" "Game/SampleGame.uproject" --skip-codegen
-  if [[ ! -f "spatial/build/assembly/worker/UnrealServer@Linux.zip" ]]; then
+  if [[ ! -f "spatial/build/assembly/worker/UnrealWorker@Linux.zip" ]]; then
     echo "Linux Server was not properly built."
     exit 1
   fi
