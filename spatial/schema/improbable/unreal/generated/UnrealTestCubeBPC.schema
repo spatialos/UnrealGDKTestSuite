@@ -5,10 +5,10 @@ package improbable.unreal.generated;
 import "improbable/vector3.schema";
 import "improbable/unreal/gdk/core_types.schema";
 
-component UnrealTestCubeSingleClientRepData {
+component UnrealTestCubeBPCSingleClientRepData {
 	id = 100030;
 }
-component UnrealTestCubeMultiClientRepData {
+component UnrealTestCubeBPCMultiClientRepData {
 	id = 100031;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
@@ -25,17 +25,17 @@ component UnrealTestCubeMultiClientRepData {
 	UnrealObjectRef field_owner = 13; // COND_None // ::Actor
 	uint32 field_role = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
-	bool field_bcolor1 = 16; // COND_None // ::TestCube
+	bool field_iscolor1 = 16; // COND_None // ::TestCube_BP_C
 }
-component UnrealTestCubeMigratableData {
+component UnrealTestCubeBPCMigratableData {
 	id = 100032;
 }
-import "improbable/unreal/generated/UnrealTestCubeTypes.schema";
+import "improbable/unreal/generated/UnrealTestCubeBPCTypes.schema";
 
-component UnrealTestCubeClientRPCs {
+component UnrealTestCubeBPCClientRPCs {
 	id = 100033;
 }
-component UnrealTestCubeServerRPCs {
+component UnrealTestCubeBPCServerRPCs {
 	id = 100034;
-	command UnrealRPCCommandResponse testcubeserverinteract(UnrealServerInteractRequest);
+	command UnrealRPCCommandResponse testcubebpcserverinteract(UnrealServerInteractRequest);
 }

@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Interactable.h"
 #include "Kismet/GameplayStatics.h"
 #include "SampleGameGameStateBase.h"
 #include "SampleGameLogging.h"
@@ -69,6 +70,13 @@ ASampleGameCharacter::ASampleGameCharacter()
 	InteractDistance = 500.0f;
 	MaxHealth = 100;
 	CurrentHealth = 0;
+
+	// Find the TestCube_BP Blueprint class and set it up as the template class for spawning.
+	static ConstructorHelpers::FClassFinder<AActor> TestCubeBPClass(TEXT("/Game/EntityBlueprints/TestCube_BP"));
+	if (TestCubeBPClass.Class != nullptr)
+	{
+		TestCubeTemplate = TestCubeBPClass.Class;
+	}
 }
 
 void ASampleGameCharacter::BeginPlay()
@@ -159,10 +167,10 @@ void ASampleGameCharacter::Interact()
             FString::Printf(TEXT("Interact with actor: %s"), *HitResult.GetActor()->GetName()));
     }
 
-    ATestCube* InteractableObject = Cast<ATestCube>(HitResult.GetActor());
-    if (InteractableObject != nullptr)
+	// Do the interface check this way so it catches both C++ and Blueprint implementations (cast will only catch C++).
+    if (HitResult.GetActor()->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
     {
-        InteractableObject->Interact(this);
+		IInteractable::Execute_Interact(HitResult.GetActor(), this);
     }
 }
 
@@ -231,7 +239,7 @@ void ASampleGameCharacter::ServerSpawnCube_Implementation()
 	FVector SpawnLocation = CameraCenter + GetFollowCamera()->GetForwardVector() * InteractDistance;
 	FTransform SpawnTranform(FRotator::ZeroRotator, SpawnLocation);
 
-	GetWorld()->SpawnActor<ATestCube>(TestCubeTemplate, SpawnTranform);
+	GetWorld()->SpawnActor<AActor>(TestCubeTemplate, SpawnTranform);
 }
 
 bool ASampleGameCharacter::DebugResetCharacter_Validate()
