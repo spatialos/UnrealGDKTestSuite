@@ -59,11 +59,11 @@ private:
 	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::Update& Update) const;
 
 	// RPC command sender functions.
-	void ClientUnderscoreRPC_SendCommand(worker::Connection* const Connection, struct FFrame* const RPCFrame, UObject* TargetObject);
+	void ClientUnderscoreRPC_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
-	void ClientUnderscoreRPC_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>& Op);
+	void ClientUnderscoreRPC_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>& Op);
 
 	// RPC command response handler functions.
-	void ClientUnderscoreRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>& Op);
+	void ClientUnderscoreRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>& Op);
 };

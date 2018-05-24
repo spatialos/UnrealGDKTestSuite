@@ -13,13 +13,13 @@ struct FTestMixedStruct
 	GENERATED_BODY();
 
 	UPROPERTY(BlueprintReadOnly)
-	APlayerState* PS;
+		APlayerState* PS;
 
 	UPROPERTY()
-	float FVar;
+		float FVar;
 
 	UPROPERTY()
-	float IVar;
+		float IVar;
 
 	void Modify()
 	{
@@ -34,13 +34,13 @@ struct FTestPODStruct
 	GENERATED_BODY();
 
 	UPROPERTY()
-	float FVar;
+		float FVar;
 
 	UPROPERTY()
-	int IVar;
+		int IVar;
 
 	UPROPERTY()
-	double DVar;
+		double DVar;
 
 	void Modify()
 	{
@@ -56,7 +56,7 @@ struct FConstStruct
 	GENERATED_BODY();
 
 	UPROPERTY()
-	const UObject* ConstObj;
+		const UObject* ConstObj;
 };
 
 USTRUCT()
@@ -65,10 +65,10 @@ struct FCArrayStruct
 	GENERATED_BODY();
 
 	UPROPERTY()
-	int CIntArray[8];
+		int CIntArray[8];
 
 	UPROPERTY()
-	float CFloatArray[8];
+		float CFloatArray[8];
 };
 
 UENUM()
@@ -80,32 +80,32 @@ enum class ETestEnum : uint8
 	Enum_Count UMETA(Hidden),
 };
 
-UCLASS(config=Game)
+UCLASS(config = Game)
 class ASampleGameCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+		/** Camera boom positioning the camera behind the character */
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
+		class UCameraComponent* FollowCamera;
 public:
 	ASampleGameCharacter();
 
 	virtual void BeginPlay() override;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	float BaseTurnRate;
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	float BaseLookUpRate;
 
-	UPROPERTY(ReplicatedUsing=OnRep_TestPODArray)
+	UPROPERTY(ReplicatedUsing = OnRep_TestPODArray)
 	TArray<float> TestPODArray;
 
 	UPROPERTY(Replicated)
@@ -123,8 +123,8 @@ public:
 	UPROPERTY(Replicated)
 	FTestPODStruct TestPODStruct;
 
-	UPROPERTY(Replicated)
-	TArray<ETestEnum> TestEnumArray;
+	//UPROPERTY(Replicated)
+	//TArray<ETestEnum> TestEnumArray;
 
 	//UPROPERTY(Replicated)
 	//TArray<UObject*> TestObjectArray;
@@ -138,8 +138,8 @@ public:
 	//UPROPERTY(Replicated)
 	//FTestMixedStruct TestMixedStructCArrayReplication[8];
 
-	UPROPERTY(Replicated)
-	ETestEnum TestEnum;
+	//UPROPERTY(Replicated)
+	//ETestEnum TestEnum;
 
 	UPROPERTY(Replicated)
 	int TestBookend;
@@ -164,16 +164,16 @@ protected:
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
-	/** 
-	 * Called via input to turn at a given rate. 
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
+	/**
+	* Called via input to turn at a given rate.
+	* @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
+	*/
 	void TurnAtRate(float Rate);
 
 	/**
-	 * Called via input to turn look up/down at a given rate. 
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
+	* Called via input to turn look up/down at a given rate.
+	* @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
+	*/
 	void LookUpAtRate(float Rate);
 
 	/** Handler for when a touch input begins. */
@@ -197,4 +197,3 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
-

@@ -33,7 +33,7 @@ import "improbable/unreal/generated/UnrealSTestUnderscoreClassNameTypes.schema";
 
 component UnrealSTestUnderscoreClassNameClientRPCs {
 	id = 100028;
-	command UnrealRPCCommandResponse clientunderscorerpc(UnrealClientUnderscoreRPCRequest);
+	command UnrealRPCCommandResponse stestunderscoreclassnameclientunderscorerpc(UnrealClientUnderscoreRPCRequest);
 }
 component UnrealSTestUnderscoreClassNameServerRPCs {
 	id = 100029;

@@ -20,6 +20,7 @@ class USpatialTypeBinding_WheeledVehicle : public USpatialTypeBinding
 public:
 	const FRepHandlePropertyMap& GetRepHandlePropertyMap() const override;
 	const FMigratableHandlePropertyMap& GetMigratableHandlePropertyMap() const override;
+
 	UClass* GetBoundClass() const override;
 
 	void Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap) override;
@@ -39,9 +40,6 @@ private:
 	// RPC to sender map.
 	using FRPCSender = void (USpatialTypeBinding_WheeledVehicle::*)(worker::Connection* const, void*, UObject*);
 	TMap<FName, FRPCSender> RPCToSenderMap;
-
-	FRepHandlePropertyMap RepHandleToPropertyMap;
-	FMigratableHandlePropertyMap MigratableHandleToPropertyMap;
 
 	// Component update helper functions.
 	void BuildSpatialComponentUpdate(

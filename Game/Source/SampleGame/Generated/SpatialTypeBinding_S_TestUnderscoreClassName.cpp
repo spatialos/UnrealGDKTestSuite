@@ -110,9 +110,9 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::BindToView()
 		}));
 	}
 
-	using ClientRPCCommandTypes = improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Clientunderscorerpc>(std::bind(&USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Clientunderscorerpc>(std::bind(&USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandResponse, this, std::placeholders::_1)));
+	using ClientRPCCommandTypes = improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands;
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Stestunderscoreclassnameclientunderscorerpc>(std::bind(&USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Stestunderscoreclassnameclientunderscorerpc>(std::bind(&USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandResponse, this, std::placeholders::_1)));
 }
 
 void USpatialTypeBinding_S_TestUnderscoreClassName::UnbindFromView()
@@ -1064,7 +1064,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_Migratable(USp
 {
 }
 
-void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_SendCommand(worker::Connection* const Connection, struct FFrame* const RPCFrame, UObject* TargetObject)
+void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -1077,7 +1077,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_SendComm
 		}
 
 		// Build request.
-		improbable::unreal::UnrealClientUnderscoreRPCRequest Request;
+		improbable::unreal::generated::UnrealClientUnderscoreRPCRequest Request;
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1085,13 +1085,13 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_SendComm
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>(TargetObjectRef.entity(), Request, 0);
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>(TargetObjectRef.entity(), Request, 0);
 		return {RequestId.Id};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
 }
 
-void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>& Op)
+void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -1104,34 +1104,38 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnComman
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
-		UObject* TargetObjectUntyped = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		AS_TestUnderscoreClassName* TargetObject = Cast<AS_TestUnderscoreClassName>(TargetObjectUntyped);
-		checkf(TargetObjectUntyped, TEXT("%s: ClientUnderscoreRPC_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: ClientUnderscoreRPC_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
-		checkf(TargetObject, TEXT("%s: ClientUnderscoreRPC_OnCommandRequest: Object Ref %s (NetGUID %s) is the wrong type. Name: %s"),
-			*Interop->GetSpatialOS()->GetWorkerId(),
-			*ObjectRefToString(TargetObjectRef),
-			*TargetNetGUID.ToString(),
-			*TargetObjectUntyped->GetName());
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientUnderscoreRPC, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		TargetObject->ClientUnderscoreRPC_Implementation();
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("ClientUnderscoreRPC"))))
+		{
+			TargetObject->ProcessEvent(Function, nullptr);
+		}
+		else
+		{
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientUnderscoreRPC_OnCommandRequest: Function not found. Object: %s, Function: ClientUnderscoreRPC."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>& Op)
+void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientUnderscoreRPC"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
