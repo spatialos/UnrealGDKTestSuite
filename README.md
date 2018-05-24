@@ -49,6 +49,34 @@ Once you have downloaded the sample game in this repository, follow these instru
     * 'one_worker_test.json' tests that managed workers launch correctly and ensures that entities never cross worker boundaries.
     * 'two_worker_test.json' provides a static non-overlapping worker boundary between two workers to assist your entity migration testing. As worker boundaries don't overlap, workers have no knowledge of an entity which is under the authority of a different worker.
 
+## Helper Scripts
+### `Game/Scripts/Codegen.bat`
+(No parameters)
+
+Generates code from the project schema.
+
+### `Game/Scripts/BuildWorkerConfig.bat`
+(No parameters)
+
+Generates launch configurations for the runtime.
+
+Run this if you change:
+* `spatialos.UnrealClient.worker.json`
+* `spatialos.UnrealWorker.worker.json`
+
+### `Game/Scripts/Build.bat`
+`<target> <platform> <configuration> Game/SampleGame.uproject [--skip-codegen]`
+
+Build, Cook and zip special workers for use with:
+* `spatial upload`
+* `spatial local launch`
+
+The following `<target>`s will generate zipped workers:
+* `SampleGameEditor`
+* `SampleGame`
+* `SampleGameServer`
+
+> Any other `<target>` will pass all arguments along to `Engine/Build/BatchFiles/Build.bat` - no cooking or zipping will be performed.
 
 ## Documentation
 

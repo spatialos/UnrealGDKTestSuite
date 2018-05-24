@@ -43,11 +43,12 @@ markStartOfBlock "Build the SampleGame"
     exit 1
   fi
 
-  Game/Scripts/Build.bat "SampleGameServer" "Linux" "Development" "Game/SampleGame.uproject" --skip-codegen
-  if [[ ! -f "spatial/build/assembly/worker/UnrealWorker@Linux.zip" ]]; then
-    echo "Linux Server was not properly built."
-    exit 1
-  fi
+  # UNR-276 - This is disabled until TC agents have UE4.19 properly configured.
+  # Game/Scripts/Build.bat "SampleGameServer" "Linux" "Development" "Game/SampleGame.uproject" --skip-codegen
+  # if [[ ! -f "spatial/build/assembly/worker/UnrealWorker@Linux.zip" ]]; then
+  #   echo "Linux Server was not properly built."
+  #   exit 1
+  # fi
 
   Game/Scripts/Build.bat "SampleGame" "Win64" "Development" "Game/SampleGame.uproject" --skip-codegen
   if [[ ! -f "spatial/build/assembly/worker/UnrealClient@Windows.zip" ]]; then
