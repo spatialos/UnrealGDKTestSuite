@@ -61,6 +61,7 @@ void USpatialTypeBinding_TestCube_BP_C::Init(USpatialInterop* InInterop, USpatia
 	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"IsColor1"}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"CurrentHealth"}, COND_None, REPNOTIFY_OnChanged));
 }
 
 void USpatialTypeBinding_TestCube_BP_C::BindToView()
@@ -524,6 +525,13 @@ void USpatialTypeBinding_TestCube_BP_C::ServerSendUpdate_MultiClient(const uint8
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
 			OutUpdate.set_field_iscolor1(Value);
+			break;
+		}
+		case 17: // field_currenthealth
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_currenthealth(Value);
 			break;
 		}
 	default:
@@ -1073,6 +1081,28 @@ void USpatialTypeBinding_TestCube_BP_C::ReceiveUpdate_MultiClient(USpatialActorC
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
 			Value = (*Update.field_iscolor1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_currenthealth().empty())
+	{
+		// field_currenthealth
+		uint16 Handle = 17;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_currenthealth().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 

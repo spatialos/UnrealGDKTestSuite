@@ -26,6 +26,7 @@ component UnrealTestCubeBPCMultiClientRepData {
 	uint32 field_role = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
 	bool field_iscolor1 = 16; // COND_None // ::TestCube_BP_C
+	int32 field_currenthealth = 17; // COND_None // ::TestCube_BP_C
 }
 component UnrealTestCubeBPCMigratableData {
 	id = 100032;
