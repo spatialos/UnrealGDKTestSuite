@@ -15,7 +15,6 @@
 #include "SampleGameLogging.h"
 #include "SampleGamePlayerController.h"
 #include "SpatialNetDriver.h"
-#include "TestCube.h"
 #include "UnrealNetwork.h"
 #include "Weapons/Weapon.h"
 

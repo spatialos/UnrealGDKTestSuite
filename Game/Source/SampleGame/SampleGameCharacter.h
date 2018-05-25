@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
-#include "TestCube.h"
 #include "SampleGameCharacter.generated.h"
 
 UCLASS(config=Game)
