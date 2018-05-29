@@ -129,8 +129,8 @@ public:
 	//UPROPERTY(Replicated)
 	//TArray<UObject*> TestObjectArray;
 
-	//UPROPERTY(Replicated)
-	//int TestCArrayReplication[8];
+	UPROPERTY(Replicated)
+	int TestCArrayReplication[8];
 
 	//UPROPERTY(Replicated)
 	//FCArrayStruct TestCArrayStructReplication;

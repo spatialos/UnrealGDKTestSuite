@@ -63,7 +63,15 @@ component UnrealSampleGameCharacterMultiClientRepData {
 	float field_testpodstruct_fvar = 51; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
 	int32 field_testpodstruct_ivar = 52; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
 	bytes field_testpodstruct_dvar = 53; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
-	int32 field_testbookend = 54; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication0 = 54; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication1 = 55; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication2 = 56; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication3 = 57; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication4 = 58; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication5 = 59; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication6 = 60; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication7 = 61; // COND_None // ::SampleGameCharacter
+	int32 field_testbookend = 62; // COND_None // ::SampleGameCharacter
 }
 component UnrealSampleGameCharacterMigratableData {
 	id = 100022;

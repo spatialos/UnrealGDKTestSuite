@@ -61,6 +61,10 @@ ASampleGameCharacter::ASampleGameCharacter()
 												   // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 	TestPODStructArray.AddDefaulted(5);
+	for (int i = 0; i < 8; ++i)
+	{
+		TestCArrayReplication[i] = 0;
+	}
 	//TestEnumArray.AddDefaulted(5);
 }
 
@@ -185,6 +189,8 @@ void ASampleGameCharacter::Server_TestFunc_Implementation()
 
 	TestBookend += 1;
 
+	TestCArrayReplication[4] += 1;
+
 	//UE_LOG(LogTemp, Warning, TEXT("RPC successfully called with an array of %d elements"), StructArg.Num());
 }
 
@@ -223,7 +229,7 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestPODStruct, COND_SimulatedOnly);
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestEnumArray, COND_SimulatedOnly);
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestObjectArray, COND_SimulatedOnly);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayReplication, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayReplication, COND_None);
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayStructReplication, COND_SimulatedOnly);
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestEnum, COND_SimulatedOnly);
