@@ -69,13 +69,6 @@ ASampleGameCharacter::ASampleGameCharacter()
 	InteractDistance = 500.0f;
 	MaxHealth = 100;
 	CurrentHealth = 0;
-
-	// Find the TestCube_BP Blueprint class and set it up as the template class for spawning.
-	static ConstructorHelpers::FClassFinder<AActor> TestCubeBPClass(TEXT("/Game/EntityBlueprints/TestCube_BP"));
-	if (TestCubeBPClass.Class != nullptr)
-	{
-		TestCubeTemplate = TestCubeBPClass.Class;
-	}
 }
 
 void ASampleGameCharacter::BeginPlay()
@@ -119,7 +112,7 @@ void ASampleGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &ASampleGameCharacter::LookUpAtRate);
 
-    PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ASampleGameCharacter::Interact);
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ASampleGameCharacter::Interact);
 	PlayerInputComponent->BindAction("SpawnCube", IE_Pressed, this, &ASampleGameCharacter::SpawnCube);
 	PlayerInputComponent->BindAction("DebugResetCharacter", IE_Pressed, this, &ASampleGameCharacter::DebugResetCharacter);
 
@@ -139,38 +132,38 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 void ASampleGameCharacter::Interact()
 {
-    FCollisionQueryParams TraceParams = FCollisionQueryParams(FName(TEXT("SampleGame_Trace")), true, this);
-    TraceParams.bTraceComplex = true;
-    TraceParams.bTraceAsyncScene = true;
-    TraceParams.bReturnPhysicalMaterial = false;
+	FCollisionQueryParams TraceParams = FCollisionQueryParams(FName(TEXT("SampleGame_Trace")), true, this);
+	TraceParams.bTraceComplex = true;
+	TraceParams.bTraceAsyncScene = true;
+	TraceParams.bReturnPhysicalMaterial = false;
 
-    FHitResult HitResult(ForceInit);
-    FVector TraceStart = GetFollowCamera()->GetComponentLocation();
-    FVector TraceEnd = TraceStart + GetFollowCamera()->GetForwardVector() * InteractDistance;
+	FHitResult HitResult(ForceInit);
+	FVector TraceStart = GetFollowCamera()->GetComponentLocation();
+	FVector TraceEnd = TraceStart + GetFollowCamera()->GetForwardVector() * InteractDistance;
 
-    bool bDidHit = GetWorld()->LineTraceSingleByChannel(
-        HitResult,
-        TraceStart,
-        TraceEnd,
-        ECC_Visibility,
-        TraceParams);
+	bool bDidHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		TraceStart,
+		TraceEnd,
+		ECC_Visibility,
+		TraceParams);
 
-    if (!bDidHit)
-    {
-        return;
-    }
+	if (!bDidHit)
+	{
+		return;
+	}
 
-    if (GEngine != nullptr)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
-            FString::Printf(TEXT("Interact with actor: %s"), *HitResult.GetActor()->GetName()));
-    }
+	if (GEngine != nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
+			FString::Printf(TEXT("Interact with actor: %s"), *HitResult.GetActor()->GetName()));
+	}
 
 	// Do the interface check this way so it catches both C++ and Blueprint implementations (cast will only catch C++).
-    if (HitResult.GetActor()->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
-    {
+	if (HitResult.GetActor()->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
+	{
 		IInteractable::Execute_Interact(HitResult.GetActor(), this);
-    }
+	}
 }
 
 void ASampleGameCharacter::SpawnCube()
