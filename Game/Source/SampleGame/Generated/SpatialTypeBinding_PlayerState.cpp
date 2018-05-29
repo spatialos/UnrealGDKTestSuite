@@ -542,7 +542,7 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_playerid(Value);
+			OutUpdate.set_field_playerid(int32_t(Value));
 			break;
 		}
 		case 19: // field_bfrompreviouslevel
@@ -584,7 +584,7 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_starttime(Value);
+			OutUpdate.set_field_starttime(int32_t(Value));
 			break;
 		}
 		case 25: // field_uniqueid

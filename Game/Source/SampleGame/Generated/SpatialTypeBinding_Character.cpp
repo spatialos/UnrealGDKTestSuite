@@ -752,7 +752,7 @@ void USpatialTypeBinding_Character::ServerSendUpdate_MultiClient(const uint8* RE
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_jumpmaxcount(Value);
+			OutUpdate.set_field_jumpmaxcount(int32_t(Value));
 			break;
 		}
 		case 32: // field_reprootmotion_bisactive
@@ -3700,7 +3700,7 @@ void USpatialTypeBinding_Character::ServerMoveNoBase_OnCommandRequest(const work
 		}
 		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = uint32(Op.Request.field_view());
+		Parameters.View = Op.Request.field_view();
 		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
 
 		// Call implementation.
@@ -3760,7 +3760,7 @@ void USpatialTypeBinding_Character::ServerMoveDualNoBase_OnCommandRequest(const 
 			Parameters.InAccel0.Z = Vector.z();
 		}
 		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = uint32(Op.Request.field_view0());
+		Parameters.View0 = Op.Request.field_view0();
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
 			auto& Vector = Op.Request.field_inaccel();
@@ -3776,7 +3776,7 @@ void USpatialTypeBinding_Character::ServerMoveDualNoBase_OnCommandRequest(const 
 		}
 		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = uint32(Op.Request.field_view());
+		Parameters.View = Op.Request.field_view();
 		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
 
 		// Call implementation.
@@ -3836,7 +3836,7 @@ void USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_OnCommandRequ
 			Parameters.InAccel0.Z = Vector.z();
 		}
 		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = uint32(Op.Request.field_view0());
+		Parameters.View0 = Op.Request.field_view0();
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
 			auto& Vector = Op.Request.field_inaccel();
@@ -3852,7 +3852,7 @@ void USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_OnCommandRequ
 		}
 		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = uint32(Op.Request.field_view());
+		Parameters.View = Op.Request.field_view();
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
@@ -3939,7 +3939,7 @@ void USpatialTypeBinding_Character::ServerMoveDual_OnCommandRequest(const worker
 			Parameters.InAccel0.Z = Vector.z();
 		}
 		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = uint32(Op.Request.field_view0());
+		Parameters.View0 = Op.Request.field_view0();
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
 			auto& Vector = Op.Request.field_inaccel();
@@ -3955,7 +3955,7 @@ void USpatialTypeBinding_Character::ServerMoveDual_OnCommandRequest(const worker
 		}
 		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = uint32(Op.Request.field_view());
+		Parameters.View = Op.Request.field_view();
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
@@ -4049,7 +4049,7 @@ void USpatialTypeBinding_Character::ServerMove_OnCommandRequest(const worker::Co
 		}
 		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = uint32(Op.Request.field_view());
+		Parameters.View = Op.Request.field_view();
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);

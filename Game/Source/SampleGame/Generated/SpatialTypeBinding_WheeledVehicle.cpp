@@ -1274,7 +1274,7 @@ void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_SendCommand(worker::C
 		Request.set_field_inthrottleinput(StructuredParams.InThrottleInput);
 		Request.set_field_inbrakeinput(StructuredParams.InBrakeInput);
 		Request.set_field_inhandbrakeinput(StructuredParams.InHandbrakeInput);
-		Request.set_field_currentgear(StructuredParams.CurrentGear);
+		Request.set_field_currentgear(int32_t(StructuredParams.CurrentGear));
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
