@@ -20,7 +20,6 @@ class USpatialTypeBinding_SampleGameCharacter : public USpatialTypeBinding
 public:
 	const FRepHandlePropertyMap& GetRepHandlePropertyMap() const override;
 	const FMigratableHandlePropertyMap& GetMigratableHandlePropertyMap() const override;
-
 	UClass* GetBoundClass() const override;
 
 	void Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap) override;
@@ -41,6 +40,9 @@ private:
 	using FRPCSender = void (USpatialTypeBinding_SampleGameCharacter::*)(worker::Connection* const, void*, UObject*);
 	TMap<FName, FRPCSender> RPCToSenderMap;
 
+	FRepHandlePropertyMap RepHandleToPropertyMap;
+	FMigratableHandlePropertyMap MigratableHandleToPropertyMap;
+
 	// Component update helper functions.
 	void BuildSpatialComponentUpdate(
 		const FPropertyChangeState& Changes,
@@ -59,6 +61,7 @@ private:
 	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update& Update) const;
 
 	// RPC command sender functions.
+	void Client_TestFunc_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void Client_TestConstArgs_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void RootMotionDebugClientPrintOnScreen_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void ClientVeryShortAdjustPosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
@@ -78,6 +81,7 @@ private:
 	void ServerMove_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
+	void Client_TestFunc_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestfunc>& Op);
 	void Client_TestConstArgs_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestconstargs>& Op);
 	void RootMotionDebugClientPrintOnScreen_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>& Op);
 	void ClientVeryShortAdjustPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>& Op);
@@ -97,6 +101,7 @@ private:
 	void ServerMove_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>& Op);
 
 	// RPC command response handler functions.
+	void Client_TestFunc_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestfunc>& Op);
 	void Client_TestConstArgs_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestconstargs>& Op);
 	void RootMotionDebugClientPrintOnScreen_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>& Op);
 	void ClientVeryShortAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>& Op);

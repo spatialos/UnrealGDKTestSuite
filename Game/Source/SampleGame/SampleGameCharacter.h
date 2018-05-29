@@ -71,8 +71,9 @@ struct FCArrayStruct
 		float CFloatArray[8];
 };
 
+// Enum tests start
 UENUM()
-enum class ETestEnum : uint8
+enum class ETest8Enum : uint8
 {
 	Enum_0,
 	Enum_1,
@@ -80,18 +81,57 @@ enum class ETestEnum : uint8
 	Enum_Count UMETA(Hidden),
 };
 
+UENUM()
+enum class ETest16Enum : uint16
+{
+	Enum_0,
+	Enum_1,
+
+	Enum_Count UMETA(Hidden),
+};
+
+UENUM()
+enum class ETest32Enum : uint32
+{
+	Enum_0,
+	Enum_1,
+
+	Enum_Count UMETA(Hidden),
+};
+
+UENUM()
+enum class ETest64Enum : int64
+{
+	Enum_0,
+	Enum_1,
+
+	Enum_Count UMETA(Hidden),
+};
+
+UENUM()
+namespace EnumNamespace
+{
+	enum EUnrealTestEnum
+	{
+		Enum_0,
+		Enum_1,
+	};
+}
+// Enum tests end
+
+
 UCLASS(config = Game)
 class ASampleGameCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-		/** Camera boom positioning the camera behind the character */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoom;
+	/** Camera boom positioning the camera behind the character */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* FollowCamera;
+	class UCameraComponent* FollowCamera;
 public:
 	ASampleGameCharacter();
 
@@ -124,9 +164,6 @@ public:
 	FTestPODStruct TestPODStruct;
 
 	//UPROPERTY(Replicated)
-	//TArray<ETestEnum> TestEnumArray;
-
-	//UPROPERTY(Replicated)
 	//TArray<UObject*> TestObjectArray;
 
 	//UPROPERTY(Replicated)
@@ -138,21 +175,85 @@ public:
 	//UPROPERTY(Replicated)
 	//FTestMixedStruct TestMixedStructCArrayReplication[8];
 
-	//UPROPERTY(Replicated)
-	//ETestEnum TestEnum;
+	// Enum properties begin
+	UPROPERTY(Replicated)
+	ETest8Enum Test8Enum;
 
 	UPROPERTY(Replicated)
+	ETest16Enum Test16Enum;
+
+	UPROPERTY(Replicated)
+	ETest32Enum Test32Enum;
+
+	UPROPERTY(Replicated)
+	ETest64Enum Test64Enum;
+
+	//UPROPERTY(Replicated)
+	//ETest8Enum TestEnumCArray[16];
+
+	UPROPERTY(Replicated)
+	TArray<ETest8Enum> TestEnumTArray;
+
+	UPROPERTY(Replicated)
+	TEnumAsByte<EnumNamespace::EUnrealTestEnum> TestUEnum;
+
+	//UPROPERTY(Replicated)
+	//TEnumAsByte<EnumNamespace::EUnrealTestEnum> TestUEnumCArray[16];
+
+	UPROPERTY(Replicated)
+	TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>> TestUEnumTArray;
+	// Enum properties end
+
+	// POD properties begin
+	UPROPERTY(Replicated)
+	int8 Test8Int;
+
+	UPROPERTY(Replicated)
+	int16 Test16Int;
+
+	UPROPERTY(Replicated)
+	int32 Test32Int;
+
+	UPROPERTY(Replicated)
+	int64 Test64Int;
+
+	UPROPERTY(Replicated)
+	uint8 Test8UInt;
+
+	UPROPERTY(Replicated)
+	uint16 Test16UInt;
+
+	UPROPERTY(Replicated)
+	uint32 Test32UInt;
+
+	UPROPERTY(Replicated)
+	uint64 Test64UInt;
+
+	UPROPERTY(Replicated)
+	float TestFloat;
+
+	UPROPERTY(Replicated)
+	double TestDouble;
+	// POD properties end
+
+	UPROPERTY(ReplicatedUsing = OnRep_TestBookend)
 	int TestBookend;
 
 	UFUNCTION(Client, Reliable)
 	void Client_TestConstArgs(FConstStruct ConstStruct);
 
-	UFUNCTION(server, reliable, WithValidation)
+	UFUNCTION(Server, Reliable, WithValidation)
 	//void Server_TestFunc(const TArray<FTestMixedStruct>& StructArg);
 	void Server_TestFunc();
 
+	UFUNCTION(Client, Reliable)
+	void Client_TestFunc();
+
 	UFUNCTION()
 	void OnRep_TestPODArray();
+
+	UFUNCTION()
+	void OnRep_TestBookend();
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 

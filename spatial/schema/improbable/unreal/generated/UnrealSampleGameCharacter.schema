@@ -62,8 +62,25 @@ component UnrealSampleGameCharacterMultiClientRepData {
 	float field_testmixedstruct_ivar = 50; // COND_SimulatedOnly // TestMixedStruct::TestMixedStruct::SampleGameCharacter
 	float field_testpodstruct_fvar = 51; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
 	int32 field_testpodstruct_ivar = 52; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
-	bytes field_testpodstruct_dvar = 53; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
-	int32 field_testbookend = 54; // COND_None // ::SampleGameCharacter
+	double field_testpodstruct_dvar = 53; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
+	uint32 field_test8enum = 54; // COND_None // ::SampleGameCharacter
+	uint32 field_test16enum = 55; // COND_None // ::SampleGameCharacter
+	uint32 field_test32enum = 56; // COND_None // ::SampleGameCharacter
+	int64 field_test64enum = 57; // COND_None // ::SampleGameCharacter
+	list<uint32> field_testenumtarray = 58; // COND_None // ::SampleGameCharacter
+	uint32 field_testuenum = 59; // COND_None // ::SampleGameCharacter
+	list<uint32> field_testuenumtarray = 60; // COND_None // ::SampleGameCharacter
+	int32 field_test8int = 61; // COND_None // ::SampleGameCharacter
+	int32 field_test16int = 62; // COND_None // ::SampleGameCharacter
+	int32 field_test32int = 63; // COND_None // ::SampleGameCharacter
+	int64 field_test64int = 64; // COND_None // ::SampleGameCharacter
+	uint32 field_test8uint = 65; // COND_None // ::SampleGameCharacter
+	uint32 field_test16uint = 66; // COND_None // ::SampleGameCharacter
+	uint32 field_test32uint = 67; // COND_None // ::SampleGameCharacter
+	uint64 field_test64uint = 68; // COND_None // ::SampleGameCharacter
+	float field_testfloat = 69; // COND_None // ::SampleGameCharacter
+	double field_testdouble = 70; // COND_None // ::SampleGameCharacter
+	int32 field_testbookend = 71; // COND_None // ::SampleGameCharacter
 }
 component UnrealSampleGameCharacterMigratableData {
 	id = 100022;
@@ -73,6 +90,7 @@ import "improbable/unreal/generated/UnrealCharacterTypes.schema";
 
 component UnrealSampleGameCharacterClientRPCs {
 	id = 100023;
+	command UnrealRPCCommandResponse samplegamecharacterclienttestfunc(UnrealClientTestFuncRequest);
 	command UnrealRPCCommandResponse samplegamecharacterclienttestconstargs(UnrealClientTestConstArgsRequest);
 	command UnrealRPCCommandResponse samplegamecharacterrootmotiondebugclientprintonscreen(UnrealRootMotionDebugClientPrintOnScreenRequest);
 	command UnrealRPCCommandResponse samplegamecharacterclientveryshortadjustposition(UnrealClientVeryShortAdjustPositionRequest);
