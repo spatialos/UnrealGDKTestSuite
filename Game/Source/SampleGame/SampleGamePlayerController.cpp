@@ -10,8 +10,14 @@
 
 
 ASampleGamePlayerController::ASampleGamePlayerController()
-	: SampleGameUI(nullptr)
-{}
+	: SampleGameUI(nullptr),
+	PlayerRespawnDelay(5.0f),
+	DeletePlayerDelay(15.0f),
+	PlayerToDelete(nullptr)
+{
+	// Don't automatically switch the camera view when the pawn changes, to avoid weird camera jumps when a character dies.
+	bAutoManageActiveCameraTarget = false;
+}
 
 void ASampleGamePlayerController::UpdateHealthUI(int32 NewHealth, int32 MaxHealth)
 {
@@ -29,19 +35,43 @@ void ASampleGamePlayerController::SetPawn(APawn* InPawn)
 {
 	Super::SetPawn(InPawn);
 
-	if (GetNetMode() == NM_DedicatedServer)
+	if (GetNetMode() == NM_Client)
+	{
+		SetPlayerUIVisible(InPawn != nullptr);
+
+		ASampleGameCharacter* Character = Cast<ASampleGameCharacter>(InPawn);
+		if (Character != nullptr)
+		{
+			UpdateHealthUI(Character->GetCurrentHealth(), Character->GetMaxHealth());
+
+			// Make the new pawn's camera this controller's camera.
+			SetViewTarget(InPawn);
+		}
+	}
+}
+
+void ASampleGamePlayerController::KillPlayer()
+{
+	check(GetNetMode() == NM_DedicatedServer);
+
+	if (!HasAuthority())
 	{
 		return;
 	}
 
-	if (InPawn == nullptr)
-	{
-		if (SampleGameUI != nullptr && SampleGameUI->IsVisible())
-		{
-			SampleGameUI->RemoveFromViewport();
-		}
-	}
-	else
+	PlayerToDelete = GetPawn();
+	UnPossess();
+
+	// TODO: timers won't persist across worker boundary migrations, and neither will PlayerToDelete
+	GetWorldTimerManager().SetTimer(DeletePlayerTimerHandle, this, &ASampleGamePlayerController::DeletePlayer, DeletePlayerDelay);
+	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASampleGamePlayerController::RespawnPlayer, PlayerRespawnDelay);
+}
+
+void ASampleGamePlayerController::SetPlayerUIVisible(bool bIsVisible)
+{
+	check(GetNetMode() == NM_Client);
+
+	if (bIsVisible)
 	{
 		if (SampleGameUI == nullptr)
 		{
@@ -61,11 +91,34 @@ void ASampleGamePlayerController::SetPawn(APawn* InPawn)
 		{
 			SampleGameUI->AddToViewport();
 		}
-
-		ASampleGameCharacter* Character = Cast<ASampleGameCharacter>(InPawn);
-		if (Character != nullptr)
+	}
+	else
+	{
+		if (SampleGameUI != nullptr && SampleGameUI->IsVisible())
 		{
-			UpdateHealthUI(Character->GetCurrentHealth(), Character->GetMaxHealth());
+			SampleGameUI->RemoveFromViewport();
 		}
+	}
+}
+
+void ASampleGamePlayerController::RespawnPlayer()
+{
+	check(GetNetMode() == NM_DedicatedServer);
+	AGameModeBase* GameMode = GetWorld()->GetAuthGameMode();
+	if (GameMode != nullptr)
+	{
+		APawn* NewPawn = GameMode->SpawnDefaultPawnFor(this, StartSpot.Get());
+		Possess(NewPawn);
+	}
+}
+
+void ASampleGamePlayerController::DeletePlayer()
+{
+	check(GetNetMode() == NM_DedicatedServer);
+	if (PlayerToDelete != nullptr)
+	{
+		// TODO: what if the player is on a different worker?
+		GetWorld()->DestroyActor(PlayerToDelete);
+		PlayerToDelete = nullptr;
 	}
 }

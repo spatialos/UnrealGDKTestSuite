@@ -69,6 +69,7 @@ ASampleGameCharacter::ASampleGameCharacter()
 	InteractDistance = 500.0f;
 	MaxHealth = 100;
 	CurrentHealth = 0;
+	bIsRagdoll = false;
 }
 
 void ASampleGameCharacter::BeginPlay()
@@ -125,13 +126,25 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ASampleGameCharacter, EquippedWeapon);
+	DOREPLIFETIME(ASampleGameCharacter, bIsRagdoll);
 
 	// Only replicate health to the owning client.
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, CurrentHealth, COND_AutonomousOnly);
 }
 
+void ASampleGameCharacter::EndPlay(EEndPlayReason::Type Reason)
+{
+	UE_LOG(LogClass, Log, TEXT("Character %s being destroyed"), *this->GetName());
+}
+
 void ASampleGameCharacter::Interact()
 {
+	check(GetNetMode() == NM_Client);
+	if (bIsRagdoll)
+	{
+		return;
+	}
+
 	FCollisionQueryParams TraceParams = FCollisionQueryParams(FName(TEXT("SampleGame_Trace")), true, this);
 	TraceParams.bTraceComplex = true;
 	TraceParams.bTraceAsyncScene = true;
@@ -210,6 +223,35 @@ void ASampleGameCharacter::StopFire()
 	}
 }
 
+void ASampleGameCharacter::KillPlayer()
+{
+	if (GetNetMode() == NM_DedicatedServer && HasAuthority())
+	{
+		ASampleGamePlayerController* PC = Cast<ASampleGamePlayerController>(GetController());
+		if (PC)
+		{
+			PC->KillPlayer();
+		}
+
+		bIsRagdoll = true;
+		OnRep_IsRagdoll();
+	}
+}
+
+void ASampleGameCharacter::StartRagdoll()
+{
+	// Disable capsule collision and disable movement.
+	UCapsuleComponent* CapsuleComponent = GetCapsuleComponent();
+	CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCharacterMovement()->DisableMovement();
+
+	// Enable mesh collision and physics.
+	USkeletalMeshComponent* MeshComponent = GetMesh();
+	MeshComponent->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	MeshComponent->SetCollisionProfileName(FName(TEXT("Ragdoll")));
+	MeshComponent->SetSimulatePhysics(true);
+}
+
 AWeapon* ASampleGameCharacter::GetEquippedWeapon() const
 {
 	return EquippedWeapon;
@@ -260,6 +302,14 @@ void ASampleGameCharacter::OnRep_CurrentHealth()
 	}
 }
 
+void ASampleGameCharacter::OnRep_IsRagdoll()
+{
+	if (bIsRagdoll)
+	{
+		StartRagdoll();
+	}
+}
+
 FVector ASampleGameCharacter::GetLineTraceStart() const
 {
 	return GetFollowCamera()->GetComponentLocation();
@@ -274,6 +324,12 @@ float ASampleGameCharacter::TakeDamage(float Damage, struct FDamageEvent const& 
 {
 	int32 DamageDealt = FMath::Min(static_cast<int32>(Damage), CurrentHealth);
 	CurrentHealth -= DamageDealt;
+
+	if (CurrentHealth <= 0)
+	{
+		KillPlayer();
+	}
+
 	return DamageDealt;
 }
 
