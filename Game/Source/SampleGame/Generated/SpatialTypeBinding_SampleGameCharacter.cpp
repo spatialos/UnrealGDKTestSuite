@@ -63,6 +63,68 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("SampleGameCharacter"));
 
 	// Populate RepHandleToPropertyMap.
+	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(2, FRepHandleData(Class, {"bReplicateMovement"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(4, FRepHandleData(Class, {"bCanBeDamaged"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(5, FRepHandleData(Class, {"RemoteRole"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(6, FRepHandleData(Class, {"ReplicatedMovement"}, COND_SimulatedOrPhysicsNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(7, FRepHandleData(Class, {"AttachmentReplication", "AttachParent"}, COND_Custom, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(8, FRepHandleData(Class, {"AttachmentReplication", "LocationOffset"}, COND_Custom, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(9, FRepHandleData(Class, {"AttachmentReplication", "RelativeScale3D"}, COND_Custom, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(10, FRepHandleData(Class, {"AttachmentReplication", "RotationOffset"}, COND_Custom, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(11, FRepHandleData(Class, {"AttachmentReplication", "AttachSocket"}, COND_Custom, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(12, FRepHandleData(Class, {"AttachmentReplication", "AttachComponent"}, COND_Custom, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"PlayerState"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"RemoteViewPitch"}, COND_SkipOwner, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"Controller"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"ReplicatedBasedMovement", "MovementBase"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"ReplicatedBasedMovement", "BoneName"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"ReplicatedBasedMovement", "Location"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"ReplicatedBasedMovement", "Rotation"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(23, FRepHandleData(Class, {"ReplicatedBasedMovement", "bServerHasBaseComponent"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(24, FRepHandleData(Class, {"ReplicatedBasedMovement", "bRelativeRotation"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(25, FRepHandleData(Class, {"ReplicatedBasedMovement", "bServerHasVelocity"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"AnimRootMotionTranslationScale"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(27, FRepHandleData(Class, {"ReplicatedServerLastTransformUpdateTimeStamp"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(28, FRepHandleData(Class, {"ReplicatedMovementMode"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(29, FRepHandleData(Class, {"bIsCrouched"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(30, FRepHandleData(Class, {"JumpMaxHoldTime"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(31, FRepHandleData(Class, {"JumpMaxCount"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(32, FRepHandleData(Class, {"RepRootMotion", "bIsActive"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(33, FRepHandleData(Class, {"RepRootMotion", "AnimMontage"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(34, FRepHandleData(Class, {"RepRootMotion", "Position"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(35, FRepHandleData(Class, {"RepRootMotion", "Location"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(36, FRepHandleData(Class, {"RepRootMotion", "Rotation"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(37, FRepHandleData(Class, {"RepRootMotion", "MovementBase"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(38, FRepHandleData(Class, {"RepRootMotion", "MovementBaseBoneName"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(39, FRepHandleData(Class, {"RepRootMotion", "bRelativePosition"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(40, FRepHandleData(Class, {"RepRootMotion", "bRelativeRotation"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(41, FRepHandleData(Class, {"RepRootMotion", "AuthoritativeRootMotion"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(42, FRepHandleData(Class, {"RepRootMotion", "Acceleration"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(43, FRepHandleData(Class, {"RepRootMotion", "LinearVelocity"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"TestPODArray"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(45, FRepHandleData(Class, {"TestMixedStructArray"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(46, FRepHandleData(Class, {"TestPODStructArray"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(47, FRepHandleData(Class, {"TestNetSerializeArray"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(48, FRepHandleData(Class, {"TestMixedStruct", "PS"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(49, FRepHandleData(Class, {"TestMixedStruct", "FVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(50, FRepHandleData(Class, {"TestMixedStruct", "IVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(51, FRepHandleData(Class, {"TestPODStruct", "FVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(52, FRepHandleData(Class, {"TestPODStruct", "IVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(53, FRepHandleData(Class, {"TestPODStruct", "DVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(54, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(55, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 4));
+	RepHandleToPropertyMap.Add(56, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 8));
+	RepHandleToPropertyMap.Add(57, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 12));
+	RepHandleToPropertyMap.Add(58, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 16));
+	RepHandleToPropertyMap.Add(59, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 20));
+	RepHandleToPropertyMap.Add(60, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 24));
+	RepHandleToPropertyMap.Add(61, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 28));
+	RepHandleToPropertyMap.Add(62, FRepHandleData(Class, {"TestBookend"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(2, FRepHandleData(Class, {"bReplicateMovement"}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, COND_None, REPNOTIFY_OnChanged));
@@ -1113,10 +1175,65 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			OutUpdate.set_field_test16int(int32_t(Value));
 			break;
 		}
+		case 54: // field_testbookend
+		case 54: // field_testcarrayreplication0
 		case 63: // field_test32int
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
+			OutUpdate.set_field_testcarrayreplication0(Value);
+			break;
+		}
+		case 55: // field_testcarrayreplication1
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcarrayreplication1(Value);
+			break;
+		}
+		case 56: // field_testcarrayreplication2
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcarrayreplication2(Value);
+			break;
+		}
+		case 57: // field_testcarrayreplication3
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcarrayreplication3(Value);
+			break;
+		}
+		case 58: // field_testcarrayreplication4
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcarrayreplication4(Value);
+			break;
+		}
+		case 59: // field_testcarrayreplication5
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcarrayreplication5(Value);
+			break;
+		}
+		case 60: // field_testcarrayreplication6
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcarrayreplication6(Value);
+			break;
+		}
+		case 61: // field_testcarrayreplication7
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcarrayreplication7(Value);
+			break;
+		}
+		case 62: // field_testbookend
 			OutUpdate.set_field_test32int(int32_t(Value));
 			break;
 		}
@@ -2832,6 +2949,182 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
+	if (!Update.field_testcarrayreplication0().empty())
+	{
+		// field_testcarrayreplication0
+		uint16 Handle = 54;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcarrayreplication0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcarrayreplication1().empty())
+	{
+		// field_testcarrayreplication1
+		uint16 Handle = 55;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcarrayreplication1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcarrayreplication2().empty())
+	{
+		// field_testcarrayreplication2
+		uint16 Handle = 56;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcarrayreplication2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcarrayreplication3().empty())
+	{
+		// field_testcarrayreplication3
+		uint16 Handle = 57;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcarrayreplication3().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcarrayreplication4().empty())
+	{
+		// field_testcarrayreplication4
+		uint16 Handle = 58;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcarrayreplication4().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcarrayreplication5().empty())
+	{
+		// field_testcarrayreplication5
+		uint16 Handle = 59;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcarrayreplication5().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcarrayreplication6().empty())
+	{
+		// field_testcarrayreplication6
+		uint16 Handle = 60;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcarrayreplication6().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcarrayreplication7().empty())
+	{
+		// field_testcarrayreplication7
+		uint16 Handle = 61;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcarrayreplication7().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
 	if (!Update.field_test8enum().empty())
 	{
 		// field_test8enum
@@ -3223,6 +3516,8 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testbookend().empty())
 	{
 		// field_testbookend
+		uint16 Handle = 54;
+		uint16 Handle = 62;
 		uint16 Handle = 71;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
