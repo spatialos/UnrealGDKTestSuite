@@ -259,6 +259,19 @@ void ASampleGameCharacter::StartRagdoll()
 	MeshComponent->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	MeshComponent->SetCollisionProfileName(FName(TEXT("Ragdoll")));
 	MeshComponent->SetSimulatePhysics(true);
+
+	// Move all of the components from under CapsuleComponent (the current root) to MeshComponent.
+	SetRootComponent(MeshComponent);
+	int NumChildren = CapsuleComponent->GetNumChildrenComponents();
+	for (int i = 0; i < NumChildren; ++i)
+	{
+		USceneComponent* Component = CapsuleComponent->GetChildComponent(i);
+		if (Component == nullptr || Component == MeshComponent)
+		{
+			continue;
+		}
+		Component->AttachTo(MeshComponent);
+	}
 }
 
 AWeapon* ASampleGameCharacter::GetEquippedWeapon() const
