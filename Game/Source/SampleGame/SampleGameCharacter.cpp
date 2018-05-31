@@ -95,6 +95,20 @@ void ASampleGameCharacter::BeginPlay()
 	}
 }
 
+void ASampleGameCharacter::EndPlay(const EEndPlayReason::Type Reason)
+{
+	Super::EndPlay(Reason);
+
+	if (HasAuthority())
+	{
+		// Destroy weapon actor.
+		if (EquippedWeapon != nullptr && !EquippedWeapon->IsPendingKill())
+		{
+			GetWorld()->DestroyActor(EquippedWeapon);
+		}
+	}
+}
+
 void ASampleGameCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
@@ -130,11 +144,6 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 	// Only replicate health to the owning client.
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, CurrentHealth, COND_AutonomousOnly);
-}
-
-void ASampleGameCharacter::EndPlay(EEndPlayReason::Type Reason)
-{
-	UE_LOG(LogClass, Log, TEXT("Character %s being destroyed"), *this->GetName());
 }
 
 void ASampleGameCharacter::Interact()

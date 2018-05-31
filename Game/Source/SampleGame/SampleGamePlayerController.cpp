@@ -105,7 +105,7 @@ void ASampleGamePlayerController::RespawnPlayer()
 {
 	check(GetNetMode() == NM_DedicatedServer);
 	AGameModeBase* GameMode = GetWorld()->GetAuthGameMode();
-	if (GameMode != nullptr)
+	if (GameMode != nullptr && this != nullptr)
 	{
 		APawn* NewPawn = GameMode->SpawnDefaultPawnFor(this, StartSpot.Get());
 		Possess(NewPawn);

@@ -25,6 +25,8 @@ public:
 
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -79,8 +81,6 @@ protected:
 	// End of APawn interface
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	
-	virtual void EndPlay(EEndPlayReason::Type Reason) override;
 
 private:
 	// [client] Checks if the crosshair is pointing at an interactable object, and if so, calls Interact() on it.
