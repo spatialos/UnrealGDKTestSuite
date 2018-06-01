@@ -11,13 +11,18 @@
 
 
 ASampleGamePlayerController::ASampleGamePlayerController()
-	: SampleGameUI(nullptr),
-	PlayerRespawnDelay(5.0f),
-	DeletePlayerDelay(15.0f),
-	PlayerToDelete(nullptr)
+	: SampleGameUI(nullptr)
+	, PlayerRespawnDelay(5.0f)
+	, DeletePlayerDelay(15.0f)
+	, PlayerToDelete(nullptr)
 {
 	// Don't automatically switch the camera view when the pawn changes, to avoid weird camera jumps when a character dies.
 	bAutoManageActiveCameraTarget = false;
+}
+
+void ASampleGamePlayerController::EndPlay(const EEndPlayReason::Type Reason)
+{
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 }
 
 void ASampleGamePlayerController::UpdateHealthUI(int32 NewHealth, int32 MaxHealth)
@@ -112,7 +117,7 @@ void ASampleGamePlayerController::RespawnPlayer()
 {
 	check(GetNetMode() == NM_DedicatedServer);
 	AGameModeBase* GameMode = GetWorld()->GetAuthGameMode();
-	if (GameMode != nullptr && this != nullptr)
+	if (GameMode != nullptr)
 	{
 		APawn* NewPawn = GameMode->SpawnDefaultPawnFor(this, StartSpot.Get());
 		Possess(NewPawn);

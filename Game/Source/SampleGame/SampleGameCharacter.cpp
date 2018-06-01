@@ -149,10 +149,6 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 void ASampleGameCharacter::Interact()
 {
 	check(GetNetMode() == NM_Client);
-	if (bIsRagdoll)
-	{
-		return;
-	}
 
 	FCollisionQueryParams TraceParams = FCollisionQueryParams(FName(TEXT("SampleGame_Trace")), true, this);
 	TraceParams.bTraceComplex = true;
@@ -266,11 +262,10 @@ void ASampleGameCharacter::StartRagdoll()
 	for (int i = 0; i < NumChildren; ++i)
 	{
 		USceneComponent* Component = CapsuleComponent->GetChildComponent(i);
-		if (Component == nullptr || Component == MeshComponent)
+		if (Component != nullptr && Component != MeshComponent)
 		{
-			continue;
+			ComponentsToMove.Add(Component);
 		}
-		ComponentsToMove.Add(Component);
 	}
 
 	SetRootComponent(MeshComponent);
@@ -372,6 +367,11 @@ FVector ASampleGameCharacter::GetLineTraceDirection() const
 
 float ASampleGameCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	if (!HasAuthority())
+	{
+		return 0;
+	}
+
 	int32 DamageDealt = FMath::Min(static_cast<int32>(Damage), CurrentHealth);
 	CurrentHealth -= DamageDealt;
 

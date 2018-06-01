@@ -17,6 +17,8 @@ class SAMPLEGAME_API ASampleGamePlayerController : public APlayerController
 public:
 	ASampleGamePlayerController();
 
+	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
+
 	// Updates the health UI with a new value.
 	void UpdateHealthUI(int32 NewHealth, int32 MaxHealth);
 

@@ -6,10 +6,10 @@
 
 
 ASampleGameHUD::ASampleGameHUD()
-{
-	CrosshairWidth = 2.0f;
-	CrosshairHeight = 2.0f;
-}
+	: CrosshairWidth(2.0f)
+	, CrosshairHeight(2.0f)
+	, bDrawCrosshair(true)
+{}
 
 void ASampleGameHUD::DrawHUD()
 {
