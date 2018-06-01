@@ -19,7 +19,10 @@ void ASampleGameHUD::DrawHUD()
 		return;
 	}
 
-	DrawCrosshair();
+	if (bDrawCrosshair)
+	{
+		DrawCrosshair();
+	}
 }
 
 void ASampleGameHUD::DrawCrosshair()

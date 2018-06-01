@@ -4,6 +4,7 @@
 
 #include "SampleGameCharacter.h"
 #include "SampleGameLogging.h"
+#include "UI/SampleGameHUD.h"
 #include "UI/SampleGameUI.h"
 
 #include "SpatialNetDriver.h"
@@ -70,6 +71,12 @@ void ASampleGamePlayerController::KillPlayer()
 void ASampleGamePlayerController::SetPlayerUIVisible(bool bIsVisible)
 {
 	check(GetNetMode() == NM_Client);
+
+	ASampleGameHUD* HUD = Cast<ASampleGameHUD>(GetHUD());
+	if (HUD != nullptr)
+	{
+		HUD->SetDrawCrosshair(bIsVisible);
+	}
 
 	if (bIsVisible)
 	{
