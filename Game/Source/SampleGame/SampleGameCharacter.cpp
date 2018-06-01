@@ -260,8 +260,8 @@ void ASampleGameCharacter::StartRagdoll()
 	MeshComponent->SetCollisionProfileName(FName(TEXT("Ragdoll")));
 	MeshComponent->SetSimulatePhysics(true);
 
-	// Move all of the components from under CapsuleComponent (the current root) to MeshComponent.
-	SetRootComponent(MeshComponent);
+	// Gather list of child components of the capsule.
+	TArray<USceneComponent*> ComponentsToMove;
 	int NumChildren = CapsuleComponent->GetNumChildrenComponents();
 	for (int i = 0; i < NumChildren; ++i)
 	{
@@ -270,7 +270,35 @@ void ASampleGameCharacter::StartRagdoll()
 		{
 			continue;
 		}
-		Component->AttachTo(MeshComponent);
+		ComponentsToMove.Add(Component);
+	}
+
+	SetRootComponent(MeshComponent);
+
+	// Move the capsule's former child components over to the mesh.
+	for (USceneComponent* Component : ComponentsToMove)
+	{
+		Component->AttachToComponent(MeshComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	}
+
+	// Fix up the camera to a "death view".
+	if (GetNetMode() == NM_Client)
+	{
+		USpringArmComponent* CameraBoom = GetCameraBoom();
+
+		// Enable lag on the spring arm to smooth movement, counters sporadic movement of the ragdoll.
+		CameraBoom->bEnableCameraLag = true;
+		CameraBoom->bEnableCameraRotationLag = true;
+		// Change the camera boom so it's looking down on the ragdoll from slightly further away.
+		CameraBoom->bUsePawnControlRotation = false;
+		CameraBoom->bInheritPitch = false;
+		CameraBoom->bInheritRoll = false;
+		CameraBoom->bInheritYaw = false;
+		CameraBoom->SocketOffset = FVector::ZeroVector;  // Zero out the over-the-shoulder offset.
+		CameraBoom->TargetOffset = FVector(0, 0, 50);  // Offset slightly up so the camera target doesn't collide with the floor.
+		CameraBoom->SetRelativeLocation(FVector(0, 0, 97));  // Places it at the character mesh's root bone.
+		CameraBoom->SetRelativeRotation(FRotator(300, 0, 0));  // Look down on the character.
+		CameraBoom->TargetArmLength = 500;  // Extend the arm length slightly.
 	}
 }
 
