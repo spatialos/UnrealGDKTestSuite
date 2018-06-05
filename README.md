@@ -31,8 +31,8 @@ Once you have downloaded the sample game in this repository, follow these instru
 	* Look at the [readme](https://github.com/improbable/UnrealEngine/blob/UnrealEngine419_SpatialGDK/README.md) file for guidance on setting up the SpatialOS Unreal engine and follow steps 1 to 4 in the `UnrealEngine419_SpatialGDK` readme.
 2. Download the Unreal SpatialGDK module and Unreal Editor plugin from [https://github.com/improbable/unreal-gdk](https://github.com/improbable/unreal-gdk).
 3. Create `UNREAL_HOME` environment variable and set to the location of the SpatialOS Unreal engine you have just downloaded.
-4. Initialise the project: from the root directory of your project, run `Game/Scripts/Codegen.bat`.
-5. Create a link between your sample game directory and the Unreal SpatialGDK: run `create_spatialGDK_symlink.bat <Unreal SpatialGDK path>`.
+4. Create a link between your sample game directory and the Unreal SpatialGDK: run `create_spatialGDK_symlink.bat <Unreal SpatialGDK path>`.
+5. Initialise the project: from the root directory of your project, run `Game/Scripts/Codegen.bat`.
 6. Locate the Unreal project file for your project. You’ll find this under the project’s root directory in `Game/`.
 7. Right-click on `SampleGame.uproject` and select **Switch Unreal Engine version...**
 8.  Select the path of the engine version you just downloaded.
