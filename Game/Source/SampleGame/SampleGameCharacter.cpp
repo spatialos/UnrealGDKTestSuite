@@ -228,14 +228,14 @@ void ASampleGameCharacter::StopFire()
 	}
 }
 
-void ASampleGameCharacter::KillPlayer()
+void ASampleGameCharacter::Die()
 {
 	if (GetNetMode() == NM_DedicatedServer && HasAuthority())
 	{
 		ASampleGamePlayerController* PC = Cast<ASampleGamePlayerController>(GetController());
 		if (PC)
 		{
-			PC->KillPlayer();
+			PC->KillCharacter();
 		}
 
 		bIsRagdoll = true;
@@ -247,6 +247,11 @@ void ASampleGameCharacter::StartRagdoll()
 {
 	// Disable capsule collision and disable movement.
 	UCapsuleComponent* CapsuleComponent = GetCapsuleComponent();
+	if (CapsuleComponent == nullptr)
+	{
+		UE_LOG(LogSampleGame, Error, TEXT("Invalid capsule component on character %s"), *this->GetName());
+		return;
+	}
 	CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetCharacterMovement()->DisableMovement();
 
@@ -377,7 +382,7 @@ float ASampleGameCharacter::TakeDamage(float Damage, struct FDamageEvent const& 
 
 	if (CurrentHealth <= 0)
 	{
-		KillPlayer();
+		Die();
 	}
 
 	return DamageDealt;

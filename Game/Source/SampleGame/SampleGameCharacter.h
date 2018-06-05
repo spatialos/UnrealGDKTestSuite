@@ -98,8 +98,8 @@ private:
 	// [client] Triggers the equipped weapon to stop firing.
 	void StopFire();
 
-	// [server] Kills the player.
-	void KillPlayer();
+	// [server] Tells this player that it's time to die.
+	void Die();
 
 	// [client + server] Puts the player in ragdoll mode.
 	void StartRagdoll();

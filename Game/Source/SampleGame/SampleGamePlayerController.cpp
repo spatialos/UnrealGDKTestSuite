@@ -12,9 +12,9 @@
 
 ASampleGamePlayerController::ASampleGamePlayerController()
 	: SampleGameUI(nullptr)
-	, PlayerRespawnDelay(5.0f)
-	, DeletePlayerDelay(15.0f)
-	, PlayerToDelete(nullptr)
+	, RespawnCharacterDelay(5.0f)
+	, DeleteCharacterDelay(15.0f)
+	, PawnToDelete(nullptr)
 {
 	// Don't automatically switch the camera view when the pawn changes, to avoid weird camera jumps when a character dies.
 	bAutoManageActiveCameraTarget = false;
@@ -56,7 +56,7 @@ void ASampleGamePlayerController::SetPawn(APawn* InPawn)
 	}
 }
 
-void ASampleGamePlayerController::KillPlayer()
+void ASampleGamePlayerController::KillCharacter()
 {
 	check(GetNetMode() == NM_DedicatedServer);
 
@@ -65,12 +65,12 @@ void ASampleGamePlayerController::KillPlayer()
 		return;
 	}
 
-	PlayerToDelete = GetPawn();
+	PawnToDelete = GetPawn();
 	UnPossess();
 
-	// TODO: timers won't persist across worker boundary migrations, and neither will PlayerToDelete
-	GetWorldTimerManager().SetTimer(DeletePlayerTimerHandle, this, &ASampleGamePlayerController::DeletePlayer, DeletePlayerDelay);
-	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASampleGamePlayerController::RespawnPlayer, PlayerRespawnDelay);
+	// TODO: timers won't persist across worker boundary migrations, and neither will PawnToDelete
+	GetWorldTimerManager().SetTimer(DeleteCharacterTimerHandle, this, &ASampleGamePlayerController::DeleteCharacter, DeleteCharacterDelay);
+	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASampleGamePlayerController::RespawnCharacter, RespawnCharacterDelay);
 }
 
 void ASampleGamePlayerController::SetPlayerUIVisible(bool bIsVisible)
@@ -113,7 +113,7 @@ void ASampleGamePlayerController::SetPlayerUIVisible(bool bIsVisible)
 	}
 }
 
-void ASampleGamePlayerController::RespawnPlayer()
+void ASampleGamePlayerController::RespawnCharacter()
 {
 	check(GetNetMode() == NM_DedicatedServer);
 	AGameModeBase* GameMode = GetWorld()->GetAuthGameMode();
@@ -124,13 +124,13 @@ void ASampleGamePlayerController::RespawnPlayer()
 	}
 }
 
-void ASampleGamePlayerController::DeletePlayer()
+void ASampleGamePlayerController::DeleteCharacter()
 {
 	check(GetNetMode() == NM_DedicatedServer);
-	if (PlayerToDelete != nullptr)
+	if (PawnToDelete != nullptr)
 	{
-		// TODO: what if the player is on a different worker?
-		GetWorld()->DestroyActor(PlayerToDelete);
-		PlayerToDelete = nullptr;
+		// TODO: what if the character is on a different worker?
+		GetWorld()->DestroyActor(PawnToDelete);
+		PawnToDelete = nullptr;
 	}
 }
