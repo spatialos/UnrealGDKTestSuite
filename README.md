@@ -36,7 +36,7 @@ Once you have downloaded the sample game in this repository, follow these instru
 6. Locate the Unreal project file for your project. You’ll find this under the project’s root directory in `Game/`.
 7. Right-click on `SampleGame.uproject` and select **Switch Unreal Engine version...**
 8.  Select the path of the engine version you just downloaded.
-9.  Build the SpatialOS Unreal engine for SpatialOS local deployment: in a terminal window, run `Game/Scripts/Build.bat SampleGameEditor Win64 Development Game/SampleGame.uproject`.
+9.  Build the SpatialOS Unreal engine for SpatialOS local deployment: in a terminal window, run `Game/Scripts/Build.bat SampleGameEditor Win64 Development SampleGame.uproject`.
 10.  Start the SpatialOS local deployment by running `spatial local launch`.
 11.  Double-click on the `SampleGame.uproject` to open the Unreal Editor and select the **Play** drop-down menu to see **Modes** and **Multiplayer Options**.
 12.  From the drop-down menu, select **New Editor Window (PIE)**. Enter **Number of Players** as `2` and check the box for **Run Dedicated Server**.
