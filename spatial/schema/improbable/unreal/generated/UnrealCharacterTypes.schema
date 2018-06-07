@@ -31,21 +31,17 @@ type UnrealClientCheatFlyRequest {
 type UnrealClientAdjustRootMotionSourcePositionRequest {
 	uint32 target_subobject_offset = 1;
 	float field_timestamp = 2;
-	bool field_serverrootmotion_bhasadditivesources = 3;
-	bool field_serverrootmotion_bhasoverridesources = 4;
-	improbable.Vector3f field_serverrootmotion_lastpreadditivevelocity = 5;
-	bool field_serverrootmotion_bisadditivevelocityapplied = 6;
-	uint32 field_serverrootmotion_lastaccumulatedsettings_flags = 7;
-	bool field_bhasanimrootmotion = 8;
-	float field_servermontagetrackposition = 9;
-	improbable.Vector3f field_serverloc = 10;
-	improbable.Vector3f field_serverrotation = 11;
-	float field_servervelz = 12;
-	UnrealObjectRef field_serverbase = 13;
-	string field_serverbonename = 14;
-	bool field_bhasbase = 15;
-	bool field_bbaserelativeposition = 16;
-	uint32 field_servermovementmode = 17;
+	bytes field_serverrootmotion = 3;
+	bool field_bhasanimrootmotion = 4;
+	float field_servermontagetrackposition = 5;
+	improbable.Vector3f field_serverloc = 6;
+	improbable.Vector3f field_serverrotation = 7;
+	float field_servervelz = 8;
+	UnrealObjectRef field_serverbase = 9;
+	string field_serverbonename = 10;
+	bool field_bhasbase = 11;
+	bool field_bbaserelativeposition = 12;
+	uint32 field_servermovementmode = 13;
 }
 type UnrealClientAdjustRootMotionPositionRequest {
 	uint32 target_subobject_offset = 1;
