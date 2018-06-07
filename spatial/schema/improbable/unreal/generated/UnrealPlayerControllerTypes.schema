@@ -110,10 +110,9 @@ type UnrealClientSetCameraFadeRequest {
 	uint32 field_fadecolor_g = 4;
 	uint32 field_fadecolor_r = 5;
 	uint32 field_fadecolor_a = 6;
-	float field_fadealpha_x = 7;
-	float field_fadealpha_y = 8;
-	float field_fadetime = 9;
-	bool field_bfadeaudio = 10;
+	bytes field_fadealpha = 7;
+	float field_fadetime = 8;
+	bool field_bfadeaudio = 9;
 }
 type UnrealClientSetBlockOnAsyncLoadingRequest {
 	uint32 target_subobject_offset = 1;

@@ -1,4 +1,5 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+#pragma optimize("", off)
 
 #include "SampleGameCharacter.h"
 #include "Camera/CameraComponent.h"
@@ -61,6 +62,8 @@ ASampleGameCharacter::ASampleGameCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
+
+
 void ASampleGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -112,6 +115,38 @@ void ASampleGameCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}
+
+bool FTestStruct::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
+{
+	Ar << TestInt;
+
+	return true;
+}
+
+void ASampleGameCharacter::DoTheThing_Implementation(const FString& PrintMe, const FTestStruct& TheTestStructRPC)
+{
+	// Get the value of the non-serialized int which should have been replicated thanks to the custom NetSerialize.
+	FString IntString = FString::FromInt(TheTestStructRPC.TestInt);
+	FString NonSerializedIntString = FString::FromInt(TheTestStructRPC.NonSerializedInt);
+
+	UE_LOG(LogTemp, Warning, TEXT("%s: Server_DoTheThing_Implementation"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
+	UE_LOG(LogTemp, Warning, TEXT("Doing the thing: %s"), *PrintMe);
+	UE_LOG(LogTemp, Warning, TEXT("                 TestInt:          %s"), *IntString);
+	UE_LOG(LogTemp, Warning, TEXT("                 NonSerializedInt: %s"), *NonSerializedIntString);
+}
+
+bool ASampleGameCharacter::DoTheThing_Validate(const FString& PrintMe, const FTestStruct& TheTestStructRPC)
+{
+	return true; 
+};
+
+void ASampleGameCharacter::IncrementTestInt()
+{
+	TheTestStruct.TestInt++;
+	FString IntString = FString::FromInt(TheTestStruct.TestInt);
+	UE_LOG(LogTemp, Warning, TEXT("%s: Server_DoTheThing_Implementation"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
+	UE_LOG(LogTemp, Warning, TEXT("                 TestInt:          %s"), *IntString);
 }
 
 void ASampleGameCharacter::MoveForward(float Value)
