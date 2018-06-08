@@ -14,13 +14,13 @@ Use the SpatialOS Unreal GDK Sample Game to explore how Unreal projects integrat
 * These instructions are for a local deployment only.
 
 **Documentation** <br/>
-For guidance on SpatialOS concepts see the documentation on the [SpatialOS website](https://docs.improbable.io/reference/13.0/shared/concepts/spatialos). <br/> 
+For guidance on SpatialOS concepts see the documentation on the [SpatialOS website](https://docs.improbable.io/reference/13.0/shared/concepts/spatialos). <br/>
 For guidance on using the SpatialOS Unity GDK, see the documentation in the  [SpatialOS Unreal GDK GitHub repository](https://github.com/improbable/unreal-gdk/blob/master/docs/start_here_table_of_contents.md).
 
-**Prerequisites** <br/> 
+**Prerequisites** <br/>
 See the [Getting started](https://github.com/improbable/unreal-gdk/blob/master/docs/getting_started.md#prerequisites) documentation on the SpatialOS Unity GDK GitHub repository.
 
-**Installation and setup** <br/> 
+**Installation and setup** <br/>
 See the [Getting started](https://github.com/improbable/unreal-gdk/blob/master/docs/getting_started.md#table-of-contents) documentation on the SpatialOS Unity GDK GitHub repository.
 
 **Contributions** <br/>
@@ -47,7 +47,11 @@ Run this if you change:
 #### `Game/Scripts/Build.bat`
 Parameters:
 
-`<target> <platform> <configuration> Game/SampleGame.uproject [--skip-codegen]`
+`<target> <platform> <configuration> SampleGame.uproject [--skip-codegen]`
+
+e.g.
+
+`Game/Scripts/Build.bat SampleGameEditor Win64 Development SampleGame.uproject`
 
 Build, cook and zip special workers for use with:
 * `spatial upload`
