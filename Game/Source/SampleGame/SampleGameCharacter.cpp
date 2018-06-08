@@ -112,7 +112,7 @@ void ASampleGameCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector L
 
 void ASampleGameCharacter::DebugCmd()
 {
-	UE_LOG(LogTemp, Warning, TEXT("DebugCmd"));
+	UE_LOG(LogTemp, Warning, TEXT("%s: DebugCmd"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
 
 	TArray<FTestMixedStruct> TempArray;
 	TempArray.AddZeroed(4);
@@ -165,6 +165,8 @@ void ASampleGameCharacter::MoveRight(float Value)
 //void ASampleGameCharacter::Server_TestFunc_Implementation(const TArray<FTestMixedStruct>& StructArg)
 void ASampleGameCharacter::Server_TestFunc_Implementation()
 {
+	UE_LOG(LogTemp, Warning, TEXT("%s: Server_TestFunc_Implementation"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
+
 	// modify replicated members to check network serialisation
 	static float Num = 101.f;
 	TestPODArray.Add(Num);
@@ -237,7 +239,7 @@ void ASampleGameCharacter::Client_TestConstArgs_Implementation(FConstStruct Cons
 
 void ASampleGameCharacter::Client_TestFunc_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Client_TestFunc_Implementation"));
+	UE_LOG(LogTemp, Warning, TEXT("%s: Client_TestFunc_Implementation"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
 }
 
 void ASampleGameCharacter::OnRep_TestPODArray()
