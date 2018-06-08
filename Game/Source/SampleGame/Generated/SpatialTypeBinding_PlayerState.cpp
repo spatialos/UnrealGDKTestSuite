@@ -391,8 +391,9 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 			{
 				TArray<uint8> ValueData;
 				FMemoryWriter ValueDataWriter(ValueData);
-				bool Success;
-				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, Success);
+				bool bSuccess;
+				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 				OutUpdate.set_field_replicatedmovement(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
@@ -594,8 +595,9 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 			{
 				TArray<uint8> ValueData;
 				FMemoryWriter ValueDataWriter(ValueData);
-				bool Success;
-				(const_cast<FUniqueNetIdRepl&>(Value)).NetSerialize(ValueDataWriter, PackageMap, Success);
+				bool bSuccess;
+				(const_cast<FUniqueNetIdRepl&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 				OutUpdate.set_field_uniqueid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
@@ -775,6 +777,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 				FMemoryReader ValueDataReader(ValueData);
 				bool bSuccess;
 				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -1358,6 +1361,7 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 				FMemoryReader ValueDataReader(ValueData);
 				bool bSuccess;
 				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);

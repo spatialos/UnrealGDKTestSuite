@@ -635,8 +635,9 @@ void USpatialTypeBinding_PlayerController::ServerSendUpdate_MultiClient(const ui
 			{
 				TArray<uint8> ValueData;
 				FMemoryWriter ValueDataWriter(ValueData);
-				bool Success;
-				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, Success);
+				bool bSuccess;
+				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 				OutUpdate.set_field_replicatedmovement(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
@@ -1071,6 +1072,7 @@ void USpatialTypeBinding_PlayerController::ReceiveUpdate_MultiClient(USpatialAct
 				FMemoryReader ValueDataReader(ValueData);
 				bool bSuccess;
 				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -1798,8 +1800,9 @@ void USpatialTypeBinding_PlayerController::ClientUnmutePlayer_SendCommand(worker
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
-			bool Success;
-			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, Success);
+			bool bSuccess;
+			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 			Request.set_field_playerid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
@@ -2344,8 +2347,9 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraFade_SendCommand(worke
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
-			bool Success;
-			(const_cast<FVector2D&>(StructuredParams.FadeAlpha)).NetSerialize(ValueDataWriter, PackageMap, Success);
+			bool bSuccess;
+			(const_cast<FVector2D&>(StructuredParams.FadeAlpha)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector2D failed."));
 			Request.set_field_fadealpha(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		Request.set_field_fadetime(StructuredParams.FadeTime);
@@ -3055,8 +3059,9 @@ void USpatialTypeBinding_PlayerController::ClientMutePlayer_SendCommand(worker::
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
-			bool Success;
-			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, Success);
+			bool bSuccess;
+			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 			Request.set_field_playerid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
@@ -3808,8 +3813,9 @@ void USpatialTypeBinding_PlayerController::ServerUnmutePlayer_SendCommand(worker
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
-			bool Success;
-			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, Success);
+			bool bSuccess;
+			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 			Request.set_field_playerid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
@@ -4047,8 +4053,9 @@ void USpatialTypeBinding_PlayerController::ServerMutePlayer_SendCommand(worker::
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
-			bool Success;
-			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, Success);
+			bool bSuccess;
+			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 			Request.set_field_playerid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
@@ -4522,6 +4529,7 @@ void USpatialTypeBinding_PlayerController::ClientUnmutePlayer_OnCommandRequest(c
 			FMemoryReader ValueDataReader(ValueData);
 			bool bSuccess;
 			Parameters.PlayerId.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 		}
 
 		// Call implementation.
@@ -5386,6 +5394,7 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraFade_OnCommandRequest(
 			FMemoryReader ValueDataReader(ValueData);
 			bool bSuccess;
 			Parameters.FadeAlpha.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector2D failed."));
 		}
 		Parameters.FadeTime = Op.Request.field_fadetime();
 		Parameters.bFadeAudio = Op.Request.field_bfadeaudio();
@@ -6515,6 +6524,7 @@ void USpatialTypeBinding_PlayerController::ClientMutePlayer_OnCommandRequest(con
 			FMemoryReader ValueDataReader(ValueData);
 			bool bSuccess;
 			Parameters.PlayerId.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 		}
 
 		// Call implementation.
@@ -7756,6 +7766,7 @@ void USpatialTypeBinding_PlayerController::ServerUnmutePlayer_OnCommandRequest(c
 			FMemoryReader ValueDataReader(ValueData);
 			bool bSuccess;
 			Parameters.PlayerId.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 		}
 
 		// Call implementation.
@@ -8154,6 +8165,7 @@ void USpatialTypeBinding_PlayerController::ServerMutePlayer_OnCommandRequest(con
 			FMemoryReader ValueDataReader(ValueData);
 			bool bSuccess;
 			Parameters.PlayerId.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 		}
 
 		// Call implementation.

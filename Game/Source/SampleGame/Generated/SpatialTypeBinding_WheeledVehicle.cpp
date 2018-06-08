@@ -390,8 +390,9 @@ void USpatialTypeBinding_WheeledVehicle::ServerSendUpdate_MultiClient(const uint
 			{
 				TArray<uint8> ValueData;
 				FMemoryWriter ValueDataWriter(ValueData);
-				bool Success;
-				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, Success);
+				bool bSuccess;
+				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 				OutUpdate.set_field_replicatedmovement(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
@@ -744,6 +745,7 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 				FMemoryReader ValueDataReader(ValueData);
 				bool bSuccess;
 				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
