@@ -30,12 +30,12 @@ See the [Getting started](https://github.com/improbable/unreal-gdk/blob/master/d
 (TODO: Support guidance [JIRA ticket DEV-2087](https://improbableio.atlassian.net/browse/DEV-2087))
 
 ## Helper Scripts
-#### `Game/Scripts/Codegen.bat`
+#### `Game\Scripts\Codegen.bat`
 (No parameters)
 
 Generates code from the project schema.
 
-#### `Game/Scripts/BuildWorkerConfig.bat`
+#### `Game\Scripts\BuildWorkerConfig.bat`
 (No parameters)
 
 Generates launch configurations for the runtime.
@@ -44,14 +44,14 @@ Run this if you change:
 * `spatialos.UnrealClient.worker.json`
 * `spatialos.UnrealWorker.worker.json`
 
-#### `Game/Scripts/Build.bat`
+#### `Game\Scripts\Build.bat`
 Parameters:
 
 `<target> <platform> <configuration> SampleGame.uproject [--skip-codegen]`
 
 e.g.
 
-`Game/Scripts/Build.bat SampleGameEditor Win64 Development SampleGame.uproject`
+`Game\Scripts\Build.bat SampleGameEditor Win64 Development SampleGame.uproject`
 
 Build, cook and zip special workers for use with:
 * `spatial upload`
@@ -62,6 +62,6 @@ The following `<target>`s  generate zipped workers:
 * `SampleGame`
 * `SampleGameServer`
 
-> Any other `<target>` passes all arguments  to `Engine/Build/BatchFiles/Build.bat` - eith no cooking or zipping performed.
+> Any other `<target>` passes all arguments  to `Engine\Build\BatchFiles\Build.bat` - eith no cooking or zipping performed.
 
 
