@@ -110,20 +110,22 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(46, FRepHandleData(Class, {"TestPODStructArray"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(47, FRepHandleData(Class, {"TestNetSerializeArray"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(48, FRepHandleData(Class, {"TestMixedStruct", "PS"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(49, FRepHandleData(Class, {"TestMixedStruct", "FVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(50, FRepHandleData(Class, {"TestMixedStruct", "IVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(51, FRepHandleData(Class, {"TestPODStruct", "FVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(52, FRepHandleData(Class, {"TestPODStruct", "IVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(53, FRepHandleData(Class, {"TestPODStruct", "DVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(54, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(55, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 4));
-	RepHandleToPropertyMap.Add(56, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 8));
-	RepHandleToPropertyMap.Add(57, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 12));
-	RepHandleToPropertyMap.Add(58, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 16));
-	RepHandleToPropertyMap.Add(59, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 20));
-	RepHandleToPropertyMap.Add(60, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 24));
-	RepHandleToPropertyMap.Add(61, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 28));
-	RepHandleToPropertyMap.Add(62, FRepHandleData(Class, {"TestBookend"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(49, FRepHandleData(Class, {"TestMixedStruct", "WeakPtr"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(50, FRepHandleData(Class, {"TestMixedStruct", "FVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(51, FRepHandleData(Class, {"TestMixedStruct", "IVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(52, FRepHandleData(Class, {"TestPODStruct", "FVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(53, FRepHandleData(Class, {"TestPODStruct", "IVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(54, FRepHandleData(Class, {"TestPODStruct", "DVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(55, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(56, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 4));
+	RepHandleToPropertyMap.Add(57, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 8));
+	RepHandleToPropertyMap.Add(58, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 12));
+	RepHandleToPropertyMap.Add(59, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 16));
+	RepHandleToPropertyMap.Add(60, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 20));
+	RepHandleToPropertyMap.Add(61, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 24));
+	RepHandleToPropertyMap.Add(62, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 28));
+	RepHandleToPropertyMap.Add(63, FRepHandleData(Class, {"TestBookend"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(64, FRepHandleData(Class, {"RepMesh"}, COND_None, REPNOTIFY_OnChanged, 0));
 }
 
 void USpatialTypeBinding_SampleGameCharacter::BindToView()
@@ -773,7 +775,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_jumpmaxcount(Value);
+			OutUpdate.set_field_jumpmaxcount(int32_t(Value));
 			break;
 		}
 		case 32: // field_reprootmotion_bisactive
@@ -989,102 +991,148 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			}
 			break;
 		}
-		case 49: // field_testmixedstruct_fvar
+		case 49: // field_testmixedstruct_weakptr
+		{
+			UActorComponent* Value = (reinterpret_cast<TWeakObjectPtr<UActorComponent> const*>(Data))->Get();
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 49);
+				}
+				else
+				{
+					OutUpdate.set_field_testmixedstruct_weakptr(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_testmixedstruct_weakptr(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 50: // field_testmixedstruct_fvar
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
 			OutUpdate.set_field_testmixedstruct_fvar(Value);
 			break;
 		}
-		case 50: // field_testmixedstruct_ivar
+		case 51: // field_testmixedstruct_ivar
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
 			OutUpdate.set_field_testmixedstruct_ivar(Value);
 			break;
 		}
-		case 51: // field_testpodstruct_fvar
+		case 52: // field_testpodstruct_fvar
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
 			OutUpdate.set_field_testpodstruct_fvar(Value);
 			break;
 		}
-		case 52: // field_testpodstruct_ivar
+		case 53: // field_testpodstruct_ivar
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testpodstruct_ivar(Value);
+			OutUpdate.set_field_testpodstruct_ivar(int32_t(Value));
 			break;
 		}
-		case 53: // field_testpodstruct_dvar
+		case 54: // field_testpodstruct_dvar
 		{
 			double Value = *(reinterpret_cast<double const*>(Data));
 
-			// UNSUPPORTED UDoubleProperty (unhandled) OutUpdate.set_field_testpodstruct_dvar(Value)
+			OutUpdate.set_field_testpodstruct_dvar(Value);
 			break;
 		}
-		case 54: // field_testcarrayreplication0
+		case 55: // field_testcarrayreplication0
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcarrayreplication0(Value);
+			OutUpdate.set_field_testcarrayreplication0(int32_t(Value));
 			break;
 		}
-		case 55: // field_testcarrayreplication1
+		case 56: // field_testcarrayreplication1
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcarrayreplication1(Value);
+			OutUpdate.set_field_testcarrayreplication1(int32_t(Value));
 			break;
 		}
-		case 56: // field_testcarrayreplication2
+		case 57: // field_testcarrayreplication2
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcarrayreplication2(Value);
+			OutUpdate.set_field_testcarrayreplication2(int32_t(Value));
 			break;
 		}
-		case 57: // field_testcarrayreplication3
+		case 58: // field_testcarrayreplication3
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcarrayreplication3(Value);
+			OutUpdate.set_field_testcarrayreplication3(int32_t(Value));
 			break;
 		}
-		case 58: // field_testcarrayreplication4
+		case 59: // field_testcarrayreplication4
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcarrayreplication4(Value);
+			OutUpdate.set_field_testcarrayreplication4(int32_t(Value));
 			break;
 		}
-		case 59: // field_testcarrayreplication5
+		case 60: // field_testcarrayreplication5
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcarrayreplication5(Value);
+			OutUpdate.set_field_testcarrayreplication5(int32_t(Value));
 			break;
 		}
-		case 60: // field_testcarrayreplication6
+		case 61: // field_testcarrayreplication6
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcarrayreplication6(Value);
+			OutUpdate.set_field_testcarrayreplication6(int32_t(Value));
 			break;
 		}
-		case 61: // field_testcarrayreplication7
+		case 62: // field_testcarrayreplication7
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcarrayreplication7(Value);
+			OutUpdate.set_field_testcarrayreplication7(int32_t(Value));
 			break;
 		}
-		case 62: // field_testbookend
+		case 63: // field_testbookend
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testbookend(Value);
+			OutUpdate.set_field_testbookend(int32_t(Value));
+			break;
+		}
+		case 64: // field_repmesh
+		{
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 64);
+				}
+				else
+				{
+					OutUpdate.set_field_repmesh(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_repmesh(SpatialConstants::NULL_OBJECT_REF);
+			}
 			break;
 		}
 	default:
@@ -1292,8 +1340,8 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 						Value = Cast<AActor>(Object_Raw);
-						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
 					{
@@ -1451,8 +1499,8 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<USceneComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 						Value = Cast<USceneComponent>(Object_Raw);
-						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
 					{
@@ -1507,8 +1555,8 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 						Value = Cast<AActor>(Object_Raw);
-						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
 					{
@@ -1592,8 +1640,8 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<APawn>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 						Value = Cast<APawn>(Object_Raw);
-						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
 					{
@@ -1648,8 +1696,8 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<APlayerState>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 						Value = Cast<APlayerState>(Object_Raw);
-						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
 					{
@@ -1726,8 +1774,8 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<AController>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 						Value = Cast<AController>(Object_Raw);
-						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
 					{
@@ -1782,8 +1830,8 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 						Value = Cast<UPrimitiveComponent>(Object_Raw);
-						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
 					{
@@ -2134,8 +2182,8 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<UAnimMontage>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 						Value = Cast<UAnimMontage>(Object_Raw);
-						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
 					{
@@ -2266,8 +2314,8 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 						Value = Cast<UPrimitiveComponent>(Object_Raw);
-						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					}
 					else
 					{
@@ -2602,8 +2650,65 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 					{
 						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<APlayerState>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 						Value = Cast<APlayerState>(Object_Raw);
-						checkf(Value, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					}
+					else
+					{
+						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+							*Interop->GetSpatialOS()->GetWorkerId(),
+							*ObjectRefToString(ObjectRef),
+							*ActorChannel->Actor->GetName(),
+							ActorChannel->GetEntityId().ToSpatialEntityId(),
+							*RepData->Property->GetName(),
+							Handle);
+						bWriteObjectProperty = false;
+						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					}
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
+		}
+	}
+	if (!Update.field_testmixedstruct_weakptr().empty())
+	{
+		// field_testmixedstruct_weakptr
+		uint16 Handle = 49;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			auto WeakPtrData = *(reinterpret_cast<TWeakObjectPtr<UActorComponent> const*>(PropertyData));
+			UActorComponent* Value = WeakPtrData.Get();
+
+			{
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_testmixedstruct_weakptr().data());
+				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				{
+					Value = nullptr;
+				}
+				else
+				{
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+					if (NetGUID.IsValid())
+					{
+						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<UActorComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+						Value = Cast<UActorComponent>(Object_Raw);
 					}
 					else
 					{
@@ -2636,7 +2741,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testmixedstruct_fvar().empty())
 	{
 		// field_testmixedstruct_fvar
-		uint16 Handle = 49;
+		uint16 Handle = 50;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2658,7 +2763,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testmixedstruct_ivar().empty())
 	{
 		// field_testmixedstruct_ivar
-		uint16 Handle = 50;
+		uint16 Handle = 51;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2680,7 +2785,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testpodstruct_fvar().empty())
 	{
 		// field_testpodstruct_fvar
-		uint16 Handle = 51;
+		uint16 Handle = 52;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2702,7 +2807,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testpodstruct_ivar().empty())
 	{
 		// field_testpodstruct_ivar
-		uint16 Handle = 52;
+		uint16 Handle = 53;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2724,14 +2829,14 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testpodstruct_dvar().empty())
 	{
 		// field_testpodstruct_dvar
-		uint16 Handle = 53;
+		uint16 Handle = 54;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			double Value = *(reinterpret_cast<double const*>(PropertyData));
 
-			// UNSUPPORTED UDoubleProperty (unhandled) Value (*Update.field_testpodstruct_dvar().data())
+			Value = (*Update.field_testpodstruct_dvar().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2746,7 +2851,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication0().empty())
 	{
 		// field_testcarrayreplication0
-		uint16 Handle = 54;
+		uint16 Handle = 55;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2768,7 +2873,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication1().empty())
 	{
 		// field_testcarrayreplication1
-		uint16 Handle = 55;
+		uint16 Handle = 56;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2790,7 +2895,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication2().empty())
 	{
 		// field_testcarrayreplication2
-		uint16 Handle = 56;
+		uint16 Handle = 57;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2812,7 +2917,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication3().empty())
 	{
 		// field_testcarrayreplication3
-		uint16 Handle = 57;
+		uint16 Handle = 58;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2834,7 +2939,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication4().empty())
 	{
 		// field_testcarrayreplication4
-		uint16 Handle = 58;
+		uint16 Handle = 59;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2856,7 +2961,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication5().empty())
 	{
 		// field_testcarrayreplication5
-		uint16 Handle = 59;
+		uint16 Handle = 60;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2878,7 +2983,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication6().empty())
 	{
 		// field_testcarrayreplication6
-		uint16 Handle = 60;
+		uint16 Handle = 61;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2900,7 +3005,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication7().empty())
 	{
 		// field_testcarrayreplication7
-		uint16 Handle = 61;
+		uint16 Handle = 62;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2922,7 +3027,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testbookend().empty())
 	{
 		// field_testbookend
-		uint16 Handle = 62;
+		uint16 Handle = 63;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2939,6 +3044,62 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
 				*RepData->Property->GetName(),
 				Handle);
+		}
+	}
+	if (!Update.field_repmesh().empty())
+	{
+		// field_repmesh
+		uint16 Handle = 64;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(PropertyData));
+
+			{
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_repmesh().data());
+				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				{
+					Value = nullptr;
+				}
+				else
+				{
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+					if (NetGUID.IsValid())
+					{
+						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<USkeletalMesh>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+						Value = Cast<USkeletalMesh>(Object_Raw);
+					}
+					else
+					{
+						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+							*Interop->GetSpatialOS()->GetWorkerId(),
+							*ObjectRefToString(ObjectRef),
+							*ActorChannel->Actor->GetName(),
+							ActorChannel->GetEntityId().ToSpatialEntityId(),
+							*RepData->Property->GetName(),
+							Handle);
+						bWriteObjectProperty = false;
+						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					}
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
 		}
 	}
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
@@ -3370,7 +3531,10 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendCommand(work
 
 void USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
-	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
+	// This struct is declared in SampleGameCharacter.generated.h (in a macro that is then put in SampleGameCharacter.h UCLASS macro)
+	SampleGameCharacter_eventServer_TestFunc_Parms StructuredParams = *static_cast<SampleGameCharacter_eventServer_TestFunc_Parms*>(Parameters);
+
+	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
 		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
@@ -3382,6 +3546,44 @@ void USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_SendCommand(worker
 
 		// Build request.
 		improbable::unreal::generated::UnrealServerTestFuncRequest Request;
+		if (StructuredParams.TestStr.PS != nullptr)
+		{
+			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.TestStr.PS);
+			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+			{
+				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_TestFunc queued. StructuredParams.TestStr.PS is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+				return {StructuredParams.TestStr.PS};
+			}
+			else
+			{
+				Request.set_field_teststr_ps(ObjectRef);
+			}
+		}
+		else
+		{
+			Request.set_field_teststr_ps(SpatialConstants::NULL_OBJECT_REF);
+		}
+		if (StructuredParams.TestStr.WeakPtr.Get() != nullptr)
+		{
+			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.TestStr.WeakPtr.Get());
+			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+			{
+				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_TestFunc queued. StructuredParams.TestStr.WeakPtr.Get() is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+				return {StructuredParams.TestStr.WeakPtr.Get()};
+			}
+			else
+			{
+				Request.set_field_teststr_weakptr(ObjectRef);
+			}
+		}
+		else
+		{
+			Request.set_field_teststr_weakptr(SpatialConstants::NULL_OBJECT_REF);
+		}
+		Request.set_field_teststr_fvar(StructuredParams.TestStr.FVar);
+		Request.set_field_teststr_ivar(StructuredParams.TestStr.IVar);
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3720,8 +3922,8 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_OnCommandRequ
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UObject>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					Parameters.ConstStruct.ConstObj = Cast<UObject>(Object_Raw);
-					checkf(Parameters.ConstStruct.ConstObj, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 				}
 				else
 				{
@@ -3854,8 +4056,8 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCo
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					Parameters.NewBase = Cast<UPrimitiveComponent>(Object_Raw);
-					checkf(Parameters.NewBase, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 				}
 				else
 				{
@@ -4092,8 +4294,8 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					Parameters.ServerBase = Cast<UPrimitiveComponent>(Object_Raw);
-					checkf(Parameters.ServerBase, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 				}
 				else
 				{
@@ -4187,8 +4389,8 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnC
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					Parameters.ServerBase = Cast<UPrimitiveComponent>(Object_Raw);
-					checkf(Parameters.ServerBase, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 				}
 				else
 				{
@@ -4280,8 +4482,8 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandRequ
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					Parameters.NewBase = Cast<UPrimitiveComponent>(Object_Raw);
-					checkf(Parameters.NewBase, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 				}
 				else
 				{
@@ -4392,6 +4594,66 @@ void USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_OnCommandRequest(c
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
 
+		// Declare parameters.
+		// This struct is declared in SampleGameCharacter.generated.h (in a macro that is then put in SampleGameCharacter.h UCLASS macro)
+		SampleGameCharacter_eventServer_TestFunc_Parms Parameters;
+
+		// Extract from request data.
+		{
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_teststr_ps();
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Parameters.TestStr.PS = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<APlayerState>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Parameters.TestStr.PS = Cast<APlayerState>(Object_Raw);
+				}
+				else
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_TestFunc_OnCommandRequest: Parameters.TestStr.PS %s is not resolved on this worker."),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef));
+					return {ObjectRef};
+				}
+			}
+		}
+		{
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_teststr_weakptr();
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Parameters.TestStr.WeakPtr = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UActorComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Parameters.TestStr.WeakPtr = Cast<UActorComponent>(Object_Raw);
+				}
+				else
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_TestFunc_OnCommandRequest: Parameters.TestStr.WeakPtr %s is not resolved on this worker."),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef));
+					return {ObjectRef};
+				}
+			}
+		}
+		Parameters.TestStr.FVar = Op.Request.field_teststr_fvar();
+		Parameters.TestStr.IVar = Op.Request.field_teststr_ivar();
+
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: Server_TestFunc, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
@@ -4400,7 +4662,7 @@ void USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_OnCommandRequest(c
 
 		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Server_TestFunc"))))
 		{
-			TargetObject->ProcessEvent(Function, nullptr);
+			TargetObject->ProcessEvent(Function, &Parameters);
 		}
 		else
 		{
@@ -4514,7 +4776,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandRequest(
 		}
 		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = uint32(Op.Request.field_view());
+		Parameters.View = Op.Request.field_view();
 		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
 
 		// Call implementation.
@@ -4574,7 +4836,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandRequ
 			Parameters.InAccel0.Z = Vector.z();
 		}
 		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = uint32(Op.Request.field_view0());
+		Parameters.View0 = Op.Request.field_view0();
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
 			auto& Vector = Op.Request.field_inaccel();
@@ -4590,7 +4852,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandRequ
 		}
 		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = uint32(Op.Request.field_view());
+		Parameters.View = Op.Request.field_view();
 		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
 
 		// Call implementation.
@@ -4650,7 +4912,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnC
 			Parameters.InAccel0.Z = Vector.z();
 		}
 		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = uint32(Op.Request.field_view0());
+		Parameters.View0 = Op.Request.field_view0();
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
 			auto& Vector = Op.Request.field_inaccel();
@@ -4666,7 +4928,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnC
 		}
 		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = uint32(Op.Request.field_view());
+		Parameters.View = Op.Request.field_view();
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
@@ -4681,8 +4943,8 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnC
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					Parameters.ClientMovementBase = Cast<UPrimitiveComponent>(Object_Raw);
-					checkf(Parameters.ClientMovementBase, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 				}
 				else
 				{
@@ -4753,7 +5015,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandRequest(co
 			Parameters.InAccel0.Z = Vector.z();
 		}
 		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = uint32(Op.Request.field_view0());
+		Parameters.View0 = Op.Request.field_view0();
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
 			auto& Vector = Op.Request.field_inaccel();
@@ -4769,7 +5031,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandRequest(co
 		}
 		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = uint32(Op.Request.field_view());
+		Parameters.View = Op.Request.field_view();
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
@@ -4784,8 +5046,8 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandRequest(co
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					Parameters.ClientMovementBase = Cast<UPrimitiveComponent>(Object_Raw);
-					checkf(Parameters.ClientMovementBase, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 				}
 				else
 				{
@@ -4863,7 +5125,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandRequest(const 
 		}
 		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = uint32(Op.Request.field_view());
+		Parameters.View = Op.Request.field_view();
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
@@ -4878,8 +5140,8 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandRequest(const 
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 					Parameters.ClientMovementBase = Cast<UPrimitiveComponent>(Object_Raw);
-					checkf(Parameters.ClientMovementBase, TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 				}
 				else
 				{

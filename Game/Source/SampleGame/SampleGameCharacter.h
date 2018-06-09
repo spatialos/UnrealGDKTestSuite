@@ -16,6 +16,9 @@ struct FTestMixedStruct
 		APlayerState* PS;
 
 	UPROPERTY()
+		TWeakObjectPtr<UActorComponent> WeakPtr;
+
+	UPROPERTY()
 		float FVar;
 
 	UPROPERTY()
@@ -33,9 +36,11 @@ struct FTestPODStruct
 {
 	GENERATED_BODY();
 
+private:
 	UPROPERTY()
 		float FVar;
 
+public:
 	UPROPERTY()
 		int IVar;
 
@@ -149,12 +154,15 @@ public:
 
 	UFUNCTION(server, reliable, WithValidation)
 	//void Server_TestFunc(const TArray<FTestMixedStruct>& StructArg);
-	void Server_TestFunc();
+	void Server_TestFunc(FTestMixedStruct TestStr);
 
 	UFUNCTION()
 	void OnRep_TestPODArray();
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UPROPERTY(Replicated)
+		USkeletalMesh* RepMesh;
 
 protected:
 

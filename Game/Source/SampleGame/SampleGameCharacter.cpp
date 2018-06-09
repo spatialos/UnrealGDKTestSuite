@@ -117,7 +117,10 @@ void ASampleGameCharacter::DebugCmd()
 	TArray<FTestMixedStruct> TempArray;
 	TempArray.AddZeroed(4);
 
-	Server_TestFunc();
+	FTestMixedStruct TestStr;
+	TestStr.PS = nullptr;
+	TestStr.WeakPtr = GetCapsuleComponent();
+	Server_TestFunc(TestStr);
 	//Server_TestFunc(TempArray);
 }
 
@@ -163,39 +166,15 @@ void ASampleGameCharacter::MoveRight(float Value)
 }
 
 //void ASampleGameCharacter::Server_TestFunc_Implementation(const TArray<FTestMixedStruct>& StructArg)
-void ASampleGameCharacter::Server_TestFunc_Implementation()
+void ASampleGameCharacter::Server_TestFunc_Implementation(FTestMixedStruct TestStr)
 {
-	// modify replicated members to check network serialisation
-	static float Num = 101.f;
-	TestPODArray.Add(Num);
-	Num += 1.f;
-
-	static FTestMixedStruct _TestMixedStruct{ PlayerState, 42.f };
-	//TestMixedStructArray.Add(_TestMixedStruct);
-	_TestMixedStruct.Modify();
-
-	static FTestPODStruct _TestPODStruct{ 5.f, 5, 5.0 };
-
-	//TestPODStructArray.Add(_TestPODStruct);
-	_TestPODStruct.Modify();
-
-	TestNetSerializeArray.Add(ReplicatedMovement);
-
-	TestMixedStruct = _TestMixedStruct;
-	_TestMixedStruct.Modify();
-
-	TestPODStruct = _TestPODStruct;
-	_TestPODStruct.Modify();
-
-	TestBookend += 1;
-
-	TestCArrayReplication[4] += 1;
+	RepMesh = GetMesh()->SkeletalMesh;
 
 	//UE_LOG(LogTemp, Warning, TEXT("RPC successfully called with an array of %d elements"), StructArg.Num());
 }
 
 //bool ASampleGameCharacter::Server_TestFunc_Validate(const TArray<FTestMixedStruct>& StructArg)
-bool ASampleGameCharacter::Server_TestFunc_Validate()
+bool ASampleGameCharacter::Server_TestFunc_Validate(FTestMixedStruct TestStr)
 {
 	return true;
 }
@@ -234,4 +213,5 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestEnum, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_None);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, RepMesh, COND_None);
 }

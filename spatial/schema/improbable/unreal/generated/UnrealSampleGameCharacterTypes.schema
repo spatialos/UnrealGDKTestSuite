@@ -11,4 +11,8 @@ type UnrealClientTestConstArgsRequest {
 }
 type UnrealServerTestFuncRequest {
 	uint32 target_subobject_offset = 1;
+	UnrealObjectRef field_teststr_ps = 2;
+	UnrealObjectRef field_teststr_weakptr = 3;
+	float field_teststr_fvar = 4;
+	float field_teststr_ivar = 5;
 }
