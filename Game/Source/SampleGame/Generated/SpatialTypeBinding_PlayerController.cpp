@@ -2341,8 +2341,13 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraFade_SendCommand(worke
 		Request.set_field_fadecolor_g(uint32_t(StructuredParams.FadeColor.G));
 		Request.set_field_fadecolor_r(uint32_t(StructuredParams.FadeColor.R));
 		Request.set_field_fadecolor_a(uint32_t(StructuredParams.FadeColor.A));
-		Request.set_field_fadealpha_x(StructuredParams.FadeAlpha.X);
-		Request.set_field_fadealpha_y(StructuredParams.FadeAlpha.Y);
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool Success;
+			(const_cast<FVector2D&>(StructuredParams.FadeAlpha)).NetSerialize(ValueDataWriter, PackageMap, Success);
+			Request.set_field_fadealpha(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_fadetime(StructuredParams.FadeTime);
 		Request.set_field_bfadeaudio(StructuredParams.bFadeAudio);
 
@@ -5374,8 +5379,14 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraFade_OnCommandRequest(
 		Parameters.FadeColor.G = uint8(uint8(Op.Request.field_fadecolor_g()));
 		Parameters.FadeColor.R = uint8(uint8(Op.Request.field_fadecolor_r()));
 		Parameters.FadeColor.A = uint8(uint8(Op.Request.field_fadecolor_a()));
-		Parameters.FadeAlpha.X = Op.Request.field_fadealpha_x();
-		Parameters.FadeAlpha.Y = Op.Request.field_fadealpha_y();
+		{
+			auto& ValueDataStr = Op.Request.field_fadealpha();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess;
+			Parameters.FadeAlpha.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+		}
 		Parameters.FadeTime = Op.Request.field_fadetime();
 		Parameters.bFadeAudio = Op.Request.field_bfadeaudio();
 

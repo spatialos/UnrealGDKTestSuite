@@ -173,7 +173,7 @@ void ASampleGameCharacter::Server_TestFunc_Implementation()
 	Num += 1.f;
 
 	static FTestMixedStruct _TestMixedStruct{ PlayerState, 42.f };
-	//TestMixedStructArray.Add(_TestMixedStruct);
+	//TestMixedStructArray.Add(_TestMixedStruct); // commented out until we support UObject* serialization in nested structs
 	_TestMixedStruct.Modify();
 
 	static FTestPODStruct _TestPODStruct{ 5.f, 5, 5.0 };
@@ -217,6 +217,10 @@ void ASampleGameCharacter::Server_TestFunc_Implementation()
 	TestFloat = 42.f;
 	TestDouble = 42.0;
 	// POD property changes end
+
+	BarArray.Push(FBar{});
+	TestBar.MyStruct.MyInt++;
+	TestBar.MyStruct.MyFloat = 101.f;
 
 	TestBookend += 1;
 
@@ -326,6 +330,9 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test64UInt, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestFloat, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestDouble, COND_None);
+
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, BarArray, COND_None);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBar, COND_None);
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_None);
 }
