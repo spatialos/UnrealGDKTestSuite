@@ -496,21 +496,42 @@ void USpatialTypeBinding_Character::ServerSendUpdate_MultiClient(const uint8* RE
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_locationoffset(improbable::Vector3f(Value.X, Value.Y, Value.Z));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+				OutUpdate.set_field_attachmentreplication_locationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 9: // field_attachmentreplication_relativescale3d
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_relativescale3d(improbable::Vector3f(Value.X, Value.Y, Value.Z));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+				OutUpdate.set_field_attachmentreplication_relativescale3d(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 10: // field_attachmentreplication_rotationoffset
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_rotationoffset(improbable::unreal::UnrealFRotator(Value.Yaw, Value.Pitch, Value.Roll));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+				OutUpdate.set_field_attachmentreplication_rotationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 11: // field_attachmentreplication_attachsocket
@@ -683,14 +704,28 @@ void USpatialTypeBinding_Character::ServerSendUpdate_MultiClient(const uint8* RE
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			OutUpdate.set_field_replicatedbasedmovement_location(improbable::Vector3f(Value.X, Value.Y, Value.Z));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+				OutUpdate.set_field_replicatedbasedmovement_location(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 22: // field_replicatedbasedmovement_rotation
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			OutUpdate.set_field_replicatedbasedmovement_rotation(improbable::unreal::UnrealFRotator(Value.Yaw, Value.Pitch, Value.Roll));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+				OutUpdate.set_field_replicatedbasedmovement_rotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 23: // field_replicatedbasedmovement_bserverhasbasecomponent
@@ -797,14 +832,28 @@ void USpatialTypeBinding_Character::ServerSendUpdate_MultiClient(const uint8* RE
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			OutUpdate.set_field_reprootmotion_location(improbable::Vector3f(Value.X, Value.Y, Value.Z));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+				OutUpdate.set_field_reprootmotion_location(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 36: // field_reprootmotion_rotation
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			OutUpdate.set_field_reprootmotion_rotation(improbable::unreal::UnrealFRotator(Value.Yaw, Value.Pitch, Value.Roll));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+				OutUpdate.set_field_reprootmotion_rotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 37: // field_reprootmotion_movementbase
@@ -869,14 +918,28 @@ void USpatialTypeBinding_Character::ServerSendUpdate_MultiClient(const uint8* RE
 		{
 			const FVector_NetQuantize10& Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(Data));
 
-			OutUpdate.set_field_reprootmotion_acceleration(improbable::Vector3f(Value.X, Value.Y, Value.Z));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FVector_NetQuantize10&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+				OutUpdate.set_field_reprootmotion_acceleration(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 43: // field_reprootmotion_linearvelocity
 		{
 			const FVector_NetQuantize10& Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(Data));
 
-			OutUpdate.set_field_reprootmotion_linearvelocity(improbable::Vector3f(Value.X, Value.Y, Value.Z));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FVector_NetQuantize10&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+				OutUpdate.set_field_reprootmotion_linearvelocity(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 	default:
@@ -1154,10 +1217,13 @@ void USpatialTypeBinding_Character::ReceiveUpdate_MultiClient(USpatialActorChann
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			{
-				auto& Vector = (*Update.field_attachmentreplication_locationoffset().data());
-				Value.X = Vector.x();
-				Value.Y = Vector.y();
-				Value.Z = Vector.z();
+				auto& ValueDataStr = (*Update.field_attachmentreplication_locationoffset().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -1181,10 +1247,13 @@ void USpatialTypeBinding_Character::ReceiveUpdate_MultiClient(USpatialActorChann
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			{
-				auto& Vector = (*Update.field_attachmentreplication_relativescale3d().data());
-				Value.X = Vector.x();
-				Value.Y = Vector.y();
-				Value.Z = Vector.z();
+				auto& ValueDataStr = (*Update.field_attachmentreplication_relativescale3d().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -1208,10 +1277,13 @@ void USpatialTypeBinding_Character::ReceiveUpdate_MultiClient(USpatialActorChann
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
 			{
-				auto& Rotator = (*Update.field_attachmentreplication_rotationoffset().data());
-				Value.Yaw = Rotator.yaw();
-				Value.Pitch = Rotator.pitch();
-				Value.Roll = Rotator.roll();
+				auto& ValueDataStr = (*Update.field_attachmentreplication_rotationoffset().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -1666,10 +1738,13 @@ void USpatialTypeBinding_Character::ReceiveUpdate_MultiClient(USpatialActorChann
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			{
-				auto& Vector = (*Update.field_replicatedbasedmovement_location().data());
-				Value.X = Vector.x();
-				Value.Y = Vector.y();
-				Value.Z = Vector.z();
+				auto& ValueDataStr = (*Update.field_replicatedbasedmovement_location().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -1693,10 +1768,13 @@ void USpatialTypeBinding_Character::ReceiveUpdate_MultiClient(USpatialActorChann
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
 			{
-				auto& Rotator = (*Update.field_replicatedbasedmovement_rotation().data());
-				Value.Yaw = Rotator.yaw();
-				Value.Pitch = Rotator.pitch();
-				Value.Roll = Rotator.roll();
+				auto& ValueDataStr = (*Update.field_replicatedbasedmovement_rotation().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -2018,10 +2096,13 @@ void USpatialTypeBinding_Character::ReceiveUpdate_MultiClient(USpatialActorChann
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			{
-				auto& Vector = (*Update.field_reprootmotion_location().data());
-				Value.X = Vector.x();
-				Value.Y = Vector.y();
-				Value.Z = Vector.z();
+				auto& ValueDataStr = (*Update.field_reprootmotion_location().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -2045,10 +2126,13 @@ void USpatialTypeBinding_Character::ReceiveUpdate_MultiClient(USpatialActorChann
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
 			{
-				auto& Rotator = (*Update.field_reprootmotion_rotation().data());
-				Value.Yaw = Rotator.yaw();
-				Value.Pitch = Rotator.pitch();
-				Value.Roll = Rotator.roll();
+				auto& ValueDataStr = (*Update.field_reprootmotion_rotation().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -2224,10 +2308,13 @@ void USpatialTypeBinding_Character::ReceiveUpdate_MultiClient(USpatialActorChann
 			FVector_NetQuantize10 Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(PropertyData));
 
 			{
-				auto& Vector = (*Update.field_reprootmotion_acceleration().data());
-				Value.X = Vector.x();
-				Value.Y = Vector.y();
-				Value.Z = Vector.z();
+				auto& ValueDataStr = (*Update.field_reprootmotion_acceleration().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -2251,10 +2338,13 @@ void USpatialTypeBinding_Character::ReceiveUpdate_MultiClient(USpatialActorChann
 			FVector_NetQuantize10 Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(PropertyData));
 
 			{
-				auto& Vector = (*Update.field_reprootmotion_linearvelocity().data());
-				Value.X = Vector.x();
-				Value.Y = Vector.y();
-				Value.Z = Vector.z();
+				auto& ValueDataStr = (*Update.field_reprootmotion_linearvelocity().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -2382,7 +2472,14 @@ void USpatialTypeBinding_Character::ClientVeryShortAdjustPosition_SendCommand(wo
 		// Build request.
 		improbable::unreal::generated::UnrealClientVeryShortAdjustPositionRequest Request;
 		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_newloc(improbable::Vector3f(StructuredParams.NewLoc.X, StructuredParams.NewLoc.Y, StructuredParams.NewLoc.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector&>(StructuredParams.NewLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
+			Request.set_field_newloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		if (StructuredParams.NewBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewBase);
@@ -2527,8 +2624,22 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionSourcePosition_SendCom
 		}
 		Request.set_field_bhasanimrootmotion(StructuredParams.bHasAnimRootMotion);
 		Request.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
-		Request.set_field_serverloc(improbable::Vector3f(StructuredParams.ServerLoc.X, StructuredParams.ServerLoc.Y, StructuredParams.ServerLoc.Z));
-		Request.set_field_serverrotation(improbable::Vector3f(StructuredParams.ServerRotation.X, StructuredParams.ServerRotation.Y, StructuredParams.ServerRotation.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector&>(StructuredParams.ServerLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
+			Request.set_field_serverloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantizeNormal&>(StructuredParams.ServerRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
+			Request.set_field_serverrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_servervelz(StructuredParams.ServerVelZ);
 		if (StructuredParams.ServerBase != nullptr)
 		{
@@ -2584,8 +2695,22 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionPosition_SendCommand(w
 		improbable::unreal::generated::UnrealClientAdjustRootMotionPositionRequest Request;
 		Request.set_field_timestamp(StructuredParams.TimeStamp);
 		Request.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
-		Request.set_field_serverloc(improbable::Vector3f(StructuredParams.ServerLoc.X, StructuredParams.ServerLoc.Y, StructuredParams.ServerLoc.Z));
-		Request.set_field_serverrotation(improbable::Vector3f(StructuredParams.ServerRotation.X, StructuredParams.ServerRotation.Y, StructuredParams.ServerRotation.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector&>(StructuredParams.ServerLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
+			Request.set_field_serverloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantizeNormal&>(StructuredParams.ServerRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
+			Request.set_field_serverrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_servervelz(StructuredParams.ServerVelZ);
 		if (StructuredParams.ServerBase != nullptr)
 		{
@@ -2640,8 +2765,22 @@ void USpatialTypeBinding_Character::ClientAdjustPosition_SendCommand(worker::Con
 		// Build request.
 		improbable::unreal::generated::UnrealClientAdjustPositionRequest Request;
 		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_newloc(improbable::Vector3f(StructuredParams.NewLoc.X, StructuredParams.NewLoc.Y, StructuredParams.NewLoc.Z));
-		Request.set_field_newvel(improbable::Vector3f(StructuredParams.NewVel.X, StructuredParams.NewVel.Y, StructuredParams.NewVel.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector&>(StructuredParams.NewLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
+			Request.set_field_newloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector&>(StructuredParams.NewVel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
+			Request.set_field_newvel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		if (StructuredParams.NewBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewBase);
@@ -2726,7 +2865,14 @@ void USpatialTypeBinding_Character::ServerMoveOld_SendCommand(worker::Connection
 		// Build request.
 		improbable::unreal::generated::UnrealServerMoveOldRequest Request;
 		Request.set_field_oldtimestamp(StructuredParams.OldTimeStamp);
-		Request.set_field_oldaccel(improbable::Vector3f(StructuredParams.OldAccel.X, StructuredParams.OldAccel.Y, StructuredParams.OldAccel.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(StructuredParams.OldAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			Request.set_field_oldaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_oldmoveflags(uint32_t(StructuredParams.OldMoveFlags));
 
 		// Send command request.
@@ -2759,8 +2905,22 @@ void USpatialTypeBinding_Character::ServerMoveNoBase_SendCommand(worker::Connect
 		// Build request.
 		improbable::unreal::generated::UnrealServerMoveNoBaseRequest Request;
 		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
-		Request.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			Request.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			Request.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
 		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
 		Request.set_field_view(uint32_t(StructuredParams.View));
@@ -2796,12 +2956,33 @@ void USpatialTypeBinding_Character::ServerMoveDualNoBase_SendCommand(worker::Con
 		// Build request.
 		improbable::unreal::generated::UnrealServerMoveDualNoBaseRequest Request;
 		Request.set_field_timestamp0(StructuredParams.TimeStamp0);
-		Request.set_field_inaccel0(improbable::Vector3f(StructuredParams.InAccel0.X, StructuredParams.InAccel0.Y, StructuredParams.InAccel0.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			Request.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
 		Request.set_field_view0(uint32_t(StructuredParams.View0));
 		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
-		Request.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			Request.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			Request.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_newflags(uint32_t(StructuredParams.NewFlags));
 		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
 		Request.set_field_view(uint32_t(StructuredParams.View));
@@ -2837,12 +3018,33 @@ void USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_SendCommand(w
 		// Build request.
 		improbable::unreal::generated::UnrealServerMoveDualHybridRootMotionRequest Request;
 		Request.set_field_timestamp0(StructuredParams.TimeStamp0);
-		Request.set_field_inaccel0(improbable::Vector3f(StructuredParams.InAccel0.X, StructuredParams.InAccel0.Y, StructuredParams.InAccel0.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			Request.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
 		Request.set_field_view0(uint32_t(StructuredParams.View0));
 		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
-		Request.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			Request.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			Request.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_newflags(uint32_t(StructuredParams.NewFlags));
 		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
 		Request.set_field_view(uint32_t(StructuredParams.View));
@@ -2897,12 +3099,33 @@ void USpatialTypeBinding_Character::ServerMoveDual_SendCommand(worker::Connectio
 		// Build request.
 		improbable::unreal::generated::UnrealServerMoveDualRequest Request;
 		Request.set_field_timestamp0(StructuredParams.TimeStamp0);
-		Request.set_field_inaccel0(improbable::Vector3f(StructuredParams.InAccel0.X, StructuredParams.InAccel0.Y, StructuredParams.InAccel0.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			Request.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
 		Request.set_field_view0(uint32_t(StructuredParams.View0));
 		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
-		Request.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			Request.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			Request.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_newflags(uint32_t(StructuredParams.NewFlags));
 		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
 		Request.set_field_view(uint32_t(StructuredParams.View));
@@ -2957,8 +3180,22 @@ void USpatialTypeBinding_Character::ServerMove_SendCommand(worker::Connection* c
 		// Build request.
 		improbable::unreal::generated::UnrealServerMoveRequest Request;
 		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
-		Request.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			Request.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			Request.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
 		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
 		Request.set_field_view(uint32_t(StructuredParams.View));
@@ -3072,10 +3309,13 @@ void USpatialTypeBinding_Character::ClientVeryShortAdjustPosition_OnCommandReque
 		// Extract from request data.
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_newloc();
-			Parameters.NewLoc.X = Vector.x();
-			Parameters.NewLoc.Y = Vector.y();
-			Parameters.NewLoc.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_newloc();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.NewLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newbase();
@@ -3302,16 +3542,22 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionSourcePosition_OnComma
 		Parameters.bHasAnimRootMotion = Op.Request.field_bhasanimrootmotion();
 		Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition();
 		{
-			auto& Vector = Op.Request.field_serverloc();
-			Parameters.ServerLoc.X = Vector.x();
-			Parameters.ServerLoc.Y = Vector.y();
-			Parameters.ServerLoc.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_serverloc();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.ServerLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			auto& Vector = Op.Request.field_serverrotation();
-			Parameters.ServerRotation.X = Vector.x();
-			Parameters.ServerRotation.Y = Vector.y();
-			Parameters.ServerRotation.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_serverrotation();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.ServerRotation.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
 		}
 		Parameters.ServerVelZ = Op.Request.field_servervelz();
 		{
@@ -3397,16 +3643,22 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionPosition_OnCommandRequ
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition();
 		{
-			auto& Vector = Op.Request.field_serverloc();
-			Parameters.ServerLoc.X = Vector.x();
-			Parameters.ServerLoc.Y = Vector.y();
-			Parameters.ServerLoc.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_serverloc();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.ServerLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			auto& Vector = Op.Request.field_serverrotation();
-			Parameters.ServerRotation.X = Vector.x();
-			Parameters.ServerRotation.Y = Vector.y();
-			Parameters.ServerRotation.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_serverrotation();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.ServerRotation.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
 		}
 		Parameters.ServerVelZ = Op.Request.field_servervelz();
 		{
@@ -3491,16 +3743,22 @@ void USpatialTypeBinding_Character::ClientAdjustPosition_OnCommandRequest(const 
 		// Extract from request data.
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_newloc();
-			Parameters.NewLoc.X = Vector.x();
-			Parameters.NewLoc.Y = Vector.y();
-			Parameters.NewLoc.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_newloc();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.NewLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			auto& Vector = Op.Request.field_newvel();
-			Parameters.NewVel.X = Vector.x();
-			Parameters.NewVel.Y = Vector.y();
-			Parameters.NewVel.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_newvel();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.NewVel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newbase();
@@ -3635,10 +3893,13 @@ void USpatialTypeBinding_Character::ServerMoveOld_OnCommandRequest(const worker:
 		// Extract from request data.
 		Parameters.OldTimeStamp = Op.Request.field_oldtimestamp();
 		{
-			auto& Vector = Op.Request.field_oldaccel();
-			Parameters.OldAccel.X = Vector.x();
-			Parameters.OldAccel.Y = Vector.y();
-			Parameters.OldAccel.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_oldaccel();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.OldAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		Parameters.OldMoveFlags = uint8(uint8(Op.Request.field_oldmoveflags()));
 
@@ -3693,16 +3954,22 @@ void USpatialTypeBinding_Character::ServerMoveNoBase_OnCommandRequest(const work
 		// Extract from request data.
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_inaccel();
-			Parameters.InAccel.X = Vector.x();
-			Parameters.InAccel.Y = Vector.y();
-			Parameters.InAccel.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_inaccel();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& Vector = Op.Request.field_clientloc();
-			Parameters.ClientLoc.X = Vector.x();
-			Parameters.ClientLoc.Y = Vector.y();
-			Parameters.ClientLoc.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_clientloc();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
 		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
@@ -3760,25 +4027,34 @@ void USpatialTypeBinding_Character::ServerMoveDualNoBase_OnCommandRequest(const 
 		// Extract from request data.
 		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
 		{
-			auto& Vector = Op.Request.field_inaccel0();
-			Parameters.InAccel0.X = Vector.x();
-			Parameters.InAccel0.Y = Vector.y();
-			Parameters.InAccel0.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_inaccel0();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.InAccel0.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
 		Parameters.View0 = Op.Request.field_view0();
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_inaccel();
-			Parameters.InAccel.X = Vector.x();
-			Parameters.InAccel.Y = Vector.y();
-			Parameters.InAccel.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_inaccel();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& Vector = Op.Request.field_clientloc();
-			Parameters.ClientLoc.X = Vector.x();
-			Parameters.ClientLoc.Y = Vector.y();
-			Parameters.ClientLoc.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_clientloc();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
 		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
@@ -3836,25 +4112,34 @@ void USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_OnCommandRequ
 		// Extract from request data.
 		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
 		{
-			auto& Vector = Op.Request.field_inaccel0();
-			Parameters.InAccel0.X = Vector.x();
-			Parameters.InAccel0.Y = Vector.y();
-			Parameters.InAccel0.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_inaccel0();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.InAccel0.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
 		Parameters.View0 = Op.Request.field_view0();
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_inaccel();
-			Parameters.InAccel.X = Vector.x();
-			Parameters.InAccel.Y = Vector.y();
-			Parameters.InAccel.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_inaccel();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& Vector = Op.Request.field_clientloc();
-			Parameters.ClientLoc.X = Vector.x();
-			Parameters.ClientLoc.Y = Vector.y();
-			Parameters.ClientLoc.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_clientloc();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
 		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
@@ -3939,25 +4224,34 @@ void USpatialTypeBinding_Character::ServerMoveDual_OnCommandRequest(const worker
 		// Extract from request data.
 		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
 		{
-			auto& Vector = Op.Request.field_inaccel0();
-			Parameters.InAccel0.X = Vector.x();
-			Parameters.InAccel0.Y = Vector.y();
-			Parameters.InAccel0.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_inaccel0();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.InAccel0.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
 		Parameters.View0 = Op.Request.field_view0();
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_inaccel();
-			Parameters.InAccel.X = Vector.x();
-			Parameters.InAccel.Y = Vector.y();
-			Parameters.InAccel.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_inaccel();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& Vector = Op.Request.field_clientloc();
-			Parameters.ClientLoc.X = Vector.x();
-			Parameters.ClientLoc.Y = Vector.y();
-			Parameters.ClientLoc.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_clientloc();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
 		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
@@ -4042,16 +4336,22 @@ void USpatialTypeBinding_Character::ServerMove_OnCommandRequest(const worker::Co
 		// Extract from request data.
 		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_inaccel();
-			Parameters.InAccel.X = Vector.x();
-			Parameters.InAccel.Y = Vector.y();
-			Parameters.InAccel.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_inaccel();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& Vector = Op.Request.field_clientloc();
-			Parameters.ClientLoc.X = Vector.x();
-			Parameters.ClientLoc.Y = Vector.y();
-			Parameters.ClientLoc.Z = Vector.z();
+			auto& ValueDataStr = Op.Request.field_clientloc();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
 		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
 		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
