@@ -9,8 +9,10 @@
 UCLASS(minimalapi)
 class ASampleGameGameMode : public AGameModeBase
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
-	ASampleGameGameMode();
+    ASampleGameGameMode();
+
+    virtual void BeginPlay() override;
 };

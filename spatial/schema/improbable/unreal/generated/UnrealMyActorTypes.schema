@@ -1,0 +1,15 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated;
+
+import "improbable/vector3.schema";
+import "improbable/unreal/gdk/core_types.schema";
+
+type UnrealBarRequest {
+	uint32 target_subobject_offset = 1;
+	double field_y = 2;
+}
+type UnrealFooRequest {
+	uint32 target_subobject_offset = 1;
+	int32 field_x = 2;
+}

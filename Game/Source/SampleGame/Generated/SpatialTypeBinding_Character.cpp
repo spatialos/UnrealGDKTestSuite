@@ -153,40 +153,26 @@ void USpatialTypeBinding_Character::BindToView()
 			ReceiveUpdate_Migratable(ActorChannel, Op.Update);
 		}));
 	}
-
-	using ClientRPCCommandTypes = improbable::unreal::generated::UnrealCharacterClientRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Characterrootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_Character::RootMotionDebugClientPrintOnScreen_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Characterclientveryshortadjustposition>(std::bind(&USpatialTypeBinding_Character::ClientVeryShortAdjustPosition_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Characterclientcheatwalk>(std::bind(&USpatialTypeBinding_Character::ClientCheatWalk_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Characterclientcheatghost>(std::bind(&USpatialTypeBinding_Character::ClientCheatGhost_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Characterclientcheatfly>(std::bind(&USpatialTypeBinding_Character::ClientCheatFly_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Characterclientadjustrootmotionsourceposition>(std::bind(&USpatialTypeBinding_Character::ClientAdjustRootMotionSourcePosition_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Characterclientadjustrootmotionposition>(std::bind(&USpatialTypeBinding_Character::ClientAdjustRootMotionPosition_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Characterclientadjustposition>(std::bind(&USpatialTypeBinding_Character::ClientAdjustPosition_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Characterclientackgoodmove>(std::bind(&USpatialTypeBinding_Character::ClientAckGoodMove_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Characterrootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_Character::RootMotionDebugClientPrintOnScreen_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Characterclientveryshortadjustposition>(std::bind(&USpatialTypeBinding_Character::ClientVeryShortAdjustPosition_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Characterclientcheatwalk>(std::bind(&USpatialTypeBinding_Character::ClientCheatWalk_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Characterclientcheatghost>(std::bind(&USpatialTypeBinding_Character::ClientCheatGhost_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Characterclientcheatfly>(std::bind(&USpatialTypeBinding_Character::ClientCheatFly_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Characterclientadjustrootmotionsourceposition>(std::bind(&USpatialTypeBinding_Character::ClientAdjustRootMotionSourcePosition_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Characterclientadjustrootmotionposition>(std::bind(&USpatialTypeBinding_Character::ClientAdjustRootMotionPosition_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Characterclientadjustposition>(std::bind(&USpatialTypeBinding_Character::ClientAdjustPosition_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Characterclientackgoodmove>(std::bind(&USpatialTypeBinding_Character::ClientAckGoodMove_OnCommandResponse, this, std::placeholders::_1)));
-
-	using ServerRPCCommandTypes = improbable::unreal::generated::UnrealCharacterServerRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Characterservermoveold>(std::bind(&USpatialTypeBinding_Character::ServerMoveOld_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Characterservermovenobase>(std::bind(&USpatialTypeBinding_Character::ServerMoveNoBase_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Characterservermovedualnobase>(std::bind(&USpatialTypeBinding_Character::ServerMoveDualNoBase_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Characterservermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Characterservermovedual>(std::bind(&USpatialTypeBinding_Character::ServerMoveDual_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Characterservermove>(std::bind(&USpatialTypeBinding_Character::ServerMove_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Characterservermoveold>(std::bind(&USpatialTypeBinding_Character::ServerMoveOld_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Characterservermovenobase>(std::bind(&USpatialTypeBinding_Character::ServerMoveNoBase_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Characterservermovedualnobase>(std::bind(&USpatialTypeBinding_Character::ServerMoveDualNoBase_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Characterservermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Characterservermovedual>(std::bind(&USpatialTypeBinding_Character::ServerMoveDual_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Characterservermove>(std::bind(&USpatialTypeBinding_Character::ServerMove_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealCharacterClientRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealCharacterClientRPCs>& Op)
+	{
+		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealCharacterClientRPCs::ComponentId))
+		{
+			return;
+		}
+		ReceiveUpdate_ClientRPCs(Op.EntityId, Op.Update);
+	}));
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealCharacterServerRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealCharacterServerRPCs>& Op)
+	{
+		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealCharacterServerRPCs::ComponentId))
+		{
+			return;
+		}
+		ReceiveUpdate_ServerRPCs(Op.EntityId, Op.Update);
+	}));
 }
 
 void USpatialTypeBinding_Character::UnbindFromView()
@@ -266,8 +252,8 @@ worker::Entity USpatialTypeBinding_Character::CreateActorEntity(const FString& C
 		.AddComponent<improbable::unreal::generated::UnrealCharacterSingleClientRepData>(SingleClientData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::UnrealCharacterMultiClientRepData>(MultiClientData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::UnrealCharacterMigratableData>(MigratableData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealCharacterClientRPCs>(improbable::unreal::generated::UnrealCharacterClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::generated::UnrealCharacterServerRPCs>(improbable::unreal::generated::UnrealCharacterServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealCharacterClientRPCs>(improbable::unreal::generated::UnrealCharacterClientRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealCharacterServerRPCs>(improbable::unreal::generated::UnrealCharacterServerRPCs::Data{}, OwningClientOnly)
 		.Build();
 }
 
@@ -2329,6 +2315,104 @@ void USpatialTypeBinding_Character::ReceiveUpdate_Migratable(USpatialActorChanne
 	}
 }
 
+void USpatialTypeBinding_Character::ReceiveUpdate_ClientRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealCharacterClientRPCs::Update& Update)
+{
+	for (auto& event : Update.characterrootmotiondebugclientprintonscreen())
+	{
+		RootMotionDebugClientPrintOnScreen_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterclientveryshortadjustposition())
+	{
+		ClientVeryShortAdjustPosition_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterclientcheatwalk())
+	{
+		ClientCheatWalk_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterclientcheatghost())
+	{
+		ClientCheatGhost_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterclientcheatfly())
+	{
+		ClientCheatFly_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterclientadjustrootmotionsourceposition())
+	{
+		ClientAdjustRootMotionSourcePosition_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterclientadjustrootmotionposition())
+	{
+		ClientAdjustRootMotionPosition_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterclientadjustposition())
+	{
+		ClientAdjustPosition_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterclientackgoodmove())
+	{
+		ClientAckGoodMove_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+}
+
+void USpatialTypeBinding_Character::ReceiveUpdate_ServerRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealCharacterServerRPCs::Update& Update)
+{
+	for (auto& event : Update.characterservermoveold())
+	{
+		ServerMoveOld_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterservermovenobase())
+	{
+		ServerMoveNoBase_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterservermovedualnobase())
+	{
+		ServerMoveDualNoBase_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterservermovedualhybridrootmotion())
+	{
+		ServerMoveDualHybridRootMotion_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterservermovedual())
+	{
+		ServerMoveDual_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+	for (auto& event : Update.characterservermove())
+	{
+		ServerMove_ReceiveRPCEvent(EntityId, event);
+	}
+
+
+}
+
 void USpatialTypeBinding_Character::RootMotionDebugClientPrintOnScreen_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
@@ -2345,17 +2429,19 @@ void USpatialTypeBinding_Character::RootMotionDebugClientPrintOnScreen_SendComma
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealRootMotionDebugClientPrintOnScreenRequest Request;
-		Request.set_field_instring(TCHAR_TO_UTF8(*StructuredParams.InString));
+		improbable::unreal::generated::UnrealRootMotionDebugClientPrintOnScreenRequest EventData;
+		EventData.set_field_instring(TCHAR_TO_UTF8(*StructuredParams.InString));
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: RootMotionDebugClientPrintOnScreen, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterrootmotiondebugclientprintonscreen>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterClientRPCs::Update Update;
+		Update.add_characterrootmotiondebugclientprintonscreen(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterClientRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
 }
@@ -2376,9 +2462,9 @@ void USpatialTypeBinding_Character::ClientVeryShortAdjustPosition_SendCommand(wo
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealClientVeryShortAdjustPositionRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_newloc(improbable::Vector3f(StructuredParams.NewLoc.X, StructuredParams.NewLoc.Y, StructuredParams.NewLoc.Z));
+		improbable::unreal::generated::UnrealClientVeryShortAdjustPositionRequest EventData;
+		EventData.set_field_timestamp(StructuredParams.TimeStamp);
+		EventData.set_field_newloc(improbable::Vector3f(StructuredParams.NewLoc.X, StructuredParams.NewLoc.Y, StructuredParams.NewLoc.Z));
 		if (StructuredParams.NewBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewBase);
@@ -2390,26 +2476,28 @@ void USpatialTypeBinding_Character::ClientVeryShortAdjustPosition_SendCommand(wo
 			}
 			else
 			{
-				Request.set_field_newbase(ObjectRef);
+				EventData.set_field_newbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
+			EventData.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
-		Request.set_field_bhasbase(StructuredParams.bHasBase);
-		Request.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		Request.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		EventData.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
+		EventData.set_field_bhasbase(StructuredParams.bHasBase);
+		EventData.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
+		EventData.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientVeryShortAdjustPosition, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientveryshortadjustposition>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterClientRPCs::Update Update;
+		Update.add_characterclientveryshortadjustposition(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterClientRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
 }
@@ -2427,16 +2515,18 @@ void USpatialTypeBinding_Character::ClientCheatWalk_SendCommand(worker::Connecti
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealClientCheatWalkRequest Request;
+		improbable::unreal::generated::UnrealClientCheatWalkRequest EventData;
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientCheatWalk, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatwalk>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterClientRPCs::Update Update;
+		Update.add_characterclientcheatwalk(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterClientRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
 }
@@ -2454,16 +2544,18 @@ void USpatialTypeBinding_Character::ClientCheatGhost_SendCommand(worker::Connect
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealClientCheatGhostRequest Request;
+		improbable::unreal::generated::UnrealClientCheatGhostRequest EventData;
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientCheatGhost, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatghost>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterClientRPCs::Update Update;
+		Update.add_characterclientcheatghost(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterClientRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
 }
@@ -2481,16 +2573,18 @@ void USpatialTypeBinding_Character::ClientCheatFly_SendCommand(worker::Connectio
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealClientCheatFlyRequest Request;
+		improbable::unreal::generated::UnrealClientCheatFlyRequest EventData;
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientCheatFly, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatfly>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterClientRPCs::Update Update;
+		Update.add_characterclientcheatfly(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterClientRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
 }
@@ -2511,18 +2605,18 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionSourcePosition_SendCom
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealClientAdjustRootMotionSourcePositionRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_serverrootmotion_bhasadditivesources(StructuredParams.ServerRootMotion.bHasAdditiveSources);
-		Request.set_field_serverrootmotion_bhasoverridesources(StructuredParams.ServerRootMotion.bHasOverrideSources);
-		Request.set_field_serverrootmotion_lastpreadditivevelocity(improbable::Vector3f(StructuredParams.ServerRootMotion.LastPreAdditiveVelocity.X, StructuredParams.ServerRootMotion.LastPreAdditiveVelocity.Y, StructuredParams.ServerRootMotion.LastPreAdditiveVelocity.Z));
-		Request.set_field_serverrootmotion_bisadditivevelocityapplied(StructuredParams.ServerRootMotion.bIsAdditiveVelocityApplied);
-		Request.set_field_serverrootmotion_lastaccumulatedsettings_flags(uint32_t(StructuredParams.ServerRootMotion.LastAccumulatedSettings.Flags));
-		Request.set_field_bhasanimrootmotion(StructuredParams.bHasAnimRootMotion);
-		Request.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
-		Request.set_field_serverloc(improbable::Vector3f(StructuredParams.ServerLoc.X, StructuredParams.ServerLoc.Y, StructuredParams.ServerLoc.Z));
-		Request.set_field_serverrotation(improbable::Vector3f(StructuredParams.ServerRotation.X, StructuredParams.ServerRotation.Y, StructuredParams.ServerRotation.Z));
-		Request.set_field_servervelz(StructuredParams.ServerVelZ);
+		improbable::unreal::generated::UnrealClientAdjustRootMotionSourcePositionRequest EventData;
+		EventData.set_field_timestamp(StructuredParams.TimeStamp);
+		EventData.set_field_serverrootmotion_bhasadditivesources(StructuredParams.ServerRootMotion.bHasAdditiveSources);
+		EventData.set_field_serverrootmotion_bhasoverridesources(StructuredParams.ServerRootMotion.bHasOverrideSources);
+		EventData.set_field_serverrootmotion_lastpreadditivevelocity(improbable::Vector3f(StructuredParams.ServerRootMotion.LastPreAdditiveVelocity.X, StructuredParams.ServerRootMotion.LastPreAdditiveVelocity.Y, StructuredParams.ServerRootMotion.LastPreAdditiveVelocity.Z));
+		EventData.set_field_serverrootmotion_bisadditivevelocityapplied(StructuredParams.ServerRootMotion.bIsAdditiveVelocityApplied);
+		EventData.set_field_serverrootmotion_lastaccumulatedsettings_flags(uint32_t(StructuredParams.ServerRootMotion.LastAccumulatedSettings.Flags));
+		EventData.set_field_bhasanimrootmotion(StructuredParams.bHasAnimRootMotion);
+		EventData.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
+		EventData.set_field_serverloc(improbable::Vector3f(StructuredParams.ServerLoc.X, StructuredParams.ServerLoc.Y, StructuredParams.ServerLoc.Z));
+		EventData.set_field_serverrotation(improbable::Vector3f(StructuredParams.ServerRotation.X, StructuredParams.ServerRotation.Y, StructuredParams.ServerRotation.Z));
+		EventData.set_field_servervelz(StructuredParams.ServerVelZ);
 		if (StructuredParams.ServerBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
@@ -2534,26 +2628,28 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionSourcePosition_SendCom
 			}
 			else
 			{
-				Request.set_field_serverbase(ObjectRef);
+				EventData.set_field_serverbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
+			EventData.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
-		Request.set_field_bhasbase(StructuredParams.bHasBase);
-		Request.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		Request.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		EventData.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
+		EventData.set_field_bhasbase(StructuredParams.bHasBase);
+		EventData.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
+		EventData.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientAdjustRootMotionSourcePosition, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustrootmotionsourceposition>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterClientRPCs::Update Update;
+		Update.add_characterclientadjustrootmotionsourceposition(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterClientRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
 }
@@ -2574,12 +2670,12 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionPosition_SendCommand(w
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealClientAdjustRootMotionPositionRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
-		Request.set_field_serverloc(improbable::Vector3f(StructuredParams.ServerLoc.X, StructuredParams.ServerLoc.Y, StructuredParams.ServerLoc.Z));
-		Request.set_field_serverrotation(improbable::Vector3f(StructuredParams.ServerRotation.X, StructuredParams.ServerRotation.Y, StructuredParams.ServerRotation.Z));
-		Request.set_field_servervelz(StructuredParams.ServerVelZ);
+		improbable::unreal::generated::UnrealClientAdjustRootMotionPositionRequest EventData;
+		EventData.set_field_timestamp(StructuredParams.TimeStamp);
+		EventData.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
+		EventData.set_field_serverloc(improbable::Vector3f(StructuredParams.ServerLoc.X, StructuredParams.ServerLoc.Y, StructuredParams.ServerLoc.Z));
+		EventData.set_field_serverrotation(improbable::Vector3f(StructuredParams.ServerRotation.X, StructuredParams.ServerRotation.Y, StructuredParams.ServerRotation.Z));
+		EventData.set_field_servervelz(StructuredParams.ServerVelZ);
 		if (StructuredParams.ServerBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
@@ -2591,26 +2687,28 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionPosition_SendCommand(w
 			}
 			else
 			{
-				Request.set_field_serverbase(ObjectRef);
+				EventData.set_field_serverbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
+			EventData.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
-		Request.set_field_bhasbase(StructuredParams.bHasBase);
-		Request.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		Request.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		EventData.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
+		EventData.set_field_bhasbase(StructuredParams.bHasBase);
+		EventData.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
+		EventData.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientAdjustRootMotionPosition, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustrootmotionposition>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterClientRPCs::Update Update;
+		Update.add_characterclientadjustrootmotionposition(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterClientRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
 }
@@ -2631,10 +2729,10 @@ void USpatialTypeBinding_Character::ClientAdjustPosition_SendCommand(worker::Con
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealClientAdjustPositionRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_newloc(improbable::Vector3f(StructuredParams.NewLoc.X, StructuredParams.NewLoc.Y, StructuredParams.NewLoc.Z));
-		Request.set_field_newvel(improbable::Vector3f(StructuredParams.NewVel.X, StructuredParams.NewVel.Y, StructuredParams.NewVel.Z));
+		improbable::unreal::generated::UnrealClientAdjustPositionRequest EventData;
+		EventData.set_field_timestamp(StructuredParams.TimeStamp);
+		EventData.set_field_newloc(improbable::Vector3f(StructuredParams.NewLoc.X, StructuredParams.NewLoc.Y, StructuredParams.NewLoc.Z));
+		EventData.set_field_newvel(improbable::Vector3f(StructuredParams.NewVel.X, StructuredParams.NewVel.Y, StructuredParams.NewVel.Z));
 		if (StructuredParams.NewBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewBase);
@@ -2646,26 +2744,28 @@ void USpatialTypeBinding_Character::ClientAdjustPosition_SendCommand(worker::Con
 			}
 			else
 			{
-				Request.set_field_newbase(ObjectRef);
+				EventData.set_field_newbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
+			EventData.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
-		Request.set_field_bhasbase(StructuredParams.bHasBase);
-		Request.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		Request.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		EventData.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
+		EventData.set_field_bhasbase(StructuredParams.bHasBase);
+		EventData.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
+		EventData.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientAdjustPosition, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustposition>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterClientRPCs::Update Update;
+		Update.add_characterclientadjustposition(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterClientRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
 }
@@ -2686,17 +2786,19 @@ void USpatialTypeBinding_Character::ClientAckGoodMove_SendCommand(worker::Connec
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealClientAckGoodMoveRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
+		improbable::unreal::generated::UnrealClientAckGoodMoveRequest EventData;
+		EventData.set_field_timestamp(StructuredParams.TimeStamp);
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientAckGoodMove, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientackgoodmove>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterClientRPCs::Update Update;
+		Update.add_characterclientackgoodmove(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterClientRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
 }
@@ -2717,19 +2819,21 @@ void USpatialTypeBinding_Character::ServerMoveOld_SendCommand(worker::Connection
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealServerMoveOldRequest Request;
-		Request.set_field_oldtimestamp(StructuredParams.OldTimeStamp);
-		Request.set_field_oldaccel(improbable::Vector3f(StructuredParams.OldAccel.X, StructuredParams.OldAccel.Y, StructuredParams.OldAccel.Z));
-		Request.set_field_oldmoveflags(uint32_t(StructuredParams.OldMoveFlags));
+		improbable::unreal::generated::UnrealServerMoveOldRequest EventData;
+		EventData.set_field_oldtimestamp(StructuredParams.OldTimeStamp);
+		EventData.set_field_oldaccel(improbable::Vector3f(StructuredParams.OldAccel.X, StructuredParams.OldAccel.Y, StructuredParams.OldAccel.Z));
+		EventData.set_field_oldmoveflags(uint32_t(StructuredParams.OldMoveFlags));
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerMoveOld, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermoveold>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterServerRPCs::Update Update;
+		Update.add_characterservermoveold(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterServerRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
 }
@@ -2750,23 +2854,25 @@ void USpatialTypeBinding_Character::ServerMoveNoBase_SendCommand(worker::Connect
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealServerMoveNoBaseRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
-		Request.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
-		Request.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
-		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		Request.set_field_view(uint32_t(StructuredParams.View));
-		Request.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		improbable::unreal::generated::UnrealServerMoveNoBaseRequest EventData;
+		EventData.set_field_timestamp(StructuredParams.TimeStamp);
+		EventData.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
+		EventData.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
+		EventData.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
+		EventData.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		EventData.set_field_view(uint32_t(StructuredParams.View));
+		EventData.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerMoveNoBase, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovenobase>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterServerRPCs::Update Update;
+		Update.add_characterservermovenobase(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterServerRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
 }
@@ -2787,27 +2893,29 @@ void USpatialTypeBinding_Character::ServerMoveDualNoBase_SendCommand(worker::Con
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealServerMoveDualNoBaseRequest Request;
-		Request.set_field_timestamp0(StructuredParams.TimeStamp0);
-		Request.set_field_inaccel0(improbable::Vector3f(StructuredParams.InAccel0.X, StructuredParams.InAccel0.Y, StructuredParams.InAccel0.Z));
-		Request.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		Request.set_field_view0(uint32_t(StructuredParams.View0));
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
-		Request.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
-		Request.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		Request.set_field_view(uint32_t(StructuredParams.View));
-		Request.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		improbable::unreal::generated::UnrealServerMoveDualNoBaseRequest EventData;
+		EventData.set_field_timestamp0(StructuredParams.TimeStamp0);
+		EventData.set_field_inaccel0(improbable::Vector3f(StructuredParams.InAccel0.X, StructuredParams.InAccel0.Y, StructuredParams.InAccel0.Z));
+		EventData.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
+		EventData.set_field_view0(uint32_t(StructuredParams.View0));
+		EventData.set_field_timestamp(StructuredParams.TimeStamp);
+		EventData.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
+		EventData.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
+		EventData.set_field_newflags(uint32_t(StructuredParams.NewFlags));
+		EventData.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		EventData.set_field_view(uint32_t(StructuredParams.View));
+		EventData.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerMoveDualNoBase, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedualnobase>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterServerRPCs::Update Update;
+		Update.add_characterservermovedualnobase(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterServerRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
 }
@@ -2828,17 +2936,17 @@ void USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_SendCommand(w
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealServerMoveDualHybridRootMotionRequest Request;
-		Request.set_field_timestamp0(StructuredParams.TimeStamp0);
-		Request.set_field_inaccel0(improbable::Vector3f(StructuredParams.InAccel0.X, StructuredParams.InAccel0.Y, StructuredParams.InAccel0.Z));
-		Request.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		Request.set_field_view0(uint32_t(StructuredParams.View0));
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
-		Request.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
-		Request.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		Request.set_field_view(uint32_t(StructuredParams.View));
+		improbable::unreal::generated::UnrealServerMoveDualHybridRootMotionRequest EventData;
+		EventData.set_field_timestamp0(StructuredParams.TimeStamp0);
+		EventData.set_field_inaccel0(improbable::Vector3f(StructuredParams.InAccel0.X, StructuredParams.InAccel0.Y, StructuredParams.InAccel0.Z));
+		EventData.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
+		EventData.set_field_view0(uint32_t(StructuredParams.View0));
+		EventData.set_field_timestamp(StructuredParams.TimeStamp);
+		EventData.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
+		EventData.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
+		EventData.set_field_newflags(uint32_t(StructuredParams.NewFlags));
+		EventData.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		EventData.set_field_view(uint32_t(StructuredParams.View));
 		if (StructuredParams.ClientMovementBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
@@ -2850,24 +2958,26 @@ void USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_SendCommand(w
 			}
 			else
 			{
-				Request.set_field_clientmovementbase(ObjectRef);
+				EventData.set_field_clientmovementbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			EventData.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		Request.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		EventData.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
+		EventData.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerMoveDualHybridRootMotion, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedualhybridrootmotion>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterServerRPCs::Update Update;
+		Update.add_characterservermovedualhybridrootmotion(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterServerRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
 }
@@ -2888,17 +2998,17 @@ void USpatialTypeBinding_Character::ServerMoveDual_SendCommand(worker::Connectio
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealServerMoveDualRequest Request;
-		Request.set_field_timestamp0(StructuredParams.TimeStamp0);
-		Request.set_field_inaccel0(improbable::Vector3f(StructuredParams.InAccel0.X, StructuredParams.InAccel0.Y, StructuredParams.InAccel0.Z));
-		Request.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		Request.set_field_view0(uint32_t(StructuredParams.View0));
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
-		Request.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
-		Request.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		Request.set_field_view(uint32_t(StructuredParams.View));
+		improbable::unreal::generated::UnrealServerMoveDualRequest EventData;
+		EventData.set_field_timestamp0(StructuredParams.TimeStamp0);
+		EventData.set_field_inaccel0(improbable::Vector3f(StructuredParams.InAccel0.X, StructuredParams.InAccel0.Y, StructuredParams.InAccel0.Z));
+		EventData.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
+		EventData.set_field_view0(uint32_t(StructuredParams.View0));
+		EventData.set_field_timestamp(StructuredParams.TimeStamp);
+		EventData.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
+		EventData.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
+		EventData.set_field_newflags(uint32_t(StructuredParams.NewFlags));
+		EventData.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		EventData.set_field_view(uint32_t(StructuredParams.View));
 		if (StructuredParams.ClientMovementBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
@@ -2910,24 +3020,26 @@ void USpatialTypeBinding_Character::ServerMoveDual_SendCommand(worker::Connectio
 			}
 			else
 			{
-				Request.set_field_clientmovementbase(ObjectRef);
+				EventData.set_field_clientmovementbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			EventData.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		Request.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		EventData.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
+		EventData.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerMoveDual, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedual>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterServerRPCs::Update Update;
+		Update.add_characterservermovedual(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterServerRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
 }
@@ -2948,13 +3060,13 @@ void USpatialTypeBinding_Character::ServerMove_SendCommand(worker::Connection* c
 		}
 
 		// Build request.
-		improbable::unreal::generated::UnrealServerMoveRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
-		Request.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
-		Request.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
-		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		Request.set_field_view(uint32_t(StructuredParams.View));
+		improbable::unreal::generated::UnrealServerMoveRequest EventData;
+		EventData.set_field_timestamp(StructuredParams.TimeStamp);
+		EventData.set_field_inaccel(improbable::Vector3f(StructuredParams.InAccel.X, StructuredParams.InAccel.Y, StructuredParams.InAccel.Z));
+		EventData.set_field_clientloc(improbable::Vector3f(StructuredParams.ClientLoc.X, StructuredParams.ClientLoc.Y, StructuredParams.ClientLoc.Z));
+		EventData.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
+		EventData.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		EventData.set_field_view(uint32_t(StructuredParams.View));
 		if (StructuredParams.ClientMovementBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
@@ -2966,33 +3078,35 @@ void USpatialTypeBinding_Character::ServerMove_SendCommand(worker::Connection* c
 			}
 			else
 			{
-				Request.set_field_clientmovementbase(ObjectRef);
+				EventData.set_field_clientmovementbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			EventData.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		Request.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		EventData.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
+		EventData.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
 
 		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		EventData.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerMove, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermove>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
+		improbable::unreal::generated::UnrealCharacterServerRPCs::Update Update;
+		Update.add_characterservermove(EventData);
+		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealCharacterServerRPCs>(TargetObjectRef.entity(), Update);
+		return {};
 	};
 	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
 }
 
-void USpatialTypeBinding_Character::RootMotionDebugClientPrintOnScreen_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterrootmotiondebugclientprintonscreen>& Op)
+void USpatialTypeBinding_Character::RootMotionDebugClientPrintOnScreen_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealRootMotionDebugClientPrintOnScreenRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3012,7 +3126,7 @@ void USpatialTypeBinding_Character::RootMotionDebugClientPrintOnScreen_OnCommand
 		Character_eventRootMotionDebugClientPrintOnScreen_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.InString = FString(UTF8_TO_TCHAR(Op.Request.field_instring().c_str()));
+		Parameters.InString = FString(UTF8_TO_TCHAR(EventData.field_instring().c_str()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: RootMotionDebugClientPrintOnScreen, target: %s %s"),
@@ -3031,19 +3145,16 @@ void USpatialTypeBinding_Character::RootMotionDebugClientPrintOnScreen_OnCommand
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterrootmotiondebugclientprintonscreen>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ClientVeryShortAdjustPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientveryshortadjustposition>& Op)
+void USpatialTypeBinding_Character::ClientVeryShortAdjustPosition_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientVeryShortAdjustPositionRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3063,15 +3174,15 @@ void USpatialTypeBinding_Character::ClientVeryShortAdjustPosition_OnCommandReque
 		Character_eventClientVeryShortAdjustPosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.TimeStamp = EventData.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_newloc();
+			auto& Vector = EventData.field_newloc();
 			Parameters.NewLoc.X = Vector.x();
 			Parameters.NewLoc.Y = Vector.y();
 			Parameters.NewLoc.Z = Vector.z();
 		}
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = EventData.field_newbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -3096,10 +3207,10 @@ void USpatialTypeBinding_Character::ClientVeryShortAdjustPosition_OnCommandReque
 				}
 			}
 		}
-		Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		Parameters.NewBaseBoneName = FName((EventData.field_newbasebonename()).data());
+		Parameters.bHasBase = EventData.field_bhasbase();
+		Parameters.bBaseRelativePosition = EventData.field_bbaserelativeposition();
+		Parameters.ServerMovementMode = uint8(uint8(EventData.field_servermovementmode()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientVeryShortAdjustPosition, target: %s %s"),
@@ -3118,19 +3229,16 @@ void USpatialTypeBinding_Character::ClientVeryShortAdjustPosition_OnCommandReque
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientveryshortadjustposition>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ClientCheatWalk_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatwalk>& Op)
+void USpatialTypeBinding_Character::ClientCheatWalk_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientCheatWalkRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3162,19 +3270,16 @@ void USpatialTypeBinding_Character::ClientCheatWalk_OnCommandRequest(const worke
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatwalk>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ClientCheatGhost_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatghost>& Op)
+void USpatialTypeBinding_Character::ClientCheatGhost_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientCheatGhostRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3206,19 +3311,16 @@ void USpatialTypeBinding_Character::ClientCheatGhost_OnCommandRequest(const work
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatghost>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ClientCheatFly_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatfly>& Op)
+void USpatialTypeBinding_Character::ClientCheatFly_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientCheatFlyRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3250,19 +3352,16 @@ void USpatialTypeBinding_Character::ClientCheatFly_OnCommandRequest(const worker
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatfly>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ClientAdjustRootMotionSourcePosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustrootmotionsourceposition>& Op)
+void USpatialTypeBinding_Character::ClientAdjustRootMotionSourcePosition_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientAdjustRootMotionSourcePositionRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3282,34 +3381,34 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionSourcePosition_OnComma
 		Character_eventClientAdjustRootMotionSourcePosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
-		Parameters.ServerRootMotion.bHasAdditiveSources = Op.Request.field_serverrootmotion_bhasadditivesources();
-		Parameters.ServerRootMotion.bHasOverrideSources = Op.Request.field_serverrootmotion_bhasoverridesources();
+		Parameters.TimeStamp = EventData.field_timestamp();
+		Parameters.ServerRootMotion.bHasAdditiveSources = EventData.field_serverrootmotion_bhasadditivesources();
+		Parameters.ServerRootMotion.bHasOverrideSources = EventData.field_serverrootmotion_bhasoverridesources();
 		{
-			auto& Vector = Op.Request.field_serverrootmotion_lastpreadditivevelocity();
+			auto& Vector = EventData.field_serverrootmotion_lastpreadditivevelocity();
 			Parameters.ServerRootMotion.LastPreAdditiveVelocity.X = Vector.x();
 			Parameters.ServerRootMotion.LastPreAdditiveVelocity.Y = Vector.y();
 			Parameters.ServerRootMotion.LastPreAdditiveVelocity.Z = Vector.z();
 		}
-		Parameters.ServerRootMotion.bIsAdditiveVelocityApplied = Op.Request.field_serverrootmotion_bisadditivevelocityapplied();
-		Parameters.ServerRootMotion.LastAccumulatedSettings.Flags = uint8(uint8(Op.Request.field_serverrootmotion_lastaccumulatedsettings_flags()));
-		Parameters.bHasAnimRootMotion = Op.Request.field_bhasanimrootmotion();
-		Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition();
+		Parameters.ServerRootMotion.bIsAdditiveVelocityApplied = EventData.field_serverrootmotion_bisadditivevelocityapplied();
+		Parameters.ServerRootMotion.LastAccumulatedSettings.Flags = uint8(uint8(EventData.field_serverrootmotion_lastaccumulatedsettings_flags()));
+		Parameters.bHasAnimRootMotion = EventData.field_bhasanimrootmotion();
+		Parameters.ServerMontageTrackPosition = EventData.field_servermontagetrackposition();
 		{
-			auto& Vector = Op.Request.field_serverloc();
+			auto& Vector = EventData.field_serverloc();
 			Parameters.ServerLoc.X = Vector.x();
 			Parameters.ServerLoc.Y = Vector.y();
 			Parameters.ServerLoc.Z = Vector.z();
 		}
 		{
-			auto& Vector = Op.Request.field_serverrotation();
+			auto& Vector = EventData.field_serverrotation();
 			Parameters.ServerRotation.X = Vector.x();
 			Parameters.ServerRotation.Y = Vector.y();
 			Parameters.ServerRotation.Z = Vector.z();
 		}
-		Parameters.ServerVelZ = Op.Request.field_servervelz();
+		Parameters.ServerVelZ = EventData.field_servervelz();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_serverbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = EventData.field_serverbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -3334,10 +3433,10 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionSourcePosition_OnComma
 				}
 			}
 		}
-		Parameters.ServerBoneName = FName((Op.Request.field_serverbonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		Parameters.ServerBoneName = FName((EventData.field_serverbonename()).data());
+		Parameters.bHasBase = EventData.field_bhasbase();
+		Parameters.bBaseRelativePosition = EventData.field_bbaserelativeposition();
+		Parameters.ServerMovementMode = uint8(uint8(EventData.field_servermovementmode()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAdjustRootMotionSourcePosition, target: %s %s"),
@@ -3356,19 +3455,16 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionSourcePosition_OnComma
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustrootmotionsourceposition>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ClientAdjustRootMotionPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustrootmotionposition>& Op)
+void USpatialTypeBinding_Character::ClientAdjustRootMotionPosition_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientAdjustRootMotionPositionRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3388,23 +3484,23 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionPosition_OnCommandRequ
 		Character_eventClientAdjustRootMotionPosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
-		Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition();
+		Parameters.TimeStamp = EventData.field_timestamp();
+		Parameters.ServerMontageTrackPosition = EventData.field_servermontagetrackposition();
 		{
-			auto& Vector = Op.Request.field_serverloc();
+			auto& Vector = EventData.field_serverloc();
 			Parameters.ServerLoc.X = Vector.x();
 			Parameters.ServerLoc.Y = Vector.y();
 			Parameters.ServerLoc.Z = Vector.z();
 		}
 		{
-			auto& Vector = Op.Request.field_serverrotation();
+			auto& Vector = EventData.field_serverrotation();
 			Parameters.ServerRotation.X = Vector.x();
 			Parameters.ServerRotation.Y = Vector.y();
 			Parameters.ServerRotation.Z = Vector.z();
 		}
-		Parameters.ServerVelZ = Op.Request.field_servervelz();
+		Parameters.ServerVelZ = EventData.field_servervelz();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_serverbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = EventData.field_serverbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -3429,10 +3525,10 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionPosition_OnCommandRequ
 				}
 			}
 		}
-		Parameters.ServerBoneName = FName((Op.Request.field_serverbonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		Parameters.ServerBoneName = FName((EventData.field_serverbonename()).data());
+		Parameters.bHasBase = EventData.field_bhasbase();
+		Parameters.bBaseRelativePosition = EventData.field_bbaserelativeposition();
+		Parameters.ServerMovementMode = uint8(uint8(EventData.field_servermovementmode()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAdjustRootMotionPosition, target: %s %s"),
@@ -3451,19 +3547,16 @@ void USpatialTypeBinding_Character::ClientAdjustRootMotionPosition_OnCommandRequ
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustrootmotionposition>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ClientAdjustPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustposition>& Op)
+void USpatialTypeBinding_Character::ClientAdjustPosition_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientAdjustPositionRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3483,21 +3576,21 @@ void USpatialTypeBinding_Character::ClientAdjustPosition_OnCommandRequest(const 
 		Character_eventClientAdjustPosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.TimeStamp = EventData.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_newloc();
+			auto& Vector = EventData.field_newloc();
 			Parameters.NewLoc.X = Vector.x();
 			Parameters.NewLoc.Y = Vector.y();
 			Parameters.NewLoc.Z = Vector.z();
 		}
 		{
-			auto& Vector = Op.Request.field_newvel();
+			auto& Vector = EventData.field_newvel();
 			Parameters.NewVel.X = Vector.x();
 			Parameters.NewVel.Y = Vector.y();
 			Parameters.NewVel.Z = Vector.z();
 		}
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = EventData.field_newbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -3522,10 +3615,10 @@ void USpatialTypeBinding_Character::ClientAdjustPosition_OnCommandRequest(const 
 				}
 			}
 		}
-		Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		Parameters.NewBaseBoneName = FName((EventData.field_newbasebonename()).data());
+		Parameters.bHasBase = EventData.field_bhasbase();
+		Parameters.bBaseRelativePosition = EventData.field_bbaserelativeposition();
+		Parameters.ServerMovementMode = uint8(uint8(EventData.field_servermovementmode()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAdjustPosition, target: %s %s"),
@@ -3544,19 +3637,16 @@ void USpatialTypeBinding_Character::ClientAdjustPosition_OnCommandRequest(const 
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustposition>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ClientAckGoodMove_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientackgoodmove>& Op)
+void USpatialTypeBinding_Character::ClientAckGoodMove_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientAckGoodMoveRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3576,7 +3666,7 @@ void USpatialTypeBinding_Character::ClientAckGoodMove_OnCommandRequest(const wor
 		Character_eventClientAckGoodMove_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.TimeStamp = EventData.field_timestamp();
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAckGoodMove, target: %s %s"),
@@ -3595,19 +3685,16 @@ void USpatialTypeBinding_Character::ClientAckGoodMove_OnCommandRequest(const wor
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientackgoodmove>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ServerMoveOld_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermoveold>& Op)
+void USpatialTypeBinding_Character::ServerMoveOld_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerMoveOldRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3627,14 +3714,14 @@ void USpatialTypeBinding_Character::ServerMoveOld_OnCommandRequest(const worker:
 		Character_eventServerMoveOld_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.OldTimeStamp = Op.Request.field_oldtimestamp();
+		Parameters.OldTimeStamp = EventData.field_oldtimestamp();
 		{
-			auto& Vector = Op.Request.field_oldaccel();
+			auto& Vector = EventData.field_oldaccel();
 			Parameters.OldAccel.X = Vector.x();
 			Parameters.OldAccel.Y = Vector.y();
 			Parameters.OldAccel.Z = Vector.z();
 		}
-		Parameters.OldMoveFlags = uint8(uint8(Op.Request.field_oldmoveflags()));
+		Parameters.OldMoveFlags = uint8(uint8(EventData.field_oldmoveflags()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveOld, target: %s %s"),
@@ -3653,19 +3740,16 @@ void USpatialTypeBinding_Character::ServerMoveOld_OnCommandRequest(const worker:
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermoveold>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ServerMoveNoBase_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovenobase>& Op)
+void USpatialTypeBinding_Character::ServerMoveNoBase_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerMoveNoBaseRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3685,23 +3769,23 @@ void USpatialTypeBinding_Character::ServerMoveNoBase_OnCommandRequest(const work
 		Character_eventServerMoveNoBase_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.TimeStamp = EventData.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_inaccel();
+			auto& Vector = EventData.field_inaccel();
 			Parameters.InAccel.X = Vector.x();
 			Parameters.InAccel.Y = Vector.y();
 			Parameters.InAccel.Z = Vector.z();
 		}
 		{
-			auto& Vector = Op.Request.field_clientloc();
+			auto& Vector = EventData.field_clientloc();
 			Parameters.ClientLoc.X = Vector.x();
 			Parameters.ClientLoc.Y = Vector.y();
 			Parameters.ClientLoc.Z = Vector.z();
 		}
-		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		Parameters.CompressedMoveFlags = uint8(uint8(EventData.field_compressedmoveflags()));
+		Parameters.ClientRoll = uint8(uint8(EventData.field_clientroll()));
+		Parameters.View = EventData.field_view();
+		Parameters.ClientMovementMode = uint8(uint8(EventData.field_clientmovementmode()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveNoBase, target: %s %s"),
@@ -3720,19 +3804,16 @@ void USpatialTypeBinding_Character::ServerMoveNoBase_OnCommandRequest(const work
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovenobase>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ServerMoveDualNoBase_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedualnobase>& Op)
+void USpatialTypeBinding_Character::ServerMoveDualNoBase_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerMoveDualNoBaseRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3752,32 +3833,32 @@ void USpatialTypeBinding_Character::ServerMoveDualNoBase_OnCommandRequest(const 
 		Character_eventServerMoveDualNoBase_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
+		Parameters.TimeStamp0 = EventData.field_timestamp0();
 		{
-			auto& Vector = Op.Request.field_inaccel0();
+			auto& Vector = EventData.field_inaccel0();
 			Parameters.InAccel0.X = Vector.x();
 			Parameters.InAccel0.Y = Vector.y();
 			Parameters.InAccel0.Z = Vector.z();
 		}
-		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = Op.Request.field_view0();
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.PendingFlags = uint8(uint8(EventData.field_pendingflags()));
+		Parameters.View0 = EventData.field_view0();
+		Parameters.TimeStamp = EventData.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_inaccel();
+			auto& Vector = EventData.field_inaccel();
 			Parameters.InAccel.X = Vector.x();
 			Parameters.InAccel.Y = Vector.y();
 			Parameters.InAccel.Z = Vector.z();
 		}
 		{
-			auto& Vector = Op.Request.field_clientloc();
+			auto& Vector = EventData.field_clientloc();
 			Parameters.ClientLoc.X = Vector.x();
 			Parameters.ClientLoc.Y = Vector.y();
 			Parameters.ClientLoc.Z = Vector.z();
 		}
-		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		Parameters.NewFlags = uint8(uint8(EventData.field_newflags()));
+		Parameters.ClientRoll = uint8(uint8(EventData.field_clientroll()));
+		Parameters.View = EventData.field_view();
+		Parameters.ClientMovementMode = uint8(uint8(EventData.field_clientmovementmode()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveDualNoBase, target: %s %s"),
@@ -3796,19 +3877,16 @@ void USpatialTypeBinding_Character::ServerMoveDualNoBase_OnCommandRequest(const 
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedualnobase>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedualhybridrootmotion>& Op)
+void USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerMoveDualHybridRootMotionRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3828,33 +3906,33 @@ void USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_OnCommandRequ
 		Character_eventServerMoveDualHybridRootMotion_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
+		Parameters.TimeStamp0 = EventData.field_timestamp0();
 		{
-			auto& Vector = Op.Request.field_inaccel0();
+			auto& Vector = EventData.field_inaccel0();
 			Parameters.InAccel0.X = Vector.x();
 			Parameters.InAccel0.Y = Vector.y();
 			Parameters.InAccel0.Z = Vector.z();
 		}
-		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = Op.Request.field_view0();
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.PendingFlags = uint8(uint8(EventData.field_pendingflags()));
+		Parameters.View0 = EventData.field_view0();
+		Parameters.TimeStamp = EventData.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_inaccel();
+			auto& Vector = EventData.field_inaccel();
 			Parameters.InAccel.X = Vector.x();
 			Parameters.InAccel.Y = Vector.y();
 			Parameters.InAccel.Z = Vector.z();
 		}
 		{
-			auto& Vector = Op.Request.field_clientloc();
+			auto& Vector = EventData.field_clientloc();
 			Parameters.ClientLoc.X = Vector.x();
 			Parameters.ClientLoc.Y = Vector.y();
 			Parameters.ClientLoc.Z = Vector.z();
 		}
-		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
+		Parameters.NewFlags = uint8(uint8(EventData.field_newflags()));
+		Parameters.ClientRoll = uint8(uint8(EventData.field_clientroll()));
+		Parameters.View = EventData.field_view();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = EventData.field_clientmovementbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -3879,8 +3957,8 @@ void USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_OnCommandRequ
 				}
 			}
 		}
-		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		Parameters.ClientBaseBoneName = FName((EventData.field_clientbasebonename()).data());
+		Parameters.ClientMovementMode = uint8(uint8(EventData.field_clientmovementmode()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveDualHybridRootMotion, target: %s %s"),
@@ -3899,19 +3977,16 @@ void USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_OnCommandRequ
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedualhybridrootmotion>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ServerMoveDual_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedual>& Op)
+void USpatialTypeBinding_Character::ServerMoveDual_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerMoveDualRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -3931,33 +4006,33 @@ void USpatialTypeBinding_Character::ServerMoveDual_OnCommandRequest(const worker
 		Character_eventServerMoveDual_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
+		Parameters.TimeStamp0 = EventData.field_timestamp0();
 		{
-			auto& Vector = Op.Request.field_inaccel0();
+			auto& Vector = EventData.field_inaccel0();
 			Parameters.InAccel0.X = Vector.x();
 			Parameters.InAccel0.Y = Vector.y();
 			Parameters.InAccel0.Z = Vector.z();
 		}
-		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = Op.Request.field_view0();
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.PendingFlags = uint8(uint8(EventData.field_pendingflags()));
+		Parameters.View0 = EventData.field_view0();
+		Parameters.TimeStamp = EventData.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_inaccel();
+			auto& Vector = EventData.field_inaccel();
 			Parameters.InAccel.X = Vector.x();
 			Parameters.InAccel.Y = Vector.y();
 			Parameters.InAccel.Z = Vector.z();
 		}
 		{
-			auto& Vector = Op.Request.field_clientloc();
+			auto& Vector = EventData.field_clientloc();
 			Parameters.ClientLoc.X = Vector.x();
 			Parameters.ClientLoc.Y = Vector.y();
 			Parameters.ClientLoc.Z = Vector.z();
 		}
-		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
+		Parameters.NewFlags = uint8(uint8(EventData.field_newflags()));
+		Parameters.ClientRoll = uint8(uint8(EventData.field_clientroll()));
+		Parameters.View = EventData.field_view();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = EventData.field_clientmovementbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -3982,8 +4057,8 @@ void USpatialTypeBinding_Character::ServerMoveDual_OnCommandRequest(const worker
 				}
 			}
 		}
-		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		Parameters.ClientBaseBoneName = FName((EventData.field_clientbasebonename()).data());
+		Parameters.ClientMovementMode = uint8(uint8(EventData.field_clientmovementmode()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveDual, target: %s %s"),
@@ -4002,19 +4077,16 @@ void USpatialTypeBinding_Character::ServerMoveDual_OnCommandRequest(const worker
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedual>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
 }
 
-void USpatialTypeBinding_Character::ServerMove_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermove>& Op)
+void USpatialTypeBinding_Character::ServerMove_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerMoveRequest& EventData)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
@@ -4034,24 +4106,24 @@ void USpatialTypeBinding_Character::ServerMove_OnCommandRequest(const worker::Co
 		Character_eventServerMove_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.TimeStamp = EventData.field_timestamp();
 		{
-			auto& Vector = Op.Request.field_inaccel();
+			auto& Vector = EventData.field_inaccel();
 			Parameters.InAccel.X = Vector.x();
 			Parameters.InAccel.Y = Vector.y();
 			Parameters.InAccel.Z = Vector.z();
 		}
 		{
-			auto& Vector = Op.Request.field_clientloc();
+			auto& Vector = EventData.field_clientloc();
 			Parameters.ClientLoc.X = Vector.x();
 			Parameters.ClientLoc.Y = Vector.y();
 			Parameters.ClientLoc.Z = Vector.z();
 		}
-		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
+		Parameters.CompressedMoveFlags = uint8(uint8(EventData.field_compressedmoveflags()));
+		Parameters.ClientRoll = uint8(uint8(EventData.field_clientroll()));
+		Parameters.View = EventData.field_view();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = EventData.field_clientmovementbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -4076,8 +4148,8 @@ void USpatialTypeBinding_Character::ServerMove_OnCommandRequest(const worker::Co
 				}
 			}
 		}
-		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		Parameters.ClientBaseBoneName = FName((EventData.field_clientbasebonename()).data());
+		Parameters.ClientMovementMode = uint8(uint8(EventData.field_clientmovementmode()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMove, target: %s %s"),
@@ -4096,85 +4168,7 @@ void USpatialTypeBinding_Character::ServerMove_OnCommandRequest(const worker::Co
 				*TargetObject->GetFullName());
 		}
 
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermove>(Op.RequestId, {});
 		return {};
 	};
 	Interop->SendCommandResponse_Internal(Receiver);
-}
-
-void USpatialTypeBinding_Character::RootMotionDebugClientPrintOnScreen_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterrootmotiondebugclientprintonscreen>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("RootMotionDebugClientPrintOnScreen"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ClientVeryShortAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientveryshortadjustposition>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ClientVeryShortAdjustPosition"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ClientCheatWalk_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatwalk>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ClientCheatWalk"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ClientCheatGhost_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatghost>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ClientCheatGhost"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ClientCheatFly_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatfly>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ClientCheatFly"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ClientAdjustRootMotionSourcePosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustrootmotionsourceposition>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ClientAdjustRootMotionSourcePosition"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ClientAdjustRootMotionPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustrootmotionposition>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ClientAdjustRootMotionPosition"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ClientAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustposition>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ClientAdjustPosition"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ClientAckGoodMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientackgoodmove>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ClientAckGoodMove"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ServerMoveOld_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermoveold>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveOld"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ServerMoveNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovenobase>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveNoBase"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ServerMoveDualNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedualnobase>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveDualNoBase"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ServerMoveDualHybridRootMotion_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedualhybridrootmotion>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveDualHybridRootMotion"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ServerMoveDual_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedual>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveDual"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
-}
-
-void USpatialTypeBinding_Character::ServerMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermove>& Op)
-{
-	Interop->HandleCommandResponse_Internal(TEXT("ServerMove"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }

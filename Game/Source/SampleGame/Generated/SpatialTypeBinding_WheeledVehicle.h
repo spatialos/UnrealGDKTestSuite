@@ -60,12 +60,13 @@ private:
 	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealWheeledVehicleMultiClientRepData::Update& Update) const;
 	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealWheeledVehicleMigratableData::Update& Update) const;
 
+	// RPC event receive functions.
+	void ReceiveUpdate_ClientRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealWheeledVehicleClientRPCs::Update& Update);
+	void ReceiveUpdate_ServerRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Update& Update);
+
 	// RPC command sender functions.
 	void ServerUpdateState_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
-	void ServerUpdateState_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>& Op);
-
-	// RPC command response handler functions.
-	void ServerUpdateState_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>& Op);
+	void ServerUpdateState_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerUpdateStateRequest& EventData);
 };

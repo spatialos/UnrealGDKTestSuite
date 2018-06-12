@@ -60,9 +60,11 @@ private:
 	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealPlayerStateMultiClientRepData::Update& Update) const;
 	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealPlayerStateMigratableData::Update& Update) const;
 
+	// RPC event receive functions.
+	void ReceiveUpdate_ClientRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealPlayerStateClientRPCs::Update& Update);
+	void ReceiveUpdate_ServerRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealPlayerStateServerRPCs::Update& Update);
+
 	// RPC command sender functions.
 
 	// RPC command request handler functions.
-
-	// RPC command response handler functions.
 };

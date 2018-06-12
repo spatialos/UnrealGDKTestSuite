@@ -60,6 +60,10 @@ private:
 	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealCharacterMultiClientRepData::Update& Update) const;
 	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealCharacterMigratableData::Update& Update) const;
 
+	// RPC event receive functions.
+	void ReceiveUpdate_ClientRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealCharacterClientRPCs::Update& Update);
+	void ReceiveUpdate_ServerRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealCharacterServerRPCs::Update& Update);
+
 	// RPC command sender functions.
 	void RootMotionDebugClientPrintOnScreen_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void ClientVeryShortAdjustPosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
@@ -78,36 +82,19 @@ private:
 	void ServerMove_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
-	void RootMotionDebugClientPrintOnScreen_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterrootmotiondebugclientprintonscreen>& Op);
-	void ClientVeryShortAdjustPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientveryshortadjustposition>& Op);
-	void ClientCheatWalk_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatwalk>& Op);
-	void ClientCheatGhost_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatghost>& Op);
-	void ClientCheatFly_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatfly>& Op);
-	void ClientAdjustRootMotionSourcePosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustrootmotionsourceposition>& Op);
-	void ClientAdjustRootMotionPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustrootmotionposition>& Op);
-	void ClientAdjustPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustposition>& Op);
-	void ClientAckGoodMove_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientackgoodmove>& Op);
-	void ServerMoveOld_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermoveold>& Op);
-	void ServerMoveNoBase_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovenobase>& Op);
-	void ServerMoveDualNoBase_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedualnobase>& Op);
-	void ServerMoveDualHybridRootMotion_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedualhybridrootmotion>& Op);
-	void ServerMoveDual_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedual>& Op);
-	void ServerMove_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermove>& Op);
-
-	// RPC command response handler functions.
-	void RootMotionDebugClientPrintOnScreen_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterrootmotiondebugclientprintonscreen>& Op);
-	void ClientVeryShortAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientveryshortadjustposition>& Op);
-	void ClientCheatWalk_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatwalk>& Op);
-	void ClientCheatGhost_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatghost>& Op);
-	void ClientCheatFly_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientcheatfly>& Op);
-	void ClientAdjustRootMotionSourcePosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustrootmotionsourceposition>& Op);
-	void ClientAdjustRootMotionPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustrootmotionposition>& Op);
-	void ClientAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientadjustposition>& Op);
-	void ClientAckGoodMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterClientRPCs::Commands::Characterclientackgoodmove>& Op);
-	void ServerMoveOld_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermoveold>& Op);
-	void ServerMoveNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovenobase>& Op);
-	void ServerMoveDualNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedualnobase>& Op);
-	void ServerMoveDualHybridRootMotion_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedualhybridrootmotion>& Op);
-	void ServerMoveDual_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermovedual>& Op);
-	void ServerMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealCharacterServerRPCs::Commands::Characterservermove>& Op);
+	void RootMotionDebugClientPrintOnScreen_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealRootMotionDebugClientPrintOnScreenRequest& EventData);
+	void ClientVeryShortAdjustPosition_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientVeryShortAdjustPositionRequest& EventData);
+	void ClientCheatWalk_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientCheatWalkRequest& EventData);
+	void ClientCheatGhost_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientCheatGhostRequest& EventData);
+	void ClientCheatFly_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientCheatFlyRequest& EventData);
+	void ClientAdjustRootMotionSourcePosition_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientAdjustRootMotionSourcePositionRequest& EventData);
+	void ClientAdjustRootMotionPosition_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientAdjustRootMotionPositionRequest& EventData);
+	void ClientAdjustPosition_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientAdjustPositionRequest& EventData);
+	void ClientAckGoodMove_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealClientAckGoodMoveRequest& EventData);
+	void ServerMoveOld_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerMoveOldRequest& EventData);
+	void ServerMoveNoBase_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerMoveNoBaseRequest& EventData);
+	void ServerMoveDualNoBase_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerMoveDualNoBaseRequest& EventData);
+	void ServerMoveDualHybridRootMotion_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerMoveDualHybridRootMotionRequest& EventData);
+	void ServerMoveDual_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerMoveDualRequest& EventData);
+	void ServerMove_ReceiveRPCEvent(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealServerMoveRequest& EventData);
 };

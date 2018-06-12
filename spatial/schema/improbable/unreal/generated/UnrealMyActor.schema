@@ -5,11 +5,11 @@ package improbable.unreal.generated;
 import "improbable/vector3.schema";
 import "improbable/unreal/gdk/core_types.schema";
 
-component UnrealWheeledVehicleSingleClientRepData {
-	id = 100025;
+component UnrealMyActorSingleClientRepData {
+	id = 100030;
 }
-component UnrealWheeledVehicleMultiClientRepData {
-	id = 100026;
+component UnrealMyActorMultiClientRepData {
+	id = 100031;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
 	bool field_btearoff = 3; // COND_None // ::Actor
@@ -25,19 +25,17 @@ component UnrealWheeledVehicleMultiClientRepData {
 	UnrealObjectRef field_owner = 13; // COND_None // ::Actor
 	uint32 field_role = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
-	UnrealObjectRef field_playerstate = 16; // COND_None // ::Pawn
-	uint32 field_remoteviewpitch = 17; // COND_SkipOwner // ::Pawn
-	UnrealObjectRef field_controller = 18; // COND_None // ::Pawn
 }
-component UnrealWheeledVehicleMigratableData {
-	id = 100027;
+component UnrealMyActorMigratableData {
+	id = 100032;
 }
-import "improbable/unreal/generated/UnrealWheeledVehicleMovementComponentTypes.schema";
+import "improbable/unreal/generated/UnrealMyActorTypes.schema";
 
-component UnrealWheeledVehicleClientRPCs {
-	id = 100028;
+component UnrealMyActorClientRPCs {
+	id = 100033;
+	event UnrealBarRequest myactorbar;
 }
-component UnrealWheeledVehicleServerRPCs {
-	id = 100029;
-	event UnrealServerUpdateStateRequest wheeledvehicleserverupdatestate;
+component UnrealMyActorServerRPCs {
+	id = 100034;
+	event UnrealFooRequest myactorfoo;
 }

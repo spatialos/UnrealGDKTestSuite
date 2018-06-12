@@ -116,6 +116,26 @@ void USpatialTypeBinding_PlayerState::BindToView()
 			ReceiveUpdate_Migratable(ActorChannel, Op.Update);
 		}));
 	}
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealPlayerStateClientRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealPlayerStateClientRPCs>& Op)
+	{
+		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealPlayerStateClientRPCs::ComponentId))
+		{
+			return;
+		}
+		ReceiveUpdate_ClientRPCs(Op.EntityId, Op.Update);
+	}));
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealPlayerStateServerRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealPlayerStateServerRPCs>& Op)
+	{
+		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealPlayerStateServerRPCs::ComponentId))
+		{
+			return;
+		}
+		ReceiveUpdate_ServerRPCs(Op.EntityId, Op.Update);
+	}));
 }
 
 void USpatialTypeBinding_PlayerState::UnbindFromView()
@@ -195,8 +215,8 @@ worker::Entity USpatialTypeBinding_PlayerState::CreateActorEntity(const FString&
 		.AddComponent<improbable::unreal::generated::UnrealPlayerStateSingleClientRepData>(SingleClientData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::UnrealPlayerStateMultiClientRepData>(MultiClientData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::UnrealPlayerStateMigratableData>(MigratableData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealPlayerStateClientRPCs>(improbable::unreal::generated::UnrealPlayerStateClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::generated::UnrealPlayerStateServerRPCs>(improbable::unreal::generated::UnrealPlayerStateServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealPlayerStateClientRPCs>(improbable::unreal::generated::UnrealPlayerStateClientRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealPlayerStateServerRPCs>(improbable::unreal::generated::UnrealPlayerStateServerRPCs::Data{}, OwningClientOnly)
 		.Build();
 }
 
@@ -1396,5 +1416,13 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 }
 
 void USpatialTypeBinding_PlayerState::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealPlayerStateMigratableData::Update& Update) const
+{
+}
+
+void USpatialTypeBinding_PlayerState::ReceiveUpdate_ClientRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealPlayerStateClientRPCs::Update& Update)
+{
+}
+
+void USpatialTypeBinding_PlayerState::ReceiveUpdate_ServerRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealPlayerStateServerRPCs::Update& Update)
 {
 }
