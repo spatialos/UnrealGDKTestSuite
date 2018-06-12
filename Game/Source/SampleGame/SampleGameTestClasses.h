@@ -40,8 +40,8 @@ public:
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	UPROPERTY(Replicated)
-	FContainerStruct MyStruct;
+	//UPROPERTY(Replicated)
+	//FContainerStruct MyStruct;
 };
 
 UCLASS(config=Game)

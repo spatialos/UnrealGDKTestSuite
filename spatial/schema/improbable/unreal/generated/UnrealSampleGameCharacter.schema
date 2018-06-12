@@ -88,7 +88,6 @@ component UnrealSampleGameCharacterMultiClientRepData {
 	uint64 field_test64uint = 76; // COND_None // ::SampleGameCharacter
 	float field_testfloat = 77; // COND_None // ::SampleGameCharacter
 	double field_testdouble = 78; // COND_None // ::SampleGameCharacter
-	int32 field_testbookend = 79; // COND_None // ::SampleGameCharacter
 	list<bytes> field_bararray = 79; // COND_None // ::SampleGameCharacter
 	list<bytes> field_testbar_cantreplicatethismember = 80; // COND_None // Bar::TestBar::SampleGameCharacter
 	bytes field_testbar_mystruct = 81; // COND_None // Bar::TestBar::SampleGameCharacter

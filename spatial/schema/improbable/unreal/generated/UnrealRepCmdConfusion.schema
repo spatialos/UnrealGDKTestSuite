@@ -25,9 +25,6 @@ component UnrealRepCmdConfusionMultiClientRepData {
 	UnrealObjectRef field_owner = 13; // COND_None // ::Actor
 	uint32 field_role = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
-	int32 field_myrootstruct_rootint = 16; // COND_None // RootStruct::MyRootStruct::RepCmdConfusion
-	int32 field_myderivedstruct_rootint = 17; // COND_None // DerivedStruct::MyDerivedStruct::RepCmdConfusion
-	int32 field_myderivedstruct_derivedint = 18; // COND_None // DerivedStruct::MyDerivedStruct::RepCmdConfusion
 }
 component UnrealRepCmdConfusionMigratableData {
 	id = 100037;

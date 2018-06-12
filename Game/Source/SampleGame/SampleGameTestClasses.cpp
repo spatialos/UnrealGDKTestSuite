@@ -25,5 +25,5 @@ void ARepCmdConfusion::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & 
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME_CONDITION(ARepCmdConfusion, MyStruct, COND_None);
+	//DOREPLIFETIME_CONDITION(ARepCmdConfusion, MyStruct, COND_None);
 }
