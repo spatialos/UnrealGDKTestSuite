@@ -2350,8 +2350,6 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraFade_SendCommand(worke
 			bool bSuccess = true;
 			(const_cast<FVector2D&>(StructuredParams.FadeAlpha)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector2D failed."));
-			bool Success;
-			(const_cast<FVector2D&>(StructuredParams.FadeAlpha)).NetSerialize(ValueDataWriter, PackageMap, Success);
 			Request.set_field_fadealpha(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		Request.set_field_fadetime(StructuredParams.FadeTime);
@@ -5397,9 +5395,6 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraFade_OnCommandRequest(
 			bool bSuccess = true;
 			Parameters.FadeAlpha.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector2D failed."));
-		}
-			bool bSuccess;
-			Parameters.FadeAlpha.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 		}
 		Parameters.FadeTime = Op.Request.field_fadetime();
 		Parameters.bFadeAudio = Op.Request.field_bfadeaudio();

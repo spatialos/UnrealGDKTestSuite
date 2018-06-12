@@ -218,9 +218,29 @@ void ASampleGameCharacter::Server_TestFunc_Implementation()
 	TestDouble = 42.0;
 	// POD property changes end
 
-	BarArray.Push(FBar{});
+	// Nested struct replication begin
+	FBar MyBar;
+	FFoo MyFoo;
+	MyFoo.FooMember = 31;
+	MyBar.CantReplicateThisMember.Push(MyFoo);
+	MyFoo.FooMember++;
+	MyBar.CantReplicateThisMember.Push(MyFoo);
+	MyFoo.FooMember++;
+	MyBar.CantReplicateThisMember.Push(MyFoo);
+	MyFoo.FooMember++;
+	MyBar.CantReplicateThisMember.Push(MyFoo);
+
+	BarArray.Push(MyBar);
+	BarArray.Push(MyBar);
+
 	TestBar.MyStruct.MyInt++;
 	TestBar.MyStruct.MyFloat = 101.f;
+	TestBar.CantReplicateThisMember.Push(MyFoo);
+	MyFoo.FooMember++;
+	TestBar.CantReplicateThisMember.Push(MyFoo);
+	MyFoo.FooMember++;
+	TestBar.CantReplicateThisMember.Push(MyFoo);
+	// Nested struct replication end
 
 	TestBookend += 1;
 

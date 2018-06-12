@@ -983,8 +983,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 					{
 						TArray<uint8> ValueData;
 						FMemoryWriter ValueDataWriter(ValueData);
-						bool Success;
-						(const_cast<FRepMovement&>(Value[i])).NetSerialize(ValueDataWriter, PackageMap, Success);
+						bool bSuccess = true;
+						(const_cast<FRepMovement&>(Value[i])).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+						checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 						List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 					}
 				}
@@ -1280,8 +1281,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			{
 				TArray<uint8> ValueData;
 				FMemoryWriter ValueDataWriter(ValueData);
-				bool Success;
-				(const_cast<FTestStructWithNetSerialize&>(Value)).NetSerialize(ValueDataWriter, PackageMap, Success);
+				bool bSuccess = true;
+				(const_cast<FTestStructWithNetSerialize&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStructWithNetSerialize failed."));
 				OutUpdate.set_field_testbar_mystruct(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
@@ -1293,8 +1295,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			{
 				TArray<uint8> ValueData;
 				FMemoryWriter ValueDataWriter(ValueData);
-				bool Success;
-				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, Success);
+				bool bSuccess = true;
+				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 				OutUpdate.set_field_testbar_netserializestruct(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
@@ -2782,8 +2785,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 						TArray<uint8> ValueData;
 						ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 						FMemoryReader ValueDataReader(ValueData);
-						bool bSuccess;
+						bool bSuccess = true;
 						Value[i].NetSerialize(ValueDataReader, PackageMap, bSuccess);
+						checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 					}
 				}
 			}
@@ -3609,8 +3613,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess;
+				bool bSuccess = true;
 				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStructWithNetSerialize failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -3638,8 +3643,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess;
+				bool bSuccess = true;
 				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -3943,13 +3949,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
-		Request.set_field_serverrootmotion_bisadditivevelocityapplied(StructuredParams.ServerRootMotion.bIsAdditiveVelocityApplied);
-		Request.set_field_serverrootmotion_lastaccumulatedsettings_flags(uint32_t(StructuredParams.ServerRootMotion.LastAccumulatedSettings.Flags));
 			bool bSuccess = true;
 			(const_cast<FRootMotionSourceGroup&>(StructuredParams.ServerRootMotion)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
-			bool Success;
-			(const_cast<FRootMotionSourceGroup&>(StructuredParams.ServerRootMotion)).NetSerialize(ValueDataWriter, PackageMap, Success);
 			Request.set_field_serverrootmotion(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		Request.set_field_bhasanimrootmotion(StructuredParams.bHasAnimRootMotion);
@@ -4870,7 +4872,6 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
 			bool bSuccess = true;
-			bool bSuccess;
 			Parameters.ServerRootMotion.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
 		}

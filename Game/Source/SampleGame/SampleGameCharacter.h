@@ -173,12 +173,6 @@ struct FBar
 {
 	GENERATED_BODY()
 
-	FBar()
-	{
-		CantReplicateThisMember.Push(FFoo{});
-		CantReplicateThisMember.Push(FFoo{});
-	}
-
 	UPROPERTY()
 	TArray<FFoo> CantReplicateThisMember;
 
