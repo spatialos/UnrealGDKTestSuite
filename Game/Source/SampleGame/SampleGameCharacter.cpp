@@ -112,7 +112,7 @@ void ASampleGameCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector L
 
 void ASampleGameCharacter::DebugCmd()
 {
-	UE_LOG(LogTemp, Warning, TEXT("DebugCmd"));
+	UE_LOG(LogTemp, Warning, TEXT("%s: DebugCmd"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
 
 	TArray<FTestMixedStruct> TempArray;
 	TempArray.AddZeroed(4);
@@ -165,13 +165,15 @@ void ASampleGameCharacter::MoveRight(float Value)
 //void ASampleGameCharacter::Server_TestFunc_Implementation(const TArray<FTestMixedStruct>& StructArg)
 void ASampleGameCharacter::Server_TestFunc_Implementation()
 {
+	UE_LOG(LogTemp, Warning, TEXT("%s: Server_TestFunc_Implementation"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
+
 	// modify replicated members to check network serialisation
 	static float Num = 101.f;
 	TestPODArray.Add(Num);
 	Num += 1.f;
 
 	static FTestMixedStruct _TestMixedStruct{ PlayerState, 42.f };
-	//TestMixedStructArray.Add(_TestMixedStruct);
+	//TestMixedStructArray.Add(_TestMixedStruct); // commented out until we support UObject* serialization in nested structs
 	_TestMixedStruct.Modify();
 
 	static FTestPODStruct _TestPODStruct{ 5.f, 5, 5.0 };
@@ -216,6 +218,30 @@ void ASampleGameCharacter::Server_TestFunc_Implementation()
 	TestDouble = 42.0;
 	// POD property changes end
 
+	// Nested struct replication begin
+	FBar MyBar;
+	FFoo MyFoo;
+	MyFoo.FooMember = 31;
+	MyBar.CantReplicateThisMember.Push(MyFoo);
+	MyFoo.FooMember++;
+	MyBar.CantReplicateThisMember.Push(MyFoo);
+	MyFoo.FooMember++;
+	MyBar.CantReplicateThisMember.Push(MyFoo);
+	MyFoo.FooMember++;
+	MyBar.CantReplicateThisMember.Push(MyFoo);
+
+	BarArray.Push(MyBar);
+	BarArray.Push(MyBar);
+
+	TestBar.MyStruct.MyInt++;
+	TestBar.MyStruct.MyFloat = 101.f;
+	TestBar.CantReplicateThisMember.Push(MyFoo);
+	MyFoo.FooMember++;
+	TestBar.CantReplicateThisMember.Push(MyFoo);
+	MyFoo.FooMember++;
+	TestBar.CantReplicateThisMember.Push(MyFoo);
+	// Nested struct replication end
+
 	TestBookend += 1;
 
 	TestCArrayReplication[4] += 1;
@@ -237,7 +263,7 @@ void ASampleGameCharacter::Client_TestConstArgs_Implementation(FConstStruct Cons
 
 void ASampleGameCharacter::Client_TestFunc_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Client_TestFunc_Implementation"));
+	UE_LOG(LogTemp, Warning, TEXT("%s: Client_TestFunc_Implementation"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
 }
 
 void ASampleGameCharacter::OnRep_TestPODArray()
@@ -324,6 +350,9 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test64UInt, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestFloat, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestDouble, COND_None);
+
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, BarArray, COND_None);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBar, COND_None);
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_None);
 }

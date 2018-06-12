@@ -2,6 +2,8 @@
 
 #pragma once
 
+#pragma optimize("", off)
+
 #include "CoreMinimal.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
@@ -26,6 +28,43 @@ struct FTestMixedStruct
 		FVar += 1.f;
 		IVar++;
 	}
+};
+
+USTRUCT()
+struct FTestStructWithNetSerialize
+{
+	GENERATED_BODY();
+
+	UPROPERTY()
+	int MyInt;
+
+	UPROPERTY()
+	float MyFloat;
+
+	bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
+	{
+		EStructFlags Flags = FTestStructWithNetSerialize::StaticStruct()->StructFlags;
+
+		if (Flags & STRUCT_NetSerializeNative)
+		{
+			UE_LOG( LogTemp, Warning, TEXT("native flag - %x0x"), Flags)
+		}
+
+		Ar << MyInt;
+
+		Ar << MyFloat;
+
+		return true;
+	}
+};
+
+template<>
+struct TStructOpsTypeTraits<FTestStructWithNetSerialize> : public TStructOpsTypeTraitsBase2<FTestStructWithNetSerialize>
+{
+	enum
+	{
+		WithNetSerializer = true
+	};
 };
 
 USTRUCT(BlueprintType)
@@ -118,6 +157,31 @@ namespace EnumNamespace
 	};
 }
 // Enum tests end
+
+
+USTRUCT(BlueprintType)
+struct FFoo
+{
+	GENERATED_BODY()
+
+    UPROPERTY()
+    int FooMember;
+};
+
+USTRUCT(BlueprintType)
+struct FBar
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TArray<FFoo> CantReplicateThisMember;
+
+	UPROPERTY()
+		FTestStructWithNetSerialize MyStruct;
+
+	UPROPERTY()
+	FRepMovement NetSerializeStruct;
+};
 
 
 UCLASS(config = Game)
@@ -236,6 +300,12 @@ public:
 	double TestDouble;
 	// POD properties end
 
+	UPROPERTY(replicated)
+	TArray<FBar> BarArray;
+
+	UPROPERTY(replicated)
+	FBar TestBar;
+
 	UPROPERTY(ReplicatedUsing = OnRep_TestBookend)
 	int TestBookend;
 
@@ -298,3 +368,5 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
+
+#pragma optimize("", on)

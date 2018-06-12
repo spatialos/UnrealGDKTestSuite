@@ -141,7 +141,11 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(76, FRepHandleData(Class, {"Test64UInt"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(77, FRepHandleData(Class, {"TestFloat"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(78, FRepHandleData(Class, {"TestDouble"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(79, FRepHandleData(Class, {"TestBookend"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(79, FRepHandleData(Class, {"BarArray"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(80, FRepHandleData(Class, {"TestBar", "CantReplicateThisMember"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(81, FRepHandleData(Class, {"TestBar", "MyStruct"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(82, FRepHandleData(Class, {"TestBar", "NetSerializeStruct"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(83, FRepHandleData(Class, {"TestBookend"}, COND_None, REPNOTIFY_OnChanged, 0));
 }
 
 void USpatialTypeBinding_SampleGameCharacter::BindToView()
@@ -1236,7 +1240,69 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			OutUpdate.set_field_testdouble(Value);
 			break;
 		}
-		case 79: // field_testbookend
+		case 79: // field_bararray
+		{
+			const TArray<FBar>& Value = *(reinterpret_cast<TArray<FBar> const*>(Data));
+
+			{
+				::worker::List<std::string> List;
+				for(int i = 0; i < Value.Num(); i++)
+				{
+					TArray<uint8> ValueData;
+					FMemoryWriter ValueDataWriter(ValueData);
+					FBar::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FBar*>(&Value[i])));
+					List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				}
+				OutUpdate.set_field_bararray(List);
+			}
+			break;
+		}
+		case 80: // field_testbar_cantreplicatethismember
+		{
+			const TArray<FFoo>& Value = *(reinterpret_cast<TArray<FFoo> const*>(Data));
+
+			{
+				::worker::List<std::string> List;
+				for(int i = 0; i < Value.Num(); i++)
+				{
+					TArray<uint8> ValueData;
+					FMemoryWriter ValueDataWriter(ValueData);
+					FFoo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FFoo*>(&Value[i])));
+					List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				}
+				OutUpdate.set_field_testbar_cantreplicatethismember(List);
+			}
+			break;
+		}
+		case 81: // field_testbar_mystruct
+		{
+			const FTestStructWithNetSerialize& Value = *(reinterpret_cast<FTestStructWithNetSerialize const*>(Data));
+
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FTestStructWithNetSerialize&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStructWithNetSerialize failed."));
+				OutUpdate.set_field_testbar_mystruct(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			break;
+		}
+		case 82: // field_testbar_netserializestruct
+		{
+			const FRepMovement& Value = *(reinterpret_cast<FRepMovement const*>(Data));
+
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
+				OutUpdate.set_field_testbar_netserializestruct(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			break;
+		}
+		case 83: // field_testbookend
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
@@ -3466,10 +3532,136 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
+	if (!Update.field_bararray().empty())
+	{
+		// field_bararray
+		uint16 Handle = 79;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			TArray<FBar> Value = *(reinterpret_cast<TArray<FBar> *>(PropertyData));
+
+			{
+				auto& List = (*Update.field_bararray().data());
+				Value.SetNum(List.size());
+				for(int i = 0; i < List.size(); i++)
+				{
+					auto& ValueDataStr = List[i];
+					TArray<uint8> ValueData;
+					ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+					FMemoryReader ValueDataReader(ValueData);
+					FBar::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Value[i]));
+				}
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testbar_cantreplicatethismember().empty())
+	{
+		// field_testbar_cantreplicatethismember
+		uint16 Handle = 80;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			TArray<FFoo> Value = *(reinterpret_cast<TArray<FFoo> *>(PropertyData));
+
+			{
+				auto& List = (*Update.field_testbar_cantreplicatethismember().data());
+				Value.SetNum(List.size());
+				for(int i = 0; i < List.size(); i++)
+				{
+					auto& ValueDataStr = List[i];
+					TArray<uint8> ValueData;
+					ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+					FMemoryReader ValueDataReader(ValueData);
+					FFoo::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Value[i]));
+				}
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testbar_mystruct().empty())
+	{
+		// field_testbar_mystruct
+		uint16 Handle = 81;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FTestStructWithNetSerialize Value = *(reinterpret_cast<FTestStructWithNetSerialize const*>(PropertyData));
+
+			{
+				auto& ValueDataStr = (*Update.field_testbar_mystruct().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStructWithNetSerialize failed."));
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testbar_netserializestruct().empty())
+	{
+		// field_testbar_netserializestruct
+		uint16 Handle = 82;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FRepMovement Value = *(reinterpret_cast<FRepMovement const*>(PropertyData));
+
+			{
+				auto& ValueDataStr = (*Update.field_testbar_netserializestruct().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
 	if (!Update.field_testbookend().empty())
 	{
 		// field_testbookend
-		uint16 Handle = 79;
+		uint16 Handle = 83;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
