@@ -26,12 +26,12 @@ void ATestIntReplication::Tick(float DeltaTime)
 
 }
 
-bool ATestIntReplication::Server_TestFunc_Validate()
+bool ATestIntReplication::Server_TestIntFunc_Validate()
 {
 	return true;
 }
 
-void ATestIntReplication::Server_TestFunc_Implementation()
+void ATestIntReplication::Server_TestIntFunc_Implementation()
 {
 	Test8Int = (1 << 6);
 	Test16Int = (1 << 14);
@@ -44,6 +44,8 @@ void ATestIntReplication::Server_TestFunc_Implementation()
 
 	// Nested struct replication end
 	TestBookend += 1;
+
+	UE_LOG(LogTemp, Warning, TEXT("M HEEEEEEEEEEERE"));
 }
 
 void ATestIntReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const

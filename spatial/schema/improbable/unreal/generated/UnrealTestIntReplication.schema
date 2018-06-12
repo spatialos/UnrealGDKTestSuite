@@ -1,0 +1,49 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated;
+
+import "improbable/unreal/gdk/core_types.schema";
+
+component UnrealTestIntReplicationSingleClientRepData {
+	id = 100040;
+}
+component UnrealTestIntReplicationMultiClientRepData {
+	id = 100041;
+	bool field_bhidden = 1; // COND_None // ::Actor
+	bool field_breplicatemovement = 2; // COND_None // ::Actor
+	bool field_btearoff = 3; // COND_None // ::Actor
+	bool field_bcanbedamaged = 4; // COND_None // ::Actor
+	uint32 field_remoterole = 5; // COND_None // ::Actor
+	bytes field_replicatedmovement = 6; // COND_None // ::Actor
+	UnrealObjectRef field_attachmentreplication_attachparent = 7; // COND_None // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication_locationoffset = 8; // COND_None // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication_relativescale3d = 9; // COND_None // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication_rotationoffset = 10; // COND_None // RepAttachment::AttachmentReplication::Actor
+	string field_attachmentreplication_attachsocket = 11; // COND_None // RepAttachment::AttachmentReplication::Actor
+	UnrealObjectRef field_attachmentreplication_attachcomponent = 12; // COND_None // RepAttachment::AttachmentReplication::Actor
+	UnrealObjectRef field_owner = 13; // COND_None // ::Actor
+	uint32 field_role = 14; // COND_None // ::Actor
+	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
+	int32 field_testbookend = 16; // COND_None // ::TestIntReplication
+	int32 field_test8int = 17; // COND_None // ::TestIntReplication
+	int32 field_test16int = 18; // COND_None // ::TestIntReplication
+	int32 field_test32int = 19; // COND_None // ::TestIntReplication
+	int64 field_test64int = 20; // COND_None // ::TestIntReplication
+	uint32 field_test8uint = 21; // COND_None // ::TestIntReplication
+	uint32 field_test16uint = 22; // COND_None // ::TestIntReplication
+	uint32 field_test32uint = 23; // COND_None // ::TestIntReplication
+	uint64 field_test64uint = 24; // COND_None // ::TestIntReplication
+}
+component UnrealTestIntReplicationMigratableData {
+	id = 100042;
+}
+import "improbable/unreal/generated/UnrealTestIntReplicationTypes.schema";
+
+component UnrealTestIntReplicationClientRPCs {
+	id = 100043;
+}
+component UnrealTestIntReplicationServerRPCs {
+	id = 100044;
+	command UnrealRPCCommandResponse testintreplicationservertestintfunc(UnrealServerTestIntFuncRequest);
+	command UnrealRPCCommandResponse testintreplicationserverreportreplication(UnrealServerReportReplicationRequest);
+}

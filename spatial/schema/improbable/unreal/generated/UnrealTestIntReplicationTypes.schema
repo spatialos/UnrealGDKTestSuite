@@ -1,0 +1,20 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated;
+
+import "improbable/unreal/gdk/core_types.schema";
+
+type UnrealServerTestIntFuncRequest {
+	uint32 target_subobject_offset = 1;
+}
+type UnrealServerReportReplicationRequest {
+	uint32 target_subobject_offset = 1;
+	int32 field_rep8int = 2;
+	int32 field_rep16int = 3;
+	int32 field_rep32int = 4;
+	int64 field_rep64int = 5;
+	uint32 field_rep8uint = 6;
+	uint32 field_rep16uint = 7;
+	uint32 field_rep32uint = 8;
+	uint64 field_rep64uint = 9;
+}

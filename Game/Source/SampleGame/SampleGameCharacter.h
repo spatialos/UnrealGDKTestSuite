@@ -7,6 +7,7 @@
 #include "CoreMinimal.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
+#include "TestIntReplication.h"
 #include "SampleGameCharacter.generated.h"
 
 USTRUCT(BlueprintType)
@@ -308,6 +309,8 @@ public:
 
 	UPROPERTY(ReplicatedUsing = OnRep_TestBookend)
 	int TestBookend;
+
+	ATestIntReplication* IntRepTest;
 
 	UFUNCTION(Client, Reliable)
 	void Client_TestConstArgs(FConstStruct ConstStruct);

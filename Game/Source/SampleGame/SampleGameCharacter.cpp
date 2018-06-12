@@ -60,6 +60,8 @@ ASampleGameCharacter::ASampleGameCharacter()
 												   // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 												   // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
+	IntRepTest = NewObject<ATestIntReplication>();
+
 	TestPODStructArray.AddDefaulted(5);
 	for (int i = 0; i < 8; ++i)
 	{
@@ -118,6 +120,7 @@ void ASampleGameCharacter::DebugCmd()
 	TempArray.AddZeroed(4);
 
 	Server_TestFunc();
+	IntRepTest->Server_TestIntFunc();
 	//Server_TestFunc(TempArray);
 }
 
