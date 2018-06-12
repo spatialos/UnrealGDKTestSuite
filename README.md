@@ -49,7 +49,7 @@ Parameters:
 
 `<target> <platform> <configuration> SampleGame.uproject [--skip-codegen]`
 
-e.g.
+For example:
 
 `Game\Scripts\Build.bat SampleGameEditor Win64 Development SampleGame.uproject`
 
@@ -62,6 +62,6 @@ The following `<target>`s  generate zipped workers:
 * `SampleGame`
 * `SampleGameServer`
 
-> Any other `<target>` passes all arguments  to `Engine\Build\BatchFiles\Build.bat` - eith no cooking or zipping performed.
+> Any other `<target>` passes all arguments  to `Engine\Build\BatchFiles\Build.bat` - either no cooking or zipping performed.
 
 
