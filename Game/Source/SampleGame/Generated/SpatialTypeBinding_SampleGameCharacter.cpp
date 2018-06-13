@@ -2907,17 +2907,15 @@ void USpatialTypeBinding_SampleGameCharacter::DoTheThingCStyleArray_SendCommand(
 			}
 			Request.set_field_theteststructcstylearrayrpc_nonetserializestruct(List);
 		}
+		::worker::List<std::string> List;
+		for(int i = 0; i < StructuredParams.DynamicStructArrayRPC.Num(); i++)
 		{
-			::worker::List<std::string> List;
-			for(int i = 0; i < StructuredParams.DynamicStructArrayRPC.Num(); i++)
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				FTestStructCStyleArray::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FTestStructCStyleArray*>(&StructuredParams.DynamicStructArrayRPC[i])));
-				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
-			Request.set_field_dynamicstructarrayrpc(List);
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			FTestStructCStyleArray::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FTestStructCStyleArray*>(&StructuredParams.DynamicStructArrayRPC[i])));
+			List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
+		Request.set_field_dynamicstructarrayrpc(List);
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
