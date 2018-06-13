@@ -1,0 +1,21 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated;
+
+import "improbable/unreal/gdk/core_types.schema";
+
+type UnrealDoTheThingCStyleArrayRequest {
+	uint32 target_subobject_offset = 1;
+	string field_printme = 2;
+	int32 field_theteststructcstylearrayrpc_nonserializedint = 3;
+	int32 field_theteststructcstylearrayrpc_testint = 4;
+	list<int32> field_theteststructcstylearrayrpc_testintarray = 5;
+	list<bytes> field_theteststructcstylearrayrpc_netserializestruct = 6;
+	list<bytes> field_theteststructcstylearrayrpc_nonetserializestruct = 7;
+	list<bytes> field_dynamicstructarrayrpc = 8;
+}
+type UnrealDoTheThingRequest {
+	uint32 target_subobject_offset = 1;
+	string field_printme = 2;
+	bytes field_theteststructrpc = 3;
+}
