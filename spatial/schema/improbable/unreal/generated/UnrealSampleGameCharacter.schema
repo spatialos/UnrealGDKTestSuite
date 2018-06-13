@@ -5,10 +5,10 @@ package improbable.unreal.generated;
 import "improbable/unreal/gdk/core_types.schema";
 
 component UnrealSampleGameCharacterSingleClientRepData {
-	id = 100016;
+	id = 100022;
 }
 component UnrealSampleGameCharacterMultiClientRepData {
-	id = 100017;
+	id = 100023;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
 	bool field_btearoff = 3; // COND_None // ::Actor
@@ -54,13 +54,13 @@ component UnrealSampleGameCharacterMultiClientRepData {
 	bytes field_reprootmotion_linearvelocity = 43; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 }
 component UnrealSampleGameCharacterMigratableData {
-	id = 100018;
+	id = 100024;
 }
 import "improbable/unreal/generated/UnrealSampleGameCharacterTypes.schema";
 import "improbable/unreal/generated/UnrealCharacterTypes.schema";
 
 component UnrealSampleGameCharacterClientRPCs {
-	id = 100019;
+	id = 100025;
 	command UnrealRPCCommandResponse samplegamecharacterrootmotiondebugclientprintonscreen(UnrealRootMotionDebugClientPrintOnScreenRequest);
 	command UnrealRPCCommandResponse samplegamecharacterclientveryshortadjustposition(UnrealClientVeryShortAdjustPositionRequest);
 	command UnrealRPCCommandResponse samplegamecharacterclientcheatwalk(UnrealClientCheatWalkRequest);
@@ -72,7 +72,7 @@ component UnrealSampleGameCharacterClientRPCs {
 	command UnrealRPCCommandResponse samplegamecharacterclientackgoodmove(UnrealClientAckGoodMoveRequest);
 }
 component UnrealSampleGameCharacterServerRPCs {
-	id = 100020;
+	id = 100026;
 	command UnrealRPCCommandResponse samplegamecharacterservermoveold(UnrealServerMoveOldRequest);
 	command UnrealRPCCommandResponse samplegamecharacterservermovenobase(UnrealServerMoveNoBaseRequest);
 	command UnrealRPCCommandResponse samplegamecharacterservermovedualnobase(UnrealServerMoveDualNoBaseRequest);
@@ -81,6 +81,6 @@ component UnrealSampleGameCharacterServerRPCs {
 	command UnrealRPCCommandResponse samplegamecharacterservermove(UnrealServerMoveRequest);
 }
 component UnrealSampleGameCharacterNetMulticastRPCs {
-	id = 100021;
+	id = 100027;
 	event UnrealTestMulticastRequest samplegamecharactertestmulticast;
 }
