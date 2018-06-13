@@ -142,3 +142,12 @@ void ASampleGameCharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
+
+bool ASampleGameCharacter::TestMulticast_Validate()
+{
+	return true;
+}
+
+void ASampleGameCharacter::TestMulticast_Implementation()
+{
+}
