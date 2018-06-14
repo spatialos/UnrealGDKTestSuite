@@ -390,8 +390,9 @@ void USpatialTypeBinding_WheeledVehicle::ServerSendUpdate_MultiClient(const uint
 			{
 				TArray<uint8> ValueData;
 				FMemoryWriter ValueDataWriter(ValueData);
-				bool Success;
-				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, Success);
+				bool bSuccess = true;
+				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 				OutUpdate.set_field_replicatedmovement(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
@@ -403,9 +404,18 @@ void USpatialTypeBinding_WheeledVehicle::ServerSendUpdate_MultiClient(const uint
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 7);
 				}
 				else
@@ -454,9 +464,18 @@ void USpatialTypeBinding_WheeledVehicle::ServerSendUpdate_MultiClient(const uint
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 12);
 				}
 				else
@@ -477,9 +496,18 @@ void USpatialTypeBinding_WheeledVehicle::ServerSendUpdate_MultiClient(const uint
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 13);
 				}
 				else
@@ -507,9 +535,18 @@ void USpatialTypeBinding_WheeledVehicle::ServerSendUpdate_MultiClient(const uint
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 15);
 				}
 				else
@@ -530,9 +567,18 @@ void USpatialTypeBinding_WheeledVehicle::ServerSendUpdate_MultiClient(const uint
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 16);
 				}
 				else
@@ -560,9 +606,18 @@ void USpatialTypeBinding_WheeledVehicle::ServerSendUpdate_MultiClient(const uint
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 18);
 				}
 				else
@@ -742,8 +797,9 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess;
+				bool bSuccess = true;
 				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -793,6 +849,8 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -952,6 +1010,8 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1008,6 +1068,8 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1093,6 +1155,8 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1149,6 +1213,8 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1227,6 +1293,8 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1292,10 +1360,12 @@ void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnCommandRequest(cons
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerUpdateState_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));

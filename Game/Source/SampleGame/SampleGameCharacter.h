@@ -150,11 +150,11 @@ public:
 	int TestBookend;
 
 	UFUNCTION(Client, Reliable)
-	void Client_TestConstArgs(FConstStruct ConstStruct);
+	void Client_TestConstArgs(USkeletalMesh* TestMesh);
 
 	UFUNCTION(server, reliable, WithValidation)
 	//void Server_TestFunc(const TArray<FTestMixedStruct>& StructArg);
-	void Server_TestFunc(FTestMixedStruct TestStr);
+	void Server_TestFunc(USkeletalMesh* TestMesh);
 
 	UFUNCTION()
 	void OnRep_TestPODArray();

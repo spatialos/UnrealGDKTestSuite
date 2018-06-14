@@ -391,8 +391,9 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 			{
 				TArray<uint8> ValueData;
 				FMemoryWriter ValueDataWriter(ValueData);
-				bool Success;
-				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, Success);
+				bool bSuccess = true;
+				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 				OutUpdate.set_field_replicatedmovement(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
@@ -404,9 +405,18 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 7);
 				}
 				else
@@ -455,9 +465,18 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 12);
 				}
 				else
@@ -478,9 +497,18 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 13);
 				}
 				else
@@ -508,9 +536,18 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 15);
 				}
 				else
@@ -594,8 +631,9 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 			{
 				TArray<uint8> ValueData;
 				FMemoryWriter ValueDataWriter(ValueData);
-				bool Success;
-				(const_cast<FUniqueNetIdRepl&>(Value)).NetSerialize(ValueDataWriter, PackageMap, Success);
+				bool bSuccess = true;
+				(const_cast<FUniqueNetIdRepl&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 				OutUpdate.set_field_uniqueid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
@@ -773,8 +811,9 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess;
+				bool bSuccess = true;
 				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -824,6 +863,8 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -983,6 +1024,8 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1039,6 +1082,8 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1124,6 +1169,8 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1356,8 +1403,9 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess;
+				bool bSuccess = true;
 				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);

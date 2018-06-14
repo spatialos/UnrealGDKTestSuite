@@ -120,7 +120,8 @@ void ASampleGameCharacter::DebugCmd()
 	FTestMixedStruct TestStr;
 	TestStr.PS = nullptr;
 	TestStr.WeakPtr = GetCapsuleComponent();
-	Server_TestFunc(TestStr);
+
+	Server_TestFunc(GetMesh()->SkeletalMesh);
 	//Server_TestFunc(TempArray);
 }
 
@@ -166,22 +167,23 @@ void ASampleGameCharacter::MoveRight(float Value)
 }
 
 //void ASampleGameCharacter::Server_TestFunc_Implementation(const TArray<FTestMixedStruct>& StructArg)
-void ASampleGameCharacter::Server_TestFunc_Implementation(FTestMixedStruct TestStr)
+void ASampleGameCharacter::Server_TestFunc_Implementation(USkeletalMesh* TestMesh)
 {
 	RepMesh = GetMesh()->SkeletalMesh;
+	Client_TestConstArgs(GetMesh()->SkeletalMesh);
 
 	//UE_LOG(LogTemp, Warning, TEXT("RPC successfully called with an array of %d elements"), StructArg.Num());
 }
 
 //bool ASampleGameCharacter::Server_TestFunc_Validate(const TArray<FTestMixedStruct>& StructArg)
-bool ASampleGameCharacter::Server_TestFunc_Validate(FTestMixedStruct TestStr)
+bool ASampleGameCharacter::Server_TestFunc_Validate(USkeletalMesh* TestMesh)
 {
 	return true;
 }
 
-void ASampleGameCharacter::Client_TestConstArgs_Implementation(FConstStruct ConstStruct)
+void ASampleGameCharacter::Client_TestConstArgs_Implementation(USkeletalMesh* TestMesh)
 {
-
+	MoveRight(0.1f);
 }
 
 void ASampleGameCharacter::OnRep_TestPODArray()

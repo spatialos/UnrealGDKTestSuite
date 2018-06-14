@@ -635,8 +635,9 @@ void USpatialTypeBinding_PlayerController::ServerSendUpdate_MultiClient(const ui
 			{
 				TArray<uint8> ValueData;
 				FMemoryWriter ValueDataWriter(ValueData);
-				bool Success;
-				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, Success);
+				bool bSuccess = true;
+				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 				OutUpdate.set_field_replicatedmovement(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
@@ -648,9 +649,18 @@ void USpatialTypeBinding_PlayerController::ServerSendUpdate_MultiClient(const ui
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 7);
 				}
 				else
@@ -699,9 +709,18 @@ void USpatialTypeBinding_PlayerController::ServerSendUpdate_MultiClient(const ui
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 12);
 				}
 				else
@@ -722,9 +741,18 @@ void USpatialTypeBinding_PlayerController::ServerSendUpdate_MultiClient(const ui
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 13);
 				}
 				else
@@ -752,9 +780,18 @@ void USpatialTypeBinding_PlayerController::ServerSendUpdate_MultiClient(const ui
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 15);
 				}
 				else
@@ -775,9 +812,18 @@ void USpatialTypeBinding_PlayerController::ServerSendUpdate_MultiClient(const ui
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 16);
 				}
 				else
@@ -798,9 +844,18 @@ void USpatialTypeBinding_PlayerController::ServerSendUpdate_MultiClient(const ui
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 17);
 				}
 				else
@@ -831,6 +886,13 @@ void USpatialTypeBinding_PlayerController::ServerSendUpdate_Migratable(const uin
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
@@ -1069,8 +1131,9 @@ void USpatialTypeBinding_PlayerController::ReceiveUpdate_MultiClient(USpatialAct
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess;
+				bool bSuccess = true;
 				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -1120,6 +1183,8 @@ void USpatialTypeBinding_PlayerController::ReceiveUpdate_MultiClient(USpatialAct
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1279,6 +1344,8 @@ void USpatialTypeBinding_PlayerController::ReceiveUpdate_MultiClient(USpatialAct
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1335,6 +1402,8 @@ void USpatialTypeBinding_PlayerController::ReceiveUpdate_MultiClient(USpatialAct
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1420,6 +1489,8 @@ void USpatialTypeBinding_PlayerController::ReceiveUpdate_MultiClient(USpatialAct
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1476,6 +1547,8 @@ void USpatialTypeBinding_PlayerController::ReceiveUpdate_MultiClient(USpatialAct
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1532,6 +1605,8 @@ void USpatialTypeBinding_PlayerController::ReceiveUpdate_MultiClient(USpatialAct
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1798,8 +1873,9 @@ void USpatialTypeBinding_PlayerController::ClientUnmutePlayer_SendCommand(worker
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
-			bool Success;
-			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, Success);
+			bool bSuccess = true;
+			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 			Request.set_field_playerid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
@@ -1872,6 +1948,13 @@ void USpatialTypeBinding_PlayerController::ClientTeamMessage_SendCommand(worker:
 		if (StructuredParams.SenderPlayerState != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.SenderPlayerState);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.SenderPlayerState->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.SenderPlayerState);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -1923,6 +2006,13 @@ void USpatialTypeBinding_PlayerController::ClientStopForceFeedback_SendCommand(w
 		if (StructuredParams.ForceFeedbackEffect != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ForceFeedbackEffect);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.ForceFeedbackEffect->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ForceFeedbackEffect);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2004,6 +2094,13 @@ void USpatialTypeBinding_PlayerController::ClientStopCameraAnim_SendCommand(work
 		if (StructuredParams.AnimToStop != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.AnimToStop);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.AnimToStop->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.AnimToStop);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2110,6 +2207,13 @@ void USpatialTypeBinding_PlayerController::ClientSetViewTarget_SendCommand(worke
 		if (StructuredParams.A != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.A);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.A->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.A);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2224,6 +2328,13 @@ void USpatialTypeBinding_PlayerController::ClientSetForceMipLevelsToBeResident_S
 		if (StructuredParams.Material != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Material);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.Material->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Material);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2341,8 +2452,14 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraFade_SendCommand(worke
 		Request.set_field_fadecolor_g(uint32_t(StructuredParams.FadeColor.G));
 		Request.set_field_fadecolor_r(uint32_t(StructuredParams.FadeColor.R));
 		Request.set_field_fadecolor_a(uint32_t(StructuredParams.FadeColor.A));
-		Request.set_field_fadealpha_x(StructuredParams.FadeAlpha.X);
-		Request.set_field_fadealpha_y(StructuredParams.FadeAlpha.Y);
+		{
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			bool bSuccess = true;
+			(const_cast<FVector2D&>(StructuredParams.FadeAlpha)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector2D failed."));
+			Request.set_field_fadealpha(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
 		Request.set_field_fadetime(StructuredParams.FadeTime);
 		Request.set_field_bfadeaudio(StructuredParams.bFadeAudio);
 
@@ -2467,6 +2584,13 @@ void USpatialTypeBinding_PlayerController::ClientRetryClientRestart_SendCommand(
 		if (StructuredParams.NewPawn != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewPawn);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.NewPawn->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewPawn);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2515,6 +2639,13 @@ void USpatialTypeBinding_PlayerController::ClientRestart_SendCommand(worker::Con
 		if (StructuredParams.NewPawn != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewPawn);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.NewPawn->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewPawn);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2590,6 +2721,13 @@ void USpatialTypeBinding_PlayerController::ClientRepObjRef_SendCommand(worker::C
 		if (StructuredParams.Object != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Object);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.Object->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Object);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2640,6 +2778,13 @@ void USpatialTypeBinding_PlayerController::ClientReceiveLocalizedMessage_SendCom
 		if (StructuredParams.RelatedPlayerState_1 != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.RelatedPlayerState_1);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.RelatedPlayerState_1->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RelatedPlayerState_1);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2658,6 +2803,13 @@ void USpatialTypeBinding_PlayerController::ClientReceiveLocalizedMessage_SendCom
 		if (StructuredParams.RelatedPlayerState_2 != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.RelatedPlayerState_2);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.RelatedPlayerState_2->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RelatedPlayerState_2);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2676,6 +2828,13 @@ void USpatialTypeBinding_PlayerController::ClientReceiveLocalizedMessage_SendCom
 		if (StructuredParams.OptionalObject != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.OptionalObject);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.OptionalObject->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.OptionalObject);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2724,6 +2883,13 @@ void USpatialTypeBinding_PlayerController::ClientPrestreamTextures_SendCommand(w
 		if (StructuredParams.ForcedActor != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ForcedActor);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.ForcedActor->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ForcedActor);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2808,6 +2974,13 @@ void USpatialTypeBinding_PlayerController::ClientPlaySoundAtLocation_SendCommand
 		if (StructuredParams.Sound != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Sound);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.Sound->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Sound);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2859,6 +3032,13 @@ void USpatialTypeBinding_PlayerController::ClientPlaySound_SendCommand(worker::C
 		if (StructuredParams.Sound != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Sound);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.Sound->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Sound);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2909,6 +3089,13 @@ void USpatialTypeBinding_PlayerController::ClientPlayForceFeedback_SendCommand(w
 		if (StructuredParams.ForceFeedbackEffect != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ForceFeedbackEffect);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.ForceFeedbackEffect->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ForceFeedbackEffect);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -2994,6 +3181,13 @@ void USpatialTypeBinding_PlayerController::ClientPlayCameraAnim_SendCommand(work
 		if (StructuredParams.AnimToPlay != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.AnimToPlay);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.AnimToPlay->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.AnimToPlay);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -3050,8 +3244,9 @@ void USpatialTypeBinding_PlayerController::ClientMutePlayer_SendCommand(worker::
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
-			bool Success;
-			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, Success);
+			bool bSuccess = true;
+			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 			Request.set_field_playerid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
@@ -3213,6 +3408,13 @@ void USpatialTypeBinding_PlayerController::ClientGameEnded_SendCommand(worker::C
 		if (StructuredParams.EndGameFocus != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.EndGameFocus);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.EndGameFocus->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.EndGameFocus);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -3803,8 +4005,9 @@ void USpatialTypeBinding_PlayerController::ServerUnmutePlayer_SendCommand(worker
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
-			bool Success;
-			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, Success);
+			bool bSuccess = true;
+			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 			Request.set_field_playerid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
@@ -4042,8 +4245,9 @@ void USpatialTypeBinding_PlayerController::ServerMutePlayer_SendCommand(worker::
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
-			bool Success;
-			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, Success);
+			bool bSuccess = true;
+			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 			Request.set_field_playerid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
@@ -4195,6 +4399,13 @@ void USpatialTypeBinding_PlayerController::ServerAcknowledgePossession_SendComma
 		if (StructuredParams.P != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.P);
+			if (!NetGUID.IsValid())
+			{
+				if (StructuredParams.P->IsFullNameStableForNetworking())
+				{
+					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.P);
+				}
+			}
 			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 			{
@@ -4227,10 +4438,12 @@ void USpatialTypeBinding_PlayerController::OnServerStartedVisualLogger_OnCommand
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: OnServerStartedVisualLogger_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4278,10 +4491,12 @@ void USpatialTypeBinding_PlayerController::ClientWasKicked_OnCommandRequest(cons
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientWasKicked_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4329,10 +4544,12 @@ void USpatialTypeBinding_PlayerController::ClientVoiceHandshakeComplete_OnComman
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientVoiceHandshakeComplete_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4373,10 +4590,12 @@ void USpatialTypeBinding_PlayerController::ClientUpdateMultipleLevelsStreamingSt
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientUpdateMultipleLevelsStreamingStatus_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4435,10 +4654,12 @@ void USpatialTypeBinding_PlayerController::ClientUpdateLevelStreamingStatus_OnCo
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientUpdateLevelStreamingStatus_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4490,10 +4711,12 @@ void USpatialTypeBinding_PlayerController::ClientUnmutePlayer_OnCommandRequest(c
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientUnmutePlayer_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4515,8 +4738,9 @@ void USpatialTypeBinding_PlayerController::ClientUnmutePlayer_OnCommandRequest(c
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
-			bool bSuccess;
+			bool bSuccess = true;
 			Parameters.PlayerId.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 		}
 
 		// Call implementation.
@@ -4548,10 +4772,12 @@ void USpatialTypeBinding_PlayerController::ClientTravelInternal_OnCommandRequest
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientTravelInternal_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4605,10 +4831,12 @@ void USpatialTypeBinding_PlayerController::ClientTeamMessage_OnCommandRequest(co
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientTeamMessage_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4644,6 +4872,8 @@ void USpatialTypeBinding_PlayerController::ClientTeamMessage_OnCommandRequest(co
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientTeamMessage_OnCommandRequest: Parameters.SenderPlayerState %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -4684,10 +4914,12 @@ void USpatialTypeBinding_PlayerController::ClientStopForceFeedback_OnCommandRequ
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientStopForceFeedback_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4723,6 +4955,8 @@ void USpatialTypeBinding_PlayerController::ClientStopForceFeedback_OnCommandRequ
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientStopForceFeedback_OnCommandRequest: Parameters.ForceFeedbackEffect %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -4761,10 +4995,12 @@ void USpatialTypeBinding_PlayerController::ClientStopCameraShake_OnCommandReques
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientStopCameraShake_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4813,10 +5049,12 @@ void USpatialTypeBinding_PlayerController::ClientStopCameraAnim_OnCommandRequest
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientStopCameraAnim_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4852,6 +5090,8 @@ void USpatialTypeBinding_PlayerController::ClientStopCameraAnim_OnCommandRequest
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientStopCameraAnim_OnCommandRequest: Parameters.AnimToStop %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -4889,10 +5129,12 @@ void USpatialTypeBinding_PlayerController::ClientStartOnlineSession_OnCommandReq
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientStartOnlineSession_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4933,10 +5175,12 @@ void USpatialTypeBinding_PlayerController::ClientSpawnCameraLensEffect_OnCommand
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSpawnCameraLensEffect_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -4984,10 +5228,12 @@ void USpatialTypeBinding_PlayerController::ClientSetViewTarget_OnCommandRequest(
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetViewTarget_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5023,6 +5269,8 @@ void USpatialTypeBinding_PlayerController::ClientSetViewTarget_OnCommandRequest(
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetViewTarget_OnCommandRequest: Parameters.A %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -5064,10 +5312,12 @@ void USpatialTypeBinding_PlayerController::ClientSetSpectatorWaiting_OnCommandRe
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetSpectatorWaiting_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5115,10 +5365,12 @@ void USpatialTypeBinding_PlayerController::ClientSetHUD_OnCommandRequest(const w
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetHUD_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5166,10 +5418,12 @@ void USpatialTypeBinding_PlayerController::ClientSetForceMipLevelsToBeResident_O
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetForceMipLevelsToBeResident_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5205,6 +5459,8 @@ void USpatialTypeBinding_PlayerController::ClientSetForceMipLevelsToBeResident_O
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetForceMipLevelsToBeResident_OnCommandRequest: Parameters.Material %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -5244,10 +5500,12 @@ void USpatialTypeBinding_PlayerController::ClientSetCinematicMode_OnCommandReque
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetCinematicMode_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5298,10 +5556,12 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraMode_OnCommandRequest(
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetCameraMode_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5349,10 +5609,12 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraFade_OnCommandRequest(
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetCameraFade_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5374,8 +5636,15 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraFade_OnCommandRequest(
 		Parameters.FadeColor.G = uint8(uint8(Op.Request.field_fadecolor_g()));
 		Parameters.FadeColor.R = uint8(uint8(Op.Request.field_fadecolor_r()));
 		Parameters.FadeColor.A = uint8(uint8(Op.Request.field_fadecolor_a()));
-		Parameters.FadeAlpha.X = Op.Request.field_fadealpha_x();
-		Parameters.FadeAlpha.Y = Op.Request.field_fadealpha_y();
+		{
+			auto& ValueDataStr = Op.Request.field_fadealpha();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FMemoryReader ValueDataReader(ValueData);
+			bool bSuccess = true;
+			Parameters.FadeAlpha.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector2D failed."));
+		}
 		Parameters.FadeTime = Op.Request.field_fadetime();
 		Parameters.bFadeAudio = Op.Request.field_bfadeaudio();
 
@@ -5408,10 +5677,12 @@ void USpatialTypeBinding_PlayerController::ClientSetBlockOnAsyncLoading_OnComman
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetBlockOnAsyncLoading_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5452,10 +5723,12 @@ void USpatialTypeBinding_PlayerController::ClientReturnToMainMenuWithTextReason_
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientReturnToMainMenuWithTextReason_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5503,10 +5776,12 @@ void USpatialTypeBinding_PlayerController::ClientReturnToMainMenu_OnCommandReque
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientReturnToMainMenu_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5554,10 +5829,12 @@ void USpatialTypeBinding_PlayerController::ClientRetryClientRestart_OnCommandReq
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientRetryClientRestart_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5593,6 +5870,8 @@ void USpatialTypeBinding_PlayerController::ClientRetryClientRestart_OnCommandReq
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientRetryClientRestart_OnCommandRequest: Parameters.NewPawn %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -5630,10 +5909,12 @@ void USpatialTypeBinding_PlayerController::ClientRestart_OnCommandRequest(const 
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientRestart_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5669,6 +5950,8 @@ void USpatialTypeBinding_PlayerController::ClientRestart_OnCommandRequest(const 
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientRestart_OnCommandRequest: Parameters.NewPawn %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -5706,10 +5989,12 @@ void USpatialTypeBinding_PlayerController::ClientReset_OnCommandRequest(const wo
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientReset_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5750,10 +6035,12 @@ void USpatialTypeBinding_PlayerController::ClientRepObjRef_OnCommandRequest(cons
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientRepObjRef_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5789,6 +6076,8 @@ void USpatialTypeBinding_PlayerController::ClientRepObjRef_OnCommandRequest(cons
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientRepObjRef_OnCommandRequest: Parameters.Object %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -5826,10 +6115,12 @@ void USpatialTypeBinding_PlayerController::ClientReceiveLocalizedMessage_OnComma
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientReceiveLocalizedMessage_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5867,6 +6158,8 @@ void USpatialTypeBinding_PlayerController::ClientReceiveLocalizedMessage_OnComma
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientReceiveLocalizedMessage_OnCommandRequest: Parameters.RelatedPlayerState_1 %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -5893,6 +6186,8 @@ void USpatialTypeBinding_PlayerController::ClientReceiveLocalizedMessage_OnComma
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientReceiveLocalizedMessage_OnCommandRequest: Parameters.RelatedPlayerState_2 %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -5919,6 +6214,8 @@ void USpatialTypeBinding_PlayerController::ClientReceiveLocalizedMessage_OnComma
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientReceiveLocalizedMessage_OnCommandRequest: Parameters.OptionalObject %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -5956,10 +6253,12 @@ void USpatialTypeBinding_PlayerController::ClientPrestreamTextures_OnCommandRequ
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPrestreamTextures_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -5995,6 +6294,8 @@ void USpatialTypeBinding_PlayerController::ClientPrestreamTextures_OnCommandRequ
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPrestreamTextures_OnCommandRequest: Parameters.ForcedActor %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -6035,10 +6336,12 @@ void USpatialTypeBinding_PlayerController::ClientPrepareMapChange_OnCommandReque
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPrepareMapChange_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6088,10 +6391,12 @@ void USpatialTypeBinding_PlayerController::ClientPlaySoundAtLocation_OnCommandRe
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPlaySoundAtLocation_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6127,6 +6432,8 @@ void USpatialTypeBinding_PlayerController::ClientPlaySoundAtLocation_OnCommandRe
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPlaySoundAtLocation_OnCommandRequest: Parameters.Sound %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -6172,10 +6479,12 @@ void USpatialTypeBinding_PlayerController::ClientPlaySound_OnCommandRequest(cons
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPlaySound_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6211,6 +6520,8 @@ void USpatialTypeBinding_PlayerController::ClientPlaySound_OnCommandRequest(cons
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPlaySound_OnCommandRequest: Parameters.Sound %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -6250,10 +6561,12 @@ void USpatialTypeBinding_PlayerController::ClientPlayForceFeedback_OnCommandRequ
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPlayForceFeedback_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6289,6 +6602,8 @@ void USpatialTypeBinding_PlayerController::ClientPlayForceFeedback_OnCommandRequ
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPlayForceFeedback_OnCommandRequest: Parameters.ForceFeedbackEffect %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -6329,10 +6644,12 @@ void USpatialTypeBinding_PlayerController::ClientPlayCameraShake_OnCommandReques
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPlayCameraShake_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6388,10 +6705,12 @@ void USpatialTypeBinding_PlayerController::ClientPlayCameraAnim_OnCommandRequest
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPlayCameraAnim_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6427,6 +6746,8 @@ void USpatialTypeBinding_PlayerController::ClientPlayCameraAnim_OnCommandRequest
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPlayCameraAnim_OnCommandRequest: Parameters.AnimToPlay %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -6477,10 +6798,12 @@ void USpatialTypeBinding_PlayerController::ClientMutePlayer_OnCommandRequest(con
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientMutePlayer_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6502,8 +6825,9 @@ void USpatialTypeBinding_PlayerController::ClientMutePlayer_OnCommandRequest(con
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
-			bool bSuccess;
+			bool bSuccess = true;
 			Parameters.PlayerId.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 		}
 
 		// Call implementation.
@@ -6535,10 +6859,12 @@ void USpatialTypeBinding_PlayerController::ClientMessage_OnCommandRequest(const 
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientMessage_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6588,10 +6914,12 @@ void USpatialTypeBinding_PlayerController::ClientIgnoreMoveInput_OnCommandReques
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientIgnoreMoveInput_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6639,10 +6967,12 @@ void USpatialTypeBinding_PlayerController::ClientIgnoreLookInput_OnCommandReques
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientIgnoreLookInput_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6690,10 +7020,12 @@ void USpatialTypeBinding_PlayerController::ClientGotoState_OnCommandRequest(cons
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientGotoState_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6741,10 +7073,12 @@ void USpatialTypeBinding_PlayerController::ClientGameEnded_OnCommandRequest(cons
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientGameEnded_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6780,6 +7114,8 @@ void USpatialTypeBinding_PlayerController::ClientGameEnded_OnCommandRequest(cons
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientGameEnded_OnCommandRequest: Parameters.EndGameFocus %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
@@ -6818,10 +7154,12 @@ void USpatialTypeBinding_PlayerController::ClientForceGarbageCollection_OnComman
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientForceGarbageCollection_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6862,10 +7200,12 @@ void USpatialTypeBinding_PlayerController::ClientFlushLevelStreaming_OnCommandRe
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientFlushLevelStreaming_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6906,10 +7246,12 @@ void USpatialTypeBinding_PlayerController::ClientEndOnlineSession_OnCommandReque
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientEndOnlineSession_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -6950,10 +7292,12 @@ void USpatialTypeBinding_PlayerController::ClientEnableNetworkVoice_OnCommandReq
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientEnableNetworkVoice_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7001,10 +7345,12 @@ void USpatialTypeBinding_PlayerController::ClientCommitMapChange_OnCommandReques
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientCommitMapChange_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7045,10 +7391,12 @@ void USpatialTypeBinding_PlayerController::ClientClearCameraLensEffects_OnComman
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientClearCameraLensEffects_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7089,10 +7437,12 @@ void USpatialTypeBinding_PlayerController::ClientCapBandwidth_OnCommandRequest(c
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientCapBandwidth_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7140,10 +7490,12 @@ void USpatialTypeBinding_PlayerController::ClientCancelPendingMapChange_OnComman
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientCancelPendingMapChange_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7184,10 +7536,12 @@ void USpatialTypeBinding_PlayerController::ClientAddTextureStreamingLoc_OnComman
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAddTextureStreamingLoc_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7242,10 +7596,12 @@ void USpatialTypeBinding_PlayerController::ClientSetRotation_OnCommandRequest(co
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetRotation_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7299,10 +7655,12 @@ void USpatialTypeBinding_PlayerController::ClientSetLocation_OnCommandRequest(co
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetLocation_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7361,10 +7719,12 @@ void USpatialTypeBinding_PlayerController::ServerViewSelf_OnCommandRequest(const
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerViewSelf_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7415,10 +7775,12 @@ void USpatialTypeBinding_PlayerController::ServerViewPrevPlayer_OnCommandRequest
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerViewPrevPlayer_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7459,10 +7821,12 @@ void USpatialTypeBinding_PlayerController::ServerViewNextPlayer_OnCommandRequest
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerViewNextPlayer_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7503,10 +7867,12 @@ void USpatialTypeBinding_PlayerController::ServerVerifyViewTarget_OnCommandReque
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerVerifyViewTarget_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7547,10 +7913,12 @@ void USpatialTypeBinding_PlayerController::ServerUpdateMultipleLevelsVisibility_
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerUpdateMultipleLevelsVisibility_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7609,10 +7977,12 @@ void USpatialTypeBinding_PlayerController::ServerUpdateLevelVisibility_OnCommand
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerUpdateLevelVisibility_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7661,10 +8031,12 @@ void USpatialTypeBinding_PlayerController::ServerUpdateCamera_OnCommandRequest(c
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerUpdateCamera_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7718,10 +8090,12 @@ void USpatialTypeBinding_PlayerController::ServerUnmutePlayer_OnCommandRequest(c
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerUnmutePlayer_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7743,8 +8117,9 @@ void USpatialTypeBinding_PlayerController::ServerUnmutePlayer_OnCommandRequest(c
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
-			bool bSuccess;
+			bool bSuccess = true;
 			Parameters.PlayerId.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 		}
 
 		// Call implementation.
@@ -7776,10 +8151,12 @@ void USpatialTypeBinding_PlayerController::ServerToggleAILogging_OnCommandReques
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerToggleAILogging_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7820,10 +8197,12 @@ void USpatialTypeBinding_PlayerController::ServerShortTimeout_OnCommandRequest(c
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerShortTimeout_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7864,10 +8243,12 @@ void USpatialTypeBinding_PlayerController::ServerSetSpectatorWaiting_OnCommandRe
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerSetSpectatorWaiting_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7915,10 +8296,12 @@ void USpatialTypeBinding_PlayerController::ServerSetSpectatorLocation_OnCommandR
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerSetSpectatorLocation_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -7977,10 +8360,12 @@ void USpatialTypeBinding_PlayerController::ServerRestartPlayer_OnCommandRequest(
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerRestartPlayer_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -8021,10 +8406,12 @@ void USpatialTypeBinding_PlayerController::ServerPause_OnCommandRequest(const wo
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerPause_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -8065,10 +8452,12 @@ void USpatialTypeBinding_PlayerController::ServerNotifyLoadedWorld_OnCommandRequ
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerNotifyLoadedWorld_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -8116,10 +8505,12 @@ void USpatialTypeBinding_PlayerController::ServerMutePlayer_OnCommandRequest(con
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMutePlayer_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -8141,8 +8532,9 @@ void USpatialTypeBinding_PlayerController::ServerMutePlayer_OnCommandRequest(con
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
-			bool bSuccess;
+			bool bSuccess = true;
 			Parameters.PlayerId.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
 		}
 
 		// Call implementation.
@@ -8174,10 +8566,12 @@ void USpatialTypeBinding_PlayerController::ServerCheckClientPossessionReliable_O
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerCheckClientPossessionReliable_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -8218,10 +8612,12 @@ void USpatialTypeBinding_PlayerController::ServerCheckClientPossession_OnCommand
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerCheckClientPossession_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -8262,10 +8658,12 @@ void USpatialTypeBinding_PlayerController::ServerChangeName_OnCommandRequest(con
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerChangeName_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -8313,10 +8711,12 @@ void USpatialTypeBinding_PlayerController::ServerCamera_OnCommandRequest(const w
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerCamera_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -8364,10 +8764,12 @@ void USpatialTypeBinding_PlayerController::ServerAcknowledgePossession_OnCommand
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset()};
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), worker::Option<std::string>{}, worker::Option<improbable::unreal::UnrealObjectRef>{}};
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
+			// A legal static object reference should never be unresolved.
+			check(TargetObjectRef.path().empty());
 			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerAcknowledgePossession_OnCommandRequest: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
@@ -8403,6 +8805,8 @@ void USpatialTypeBinding_PlayerController::ServerAcknowledgePossession_OnCommand
 				}
 				else
 				{
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerAcknowledgePossession_OnCommandRequest: Parameters.P %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
