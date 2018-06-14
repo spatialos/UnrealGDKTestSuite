@@ -1771,17 +1771,15 @@ void USpatialTypeBinding_PlayerController::ClientUpdateMultipleLevelsStreamingSt
 
 		// Build request.
 		improbable::unreal::generated::UnrealClientUpdateMultipleLevelsStreamingStatusRequest Request;
+		::worker::List<std::string> List;
+		for(int i = 0; i < StructuredParams.LevelStatuses.Num(); i++)
 		{
-			::worker::List<std::string> List;
-			for(int i = 0; i < StructuredParams.LevelStatuses.Num(); i++)
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				FUpdateLevelStreamingLevelStatus::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelStreamingLevelStatus*>(&StructuredParams.LevelStatuses[i])));
-				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
-			Request.set_field_levelstatuses(List);
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			FUpdateLevelStreamingLevelStatus::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelStreamingLevelStatus*>(&StructuredParams.LevelStatuses[i])));
+			List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
+		Request.set_field_levelstatuses(List);
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3804,17 +3802,15 @@ void USpatialTypeBinding_PlayerController::ServerUpdateMultipleLevelsVisibility_
 
 		// Build request.
 		improbable::unreal::generated::UnrealServerUpdateMultipleLevelsVisibilityRequest Request;
+		::worker::List<std::string> List;
+		for(int i = 0; i < StructuredParams.LevelVisibilities.Num(); i++)
 		{
-			::worker::List<std::string> List;
-			for(int i = 0; i < StructuredParams.LevelVisibilities.Num(); i++)
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				FUpdateLevelVisibilityLevelInfo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelVisibilityLevelInfo*>(&StructuredParams.LevelVisibilities[i])));
-				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
-			Request.set_field_levelvisibilities(List);
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			FUpdateLevelVisibilityLevelInfo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelVisibilityLevelInfo*>(&StructuredParams.LevelVisibilities[i])));
+			List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
+		Request.set_field_levelvisibilities(List);
 
 		// Send command request.
 		Request.set_target_subobject_offset(TargetObjectRef.offset());
