@@ -1329,10 +1329,10 @@ void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_SendRPC(worker::Conne
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>& Op)
 {
@@ -1386,7 +1386,7 @@ void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnRPCPayload(const wo
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 
 void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>& Op)

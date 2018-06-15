@@ -67,8 +67,6 @@ protected:
 
 	UFUNCTION(NetMulticast, Unreliable, WithValidation)
 	void TestMulticast();
-	bool TestMulticast_Validate();
-	void TestMulticast_Implementation();
 
 public:
 	/** Returns CameraBoom subobject **/

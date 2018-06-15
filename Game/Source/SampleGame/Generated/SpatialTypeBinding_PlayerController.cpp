@@ -1705,10 +1705,10 @@ void USpatialTypeBinding_PlayerController::OnServerStartedVisualLogger_SendRPC(w
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrolleronserverstartedvisuallogger>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrolleronserverstartedvisuallogger>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientWasKicked_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -1736,10 +1736,10 @@ void USpatialTypeBinding_PlayerController::ClientWasKicked_SendRPC(worker::Conne
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientwaskicked>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientwaskicked>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientVoiceHandshakeComplete_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -1763,10 +1763,10 @@ void USpatialTypeBinding_PlayerController::ClientVoiceHandshakeComplete_SendRPC(
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientvoicehandshakecomplete>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientvoicehandshakecomplete>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientUpdateMultipleLevelsStreamingStatus_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -1785,17 +1785,15 @@ void USpatialTypeBinding_PlayerController::ClientUpdateMultipleLevelsStreamingSt
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealClientUpdateMultipleLevelsStreamingStatusRequest RPCPayload;
+		::worker::List<std::string> List;
+		for(int i = 0; i < StructuredParams.LevelStatuses.Num(); i++)
 		{
-			::worker::List<std::string> List;
-			for(int i = 0; i < StructuredParams.LevelStatuses.Num(); i++)
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				FUpdateLevelStreamingLevelStatus::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelStreamingLevelStatus*>(&StructuredParams.LevelStatuses[i])));
-				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
-			RPCPayload.set_field_levelstatuses(List);
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			FUpdateLevelStreamingLevelStatus::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelStreamingLevelStatus*>(&StructuredParams.LevelStatuses[i])));
+			List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
+		RPCPayload.set_field_levelstatuses(List);
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1804,10 +1802,10 @@ void USpatialTypeBinding_PlayerController::ClientUpdateMultipleLevelsStreamingSt
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientupdatemultiplelevelsstreamingstatus>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientupdatemultiplelevelsstreamingstatus>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientUpdateLevelStreamingStatus_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -1839,10 +1837,10 @@ void USpatialTypeBinding_PlayerController::ClientUpdateLevelStreamingStatus_Send
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientupdatelevelstreamingstatus>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientupdatelevelstreamingstatus>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientUnmutePlayer_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -1877,10 +1875,10 @@ void USpatialTypeBinding_PlayerController::ClientUnmutePlayer_SendRPC(worker::Co
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientunmuteplayer>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientunmuteplayer>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientTravelInternal_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -1914,10 +1912,10 @@ void USpatialTypeBinding_PlayerController::ClientTravelInternal_SendRPC(worker::
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclienttravelinternal>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclienttravelinternal>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientTeamMessage_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -1965,10 +1963,10 @@ void USpatialTypeBinding_PlayerController::ClientTeamMessage_SendRPC(worker::Con
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientteammessage>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientteammessage>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientStopForceFeedback_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2014,10 +2012,10 @@ void USpatialTypeBinding_PlayerController::ClientStopForceFeedback_SendRPC(worke
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstopforcefeedback>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstopforcefeedback>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientStopCameraShake_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2046,10 +2044,10 @@ void USpatialTypeBinding_PlayerController::ClientStopCameraShake_SendRPC(worker:
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstopcamerashake>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstopcamerashake>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientStopCameraAnim_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2094,10 +2092,10 @@ void USpatialTypeBinding_PlayerController::ClientStopCameraAnim_SendRPC(worker::
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstopcameraanim>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstopcameraanim>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientStartOnlineSession_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2121,10 +2119,10 @@ void USpatialTypeBinding_PlayerController::ClientStartOnlineSession_SendRPC(work
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstartonlinesession>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstartonlinesession>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientSpawnCameraLensEffect_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2152,10 +2150,10 @@ void USpatialTypeBinding_PlayerController::ClientSpawnCameraLensEffect_SendRPC(w
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientspawncameralenseffect>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientspawncameralenseffect>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
 void USpatialTypeBinding_PlayerController::ClientSetViewTarget_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2204,10 +2202,10 @@ void USpatialTypeBinding_PlayerController::ClientSetViewTarget_SendRPC(worker::C
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetviewtarget>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetviewtarget>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientSetSpectatorWaiting_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2235,10 +2233,10 @@ void USpatialTypeBinding_PlayerController::ClientSetSpectatorWaiting_SendRPC(wor
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetspectatorwaiting>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetspectatorwaiting>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientSetHUD_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2266,10 +2264,10 @@ void USpatialTypeBinding_PlayerController::ClientSetHUD_SendRPC(worker::Connecti
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsethud>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsethud>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientSetForceMipLevelsToBeResident_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2316,10 +2314,10 @@ void USpatialTypeBinding_PlayerController::ClientSetForceMipLevelsToBeResident_S
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetforcemiplevelstoberesident>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetforcemiplevelstoberesident>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientSetCinematicMode_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2350,10 +2348,10 @@ void USpatialTypeBinding_PlayerController::ClientSetCinematicMode_SendRPC(worker
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetcinematicmode>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetcinematicmode>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientSetCameraMode_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2381,10 +2379,10 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraMode_SendRPC(worker::C
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetcameramode>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetcameramode>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientSetCameraFade_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2426,10 +2424,10 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraFade_SendRPC(worker::C
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetcamerafade>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetcamerafade>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientSetBlockOnAsyncLoading_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2453,10 +2451,10 @@ void USpatialTypeBinding_PlayerController::ClientSetBlockOnAsyncLoading_SendRPC(
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetblockonasyncloading>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetblockonasyncloading>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientReturnToMainMenuWithTextReason_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2484,10 +2482,10 @@ void USpatialTypeBinding_PlayerController::ClientReturnToMainMenuWithTextReason_
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreturntomainmenuwithtextreason>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreturntomainmenuwithtextreason>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientReturnToMainMenu_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2515,10 +2513,10 @@ void USpatialTypeBinding_PlayerController::ClientReturnToMainMenu_SendRPC(worker
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreturntomainmenu>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreturntomainmenu>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientRetryClientRestart_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2563,10 +2561,10 @@ void USpatialTypeBinding_PlayerController::ClientRetryClientRestart_SendRPC(work
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientretryclientrestart>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientretryclientrestart>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientRestart_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2611,10 +2609,10 @@ void USpatialTypeBinding_PlayerController::ClientRestart_SendRPC(worker::Connect
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientrestart>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientrestart>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientReset_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2638,10 +2636,10 @@ void USpatialTypeBinding_PlayerController::ClientReset_SendRPC(worker::Connectio
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreset>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreset>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientRepObjRef_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2686,10 +2684,10 @@ void USpatialTypeBinding_PlayerController::ClientRepObjRef_SendRPC(worker::Conne
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientrepobjref>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientrepobjref>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientReceiveLocalizedMessage_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2772,10 +2770,10 @@ void USpatialTypeBinding_PlayerController::ClientReceiveLocalizedMessage_SendRPC
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreceivelocalizedmessage>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreceivelocalizedmessage>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientPrestreamTextures_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2823,10 +2821,10 @@ void USpatialTypeBinding_PlayerController::ClientPrestreamTextures_SendRPC(worke
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientprestreamtextures>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientprestreamtextures>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientPrepareMapChange_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2856,10 +2854,10 @@ void USpatialTypeBinding_PlayerController::ClientPrepareMapChange_SendRPC(worker
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientpreparemapchange>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientpreparemapchange>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientPlaySoundAtLocation_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2914,10 +2912,10 @@ void USpatialTypeBinding_PlayerController::ClientPlaySoundAtLocation_SendRPC(wor
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaysoundatlocation>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaysoundatlocation>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
 void USpatialTypeBinding_PlayerController::ClientPlaySound_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2964,10 +2962,10 @@ void USpatialTypeBinding_PlayerController::ClientPlaySound_SendRPC(worker::Conne
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaysound>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaysound>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
 void USpatialTypeBinding_PlayerController::ClientPlayForceFeedback_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3015,10 +3013,10 @@ void USpatialTypeBinding_PlayerController::ClientPlayForceFeedback_SendRPC(worke
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplayforcefeedback>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplayforcefeedback>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
 void USpatialTypeBinding_PlayerController::ClientPlayCameraShake_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3056,10 +3054,10 @@ void USpatialTypeBinding_PlayerController::ClientPlayCameraShake_SendRPC(worker:
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaycamerashake>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaycamerashake>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
 void USpatialTypeBinding_PlayerController::ClientPlayCameraAnim_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3119,10 +3117,10 @@ void USpatialTypeBinding_PlayerController::ClientPlayCameraAnim_SendRPC(worker::
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaycameraanim>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaycameraanim>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
 void USpatialTypeBinding_PlayerController::ClientMutePlayer_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3157,10 +3155,10 @@ void USpatialTypeBinding_PlayerController::ClientMutePlayer_SendRPC(worker::Conn
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientmuteplayer>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientmuteplayer>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientMessage_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3190,10 +3188,10 @@ void USpatialTypeBinding_PlayerController::ClientMessage_SendRPC(worker::Connect
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientmessage>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientmessage>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientIgnoreMoveInput_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3221,10 +3219,10 @@ void USpatialTypeBinding_PlayerController::ClientIgnoreMoveInput_SendRPC(worker:
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientignoremoveinput>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientignoremoveinput>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientIgnoreLookInput_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3252,10 +3250,10 @@ void USpatialTypeBinding_PlayerController::ClientIgnoreLookInput_SendRPC(worker:
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientignorelookinput>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientignorelookinput>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientGotoState_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3283,10 +3281,10 @@ void USpatialTypeBinding_PlayerController::ClientGotoState_SendRPC(worker::Conne
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientgotostate>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientgotostate>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientGameEnded_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3332,10 +3330,10 @@ void USpatialTypeBinding_PlayerController::ClientGameEnded_SendRPC(worker::Conne
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientgameended>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientgameended>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientForceGarbageCollection_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3359,10 +3357,10 @@ void USpatialTypeBinding_PlayerController::ClientForceGarbageCollection_SendRPC(
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientforcegarbagecollection>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientforcegarbagecollection>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientFlushLevelStreaming_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3386,10 +3384,10 @@ void USpatialTypeBinding_PlayerController::ClientFlushLevelStreaming_SendRPC(wor
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientflushlevelstreaming>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientflushlevelstreaming>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientEndOnlineSession_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3413,10 +3411,10 @@ void USpatialTypeBinding_PlayerController::ClientEndOnlineSession_SendRPC(worker
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientendonlinesession>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientendonlinesession>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientEnableNetworkVoice_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3444,10 +3442,10 @@ void USpatialTypeBinding_PlayerController::ClientEnableNetworkVoice_SendRPC(work
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientenablenetworkvoice>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientenablenetworkvoice>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientCommitMapChange_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3471,10 +3469,10 @@ void USpatialTypeBinding_PlayerController::ClientCommitMapChange_SendRPC(worker:
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientcommitmapchange>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientcommitmapchange>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientClearCameraLensEffects_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3498,10 +3496,10 @@ void USpatialTypeBinding_PlayerController::ClientClearCameraLensEffects_SendRPC(
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientclearcameralenseffects>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientclearcameralenseffects>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientCapBandwidth_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3529,10 +3527,10 @@ void USpatialTypeBinding_PlayerController::ClientCapBandwidth_SendRPC(worker::Co
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientcapbandwidth>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientcapbandwidth>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientCancelPendingMapChange_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3556,10 +3554,10 @@ void USpatialTypeBinding_PlayerController::ClientCancelPendingMapChange_SendRPC(
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientcancelpendingmapchange>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientcancelpendingmapchange>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientAddTextureStreamingLoc_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3596,10 +3594,10 @@ void USpatialTypeBinding_PlayerController::ClientAddTextureStreamingLoc_SendRPC(
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientaddtexturestreamingloc>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientaddtexturestreamingloc>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientSetRotation_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3635,10 +3633,10 @@ void USpatialTypeBinding_PlayerController::ClientSetRotation_SendRPC(worker::Con
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetrotation>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetrotation>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ClientSetLocation_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3681,10 +3679,10 @@ void USpatialTypeBinding_PlayerController::ClientSetLocation_SendRPC(worker::Con
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetlocation>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetlocation>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerViewSelf_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3715,10 +3713,10 @@ void USpatialTypeBinding_PlayerController::ServerViewSelf_SendRPC(worker::Connec
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverviewself>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverviewself>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
 void USpatialTypeBinding_PlayerController::ServerViewPrevPlayer_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3742,10 +3740,10 @@ void USpatialTypeBinding_PlayerController::ServerViewPrevPlayer_SendRPC(worker::
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverviewprevplayer>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverviewprevplayer>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
 void USpatialTypeBinding_PlayerController::ServerViewNextPlayer_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3769,10 +3767,10 @@ void USpatialTypeBinding_PlayerController::ServerViewNextPlayer_SendRPC(worker::
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverviewnextplayer>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverviewnextplayer>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
 void USpatialTypeBinding_PlayerController::ServerVerifyViewTarget_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3796,10 +3794,10 @@ void USpatialTypeBinding_PlayerController::ServerVerifyViewTarget_SendRPC(worker
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserververifyviewtarget>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserververifyviewtarget>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerUpdateMultipleLevelsVisibility_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3818,17 +3816,15 @@ void USpatialTypeBinding_PlayerController::ServerUpdateMultipleLevelsVisibility_
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealServerUpdateMultipleLevelsVisibilityRequest RPCPayload;
+		::worker::List<std::string> List;
+		for(int i = 0; i < StructuredParams.LevelVisibilities.Num(); i++)
 		{
-			::worker::List<std::string> List;
-			for(int i = 0; i < StructuredParams.LevelVisibilities.Num(); i++)
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				FUpdateLevelVisibilityLevelInfo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelVisibilityLevelInfo*>(&StructuredParams.LevelVisibilities[i])));
-				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
-			RPCPayload.set_field_levelvisibilities(List);
+			TArray<uint8> ValueData;
+			FMemoryWriter ValueDataWriter(ValueData);
+			FUpdateLevelVisibilityLevelInfo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelVisibilityLevelInfo*>(&StructuredParams.LevelVisibilities[i])));
+			List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
+		RPCPayload.set_field_levelvisibilities(List);
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3837,10 +3833,10 @@ void USpatialTypeBinding_PlayerController::ServerUpdateMultipleLevelsVisibility_
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverupdatemultiplelevelsvisibility>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverupdatemultiplelevelsvisibility>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerUpdateLevelVisibility_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3869,10 +3865,10 @@ void USpatialTypeBinding_PlayerController::ServerUpdateLevelVisibility_SendRPC(w
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverupdatelevelvisibility>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverupdatelevelvisibility>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerUpdateCamera_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3908,10 +3904,10 @@ void USpatialTypeBinding_PlayerController::ServerUpdateCamera_SendRPC(worker::Co
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverupdatecamera>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverupdatecamera>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
 void USpatialTypeBinding_PlayerController::ServerUnmutePlayer_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3946,10 +3942,10 @@ void USpatialTypeBinding_PlayerController::ServerUnmutePlayer_SendRPC(worker::Co
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverunmuteplayer>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverunmuteplayer>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerToggleAILogging_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3973,10 +3969,10 @@ void USpatialTypeBinding_PlayerController::ServerToggleAILogging_SendRPC(worker:
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservertoggleailogging>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservertoggleailogging>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerShortTimeout_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -4000,10 +3996,10 @@ void USpatialTypeBinding_PlayerController::ServerShortTimeout_SendRPC(worker::Co
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservershorttimeout>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservershorttimeout>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerSetSpectatorWaiting_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -4031,10 +4027,10 @@ void USpatialTypeBinding_PlayerController::ServerSetSpectatorWaiting_SendRPC(wor
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserversetspectatorwaiting>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserversetspectatorwaiting>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerSetSpectatorLocation_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -4077,10 +4073,10 @@ void USpatialTypeBinding_PlayerController::ServerSetSpectatorLocation_SendRPC(wo
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserversetspectatorlocation>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserversetspectatorlocation>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
 void USpatialTypeBinding_PlayerController::ServerRestartPlayer_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -4104,10 +4100,10 @@ void USpatialTypeBinding_PlayerController::ServerRestartPlayer_SendRPC(worker::C
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverrestartplayer>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverrestartplayer>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerPause_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -4131,10 +4127,10 @@ void USpatialTypeBinding_PlayerController::ServerPause_SendRPC(worker::Connectio
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverpause>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverpause>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerNotifyLoadedWorld_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -4162,10 +4158,10 @@ void USpatialTypeBinding_PlayerController::ServerNotifyLoadedWorld_SendRPC(worke
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservernotifyloadedworld>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservernotifyloadedworld>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerMutePlayer_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -4200,10 +4196,10 @@ void USpatialTypeBinding_PlayerController::ServerMutePlayer_SendRPC(worker::Conn
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservermuteplayer>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservermuteplayer>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerCheckClientPossessionReliable_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -4227,10 +4223,10 @@ void USpatialTypeBinding_PlayerController::ServerCheckClientPossessionReliable_S
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservercheckclientpossessionreliable>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservercheckclientpossessionreliable>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerCheckClientPossession_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -4254,10 +4250,10 @@ void USpatialTypeBinding_PlayerController::ServerCheckClientPossession_SendRPC(w
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservercheckclientpossession>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservercheckclientpossession>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
 void USpatialTypeBinding_PlayerController::ServerChangeName_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -4285,10 +4281,10 @@ void USpatialTypeBinding_PlayerController::ServerChangeName_SendRPC(worker::Conn
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverchangename>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverchangename>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerCamera_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -4316,10 +4312,10 @@ void USpatialTypeBinding_PlayerController::ServerCamera_SendRPC(worker::Connecti
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservercamera>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservercamera>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::ServerAcknowledgePossession_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -4364,10 +4360,10 @@ void USpatialTypeBinding_PlayerController::ServerAcknowledgePossession_SendRPC(w
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserveracknowledgepossession>(TargetObjectRef.entity(), RPCPayload, 0);
-		return {RequestId.Id};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserveracknowledgepossession>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_PlayerController::OnServerStartedVisualLogger_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrolleronserverstartedvisuallogger>& Op)
 {
@@ -4417,7 +4413,7 @@ void USpatialTypeBinding_PlayerController::OnServerStartedVisualLogger_OnRPCPayl
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrolleronserverstartedvisuallogger>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientWasKicked_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientwaskicked>& Op)
 {
@@ -4467,7 +4463,7 @@ void USpatialTypeBinding_PlayerController::ClientWasKicked_OnRPCPayload(const wo
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientwaskicked>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientVoiceHandshakeComplete_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientvoicehandshakecomplete>& Op)
 {
@@ -4510,7 +4506,7 @@ void USpatialTypeBinding_PlayerController::ClientVoiceHandshakeComplete_OnRPCPay
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientvoicehandshakecomplete>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientUpdateMultipleLevelsStreamingStatus_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientupdatemultiplelevelsstreamingstatus>& Op)
 {
@@ -4571,7 +4567,7 @@ void USpatialTypeBinding_PlayerController::ClientUpdateMultipleLevelsStreamingSt
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientupdatemultiplelevelsstreamingstatus>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientUpdateLevelStreamingStatus_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientupdatelevelstreamingstatus>& Op)
 {
@@ -4625,7 +4621,7 @@ void USpatialTypeBinding_PlayerController::ClientUpdateLevelStreamingStatus_OnRP
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientupdatelevelstreamingstatus>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientUnmutePlayer_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientunmuteplayer>& Op)
 {
@@ -4683,7 +4679,7 @@ void USpatialTypeBinding_PlayerController::ClientUnmutePlayer_OnRPCPayload(const
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientunmuteplayer>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientTravelInternal_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclienttravelinternal>& Op)
 {
@@ -4739,7 +4735,7 @@ void USpatialTypeBinding_PlayerController::ClientTravelInternal_OnRPCPayload(con
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclienttravelinternal>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientTeamMessage_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientteammessage>& Op)
 {
@@ -4817,7 +4813,7 @@ void USpatialTypeBinding_PlayerController::ClientTeamMessage_OnRPCPayload(const 
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientteammessage>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientStopForceFeedback_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstopforcefeedback>& Op)
 {
@@ -4893,7 +4889,7 @@ void USpatialTypeBinding_PlayerController::ClientStopForceFeedback_OnRPCPayload(
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstopforcefeedback>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientStopCameraShake_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstopcamerashake>& Op)
 {
@@ -4944,7 +4940,7 @@ void USpatialTypeBinding_PlayerController::ClientStopCameraShake_OnRPCPayload(co
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstopcamerashake>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientStopCameraAnim_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstopcameraanim>& Op)
 {
@@ -5019,7 +5015,7 @@ void USpatialTypeBinding_PlayerController::ClientStopCameraAnim_OnRPCPayload(con
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstopcameraanim>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientStartOnlineSession_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstartonlinesession>& Op)
 {
@@ -5062,7 +5058,7 @@ void USpatialTypeBinding_PlayerController::ClientStartOnlineSession_OnRPCPayload
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientstartonlinesession>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientSpawnCameraLensEffect_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientspawncameralenseffect>& Op)
 {
@@ -5112,7 +5108,7 @@ void USpatialTypeBinding_PlayerController::ClientSpawnCameraLensEffect_OnRPCPayl
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientspawncameralenseffect>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientSetViewTarget_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetviewtarget>& Op)
 {
@@ -5191,7 +5187,7 @@ void USpatialTypeBinding_PlayerController::ClientSetViewTarget_OnRPCPayload(cons
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetviewtarget>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientSetSpectatorWaiting_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetspectatorwaiting>& Op)
 {
@@ -5241,7 +5237,7 @@ void USpatialTypeBinding_PlayerController::ClientSetSpectatorWaiting_OnRPCPayloa
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetspectatorwaiting>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientSetHUD_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsethud>& Op)
 {
@@ -5291,7 +5287,7 @@ void USpatialTypeBinding_PlayerController::ClientSetHUD_OnRPCPayload(const worke
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsethud>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientSetForceMipLevelsToBeResident_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetforcemiplevelstoberesident>& Op)
 {
@@ -5368,7 +5364,7 @@ void USpatialTypeBinding_PlayerController::ClientSetForceMipLevelsToBeResident_O
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetforcemiplevelstoberesident>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientSetCinematicMode_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetcinematicmode>& Op)
 {
@@ -5421,7 +5417,7 @@ void USpatialTypeBinding_PlayerController::ClientSetCinematicMode_OnRPCPayload(c
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetcinematicmode>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientSetCameraMode_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetcameramode>& Op)
 {
@@ -5471,7 +5467,7 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraMode_OnRPCPayload(cons
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetcameramode>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientSetCameraFade_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetcamerafade>& Op)
 {
@@ -5536,7 +5532,7 @@ void USpatialTypeBinding_PlayerController::ClientSetCameraFade_OnRPCPayload(cons
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetcamerafade>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientSetBlockOnAsyncLoading_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetblockonasyncloading>& Op)
 {
@@ -5579,7 +5575,7 @@ void USpatialTypeBinding_PlayerController::ClientSetBlockOnAsyncLoading_OnRPCPay
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetblockonasyncloading>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientReturnToMainMenuWithTextReason_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreturntomainmenuwithtextreason>& Op)
 {
@@ -5629,7 +5625,7 @@ void USpatialTypeBinding_PlayerController::ClientReturnToMainMenuWithTextReason_
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreturntomainmenuwithtextreason>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientReturnToMainMenu_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreturntomainmenu>& Op)
 {
@@ -5679,7 +5675,7 @@ void USpatialTypeBinding_PlayerController::ClientReturnToMainMenu_OnRPCPayload(c
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreturntomainmenu>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientRetryClientRestart_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientretryclientrestart>& Op)
 {
@@ -5754,7 +5750,7 @@ void USpatialTypeBinding_PlayerController::ClientRetryClientRestart_OnRPCPayload
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientretryclientrestart>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientRestart_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientrestart>& Op)
 {
@@ -5829,7 +5825,7 @@ void USpatialTypeBinding_PlayerController::ClientRestart_OnRPCPayload(const work
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientrestart>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientReset_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreset>& Op)
 {
@@ -5872,7 +5868,7 @@ void USpatialTypeBinding_PlayerController::ClientReset_OnRPCPayload(const worker
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreset>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientRepObjRef_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientrepobjref>& Op)
 {
@@ -5947,7 +5943,7 @@ void USpatialTypeBinding_PlayerController::ClientRepObjRef_OnRPCPayload(const wo
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientrepobjref>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientReceiveLocalizedMessage_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreceivelocalizedmessage>& Op)
 {
@@ -6076,7 +6072,7 @@ void USpatialTypeBinding_PlayerController::ClientReceiveLocalizedMessage_OnRPCPa
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientreceivelocalizedmessage>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientPrestreamTextures_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientprestreamtextures>& Op)
 {
@@ -6154,7 +6150,7 @@ void USpatialTypeBinding_PlayerController::ClientPrestreamTextures_OnRPCPayload(
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientprestreamtextures>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientPrepareMapChange_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientpreparemapchange>& Op)
 {
@@ -6206,7 +6202,7 @@ void USpatialTypeBinding_PlayerController::ClientPrepareMapChange_OnRPCPayload(c
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientpreparemapchange>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientPlaySoundAtLocation_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaysoundatlocation>& Op)
 {
@@ -6292,7 +6288,7 @@ void USpatialTypeBinding_PlayerController::ClientPlaySoundAtLocation_OnRPCPayloa
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaysoundatlocation>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientPlaySound_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaysound>& Op)
 {
@@ -6369,7 +6365,7 @@ void USpatialTypeBinding_PlayerController::ClientPlaySound_OnRPCPayload(const wo
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaysound>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientPlayForceFeedback_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplayforcefeedback>& Op)
 {
@@ -6447,7 +6443,7 @@ void USpatialTypeBinding_PlayerController::ClientPlayForceFeedback_OnRPCPayload(
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplayforcefeedback>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientPlayCameraShake_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaycamerashake>& Op)
 {
@@ -6508,7 +6504,7 @@ void USpatialTypeBinding_PlayerController::ClientPlayCameraShake_OnRPCPayload(co
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaycamerashake>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientPlayCameraAnim_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaycameraanim>& Op)
 {
@@ -6599,7 +6595,7 @@ void USpatialTypeBinding_PlayerController::ClientPlayCameraAnim_OnRPCPayload(con
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientplaycameraanim>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientMutePlayer_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientmuteplayer>& Op)
 {
@@ -6657,7 +6653,7 @@ void USpatialTypeBinding_PlayerController::ClientMutePlayer_OnRPCPayload(const w
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientmuteplayer>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientMessage_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientmessage>& Op)
 {
@@ -6709,7 +6705,7 @@ void USpatialTypeBinding_PlayerController::ClientMessage_OnRPCPayload(const work
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientmessage>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientIgnoreMoveInput_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientignoremoveinput>& Op)
 {
@@ -6759,7 +6755,7 @@ void USpatialTypeBinding_PlayerController::ClientIgnoreMoveInput_OnRPCPayload(co
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientignoremoveinput>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientIgnoreLookInput_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientignorelookinput>& Op)
 {
@@ -6809,7 +6805,7 @@ void USpatialTypeBinding_PlayerController::ClientIgnoreLookInput_OnRPCPayload(co
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientignorelookinput>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientGotoState_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientgotostate>& Op)
 {
@@ -6859,7 +6855,7 @@ void USpatialTypeBinding_PlayerController::ClientGotoState_OnRPCPayload(const wo
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientgotostate>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientGameEnded_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientgameended>& Op)
 {
@@ -6935,7 +6931,7 @@ void USpatialTypeBinding_PlayerController::ClientGameEnded_OnRPCPayload(const wo
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientgameended>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientForceGarbageCollection_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientforcegarbagecollection>& Op)
 {
@@ -6978,7 +6974,7 @@ void USpatialTypeBinding_PlayerController::ClientForceGarbageCollection_OnRPCPay
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientforcegarbagecollection>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientFlushLevelStreaming_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientflushlevelstreaming>& Op)
 {
@@ -7021,7 +7017,7 @@ void USpatialTypeBinding_PlayerController::ClientFlushLevelStreaming_OnRPCPayloa
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientflushlevelstreaming>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientEndOnlineSession_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientendonlinesession>& Op)
 {
@@ -7064,7 +7060,7 @@ void USpatialTypeBinding_PlayerController::ClientEndOnlineSession_OnRPCPayload(c
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientendonlinesession>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientEnableNetworkVoice_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientenablenetworkvoice>& Op)
 {
@@ -7114,7 +7110,7 @@ void USpatialTypeBinding_PlayerController::ClientEnableNetworkVoice_OnRPCPayload
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientenablenetworkvoice>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientCommitMapChange_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientcommitmapchange>& Op)
 {
@@ -7157,7 +7153,7 @@ void USpatialTypeBinding_PlayerController::ClientCommitMapChange_OnRPCPayload(co
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientcommitmapchange>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientClearCameraLensEffects_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientclearcameralenseffects>& Op)
 {
@@ -7200,7 +7196,7 @@ void USpatialTypeBinding_PlayerController::ClientClearCameraLensEffects_OnRPCPay
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientclearcameralenseffects>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientCapBandwidth_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientcapbandwidth>& Op)
 {
@@ -7250,7 +7246,7 @@ void USpatialTypeBinding_PlayerController::ClientCapBandwidth_OnRPCPayload(const
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientcapbandwidth>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientCancelPendingMapChange_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientcancelpendingmapchange>& Op)
 {
@@ -7293,7 +7289,7 @@ void USpatialTypeBinding_PlayerController::ClientCancelPendingMapChange_OnRPCPay
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientcancelpendingmapchange>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientAddTextureStreamingLoc_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientaddtexturestreamingloc>& Op)
 {
@@ -7353,7 +7349,7 @@ void USpatialTypeBinding_PlayerController::ClientAddTextureStreamingLoc_OnRPCPay
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientaddtexturestreamingloc>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientSetRotation_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetrotation>& Op)
 {
@@ -7412,7 +7408,7 @@ void USpatialTypeBinding_PlayerController::ClientSetRotation_OnRPCPayload(const 
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetrotation>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ClientSetLocation_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetlocation>& Op)
 {
@@ -7479,7 +7475,7 @@ void USpatialTypeBinding_PlayerController::ClientSetLocation_OnRPCPayload(const 
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrollerclientsetlocation>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerViewSelf_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverviewself>& Op)
 {
@@ -7532,7 +7528,7 @@ void USpatialTypeBinding_PlayerController::ServerViewSelf_OnRPCPayload(const wor
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverviewself>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerViewPrevPlayer_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverviewprevplayer>& Op)
 {
@@ -7575,7 +7571,7 @@ void USpatialTypeBinding_PlayerController::ServerViewPrevPlayer_OnRPCPayload(con
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverviewprevplayer>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerViewNextPlayer_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverviewnextplayer>& Op)
 {
@@ -7618,7 +7614,7 @@ void USpatialTypeBinding_PlayerController::ServerViewNextPlayer_OnRPCPayload(con
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverviewnextplayer>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerVerifyViewTarget_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserververifyviewtarget>& Op)
 {
@@ -7661,7 +7657,7 @@ void USpatialTypeBinding_PlayerController::ServerVerifyViewTarget_OnRPCPayload(c
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserververifyviewtarget>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerUpdateMultipleLevelsVisibility_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverupdatemultiplelevelsvisibility>& Op)
 {
@@ -7722,7 +7718,7 @@ void USpatialTypeBinding_PlayerController::ServerUpdateMultipleLevelsVisibility_
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverupdatemultiplelevelsvisibility>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerUpdateLevelVisibility_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverupdatelevelvisibility>& Op)
 {
@@ -7773,7 +7769,7 @@ void USpatialTypeBinding_PlayerController::ServerUpdateLevelVisibility_OnRPCPayl
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverupdatelevelvisibility>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerUpdateCamera_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverupdatecamera>& Op)
 {
@@ -7832,7 +7828,7 @@ void USpatialTypeBinding_PlayerController::ServerUpdateCamera_OnRPCPayload(const
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverupdatecamera>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerUnmutePlayer_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverunmuteplayer>& Op)
 {
@@ -7890,7 +7886,7 @@ void USpatialTypeBinding_PlayerController::ServerUnmutePlayer_OnRPCPayload(const
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverunmuteplayer>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerToggleAILogging_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservertoggleailogging>& Op)
 {
@@ -7933,7 +7929,7 @@ void USpatialTypeBinding_PlayerController::ServerToggleAILogging_OnRPCPayload(co
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservertoggleailogging>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerShortTimeout_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservershorttimeout>& Op)
 {
@@ -7976,7 +7972,7 @@ void USpatialTypeBinding_PlayerController::ServerShortTimeout_OnRPCPayload(const
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservershorttimeout>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerSetSpectatorWaiting_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserversetspectatorwaiting>& Op)
 {
@@ -8026,7 +8022,7 @@ void USpatialTypeBinding_PlayerController::ServerSetSpectatorWaiting_OnRPCPayloa
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserversetspectatorwaiting>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerSetSpectatorLocation_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserversetspectatorlocation>& Op)
 {
@@ -8093,7 +8089,7 @@ void USpatialTypeBinding_PlayerController::ServerSetSpectatorLocation_OnRPCPaylo
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserversetspectatorlocation>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerRestartPlayer_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverrestartplayer>& Op)
 {
@@ -8136,7 +8132,7 @@ void USpatialTypeBinding_PlayerController::ServerRestartPlayer_OnRPCPayload(cons
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverrestartplayer>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerPause_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverpause>& Op)
 {
@@ -8179,7 +8175,7 @@ void USpatialTypeBinding_PlayerController::ServerPause_OnRPCPayload(const worker
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverpause>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerNotifyLoadedWorld_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservernotifyloadedworld>& Op)
 {
@@ -8229,7 +8225,7 @@ void USpatialTypeBinding_PlayerController::ServerNotifyLoadedWorld_OnRPCPayload(
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservernotifyloadedworld>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerMutePlayer_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservermuteplayer>& Op)
 {
@@ -8287,7 +8283,7 @@ void USpatialTypeBinding_PlayerController::ServerMutePlayer_OnRPCPayload(const w
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservermuteplayer>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerCheckClientPossessionReliable_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservercheckclientpossessionreliable>& Op)
 {
@@ -8330,7 +8326,7 @@ void USpatialTypeBinding_PlayerController::ServerCheckClientPossessionReliable_O
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservercheckclientpossessionreliable>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerCheckClientPossession_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservercheckclientpossession>& Op)
 {
@@ -8373,7 +8369,7 @@ void USpatialTypeBinding_PlayerController::ServerCheckClientPossession_OnRPCPayl
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservercheckclientpossession>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerChangeName_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverchangename>& Op)
 {
@@ -8423,7 +8419,7 @@ void USpatialTypeBinding_PlayerController::ServerChangeName_OnRPCPayload(const w
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserverchangename>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerCamera_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservercamera>& Op)
 {
@@ -8473,7 +8469,7 @@ void USpatialTypeBinding_PlayerController::ServerCamera_OnRPCPayload(const worke
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerservercamera>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 void USpatialTypeBinding_PlayerController::ServerAcknowledgePossession_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserveracknowledgepossession>& Op)
 {
@@ -8548,7 +8544,7 @@ void USpatialTypeBinding_PlayerController::ServerAcknowledgePossession_OnRPCPayl
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealPlayerControllerServerRPCs::Commands::Playercontrollerserveracknowledgepossession>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 
 void USpatialTypeBinding_PlayerController::OnServerStartedVisualLogger_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealPlayerControllerClientRPCs::Commands::Playercontrolleronserverstartedvisuallogger>& Op)
