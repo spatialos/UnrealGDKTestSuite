@@ -7,6 +7,27 @@
 #include "GameFramework/Character.h"
 #include "SampleGameCharacter.generated.h"
 
+USTRUCT()
+struct FRootStruct
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY()
+	int RootProp;
+};
+
+USTRUCT()
+struct FContainerStruct
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY()
+	FRootStruct Struct_1;
+
+	UPROPERTY()
+	FRootStruct Struct_2;
+};
+
 UCLASS(config=Game)
 class ASampleGameCharacter : public ACharacter
 {
@@ -22,6 +43,8 @@ class ASampleGameCharacter : public ACharacter
 public:
 	ASampleGameCharacter();
 
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	virtual void BeginPlay() override;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -31,6 +54,9 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	UPROPERTY(Replicated)
+	FContainerStruct TestContainerStruct;
 
 protected:
 
