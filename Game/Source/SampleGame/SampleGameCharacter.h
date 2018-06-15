@@ -65,6 +65,9 @@ protected:
 
 	void Interact();
 
+	UFUNCTION(NetMulticast, Unreliable, WithValidation)
+	void TestMulticast();
+
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
