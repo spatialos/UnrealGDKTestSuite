@@ -108,6 +108,39 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"CStyleTestIntArrayProperty"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(45, FRepHandleData(Class, {"CStyleTestIntArrayProperty"}, COND_None, REPNOTIFY_OnChanged, 4));
 	RepHandleToPropertyMap.Add(46, FRepHandleData(Class, {"CStyleTestIntArrayProperty"}, COND_None, REPNOTIFY_OnChanged, 8));
+	RepHandleToPropertyMap.Add(47, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NonSerializedInt"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(58, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NonSerializedInt"}, COND_None, REPNOTIFY_OnChanged, 4));
+	RepHandleToPropertyMap.Add(69, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NonSerializedInt"}, COND_None, REPNOTIFY_OnChanged, 8));
+	RepHandleToPropertyMap.Add(48, FRepHandleData(Class, {"TheTestStructStaticStructArray", "TestInt"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(59, FRepHandleData(Class, {"TheTestStructStaticStructArray", "TestInt"}, COND_None, REPNOTIFY_OnChanged, 4));
+	RepHandleToPropertyMap.Add(70, FRepHandleData(Class, {"TheTestStructStaticStructArray", "TestInt"}, COND_None, REPNOTIFY_OnChanged, 8));
+	RepHandleToPropertyMap.Add(49, FRepHandleData(Class, {"TheTestStructStaticStructArray", "TestIntArray"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(50, FRepHandleData(Class, {"TheTestStructStaticStructArray", "TestIntArray"}, COND_None, REPNOTIFY_OnChanged, 4));
+	RepHandleToPropertyMap.Add(51, FRepHandleData(Class, {"TheTestStructStaticStructArray", "TestIntArray"}, COND_None, REPNOTIFY_OnChanged, 8));
+	RepHandleToPropertyMap.Add(60, FRepHandleData(Class, {"TheTestStructStaticStructArray", "TestIntArray"}, COND_None, REPNOTIFY_OnChanged, 12));
+	RepHandleToPropertyMap.Add(61, FRepHandleData(Class, {"TheTestStructStaticStructArray", "TestIntArray"}, COND_None, REPNOTIFY_OnChanged, 16));
+	RepHandleToPropertyMap.Add(62, FRepHandleData(Class, {"TheTestStructStaticStructArray", "TestIntArray"}, COND_None, REPNOTIFY_OnChanged, 20));
+	RepHandleToPropertyMap.Add(71, FRepHandleData(Class, {"TheTestStructStaticStructArray", "TestIntArray"}, COND_None, REPNOTIFY_OnChanged, 24));
+	RepHandleToPropertyMap.Add(72, FRepHandleData(Class, {"TheTestStructStaticStructArray", "TestIntArray"}, COND_None, REPNOTIFY_OnChanged, 28));
+	RepHandleToPropertyMap.Add(73, FRepHandleData(Class, {"TheTestStructStaticStructArray", "TestIntArray"}, COND_None, REPNOTIFY_OnChanged, 32));
+	RepHandleToPropertyMap.Add(52, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NetSerializeStruct"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(53, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NetSerializeStruct"}, COND_None, REPNOTIFY_OnChanged, 8));
+	RepHandleToPropertyMap.Add(63, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NetSerializeStruct"}, COND_None, REPNOTIFY_OnChanged, 16));
+	RepHandleToPropertyMap.Add(64, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NetSerializeStruct"}, COND_None, REPNOTIFY_OnChanged, 24));
+	RepHandleToPropertyMap.Add(74, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NetSerializeStruct"}, COND_None, REPNOTIFY_OnChanged, 32));
+	RepHandleToPropertyMap.Add(75, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NetSerializeStruct"}, COND_None, REPNOTIFY_OnChanged, 40));
+	RepHandleToPropertyMap.Add(54, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NoNetSerializeStruct", "TestIntNoNetSerialize"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(56, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NoNetSerializeStruct", "TestIntNoNetSerialize"}, COND_None, REPNOTIFY_OnChanged, 4));
+	RepHandleToPropertyMap.Add(65, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NoNetSerializeStruct", "TestIntNoNetSerialize"}, COND_None, REPNOTIFY_OnChanged, 8));
+	RepHandleToPropertyMap.Add(67, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NoNetSerializeStruct", "TestIntNoNetSerialize"}, COND_None, REPNOTIFY_OnChanged, 12));
+	RepHandleToPropertyMap.Add(76, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NoNetSerializeStruct", "TestIntNoNetSerialize"}, COND_None, REPNOTIFY_OnChanged, 16));
+	RepHandleToPropertyMap.Add(78, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NoNetSerializeStruct", "TestIntNoNetSerialize"}, COND_None, REPNOTIFY_OnChanged, 20));
+	RepHandleToPropertyMap.Add(55, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NoNetSerializeStruct", "TestFStringNoNetSerialize"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(57, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NoNetSerializeStruct", "TestFStringNoNetSerialize"}, COND_None, REPNOTIFY_OnChanged, 16));
+	RepHandleToPropertyMap.Add(66, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NoNetSerializeStruct", "TestFStringNoNetSerialize"}, COND_None, REPNOTIFY_OnChanged, 32));
+	RepHandleToPropertyMap.Add(68, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NoNetSerializeStruct", "TestFStringNoNetSerialize"}, COND_None, REPNOTIFY_OnChanged, 48));
+	RepHandleToPropertyMap.Add(77, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NoNetSerializeStruct", "TestFStringNoNetSerialize"}, COND_None, REPNOTIFY_OnChanged, 64));
+	RepHandleToPropertyMap.Add(79, FRepHandleData(Class, {"TheTestStructStaticStructArray", "NoNetSerializeStruct", "TestFStringNoNetSerialize"}, COND_None, REPNOTIFY_OnChanged, 80));
 }
 
 void USpatialTypeBinding_SampleGameCharacter::BindToView()
@@ -966,6 +999,279 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
 			OutUpdate.set_field_cstyletestintarrayproperty2(int32_t(Value));
+			break;
+		}
+		case 47: // field_theteststructstaticstructarray_nonserializedint0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonserializedint0(int32_t(Value));
+			break;
+		}
+		case 58: // field_theteststructstaticstructarray_nonserializedint1
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonserializedint1(int32_t(Value));
+			break;
+		}
+		case 69: // field_theteststructstaticstructarray_nonserializedint2
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonserializedint2(int32_t(Value));
+			break;
+		}
+		case 48: // field_theteststructstaticstructarray_testint0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_testint0(int32_t(Value));
+			break;
+		}
+		case 59: // field_theteststructstaticstructarray_testint1
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_testint1(int32_t(Value));
+			break;
+		}
+		case 70: // field_theteststructstaticstructarray_testint2
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_testint2(int32_t(Value));
+			break;
+		}
+		case 49: // field_theteststructstaticstructarray_testintarray0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_testintarray0(int32_t(Value));
+			break;
+		}
+		case 50: // field_theteststructstaticstructarray_testintarray1
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_testintarray1(int32_t(Value));
+			break;
+		}
+		case 51: // field_theteststructstaticstructarray_testintarray2
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_testintarray2(int32_t(Value));
+			break;
+		}
+		case 60: // field_theteststructstaticstructarray_testintarray3
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_testintarray3(int32_t(Value));
+			break;
+		}
+		case 61: // field_theteststructstaticstructarray_testintarray4
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_testintarray4(int32_t(Value));
+			break;
+		}
+		case 62: // field_theteststructstaticstructarray_testintarray5
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_testintarray5(int32_t(Value));
+			break;
+		}
+		case 71: // field_theteststructstaticstructarray_testintarray6
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_testintarray6(int32_t(Value));
+			break;
+		}
+		case 72: // field_theteststructstaticstructarray_testintarray7
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_testintarray7(int32_t(Value));
+			break;
+		}
+		case 73: // field_theteststructstaticstructarray_testintarray8
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_testintarray8(int32_t(Value));
+			break;
+		}
+		case 52: // field_theteststructstaticstructarray_netserializestruct0
+		{
+			const FTestStruct& Value = *(reinterpret_cast<FTestStruct const*>(Data));
+
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FTestStruct&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStruct failed."));
+				OutUpdate.set_field_theteststructstaticstructarray_netserializestruct0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			break;
+		}
+		case 53: // field_theteststructstaticstructarray_netserializestruct1
+		{
+			const FTestStruct& Value = *(reinterpret_cast<FTestStruct const*>(Data));
+
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FTestStruct&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStruct failed."));
+				OutUpdate.set_field_theteststructstaticstructarray_netserializestruct1(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			break;
+		}
+		case 63: // field_theteststructstaticstructarray_netserializestruct2
+		{
+			const FTestStruct& Value = *(reinterpret_cast<FTestStruct const*>(Data));
+
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FTestStruct&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStruct failed."));
+				OutUpdate.set_field_theteststructstaticstructarray_netserializestruct2(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			break;
+		}
+		case 64: // field_theteststructstaticstructarray_netserializestruct3
+		{
+			const FTestStruct& Value = *(reinterpret_cast<FTestStruct const*>(Data));
+
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FTestStruct&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStruct failed."));
+				OutUpdate.set_field_theteststructstaticstructarray_netserializestruct3(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			break;
+		}
+		case 74: // field_theteststructstaticstructarray_netserializestruct4
+		{
+			const FTestStruct& Value = *(reinterpret_cast<FTestStruct const*>(Data));
+
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FTestStruct&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStruct failed."));
+				OutUpdate.set_field_theteststructstaticstructarray_netserializestruct4(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			break;
+		}
+		case 75: // field_theteststructstaticstructarray_netserializestruct5
+		{
+			const FTestStruct& Value = *(reinterpret_cast<FTestStruct const*>(Data));
+
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FTestStruct&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStruct failed."));
+				OutUpdate.set_field_theteststructstaticstructarray_netserializestruct5(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			break;
+		}
+		case 54: // field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize0(int32_t(Value));
+			break;
+		}
+		case 56: // field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize1
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize1(int32_t(Value));
+			break;
+		}
+		case 65: // field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize2
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize2(int32_t(Value));
+			break;
+		}
+		case 67: // field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize3
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize3(int32_t(Value));
+			break;
+		}
+		case 76: // field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize4
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize4(int32_t(Value));
+			break;
+		}
+		case 78: // field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize5
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize5(int32_t(Value));
+			break;
+		}
+		case 55: // field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize0
+		{
+			FString Value = *(reinterpret_cast<FString const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize0(TCHAR_TO_UTF8(*Value));
+			break;
+		}
+		case 57: // field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize1
+		{
+			FString Value = *(reinterpret_cast<FString const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize1(TCHAR_TO_UTF8(*Value));
+			break;
+		}
+		case 66: // field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize2
+		{
+			FString Value = *(reinterpret_cast<FString const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize2(TCHAR_TO_UTF8(*Value));
+			break;
+		}
+		case 68: // field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize3
+		{
+			FString Value = *(reinterpret_cast<FString const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize3(TCHAR_TO_UTF8(*Value));
+			break;
+		}
+		case 77: // field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize4
+		{
+			FString Value = *(reinterpret_cast<FString const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize4(TCHAR_TO_UTF8(*Value));
+			break;
+		}
+		case 79: // field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize5
+		{
+			FString Value = *(reinterpret_cast<FString const*>(Data));
+
+			OutUpdate.set_field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize5(TCHAR_TO_UTF8(*Value));
 			break;
 		}
 	default:
@@ -2411,6 +2717,780 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
 			Value = (*Update.field_cstyletestintarrayproperty2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonserializedint0().empty())
+	{
+		// field_theteststructstaticstructarray_nonserializedint0
+		uint16 Handle = 47;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_nonserializedint0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonserializedint1().empty())
+	{
+		// field_theteststructstaticstructarray_nonserializedint1
+		uint16 Handle = 58;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_nonserializedint1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonserializedint2().empty())
+	{
+		// field_theteststructstaticstructarray_nonserializedint2
+		uint16 Handle = 69;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_nonserializedint2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_testint0().empty())
+	{
+		// field_theteststructstaticstructarray_testint0
+		uint16 Handle = 48;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_testint0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_testint1().empty())
+	{
+		// field_theteststructstaticstructarray_testint1
+		uint16 Handle = 59;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_testint1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_testint2().empty())
+	{
+		// field_theteststructstaticstructarray_testint2
+		uint16 Handle = 70;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_testint2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_testintarray0().empty())
+	{
+		// field_theteststructstaticstructarray_testintarray0
+		uint16 Handle = 49;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_testintarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_testintarray1().empty())
+	{
+		// field_theteststructstaticstructarray_testintarray1
+		uint16 Handle = 50;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_testintarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_testintarray2().empty())
+	{
+		// field_theteststructstaticstructarray_testintarray2
+		uint16 Handle = 51;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_testintarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_testintarray3().empty())
+	{
+		// field_theteststructstaticstructarray_testintarray3
+		uint16 Handle = 60;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_testintarray3().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_testintarray4().empty())
+	{
+		// field_theteststructstaticstructarray_testintarray4
+		uint16 Handle = 61;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_testintarray4().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_testintarray5().empty())
+	{
+		// field_theteststructstaticstructarray_testintarray5
+		uint16 Handle = 62;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_testintarray5().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_testintarray6().empty())
+	{
+		// field_theteststructstaticstructarray_testintarray6
+		uint16 Handle = 71;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_testintarray6().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_testintarray7().empty())
+	{
+		// field_theteststructstaticstructarray_testintarray7
+		uint16 Handle = 72;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_testintarray7().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_testintarray8().empty())
+	{
+		// field_theteststructstaticstructarray_testintarray8
+		uint16 Handle = 73;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_testintarray8().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_netserializestruct0().empty())
+	{
+		// field_theteststructstaticstructarray_netserializestruct0
+		uint16 Handle = 52;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FTestStruct Value = *(reinterpret_cast<FTestStruct const*>(PropertyData));
+
+			{
+				auto& ValueDataStr = (*Update.field_theteststructstaticstructarray_netserializestruct0().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStruct failed."));
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_netserializestruct1().empty())
+	{
+		// field_theteststructstaticstructarray_netserializestruct1
+		uint16 Handle = 53;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FTestStruct Value = *(reinterpret_cast<FTestStruct const*>(PropertyData));
+
+			{
+				auto& ValueDataStr = (*Update.field_theteststructstaticstructarray_netserializestruct1().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStruct failed."));
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_netserializestruct2().empty())
+	{
+		// field_theteststructstaticstructarray_netserializestruct2
+		uint16 Handle = 63;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FTestStruct Value = *(reinterpret_cast<FTestStruct const*>(PropertyData));
+
+			{
+				auto& ValueDataStr = (*Update.field_theteststructstaticstructarray_netserializestruct2().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStruct failed."));
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_netserializestruct3().empty())
+	{
+		// field_theteststructstaticstructarray_netserializestruct3
+		uint16 Handle = 64;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FTestStruct Value = *(reinterpret_cast<FTestStruct const*>(PropertyData));
+
+			{
+				auto& ValueDataStr = (*Update.field_theteststructstaticstructarray_netserializestruct3().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStruct failed."));
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_netserializestruct4().empty())
+	{
+		// field_theteststructstaticstructarray_netserializestruct4
+		uint16 Handle = 74;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FTestStruct Value = *(reinterpret_cast<FTestStruct const*>(PropertyData));
+
+			{
+				auto& ValueDataStr = (*Update.field_theteststructstaticstructarray_netserializestruct4().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStruct failed."));
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_netserializestruct5().empty())
+	{
+		// field_theteststructstaticstructarray_netserializestruct5
+		uint16 Handle = 75;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FTestStruct Value = *(reinterpret_cast<FTestStruct const*>(PropertyData));
+
+			{
+				auto& ValueDataStr = (*Update.field_theteststructstaticstructarray_netserializestruct5().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FTestStruct failed."));
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize0().empty())
+	{
+		// field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize0
+		uint16 Handle = 54;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize1().empty())
+	{
+		// field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize1
+		uint16 Handle = 56;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize2().empty())
+	{
+		// field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize2
+		uint16 Handle = 65;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize3().empty())
+	{
+		// field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize3
+		uint16 Handle = 67;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize3().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize4().empty())
+	{
+		// field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize4
+		uint16 Handle = 76;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize4().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize5().empty())
+	{
+		// field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize5
+		uint16 Handle = 78;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_theteststructstaticstructarray_nonetserializestruct_testintnonetserialize5().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize0().empty())
+	{
+		// field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize0
+		uint16 Handle = 55;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FString Value = *(reinterpret_cast<FString const*>(PropertyData));
+
+			Value = FString(UTF8_TO_TCHAR((*Update.field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize0().data()).c_str()));
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize1().empty())
+	{
+		// field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize1
+		uint16 Handle = 57;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FString Value = *(reinterpret_cast<FString const*>(PropertyData));
+
+			Value = FString(UTF8_TO_TCHAR((*Update.field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize1().data()).c_str()));
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize2().empty())
+	{
+		// field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize2
+		uint16 Handle = 66;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FString Value = *(reinterpret_cast<FString const*>(PropertyData));
+
+			Value = FString(UTF8_TO_TCHAR((*Update.field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize2().data()).c_str()));
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize3().empty())
+	{
+		// field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize3
+		uint16 Handle = 68;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FString Value = *(reinterpret_cast<FString const*>(PropertyData));
+
+			Value = FString(UTF8_TO_TCHAR((*Update.field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize3().data()).c_str()));
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize4().empty())
+	{
+		// field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize4
+		uint16 Handle = 77;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FString Value = *(reinterpret_cast<FString const*>(PropertyData));
+
+			Value = FString(UTF8_TO_TCHAR((*Update.field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize4().data()).c_str()));
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize5().empty())
+	{
+		// field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize5
+		uint16 Handle = 79;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FString Value = *(reinterpret_cast<FString const*>(PropertyData));
+
+			Value = FString(UTF8_TO_TCHAR((*Update.field_theteststructstaticstructarray_nonetserializestruct_testfstringnonetserialize5().data()).c_str()));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 

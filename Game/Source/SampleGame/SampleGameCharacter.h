@@ -154,6 +154,9 @@ public:
 
 	UPROPERTY(Replicated)
 	int32 CStyleTestIntArrayProperty[3];
+
+	UPROPERTY(Replicated)
+	FTestStructCStyleArray TheTestStructStaticStructArray[3];
 	
 
 protected:
