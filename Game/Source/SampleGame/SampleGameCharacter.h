@@ -22,10 +22,55 @@ struct FContainerStruct
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY()
-	FRootStruct Struct_1;
+	FRootStruct Struct_Red;
 
 	UPROPERTY()
-	FRootStruct Struct_2;
+	FRootStruct Struct_Blue;
+};
+
+USTRUCT()
+struct FContainerContainerStruct
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY()
+	FContainerStruct Struct_ContainerCar;
+
+	UPROPERTY()
+	FContainerStruct Struct_ContainerPlane;
+};
+
+USTRUCT()
+struct FContainerContainerContainerStruct
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY()
+	FContainerContainerStruct Struct_ContainerContainerDog;
+
+	UPROPERTY()
+	FContainerContainerStruct Struct_ContainerContainerCat;
+};
+
+USTRUCT()
+struct FTheOneStructToRuleThemAll
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY()
+	FContainerContainerContainerStruct Struct_ContainerContainerContainer;
+
+	UPROPERTY()
+	FContainerContainerStruct Struct_ContainerContainer;
+
+	UPROPERTY()
+	FContainerStruct Struct_Container;
+
+	UPROPERTY()
+	FRootStruct Struct_Root;
+
+	UPROPERTY()
+	int RootProp;
 };
 
 UCLASS(config=Game)
@@ -57,6 +102,18 @@ public:
 
 	UPROPERTY(Replicated)
 	FContainerStruct TestContainerStruct;
+
+	UPROPERTY(Replicated)
+	FContainerStruct TestContainerStructTheSecond;
+
+	UPROPERTY(Replicated)
+	FContainerContainerStruct TestContainerContainerStruct;
+
+	UPROPERTY(Replicated)
+	FContainerContainerContainerStruct TestContainerContainerContainerStruct;
+
+	UPROPERTY(Replicated)
+	FTheOneStructToRuleThemAll TestTheOneStructToRuleThemAll;
 
 protected:
 

@@ -41,6 +41,7 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 {
 	Super::Init(InInterop, InPackageMap);
 
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	RPCToSenderMap.Emplace("RootMotionDebugClientPrintOnScreen", &USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_SendRPC);
 	RPCToSenderMap.Emplace("ClientVeryShortAdjustPosition", &USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_SendRPC);
 	RPCToSenderMap.Emplace("ClientCheatWalk", &USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendRPC);
@@ -58,6 +59,23 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RPCToSenderMap.Emplace("ServerMoveDual", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC);
 	RPCToSenderMap.Emplace("ServerMove", &USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC);
 	RPCToSenderMap.Emplace("TestMulticast", &USpatialTypeBinding_SampleGameCharacter::TestMulticast_SendRPC);
+=======
+	RPCToSenderMap.Emplace("RootMotionDebugClientPrintOnScreen", &USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_SendCommand);
+	RPCToSenderMap.Emplace("ClientVeryShortAdjustPosition", &USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_SendCommand);
+	RPCToSenderMap.Emplace("ClientCheatWalk", &USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendCommand);
+	RPCToSenderMap.Emplace("ClientCheatGhost", &USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendCommand);
+	RPCToSenderMap.Emplace("ClientCheatFly", &USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendCommand);
+	RPCToSenderMap.Emplace("ClientAdjustRootMotionSourcePosition", &USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_SendCommand);
+	RPCToSenderMap.Emplace("ClientAdjustRootMotionPosition", &USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_SendCommand);
+	RPCToSenderMap.Emplace("ClientAdjustPosition", &USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendCommand);
+	RPCToSenderMap.Emplace("ClientAckGoodMove", &USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendCommand);
+	RPCToSenderMap.Emplace("ServerMoveOld", &USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendCommand);
+	RPCToSenderMap.Emplace("ServerMoveNoBase", &USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendCommand);
+	RPCToSenderMap.Emplace("ServerMoveDualNoBase", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendCommand);
+	RPCToSenderMap.Emplace("ServerMoveDualHybridRootMotion", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_SendCommand);
+	RPCToSenderMap.Emplace("ServerMoveDual", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendCommand);
+	RPCToSenderMap.Emplace("ServerMove", &USpatialTypeBinding_SampleGameCharacter::ServerMove_SendCommand);
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("SampleGameCharacter"));
 
@@ -105,6 +123,41 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(41, FRepHandleData(Class, {"RepRootMotion", "AuthoritativeRootMotion"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(42, FRepHandleData(Class, {"RepRootMotion", "Acceleration"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(43, FRepHandleData(Class, {"RepRootMotion", "LinearVelocity"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+=======
+	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"TestContainerStruct", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(45, FRepHandleData(Class, {"TestContainerStruct", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(46, FRepHandleData(Class, {"TestContainerStructTheSecond", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(47, FRepHandleData(Class, {"TestContainerStructTheSecond", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(48, FRepHandleData(Class, {"TestContainerContainerStruct", "Struct_ContainerCock", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(49, FRepHandleData(Class, {"TestContainerContainerStruct", "Struct_ContainerCock", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(50, FRepHandleData(Class, {"TestContainerContainerStruct", "Struct_ContainerDick", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(51, FRepHandleData(Class, {"TestContainerContainerStruct", "Struct_ContainerDick", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(52, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerTwat", "Struct_ContainerCock", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(53, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerTwat", "Struct_ContainerCock", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(54, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerTwat", "Struct_ContainerDick", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(55, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerTwat", "Struct_ContainerDick", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(56, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerCunt", "Struct_ContainerCock", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(57, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerCunt", "Struct_ContainerCock", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(58, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerCunt", "Struct_ContainerDick", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(59, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerCunt", "Struct_ContainerDick", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(60, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerTwat", "Struct_ContainerCock", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(61, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerTwat", "Struct_ContainerCock", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(62, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerTwat", "Struct_ContainerDick", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(63, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerTwat", "Struct_ContainerDick", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(64, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerCunt", "Struct_ContainerCock", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(65, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerCunt", "Struct_ContainerCock", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(66, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerCunt", "Struct_ContainerDick", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(67, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerCunt", "Struct_ContainerDick", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(68, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerCock", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(69, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerCock", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(70, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerDick", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(71, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerDick", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(72, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_Container", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(73, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_Container", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(74, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_Root", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(75, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 }
 
 void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
@@ -154,8 +207,14 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 			}));
 		}
 	}
+<<<<<<< HEAD
 	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs>([this](
 		const worker::ComponentUpdateOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>& Op)
+>>>>>>> Test code for UNR-334
 	{
 		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
 		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs::ComponentId))
@@ -165,6 +224,7 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 		ReceiveUpdate_NetMulticastRPCs(Op.EntityId, Op.Update);
 	}));
 
+<<<<<<< HEAD
 	using ClientRPCCommandTypes = improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands;
 	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Rootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Clientveryshortadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload, this, std::placeholders::_1)));
@@ -200,6 +260,63 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servermovedual>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servermove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandResponse, this, std::placeholders::_1)));
+=======
+	using ClientRPCCommandTypes = improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands;
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterrootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientveryshortadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatwalk>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatghost>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatfly>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionsourceposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientackgoodmove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload, this, std::placeholders::_1)));
+=======
+
+	using ClientRPCCommandTypes = improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands;
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterrootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientveryshortadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatwalk>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatghost>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatfly>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionsourceposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientackgoodmove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandRequest, this, std::placeholders::_1)));
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterrootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientveryshortadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientcheatwalk>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientcheatghost>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientcheatfly>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionsourceposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientackgoodmove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandResponse, this, std::placeholders::_1)));
+
+	using ServerRPCCommandTypes = improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands;
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedual>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload, this, std::placeholders::_1)));
+=======
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedual>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandRequest, this, std::placeholders::_1)));
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovedual>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandResponse, this, std::placeholders::_1)));
+>>>>>>> Test code for UNR-334
 }
 
 void USpatialTypeBinding_SampleGameCharacter::UnbindFromView()
@@ -276,12 +393,24 @@ worker::Entity USpatialTypeBinding_SampleGameCharacter::CreateActorEntity(const 
 		.SetPersistence(true)
 		.SetReadAcl(AnyUnrealWorkerOrClient)
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
+<<<<<<< HEAD
 		.AddComponent<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData>(SingleClientData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData>(MultiClientData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData>(MigratableData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs>(improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs>(improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs>(improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs::Data{}, WorkersOnly)
+=======
+		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData>(SingleClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData>(MultiClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>(MigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs>(improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Data{}, OwningClientOnly)
+		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs>(improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Data{}, WorkersOnly)
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>(improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::Data{}, WorkersOnly)
+=======
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 		.Build();
 }
 
@@ -1037,6 +1166,236 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			}
 			break;
 		}
+		case 44: // field_testcontainerstruct_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update& OutUpdate) const
+{
+}
+
+=======
+			OutUpdate.set_field_testcontainerstruct_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 45: // field_testcontainerstruct_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainerstruct_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 46: // field_testcontainerstructthesecond_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainerstructthesecond_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 47: // field_testcontainerstructthesecond_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainerstructthesecond_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 48: // field_testcontainercontainerstruct_structcontainercock_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainercontainerstruct_structcontainercock_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 49: // field_testcontainercontainerstruct_structcontainercock_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainercontainerstruct_structcontainercock_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 50: // field_testcontainercontainerstruct_structcontainerdick_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainercontainerstruct_structcontainerdick_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 51: // field_testcontainercontainerstruct_structcontainerdick_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainercontainerstruct_structcontainerdick_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 52: // field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 53: // field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 54: // field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 55: // field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 56: // field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 57: // field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 58: // field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 59: // field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 60: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 61: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 62: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 63: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 64: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 65: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 66: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 67: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 68: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 69: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 70: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 71: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 72: // field_testtheonestructtorulethemall_structcontainer_structfuck_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainer_structfuck_rootprop(int32_t(Value));
+			break;
+		}
+		case 73: // field_testtheonestructtorulethemall_structcontainer_structshit_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainer_structshit_rootprop(int32_t(Value));
+			break;
+		}
+		case 74: // field_testtheonestructtorulethemall_structroot_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_structroot_rootprop(int32_t(Value));
+			break;
+		}
+		case 75: // field_testtheonestructtorulethemall_rootprop
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_testtheonestructtorulethemall_rootprop(int32_t(Value));
+			break;
+		}
 	default:
 		checkf(false, TEXT("Unknown replication handle %d encountered when creating a SpatialOS update."));
 		break;
@@ -1047,7 +1406,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_Migratable(const 
 {
 }
 
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData::Update& Update) const
+=======
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update& Update) const
+>>>>>>> Test code for UNR-334
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TArray<UProperty*> RepNotifies;
@@ -2443,10 +2807,22 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
-}
+	if (!Update.field_testcontainerstruct_structfuck_rootprop().empty())
+	{
+		// field_testcontainerstruct_structfuck_rootprop
+		uint16 Handle = 44;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData::Update& Update) const
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update& Update) const
+>>>>>>> Test code for UNR-334
 {
 }
 
@@ -2459,6 +2835,736 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_NetMulticastRPCs(wor
 
 }
 void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+			Value = (*Update.field_testcontainerstruct_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainerstruct_structshit_rootprop().empty())
+	{
+		// field_testcontainerstruct_structshit_rootprop
+		uint16 Handle = 45;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+<<<<<<< HEAD
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC RootMotionDebugClientPrintOnScreen queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
+		}
+
+		// Build RPC Payload.
+		improbable::unreal::generated::character::RootMotionDebugClientPrintOnScreenRequest RPCPayload;
+		RPCPayload.set_field_instring(TCHAR_TO_UTF8(*StructuredParams.InString));
+=======
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+>>>>>>> Test code for UNR-334
+
+			Value = (*Update.field_testcontainerstruct_structshit_rootprop().data());
+
+<<<<<<< HEAD
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Rootmotiondebugclientprintonscreen>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+{
+	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
+	Character_eventClientVeryShortAdjustPosition_Parms StructuredParams = *static_cast<Character_eventClientVeryShortAdjustPosition_Parms*>(Parameters);
+=======
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+>>>>>>> Test code for UNR-334
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainerstructthesecond_structfuck_rootprop().empty())
+	{
+		// field_testcontainerstructthesecond_structfuck_rootprop
+		uint16 Handle = 46;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+<<<<<<< HEAD
+		// Build RPC Payload.
+		improbable::unreal::generated::character::ClientVeryShortAdjustPositionRequest RPCPayload;
+=======
+			Value = (*Update.field_testcontainerstructthesecond_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainerstructthesecond_structshit_rootprop().empty())
+	{
+		// field_testcontainerstructthesecond_structshit_rootprop
+		uint16 Handle = 47;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainerstructthesecond_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainercontainerstruct_structcontainercock_structfuck_rootprop().empty())
+	{
+		// field_testcontainercontainerstruct_structcontainercock_structfuck_rootprop
+		uint16 Handle = 48;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainercontainerstruct_structcontainercock_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainercontainerstruct_structcontainercock_structshit_rootprop().empty())
+	{
+		// field_testcontainercontainerstruct_structcontainercock_structshit_rootprop
+		uint16 Handle = 49;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainercontainerstruct_structcontainercock_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainercontainerstruct_structcontainerdick_structfuck_rootprop().empty())
+	{
+		// field_testcontainercontainerstruct_structcontainerdick_structfuck_rootprop
+		uint16 Handle = 50;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainercontainerstruct_structcontainerdick_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainercontainerstruct_structcontainerdick_structshit_rootprop().empty())
+	{
+		// field_testcontainercontainerstruct_structcontainerdick_structshit_rootprop
+		uint16 Handle = 51;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainercontainerstruct_structcontainerdick_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structfuck_rootprop().empty())
+	{
+		// field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structfuck_rootprop
+		uint16 Handle = 52;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structshit_rootprop().empty())
+	{
+		// field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structshit_rootprop
+		uint16 Handle = 53;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structfuck_rootprop().empty())
+	{
+		// field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structfuck_rootprop
+		uint16 Handle = 54;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structshit_rootprop().empty())
+	{
+		// field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structshit_rootprop
+		uint16 Handle = 55;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structfuck_rootprop().empty())
+	{
+		// field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structfuck_rootprop
+		uint16 Handle = 56;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structshit_rootprop().empty())
+	{
+		// field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structshit_rootprop
+		uint16 Handle = 57;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structfuck_rootprop().empty())
+	{
+		// field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structfuck_rootprop
+		uint16 Handle = 58;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structshit_rootprop().empty())
+	{
+		// field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structshit_rootprop
+		uint16 Handle = 59;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structfuck_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structfuck_rootprop
+		uint16 Handle = 60;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structshit_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structshit_rootprop
+		uint16 Handle = 61;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structfuck_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structfuck_rootprop
+		uint16 Handle = 62;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structshit_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structshit_rootprop
+		uint16 Handle = 63;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structfuck_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structfuck_rootprop
+		uint16 Handle = 64;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structshit_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structshit_rootprop
+		uint16 Handle = 65;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structfuck_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structfuck_rootprop
+		uint16 Handle = 66;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structshit_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structshit_rootprop
+		uint16 Handle = 67;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structfuck_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structfuck_rootprop
+		uint16 Handle = 68;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structshit_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structshit_rootprop
+		uint16 Handle = 69;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structfuck_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structfuck_rootprop
+		uint16 Handle = 70;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structshit_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structshit_rootprop
+		uint16 Handle = 71;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainer_structfuck_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainer_structfuck_rootprop
+		uint16 Handle = 72;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainer_structfuck_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structcontainer_structshit_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structcontainer_structshit_rootprop
+		uint16 Handle = 73;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainer_structshit_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_structroot_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_structroot_rootprop
+		uint16 Handle = 74;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_structroot_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testtheonestructtorulethemall_rootprop().empty())
+	{
+		// field_testtheonestructtorulethemall_rootprop
+		uint16 Handle = 75;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_testtheonestructtorulethemall_rootprop().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
+}
+
+void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update& Update) const
+{
+}
+
+void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventRootMotionDebugClientPrintOnScreen_Parms StructuredParams = *static_cast<Character_eventRootMotionDebugClientPrintOnScreen_Parms*>(Parameters);
@@ -2474,7 +3580,7 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::character::RootMotionDebugClientPrintOnScreenRequest RPCPayload;
+		improbable::unreal::generated::UnrealRootMotionDebugClientPrintOnScreenRequest RPCPayload;
 		RPCPayload.set_field_instring(TCHAR_TO_UTF8(*StructuredParams.InString));
 
 		// Send RPC
@@ -2483,13 +3589,23 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Rootmotiondebugclientprintonscreen>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventClientVeryShortAdjustPosition_Parms StructuredParams = *static_cast<Character_eventClientVeryShortAdjustPosition_Parms*>(Parameters);
@@ -2505,7 +3621,8 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::character::ClientVeryShortAdjustPositionRequest RPCPayload;
+		improbable::unreal::generated::UnrealClientVeryShortAdjustPositionRequest RPCPayload;
+>>>>>>> Test code for UNR-334
 		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
@@ -2551,13 +3668,23 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientveryshortadjustposition>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -2578,13 +3705,23 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendRPC(worker::Co
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatwalk>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -2605,13 +3742,23 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendRPC(worker::C
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatghost>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -2632,13 +3779,23 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendRPC(worker::Con
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatfly>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventClientAdjustRootMotionSourcePosition_Parms StructuredParams = *static_cast<Character_eventClientAdjustRootMotionSourcePosition_Parms*>(Parameters);
@@ -2719,13 +3876,23 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustrootmotionsourceposition>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventClientAdjustRootMotionPosition_Parms StructuredParams = *static_cast<Character_eventClientAdjustRootMotionPosition_Parms*>(Parameters);
@@ -2797,13 +3964,23 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustrootmotionposition>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventClientAdjustPosition_Parms StructuredParams = *static_cast<Character_eventClientAdjustPosition_Parms*>(Parameters);
@@ -2873,13 +4050,23 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC(worke
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustposition>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventClientAckGoodMove_Parms StructuredParams = *static_cast<Character_eventClientAckGoodMove_Parms*>(Parameters);
@@ -2904,12 +4091,18 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendRPC(worker::
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientackgoodmove>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::TestRPC_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
@@ -2937,7 +4130,14 @@ void USpatialTypeBinding_SampleGameCharacter::TestRPC_SendRPC(worker::Connection
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventServerMoveOld_Parms StructuredParams = *static_cast<Character_eventServerMoveOld_Parms*>(Parameters);
@@ -2971,13 +4171,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendRPC(worker::Conn
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermoveold>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventServerMoveNoBase_Parms StructuredParams = *static_cast<Character_eventServerMoveNoBase_Parms*>(Parameters);
@@ -3022,13 +4232,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC(worker::C
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovenobase>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventServerMoveDualNoBase_Parms StructuredParams = *static_cast<Character_eventServerMoveDualNoBase_Parms*>(Parameters);
@@ -3084,13 +4304,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC(worke
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedualnobase>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventServerMoveDualHybridRootMotion_Parms StructuredParams = *static_cast<Character_eventServerMoveDualHybridRootMotion_Parms*>(Parameters);
@@ -3172,13 +4402,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedualhybridrootmotion>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventServerMoveDual_Parms StructuredParams = *static_cast<Character_eventServerMoveDual_Parms*>(Parameters);
@@ -3260,13 +4500,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC(worker::Con
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedual>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventServerMove_Parms StructuredParams = *static_cast<Character_eventServerMove_Parms*>(Parameters);
@@ -3337,9 +4587,14 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC(worker::Connect
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermove>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
+=======
+		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>(TargetObjectRef.entity(), Request, 0);
+		return {RequestId.Id};
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
@@ -3358,6 +4613,7 @@ void USpatialTypeBinding_SampleGameCharacter::TestMulticast_SendRPC(worker::Conn
 		// Build RPC Payload.
 		improbable::unreal::generated::samplegamecharacter::TestMulticastRequest RPCPayload;
 
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: TestMulticast, target: %s %s"),
@@ -3373,7 +4629,14 @@ void USpatialTypeBinding_SampleGameCharacter::TestMulticast_SendRPC(worker::Conn
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Rootmotiondebugclientprintonscreen>& Op)
+=======
+void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>& Op)
+=======
+void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3425,7 +4688,16 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientveryshortadjustposition>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3518,7 +4790,16 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRP
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatwalk>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3563,7 +4844,16 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload(const
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatghost>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3608,7 +4898,16 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload(cons
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatfly>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3653,7 +4952,16 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload(const 
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustrootmotionsourceposition>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3767,7 +5075,16 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustrootmotionposition>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3871,7 +5188,16 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnR
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustposition>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3973,7 +5299,16 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientackgoodmove>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4070,7 +5405,16 @@ void USpatialTypeBinding_SampleGameCharacter::TestRPC_OnRPCPayload(const worker:
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermoveold>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4132,7 +5476,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const w
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovenobase>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4206,7 +5559,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(cons
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedualnobase>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4292,7 +5654,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedualhybridrootmotion>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4407,7 +5778,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedual>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4522,7 +5902,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermove>& Op)
+=======
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>& Op)
+=======
+
+void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>& Op)
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4620,7 +6009,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const work
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
+<<<<<<< HEAD
 		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermove>(Op.RequestId, {});
+=======
+		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>(Op.RequestId, {});
+<<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
+>>>>>>> Test code for UNR-334
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
@@ -4663,6 +6057,8 @@ void USpatialTypeBinding_SampleGameCharacter::TestMulticast_OnRPCPayload(const w
 				*TargetObject->GetFullName());
 		}
 
+=======
+>>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
