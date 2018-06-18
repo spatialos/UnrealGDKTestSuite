@@ -61,6 +61,7 @@ ASampleGameCharacter::ASampleGameCharacter()
 												   // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 	IntRepTest = NewObject<ATestIntReplication>();
+	IntRepTest->SetOwner(this);
 
 	TestPODStructArray.AddDefaulted(5);
 	for (int i = 0; i < 8; ++i)
