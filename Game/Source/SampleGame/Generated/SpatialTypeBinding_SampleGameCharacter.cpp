@@ -123,6 +123,7 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(41, FRepHandleData(Class, {"RepRootMotion", "AuthoritativeRootMotion"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(42, FRepHandleData(Class, {"RepRootMotion", "Acceleration"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(43, FRepHandleData(Class, {"RepRootMotion", "LinearVelocity"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+<<<<<<< HEAD
 <<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 =======
 	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"TestContainerStruct", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
@@ -155,6 +156,38 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(71, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerDick", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(72, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_Container", "Struct_Fuck", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(73, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_Container", "Struct_Shit", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+=======
+	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"TestContainerStruct", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(45, FRepHandleData(Class, {"TestContainerStruct", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(46, FRepHandleData(Class, {"TestContainerStructTheSecond", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(47, FRepHandleData(Class, {"TestContainerStructTheSecond", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(48, FRepHandleData(Class, {"TestContainerContainerStruct", "Struct_ContainerCar", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(49, FRepHandleData(Class, {"TestContainerContainerStruct", "Struct_ContainerCar", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(50, FRepHandleData(Class, {"TestContainerContainerStruct", "Struct_ContainerPlane", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(51, FRepHandleData(Class, {"TestContainerContainerStruct", "Struct_ContainerPlane", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(52, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerDog", "Struct_ContainerCar", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(53, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerDog", "Struct_ContainerCar", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(54, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerDog", "Struct_ContainerPlane", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(55, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerDog", "Struct_ContainerPlane", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(56, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerCat", "Struct_ContainerCar", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(57, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerCat", "Struct_ContainerCar", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(58, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerCat", "Struct_ContainerPlane", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(59, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerCat", "Struct_ContainerPlane", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(60, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerDog", "Struct_ContainerCar", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(61, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerDog", "Struct_ContainerCar", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(62, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerDog", "Struct_ContainerPlane", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(63, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerDog", "Struct_ContainerPlane", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(64, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerCat", "Struct_ContainerCar", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(65, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerCat", "Struct_ContainerCar", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(66, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerCat", "Struct_ContainerPlane", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(67, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerCat", "Struct_ContainerPlane", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(68, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerCar", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(69, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerCar", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(70, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerPlane", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(71, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerPlane", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(72, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_Container", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(73, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_Container", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+>>>>>>> More testing
 	RepHandleToPropertyMap.Add(74, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_Root", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(75, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
 >>>>>>> Test code for UNR-334:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
@@ -1166,10 +1199,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			}
 			break;
 		}
-		case 44: // field_testcontainerstruct_structfuck_rootprop
+		case 44: // field_testcontainerstruct_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
+<<<<<<< HEAD
 <<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update& OutUpdate) const
 {
@@ -1177,209 +1211,212 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_Migratable(const 
 
 =======
 			OutUpdate.set_field_testcontainerstruct_structfuck_rootprop(int32_t(Value));
+=======
+			OutUpdate.set_field_testcontainerstruct_structred_rootprop(int32_t(Value));
+>>>>>>> More testing
 			break;
 		}
-		case 45: // field_testcontainerstruct_structshit_rootprop
+		case 45: // field_testcontainerstruct_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainerstruct_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainerstruct_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 46: // field_testcontainerstructthesecond_structfuck_rootprop
+		case 46: // field_testcontainerstructthesecond_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainerstructthesecond_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainerstructthesecond_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 47: // field_testcontainerstructthesecond_structshit_rootprop
+		case 47: // field_testcontainerstructthesecond_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainerstructthesecond_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainerstructthesecond_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 48: // field_testcontainercontainerstruct_structcontainercock_structfuck_rootprop
+		case 48: // field_testcontainercontainerstruct_structcontainercar_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainerstruct_structcontainercock_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainercontainerstruct_structcontainercar_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 49: // field_testcontainercontainerstruct_structcontainercock_structshit_rootprop
+		case 49: // field_testcontainercontainerstruct_structcontainercar_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainerstruct_structcontainercock_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainercontainerstruct_structcontainercar_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 50: // field_testcontainercontainerstruct_structcontainerdick_structfuck_rootprop
+		case 50: // field_testcontainercontainerstruct_structcontainerplane_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainerstruct_structcontainerdick_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainercontainerstruct_structcontainerplane_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 51: // field_testcontainercontainerstruct_structcontainerdick_structshit_rootprop
+		case 51: // field_testcontainercontainerstruct_structcontainerplane_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainerstruct_structcontainerdick_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainercontainerstruct_structcontainerplane_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 52: // field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structfuck_rootprop
+		case 52: // field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 53: // field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structshit_rootprop
+		case 53: // field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 54: // field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structfuck_rootprop
+		case 54: // field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 55: // field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structshit_rootprop
+		case 55: // field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 56: // field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structfuck_rootprop
+		case 56: // field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 57: // field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structshit_rootprop
+		case 57: // field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 58: // field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structfuck_rootprop
+		case 58: // field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 59: // field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structshit_rootprop
+		case 59: // field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 60: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structfuck_rootprop
+		case 60: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 61: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structshit_rootprop
+		case 61: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 62: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structfuck_rootprop
+		case 62: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 63: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structshit_rootprop
+		case 63: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 64: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structfuck_rootprop
+		case 64: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 65: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structshit_rootprop
+		case 65: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 66: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structfuck_rootprop
+		case 66: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 67: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structshit_rootprop
+		case 67: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 68: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structfuck_rootprop
+		case 68: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 69: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structshit_rootprop
+		case 69: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 70: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structfuck_rootprop
+		case 70: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 71: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structshit_rootprop
+		case 71: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 72: // field_testtheonestructtorulethemall_structcontainer_structfuck_rootprop
+		case 72: // field_testtheonestructtorulethemall_structcontainer_structred_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainer_structfuck_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainer_structred_rootprop(int32_t(Value));
 			break;
 		}
-		case 73: // field_testtheonestructtorulethemall_structcontainer_structshit_rootprop
+		case 73: // field_testtheonestructtorulethemall_structcontainer_structblue_rootprop
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainer_structshit_rootprop(int32_t(Value));
+			OutUpdate.set_field_testtheonestructtorulethemall_structcontainer_structblue_rootprop(int32_t(Value));
 			break;
 		}
 		case 74: // field_testtheonestructtorulethemall_structroot_rootprop
@@ -2807,9 +2844,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainerstruct_structfuck_rootprop().empty())
+	if (!Update.field_testcontainerstruct_structred_rootprop().empty())
 	{
-		// field_testcontainerstruct_structfuck_rootprop
+		// field_testcontainerstruct_structred_rootprop
 		uint16 Handle = 44;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2818,8 +2855,11 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData::Update& Update) const
 =======
+=======
+>>>>>>> More testing
 <<<<<<< HEAD:Game/Source/SampleGame/Generated/SpatialTypeBinding_SampleGameCharacter.cpp
 void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update& Update) const
 >>>>>>> Test code for UNR-334
@@ -2837,6 +2877,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_NetMulticastRPCs(wor
 void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 =======
 			Value = (*Update.field_testcontainerstruct_structfuck_rootprop().data());
+=======
+			Value = (*Update.field_testcontainerstruct_structred_rootprop().data());
+>>>>>>> More testing
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2848,9 +2891,9 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainerstruct_structshit_rootprop().empty())
+	if (!Update.field_testcontainerstruct_structblue_rootprop().empty())
 	{
-		// field_testcontainerstruct_structshit_rootprop
+		// field_testcontainerstruct_structblue_rootprop
 		uint16 Handle = 45;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2868,7 +2911,7 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 >>>>>>> Test code for UNR-334
 
-			Value = (*Update.field_testcontainerstruct_structshit_rootprop().data());
+			Value = (*Update.field_testcontainerstruct_structblue_rootprop().data());
 
 <<<<<<< HEAD
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Rootmotiondebugclientprintonscreen>(TargetObjectRef.entity(), RPCPayload, 0);
@@ -2892,9 +2935,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainerstructthesecond_structfuck_rootprop().empty())
+	if (!Update.field_testcontainerstructthesecond_structred_rootprop().empty())
 	{
-		// field_testcontainerstructthesecond_structfuck_rootprop
+		// field_testcontainerstructthesecond_structred_rootprop
 		uint16 Handle = 46;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2903,10 +2946,14 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ClientVeryShortAdjustPositionRequest RPCPayload;
 =======
 			Value = (*Update.field_testcontainerstructthesecond_structfuck_rootprop().data());
+=======
+			Value = (*Update.field_testcontainerstructthesecond_structred_rootprop().data());
+>>>>>>> More testing
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2918,9 +2965,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainerstructthesecond_structshit_rootprop().empty())
+	if (!Update.field_testcontainerstructthesecond_structblue_rootprop().empty())
 	{
-		// field_testcontainerstructthesecond_structshit_rootprop
+		// field_testcontainerstructthesecond_structblue_rootprop
 		uint16 Handle = 47;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2928,7 +2975,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainerstructthesecond_structshit_rootprop().data());
+			Value = (*Update.field_testcontainerstructthesecond_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2940,9 +2987,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainerstruct_structcontainercock_structfuck_rootprop().empty())
+	if (!Update.field_testcontainercontainerstruct_structcontainercar_structred_rootprop().empty())
 	{
-		// field_testcontainercontainerstruct_structcontainercock_structfuck_rootprop
+		// field_testcontainercontainerstruct_structcontainercar_structred_rootprop
 		uint16 Handle = 48;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2950,7 +2997,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainerstruct_structcontainercock_structfuck_rootprop().data());
+			Value = (*Update.field_testcontainercontainerstruct_structcontainercar_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2962,9 +3009,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainerstruct_structcontainercock_structshit_rootprop().empty())
+	if (!Update.field_testcontainercontainerstruct_structcontainercar_structblue_rootprop().empty())
 	{
-		// field_testcontainercontainerstruct_structcontainercock_structshit_rootprop
+		// field_testcontainercontainerstruct_structcontainercar_structblue_rootprop
 		uint16 Handle = 49;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2972,7 +3019,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainerstruct_structcontainercock_structshit_rootprop().data());
+			Value = (*Update.field_testcontainercontainerstruct_structcontainercar_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2984,9 +3031,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainerstruct_structcontainerdick_structfuck_rootprop().empty())
+	if (!Update.field_testcontainercontainerstruct_structcontainerplane_structred_rootprop().empty())
 	{
-		// field_testcontainercontainerstruct_structcontainerdick_structfuck_rootprop
+		// field_testcontainercontainerstruct_structcontainerplane_structred_rootprop
 		uint16 Handle = 50;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2994,7 +3041,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainerstruct_structcontainerdick_structfuck_rootprop().data());
+			Value = (*Update.field_testcontainercontainerstruct_structcontainerplane_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3006,9 +3053,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainerstruct_structcontainerdick_structshit_rootprop().empty())
+	if (!Update.field_testcontainercontainerstruct_structcontainerplane_structblue_rootprop().empty())
 	{
-		// field_testcontainercontainerstruct_structcontainerdick_structshit_rootprop
+		// field_testcontainercontainerstruct_structcontainerplane_structblue_rootprop
 		uint16 Handle = 51;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3016,7 +3063,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainerstruct_structcontainerdick_structshit_rootprop().data());
+			Value = (*Update.field_testcontainercontainerstruct_structcontainerplane_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3028,9 +3075,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structfuck_rootprop().empty())
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structred_rootprop().empty())
 	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structfuck_rootprop
+		// field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structred_rootprop
 		uint16 Handle = 52;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3038,7 +3085,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structfuck_rootprop().data());
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3050,9 +3097,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structshit_rootprop().empty())
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structblue_rootprop().empty())
 	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structshit_rootprop
+		// field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structblue_rootprop
 		uint16 Handle = 53;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3060,7 +3107,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainercock_structshit_rootprop().data());
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3072,9 +3119,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structfuck_rootprop().empty())
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structred_rootprop().empty())
 	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structfuck_rootprop
+		// field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structred_rootprop
 		uint16 Handle = 54;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3082,7 +3129,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structfuck_rootprop().data());
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3094,9 +3141,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structshit_rootprop().empty())
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structblue_rootprop().empty())
 	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structshit_rootprop
+		// field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structblue_rootprop
 		uint16 Handle = 55;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3104,7 +3151,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainertwat_structcontainerdick_structshit_rootprop().data());
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3116,9 +3163,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structfuck_rootprop().empty())
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structred_rootprop().empty())
 	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structfuck_rootprop
+		// field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structred_rootprop
 		uint16 Handle = 56;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3126,7 +3173,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structfuck_rootprop().data());
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3138,9 +3185,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structshit_rootprop().empty())
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structblue_rootprop().empty())
 	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structshit_rootprop
+		// field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structblue_rootprop
 		uint16 Handle = 57;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3148,7 +3195,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainercock_structshit_rootprop().data());
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3160,9 +3207,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structfuck_rootprop().empty())
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structred_rootprop().empty())
 	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structfuck_rootprop
+		// field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structred_rootprop
 		uint16 Handle = 58;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3170,7 +3217,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structfuck_rootprop().data());
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3182,9 +3229,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structshit_rootprop().empty())
+	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structblue_rootprop().empty())
 	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structshit_rootprop
+		// field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structblue_rootprop
 		uint16 Handle = 59;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3192,7 +3239,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercunt_structcontainerdick_structshit_rootprop().data());
+			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3204,9 +3251,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structfuck_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structred_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structfuck_rootprop
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structred_rootprop
 		uint16 Handle = 60;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3214,7 +3261,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structfuck_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3226,9 +3273,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structshit_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structblue_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structshit_rootprop
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structblue_rootprop
 		uint16 Handle = 61;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3236,7 +3283,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainercock_structshit_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3248,9 +3295,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structfuck_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structred_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structfuck_rootprop
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structred_rootprop
 		uint16 Handle = 62;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3258,7 +3305,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structfuck_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3270,9 +3317,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structshit_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structblue_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structshit_rootprop
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structblue_rootprop
 		uint16 Handle = 63;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3280,7 +3327,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainertwat_structcontainerdick_structshit_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3292,9 +3339,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structfuck_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structred_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structfuck_rootprop
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structred_rootprop
 		uint16 Handle = 64;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3302,7 +3349,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structfuck_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3314,9 +3361,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structshit_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structblue_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structshit_rootprop
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structblue_rootprop
 		uint16 Handle = 65;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3324,7 +3371,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainercock_structshit_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3336,9 +3383,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structfuck_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structred_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structfuck_rootprop
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structred_rootprop
 		uint16 Handle = 66;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3346,7 +3393,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structfuck_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3358,9 +3405,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structshit_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structblue_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structshit_rootprop
+		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structblue_rootprop
 		uint16 Handle = 67;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3368,7 +3415,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercunt_structcontainerdick_structshit_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3380,9 +3427,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structfuck_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structred_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structfuck_rootprop
+		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structred_rootprop
 		uint16 Handle = 68;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3390,7 +3437,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structfuck_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3402,9 +3449,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structshit_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structblue_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structshit_rootprop
+		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structblue_rootprop
 		uint16 Handle = 69;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3412,7 +3459,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercock_structshit_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3424,9 +3471,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structfuck_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structred_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structfuck_rootprop
+		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structred_rootprop
 		uint16 Handle = 70;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3434,7 +3481,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structfuck_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3446,9 +3493,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structshit_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structblue_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structshit_rootprop
+		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structblue_rootprop
 		uint16 Handle = 71;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3456,7 +3503,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerdick_structshit_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3468,9 +3515,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainer_structfuck_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainer_structred_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainer_structfuck_rootprop
+		// field_testtheonestructtorulethemall_structcontainer_structred_rootprop
 		uint16 Handle = 72;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3478,7 +3525,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainer_structfuck_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainer_structred_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3490,9 +3537,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainer_structshit_rootprop().empty())
+	if (!Update.field_testtheonestructtorulethemall_structcontainer_structblue_rootprop().empty())
 	{
-		// field_testtheonestructtorulethemall_structcontainer_structshit_rootprop
+		// field_testtheonestructtorulethemall_structcontainer_structblue_rootprop
 		uint16 Handle = 73;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -3500,7 +3547,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainer_structshit_rootprop().data());
+			Value = (*Update.field_testtheonestructtorulethemall_structcontainer_structblue_rootprop().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
