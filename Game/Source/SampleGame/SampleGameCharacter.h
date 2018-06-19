@@ -13,16 +13,16 @@ struct FRootStruct
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY()
-	int RootProp;
+	int RootProp; // Root Prop int
 };
 
 USTRUCT()
-struct FContainerStruct
+struct FContainerStruct // Parent
 {
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY()
-	FRootStruct Struct_Red;
+	FRootStruct Struct_Red; // Ignored
 
 	UPROPERTY()
 	FRootStruct Struct_Blue;
