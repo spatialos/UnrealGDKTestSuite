@@ -41,24 +41,25 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 {
 	Super::Init(InInterop, InPackageMap);
 
-	RPCToSenderMap.Emplace("Client_TestFunc", &USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_SendCommand);
-	RPCToSenderMap.Emplace("Client_TestConstArgs", &USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_SendCommand);
-	RPCToSenderMap.Emplace("RootMotionDebugClientPrintOnScreen", &USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_SendCommand);
-	RPCToSenderMap.Emplace("ClientVeryShortAdjustPosition", &USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_SendCommand);
-	RPCToSenderMap.Emplace("ClientCheatWalk", &USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendCommand);
-	RPCToSenderMap.Emplace("ClientCheatGhost", &USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendCommand);
-	RPCToSenderMap.Emplace("ClientCheatFly", &USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendCommand);
-	RPCToSenderMap.Emplace("ClientAdjustRootMotionSourcePosition", &USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_SendCommand);
-	RPCToSenderMap.Emplace("ClientAdjustRootMotionPosition", &USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_SendCommand);
-	RPCToSenderMap.Emplace("ClientAdjustPosition", &USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendCommand);
-	RPCToSenderMap.Emplace("ClientAckGoodMove", &USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendCommand);
-	RPCToSenderMap.Emplace("Server_TestFunc", &USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_SendCommand);
-	RPCToSenderMap.Emplace("ServerMoveOld", &USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendCommand);
-	RPCToSenderMap.Emplace("ServerMoveNoBase", &USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendCommand);
-	RPCToSenderMap.Emplace("ServerMoveDualNoBase", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendCommand);
-	RPCToSenderMap.Emplace("ServerMoveDualHybridRootMotion", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_SendCommand);
-	RPCToSenderMap.Emplace("ServerMoveDual", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendCommand);
-	RPCToSenderMap.Emplace("ServerMove", &USpatialTypeBinding_SampleGameCharacter::ServerMove_SendCommand);
+	RPCToSenderMap.Emplace("Client_TestFunc", &USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_SendRPC);
+	RPCToSenderMap.Emplace("Client_TestConstArgs", &USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_SendRPC);
+	RPCToSenderMap.Emplace("RootMotionDebugClientPrintOnScreen", &USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_SendRPC);
+	RPCToSenderMap.Emplace("ClientVeryShortAdjustPosition", &USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_SendRPC);
+	RPCToSenderMap.Emplace("ClientCheatWalk", &USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendRPC);
+	RPCToSenderMap.Emplace("ClientCheatGhost", &USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendRPC);
+	RPCToSenderMap.Emplace("ClientCheatFly", &USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendRPC);
+	RPCToSenderMap.Emplace("ClientAdjustRootMotionSourcePosition", &USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_SendRPC);
+	RPCToSenderMap.Emplace("ClientAdjustRootMotionPosition", &USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_SendRPC);
+	RPCToSenderMap.Emplace("ClientAdjustPosition", &USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC);
+	RPCToSenderMap.Emplace("ClientAckGoodMove", &USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendRPC);
+	RPCToSenderMap.Emplace("Server_TestFunc", &USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_SendRPC);
+	RPCToSenderMap.Emplace("ServerMoveOld", &USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendRPC);
+	RPCToSenderMap.Emplace("ServerMoveNoBase", &USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC);
+	RPCToSenderMap.Emplace("ServerMoveDualNoBase", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC);
+	RPCToSenderMap.Emplace("ServerMoveDualHybridRootMotion", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_SendRPC);
+	RPCToSenderMap.Emplace("ServerMoveDual", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC);
+	RPCToSenderMap.Emplace("ServerMove", &USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC);
+	RPCToSenderMap.Emplace("TestMulticast", &USpatialTypeBinding_SampleGameCharacter::TestMulticast_SendRPC);
 
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("SampleGameCharacter"));
 
@@ -192,19 +193,29 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView()
 			ReceiveUpdate_Migratable(ActorChannel, Op.Update);
 		}));
 	}
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>& Op)
+	{
+		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::ComponentId))
+		{
+			return;
+		}
+		ReceiveUpdate_NetMulticastRPCs(Op.EntityId, Op.Update);
+	}));
 
 	using ClientRPCCommandTypes = improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclienttestfunc>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclienttestconstargs>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterrootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientveryshortadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatwalk>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatghost>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatfly>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionsourceposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientackgoodmove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclienttestfunc>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclienttestconstargs>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterrootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientveryshortadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatwalk>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatghost>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatfly>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionsourceposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientackgoodmove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclienttestfunc>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclienttestconstargs>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterrootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnCommandResponse, this, std::placeholders::_1)));
@@ -218,13 +229,13 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView()
 	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientackgoodmove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandResponse, this, std::placeholders::_1)));
 
 	using ServerRPCCommandTypes = improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservertestfunc>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedual>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservertestfunc>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedual>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservertestfunc>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandResponse, this, std::placeholders::_1)));
@@ -313,6 +324,7 @@ worker::Entity USpatialTypeBinding_SampleGameCharacter::CreateActorEntity(const 
 		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>(MigratableData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs>(improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs>(improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>(improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
@@ -991,69 +1003,61 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 		{
 			const TArray<float>& Value = *(reinterpret_cast<TArray<float> const*>(Data));
 
+			::worker::List<float> List;
+			for(int i = 0; i < Value.Num(); i++)
 			{
-				::worker::List<float> List;
-				for(int i = 0; i < Value.Num(); i++)
-				{
-					List.emplace_back(Value[i]);
-				}
-				OutUpdate.set_field_testpodarray(List);
+				List.emplace_back(Value[i]);
 			}
+			OutUpdate.set_field_testpodarray(List);
 			break;
 		}
 		case 45: // field_testmixedstructarray
 		{
 			const TArray<FTestMixedStruct>& Value = *(reinterpret_cast<TArray<FTestMixedStruct> const*>(Data));
 
+			::worker::List<std::string> List;
+			for(int i = 0; i < Value.Num(); i++)
 			{
-				::worker::List<std::string> List;
-				for(int i = 0; i < Value.Num(); i++)
-				{
-					TArray<uint8> ValueData;
-					FMemoryWriter ValueDataWriter(ValueData);
-					FTestMixedStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FTestMixedStruct*>(&Value[i])));
-					List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-				}
-				OutUpdate.set_field_testmixedstructarray(List);
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				FTestMixedStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FTestMixedStruct*>(&Value[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
+			OutUpdate.set_field_testmixedstructarray(List);
 			break;
 		}
 		case 46: // field_testpodstructarray
 		{
 			const TArray<FTestPODStruct>& Value = *(reinterpret_cast<TArray<FTestPODStruct> const*>(Data));
 
+			::worker::List<std::string> List;
+			for(int i = 0; i < Value.Num(); i++)
 			{
-				::worker::List<std::string> List;
-				for(int i = 0; i < Value.Num(); i++)
-				{
-					TArray<uint8> ValueData;
-					FMemoryWriter ValueDataWriter(ValueData);
-					FTestPODStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FTestPODStruct*>(&Value[i])));
-					List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-				}
-				OutUpdate.set_field_testpodstructarray(List);
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				FTestPODStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FTestPODStruct*>(&Value[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
+			OutUpdate.set_field_testpodstructarray(List);
 			break;
 		}
 		case 47: // field_testnetserializearray
 		{
 			const TArray<FRepMovement>& Value = *(reinterpret_cast<TArray<FRepMovement> const*>(Data));
 
+			::worker::List<std::string> List;
+			for(int i = 0; i < Value.Num(); i++)
 			{
-				::worker::List<std::string> List;
-				for(int i = 0; i < Value.Num(); i++)
 				{
-					{
-						TArray<uint8> ValueData;
-						FMemoryWriter ValueDataWriter(ValueData);
-						bool bSuccess = true;
-						(const_cast<FRepMovement&>(Value[i])).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-						checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
-						List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-					}
+					TArray<uint8> ValueData;
+					FMemoryWriter ValueDataWriter(ValueData);
+					bool bSuccess = true;
+					(const_cast<FRepMovement&>(Value[i])).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+					checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
+					List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 				}
-				OutUpdate.set_field_testnetserializearray(List);
 			}
+			OutUpdate.set_field_testnetserializearray(List);
 			break;
 		}
 		case 48: // field_testmixedstruct_ps
@@ -1202,14 +1206,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 		{
 			const TArray<ETest8Enum>& Value = *(reinterpret_cast<TArray<ETest8Enum> const*>(Data));
 
+			::worker::List<uint32> List;
+			for(int i = 0; i < Value.Num(); i++)
 			{
-				::worker::List<uint32> List;
-				for(int i = 0; i < Value.Num(); i++)
-				{
-					List.emplace_back(uint32(Value[i]));
-				}
-				OutUpdate.set_field_testenumtarray(List);
+				List.emplace_back(uint32(Value[i]));
 			}
+			OutUpdate.set_field_testenumtarray(List);
 			break;
 		}
 		case 67: // field_testuenum
@@ -1223,14 +1225,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 		{
 			const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& Value = *(reinterpret_cast<TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>> const*>(Data));
 
+			::worker::List<std::uint32_t> List;
+			for(int i = 0; i < Value.Num(); i++)
 			{
-				::worker::List<std::uint32_t> List;
-				for(int i = 0; i < Value.Num(); i++)
-				{
-					List.emplace_back(uint32_t(Value[i]));
-				}
-				OutUpdate.set_field_testuenumtarray(List);
+				List.emplace_back(uint32_t(Value[i]));
 			}
+			OutUpdate.set_field_testuenumtarray(List);
 			break;
 		}
 		case 69: // field_test8int
@@ -1307,34 +1307,30 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 		{
 			const TArray<FBar>& Value = *(reinterpret_cast<TArray<FBar> const*>(Data));
 
+			::worker::List<std::string> List;
+			for(int i = 0; i < Value.Num(); i++)
 			{
-				::worker::List<std::string> List;
-				for(int i = 0; i < Value.Num(); i++)
-				{
-					TArray<uint8> ValueData;
-					FMemoryWriter ValueDataWriter(ValueData);
-					FBar::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FBar*>(&Value[i])));
-					List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-				}
-				OutUpdate.set_field_bararray(List);
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				FBar::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FBar*>(&Value[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
+			OutUpdate.set_field_bararray(List);
 			break;
 		}
 		case 80: // field_testbar_cantreplicatethismember
 		{
 			const TArray<FFoo>& Value = *(reinterpret_cast<TArray<FFoo> const*>(Data));
 
+			::worker::List<std::string> List;
+			for(int i = 0; i < Value.Num(); i++)
 			{
-				::worker::List<std::string> List;
-				for(int i = 0; i < Value.Num(); i++)
-				{
-					TArray<uint8> ValueData;
-					FMemoryWriter ValueDataWriter(ValueData);
-					FFoo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FFoo*>(&Value[i])));
-					List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-				}
-				OutUpdate.set_field_testbar_cantreplicatethismember(List);
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				FFoo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FFoo*>(&Value[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
+			OutUpdate.set_field_testbar_cantreplicatethismember(List);
 			break;
 		}
 		case 81: // field_testbar_mystruct
@@ -3777,7 +3773,15 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_Migratable(USpatialA
 {
 }
 
-void USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::Update& Update)
+{
+	for (auto& event : Update.samplegamecharactertestmulticast())
+	{
+		TestMulticast_OnRPCPayload(EntityId, event);
+	}
+
+}
+void USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -3789,22 +3793,22 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_SendCommand(worker
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealClientTestFuncRequest Request;
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealClientTestFuncRequest RPCPayload;
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Client_TestFunc, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestfunc>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestfunc>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in SampleGameCharacter.generated.h (in a macro that is then put in SampleGameCharacter.h UCLASS macro)
 	SampleGameCharacter_eventClient_TestConstArgs_Parms StructuredParams = *static_cast<SampleGameCharacter_eventClient_TestConstArgs_Parms*>(Parameters);
@@ -3819,8 +3823,8 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_SendCommand(w
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealClientTestConstArgsRequest Request;
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealClientTestConstArgsRequest RPCPayload;
 		if (StructuredParams.ConstStruct.ConstObj != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ConstStruct.ConstObj);
@@ -3832,27 +3836,27 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_SendCommand(w
 			}
 			else
 			{
-				Request.set_field_conststruct_constobj(ObjectRef);
+				RPCPayload.set_field_conststruct_constobj(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_conststruct_constobj(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_conststruct_constobj(SpatialConstants::NULL_OBJECT_REF);
 		}
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Client_TestConstArgs, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestconstargs>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestconstargs>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventRootMotionDebugClientPrintOnScreen_Parms StructuredParams = *static_cast<Character_eventRootMotionDebugClientPrintOnScreen_Parms*>(Parameters);
@@ -3867,23 +3871,23 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealRootMotionDebugClientPrintOnScreenRequest Request;
-		Request.set_field_instring(TCHAR_TO_UTF8(*StructuredParams.InString));
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealRootMotionDebugClientPrintOnScreenRequest RPCPayload;
+		RPCPayload.set_field_instring(TCHAR_TO_UTF8(*StructuredParams.InString));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: RootMotionDebugClientPrintOnScreen, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventClientVeryShortAdjustPosition_Parms StructuredParams = *static_cast<Character_eventClientVeryShortAdjustPosition_Parms*>(Parameters);
@@ -3898,16 +3902,16 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealClientVeryShortAdjustPositionRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealClientVeryShortAdjustPositionRequest RPCPayload;
+		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			Request.set_field_newloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		if (StructuredParams.NewBase != nullptr)
 		{
@@ -3920,31 +3924,31 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			}
 			else
 			{
-				Request.set_field_newbase(ObjectRef);
+				RPCPayload.set_field_newbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
-		Request.set_field_bhasbase(StructuredParams.bHasBase);
-		Request.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		Request.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		RPCPayload.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
+		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
+		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
+		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientVeryShortAdjustPosition, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -3956,22 +3960,22 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendCommand(worker
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealClientCheatWalkRequest Request;
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealClientCheatWalkRequest RPCPayload;
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientCheatWalk, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -3983,22 +3987,22 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendCommand(worke
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealClientCheatGhostRequest Request;
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealClientCheatGhostRequest RPCPayload;
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientCheatGhost, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -4010,22 +4014,22 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendCommand(worker:
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealClientCheatFlyRequest Request;
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealClientCheatFlyRequest RPCPayload;
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientCheatFly, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventClientAdjustRootMotionSourcePosition_Parms StructuredParams = *static_cast<Character_eventClientAdjustRootMotionSourcePosition_Parms*>(Parameters);
@@ -4040,26 +4044,26 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealClientAdjustRootMotionSourcePositionRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealClientAdjustRootMotionSourcePositionRequest RPCPayload;
+		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FRootMotionSourceGroup&>(StructuredParams.ServerRootMotion)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
-			Request.set_field_serverrootmotion(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverrootmotion(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		Request.set_field_bhasanimrootmotion(StructuredParams.bHasAnimRootMotion);
-		Request.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
+		RPCPayload.set_field_bhasanimrootmotion(StructuredParams.bHasAnimRootMotion);
+		RPCPayload.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.ServerLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			Request.set_field_serverloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4067,9 +4071,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantizeNormal&>(StructuredParams.ServerRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
-			Request.set_field_serverrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		Request.set_field_servervelz(StructuredParams.ServerVelZ);
+		RPCPayload.set_field_servervelz(StructuredParams.ServerVelZ);
 		if (StructuredParams.ServerBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
@@ -4081,31 +4085,31 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			}
 			else
 			{
-				Request.set_field_serverbase(ObjectRef);
+				RPCPayload.set_field_serverbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
-		Request.set_field_bhasbase(StructuredParams.bHasBase);
-		Request.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		Request.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		RPCPayload.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
+		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
+		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
+		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientAdjustRootMotionSourcePosition, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventClientAdjustRootMotionPosition_Parms StructuredParams = *static_cast<Character_eventClientAdjustRootMotionPosition_Parms*>(Parameters);
@@ -4120,17 +4124,17 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealClientAdjustRootMotionPositionRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
-		Request.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealClientAdjustRootMotionPositionRequest RPCPayload;
+		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.ServerLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			Request.set_field_serverloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4138,9 +4142,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantizeNormal&>(StructuredParams.ServerRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
-			Request.set_field_serverrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		Request.set_field_servervelz(StructuredParams.ServerVelZ);
+		RPCPayload.set_field_servervelz(StructuredParams.ServerVelZ);
 		if (StructuredParams.ServerBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
@@ -4152,31 +4156,31 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 			}
 			else
 			{
-				Request.set_field_serverbase(ObjectRef);
+				RPCPayload.set_field_serverbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
-		Request.set_field_bhasbase(StructuredParams.bHasBase);
-		Request.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		Request.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		RPCPayload.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
+		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
+		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
+		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientAdjustRootMotionPosition, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventClientAdjustPosition_Parms StructuredParams = *static_cast<Character_eventClientAdjustPosition_Parms*>(Parameters);
@@ -4191,16 +4195,16 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendCommand(w
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealClientAdjustPositionRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealClientAdjustPositionRequest RPCPayload;
+		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			Request.set_field_newloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4208,7 +4212,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendCommand(w
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewVel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			Request.set_field_newvel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newvel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		if (StructuredParams.NewBase != nullptr)
 		{
@@ -4221,31 +4225,31 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendCommand(w
 			}
 			else
 			{
-				Request.set_field_newbase(ObjectRef);
+				RPCPayload.set_field_newbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
-		Request.set_field_bhasbase(StructuredParams.bHasBase);
-		Request.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		Request.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		RPCPayload.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
+		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
+		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
+		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientAdjustPosition, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventClientAckGoodMove_Parms StructuredParams = *static_cast<Character_eventClientAckGoodMove_Parms*>(Parameters);
@@ -4260,23 +4264,23 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendCommand(work
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealClientAckGoodMoveRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealClientAckGoodMoveRequest RPCPayload;
+		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientAckGoodMove, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -4288,22 +4292,22 @@ void USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_SendCommand(worker
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealServerTestFuncRequest Request;
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealServerTestFuncRequest RPCPayload;
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Server_TestFunc, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservertestfunc>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservertestfunc>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventServerMoveOld_Parms StructuredParams = *static_cast<Character_eventServerMoveOld_Parms*>(Parameters);
@@ -4318,32 +4322,32 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendCommand(worker::
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealServerMoveOldRequest Request;
-		Request.set_field_oldtimestamp(StructuredParams.OldTimeStamp);
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealServerMoveOldRequest RPCPayload;
+		RPCPayload.set_field_oldtimestamp(StructuredParams.OldTimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.OldAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			Request.set_field_oldaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_oldaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		Request.set_field_oldmoveflags(uint32_t(StructuredParams.OldMoveFlags));
+		RPCPayload.set_field_oldmoveflags(uint32_t(StructuredParams.OldMoveFlags));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerMoveOld, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventServerMoveNoBase_Parms StructuredParams = *static_cast<Character_eventServerMoveNoBase_Parms*>(Parameters);
@@ -4358,16 +4362,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendCommand(worke
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealServerMoveNoBaseRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealServerMoveNoBaseRequest RPCPayload;
+		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			Request.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4375,26 +4379,26 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendCommand(worke
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			Request.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		Request.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
-		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		Request.set_field_view(uint32_t(StructuredParams.View));
-		Request.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		RPCPayload.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
+		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
+		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerMoveNoBase, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventServerMoveDualNoBase_Parms StructuredParams = *static_cast<Character_eventServerMoveDualNoBase_Parms*>(Parameters);
@@ -4409,27 +4413,27 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendCommand(w
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealServerMoveDualNoBaseRequest Request;
-		Request.set_field_timestamp0(StructuredParams.TimeStamp0);
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealServerMoveDualNoBaseRequest RPCPayload;
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			Request.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		Request.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		Request.set_field_view0(uint32_t(StructuredParams.View0));
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
+		RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
+		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			Request.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4437,26 +4441,26 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendCommand(w
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			Request.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		Request.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		Request.set_field_view(uint32_t(StructuredParams.View));
-		Request.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
+		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
+		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerMoveDualNoBase, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventServerMoveDualHybridRootMotion_Parms StructuredParams = *static_cast<Character_eventServerMoveDualHybridRootMotion_Parms*>(Parameters);
@@ -4471,27 +4475,27 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealServerMoveDualHybridRootMotionRequest Request;
-		Request.set_field_timestamp0(StructuredParams.TimeStamp0);
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealServerMoveDualHybridRootMotionRequest RPCPayload;
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			Request.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		Request.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		Request.set_field_view0(uint32_t(StructuredParams.View0));
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
+		RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
+		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			Request.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4499,11 +4503,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			Request.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		Request.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		Request.set_field_view(uint32_t(StructuredParams.View));
+		RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
+		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
 		if (StructuredParams.ClientMovementBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
@@ -4515,29 +4519,29 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 			}
 			else
 			{
-				Request.set_field_clientmovementbase(ObjectRef);
+				RPCPayload.set_field_clientmovementbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		Request.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
+		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerMoveDualHybridRootMotion, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventServerMoveDual_Parms StructuredParams = *static_cast<Character_eventServerMoveDual_Parms*>(Parameters);
@@ -4552,27 +4556,27 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendCommand(worker:
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealServerMoveDualRequest Request;
-		Request.set_field_timestamp0(StructuredParams.TimeStamp0);
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealServerMoveDualRequest RPCPayload;
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			Request.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		Request.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		Request.set_field_view0(uint32_t(StructuredParams.View0));
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
+		RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
+		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			Request.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4580,11 +4584,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendCommand(worker:
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			Request.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		Request.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		Request.set_field_view(uint32_t(StructuredParams.View));
+		RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
+		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
 		if (StructuredParams.ClientMovementBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
@@ -4596,29 +4600,29 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendCommand(worker:
 			}
 			else
 			{
-				Request.set_field_clientmovementbase(ObjectRef);
+				RPCPayload.set_field_clientmovementbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		Request.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
+		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerMoveDual, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
 	Character_eventServerMove_Parms StructuredParams = *static_cast<Character_eventServerMove_Parms*>(Parameters);
@@ -4633,16 +4637,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendCommand(worker::Con
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealServerMoveRequest Request;
-		Request.set_field_timestamp(StructuredParams.TimeStamp);
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealServerMoveRequest RPCPayload;
+		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			Request.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4650,11 +4654,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendCommand(worker::Con
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			Request.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		Request.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
-		Request.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		Request.set_field_view(uint32_t(StructuredParams.View));
+		RPCPayload.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
+		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
 		if (StructuredParams.ClientMovementBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
@@ -4666,29 +4670,59 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendCommand(worker::Con
 			}
 			else
 			{
-				Request.set_field_clientmovementbase(ObjectRef);
+				RPCPayload.set_field_clientmovementbase(ObjectRef);
 			}
 		}
 		else
 		{
-			Request.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
 		}
-		Request.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		Request.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
+		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerMove, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ false);
-}
 
-void USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestfunc>& Op)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::TestMulticast_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+{
+	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
+	{
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+		{
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC TestMulticast queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
+		}
+
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealTestMulticastRequest RPCPayload;
+
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: TestMulticast, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+			improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::Update Update;
+			Update.add_samplegamecharactertestmulticast(RPCPayload);
+			checkf(Update.samplegamecharactertestmulticast().size() == 1, TEXT("TestMulticast_SendCommand: More than one event being sent"));
+			Connection->SendComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>(TargetObjectRef.entity(), Update);
+			return {};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestfunc>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4696,13 +4730,13 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_OnCommandRequest(c
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Client_TestFunc_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Client_TestFunc_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: Client_TestFunc_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: Client_TestFunc_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -4719,7 +4753,7 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_OnCommandRequest(c
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Client_TestFunc_OnCommandRequest: Function not found. Object: %s, Function: Client_TestFunc."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Client_TestFunc_OnRPCPayload: Function not found. Object: %s, Function: Client_TestFunc."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -4729,10 +4763,9 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_OnCommandRequest(c
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestfunc>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestconstargs>& Op)
+void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestconstargs>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4740,13 +4773,13 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_OnCommandRequ
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Client_TestConstArgs_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Client_TestConstArgs_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: Client_TestConstArgs_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: Client_TestConstArgs_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -4775,7 +4808,7 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_OnCommandRequ
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Client_TestConstArgs_OnCommandRequest: Parameters.ConstStruct.ConstObj %s is not resolved on this worker."),
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Client_TestConstArgs_OnRPCPayload: Parameters.ConstStruct.ConstObj %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
@@ -4795,7 +4828,7 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_OnCommandRequ
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Client_TestConstArgs_OnCommandRequest: Function not found. Object: %s, Function: Client_TestConstArgs."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Client_TestConstArgs_OnRPCPayload: Function not found. Object: %s, Function: Client_TestConstArgs."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -4805,10 +4838,9 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_OnCommandRequ
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestconstargs>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>& Op)
+void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4816,13 +4848,13 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RootMotionDebugClientPrintOnScreen_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RootMotionDebugClientPrintOnScreen_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: RootMotionDebugClientPrintOnScreen_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: RootMotionDebugClientPrintOnScreen_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -4846,7 +4878,7 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: RootMotionDebugClientPrintOnScreen_OnCommandRequest: Function not found. Object: %s, Function: RootMotionDebugClientPrintOnScreen."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: RootMotionDebugClientPrintOnScreen_OnRPCPayload: Function not found. Object: %s, Function: RootMotionDebugClientPrintOnScreen."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -4856,10 +4888,9 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4867,13 +4898,13 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCo
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientVeryShortAdjustPosition_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientVeryShortAdjustPosition_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ClientVeryShortAdjustPosition_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ClientVeryShortAdjustPosition_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -4912,7 +4943,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCo
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientVeryShortAdjustPosition_OnCommandRequest: Parameters.NewBase %s is not resolved on this worker."),
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientVeryShortAdjustPosition_OnRPCPayload: Parameters.NewBase %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
@@ -4936,7 +4967,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCo
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientVeryShortAdjustPosition_OnCommandRequest: Function not found. Object: %s, Function: ClientVeryShortAdjustPosition."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientVeryShortAdjustPosition_OnRPCPayload: Function not found. Object: %s, Function: ClientVeryShortAdjustPosition."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -4946,10 +4977,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCo
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4957,13 +4987,13 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandRequest(c
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientCheatWalk_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientCheatWalk_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ClientCheatWalk_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ClientCheatWalk_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -4980,7 +5010,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandRequest(c
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientCheatWalk_OnCommandRequest: Function not found. Object: %s, Function: ClientCheatWalk."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientCheatWalk_OnRPCPayload: Function not found. Object: %s, Function: ClientCheatWalk."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -4990,10 +5020,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandRequest(c
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5001,13 +5030,13 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandRequest(
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientCheatGhost_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientCheatGhost_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ClientCheatGhost_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ClientCheatGhost_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5024,7 +5053,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandRequest(
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientCheatGhost_OnCommandRequest: Function not found. Object: %s, Function: ClientCheatGhost."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientCheatGhost_OnRPCPayload: Function not found. Object: %s, Function: ClientCheatGhost."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -5034,10 +5063,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandRequest(
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5045,13 +5073,13 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandRequest(co
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientCheatFly_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientCheatFly_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ClientCheatFly_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ClientCheatFly_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5068,7 +5096,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandRequest(co
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientCheatFly_OnCommandRequest: Function not found. Object: %s, Function: ClientCheatFly."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientCheatFly_OnRPCPayload: Function not found. Object: %s, Function: ClientCheatFly."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -5078,10 +5106,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandRequest(co
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5089,13 +5116,13 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAdjustRootMotionSourcePosition_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAdjustRootMotionSourcePosition_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ClientAdjustRootMotionSourcePosition_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ClientAdjustRootMotionSourcePosition_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5155,7 +5182,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAdjustRootMotionSourcePosition_OnCommandRequest: Parameters.ServerBase %s is not resolved on this worker."),
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAdjustRootMotionSourcePosition_OnRPCPayload: Parameters.ServerBase %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
@@ -5179,7 +5206,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientAdjustRootMotionSourcePosition_OnCommandRequest: Function not found. Object: %s, Function: ClientAdjustRootMotionSourcePosition."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientAdjustRootMotionSourcePosition_OnRPCPayload: Function not found. Object: %s, Function: ClientAdjustRootMotionSourcePosition."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -5189,10 +5216,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5200,13 +5226,13 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnC
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAdjustRootMotionPosition_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAdjustRootMotionPosition_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ClientAdjustRootMotionPosition_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ClientAdjustRootMotionPosition_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5256,7 +5282,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnC
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAdjustRootMotionPosition_OnCommandRequest: Parameters.ServerBase %s is not resolved on this worker."),
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAdjustRootMotionPosition_OnRPCPayload: Parameters.ServerBase %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
@@ -5280,7 +5306,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnC
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientAdjustRootMotionPosition_OnCommandRequest: Function not found. Object: %s, Function: ClientAdjustRootMotionPosition."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientAdjustRootMotionPosition_OnRPCPayload: Function not found. Object: %s, Function: ClientAdjustRootMotionPosition."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -5290,10 +5316,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnC
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5301,13 +5326,13 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandRequ
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAdjustPosition_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAdjustPosition_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ClientAdjustPosition_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ClientAdjustPosition_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5355,7 +5380,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandRequ
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAdjustPosition_OnCommandRequest: Parameters.NewBase %s is not resolved on this worker."),
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAdjustPosition_OnRPCPayload: Parameters.NewBase %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
@@ -5379,7 +5404,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandRequ
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientAdjustPosition_OnCommandRequest: Function not found. Object: %s, Function: ClientAdjustPosition."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientAdjustPosition_OnRPCPayload: Function not found. Object: %s, Function: ClientAdjustPosition."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -5389,10 +5414,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandRequ
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5400,13 +5424,13 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandRequest
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAckGoodMove_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientAckGoodMove_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ClientAckGoodMove_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ClientAckGoodMove_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5430,7 +5454,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandRequest
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientAckGoodMove_OnCommandRequest: Function not found. Object: %s, Function: ClientAckGoodMove."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientAckGoodMove_OnRPCPayload: Function not found. Object: %s, Function: ClientAckGoodMove."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -5440,10 +5464,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandRequest
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservertestfunc>& Op)
+void USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservertestfunc>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5451,13 +5474,13 @@ void USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_OnCommandRequest(c
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_TestFunc_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_TestFunc_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: Server_TestFunc_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: Server_TestFunc_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5474,7 +5497,7 @@ void USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_OnCommandRequest(c
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_TestFunc_OnCommandRequest: Function not found. Object: %s, Function: Server_TestFunc."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_TestFunc_OnRPCPayload: Function not found. Object: %s, Function: Server_TestFunc."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -5484,10 +5507,9 @@ void USpatialTypeBinding_SampleGameCharacter::Server_TestFunc_OnCommandRequest(c
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservertestfunc>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5495,13 +5517,13 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandRequest(con
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveOld_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveOld_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ServerMoveOld_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ServerMoveOld_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5535,7 +5557,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandRequest(con
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerMoveOld_OnCommandRequest: Function not found. Object: %s, Function: ServerMoveOld."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerMoveOld_OnRPCPayload: Function not found. Object: %s, Function: ServerMoveOld."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -5545,10 +5567,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandRequest(con
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5556,13 +5577,13 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandRequest(
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveNoBase_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveNoBase_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ServerMoveNoBase_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ServerMoveNoBase_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5608,7 +5629,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandRequest(
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerMoveNoBase_OnCommandRequest: Function not found. Object: %s, Function: ServerMoveNoBase."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerMoveNoBase_OnRPCPayload: Function not found. Object: %s, Function: ServerMoveNoBase."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -5618,10 +5639,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandRequest(
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5629,13 +5649,13 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandRequ
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveDualNoBase_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveDualNoBase_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ServerMoveDualNoBase_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ServerMoveDualNoBase_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5693,7 +5713,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandRequ
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerMoveDualNoBase_OnCommandRequest: Function not found. Object: %s, Function: ServerMoveDualNoBase."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerMoveDualNoBase_OnRPCPayload: Function not found. Object: %s, Function: ServerMoveDualNoBase."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -5703,10 +5723,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandRequ
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5714,13 +5733,13 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnC
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveDualHybridRootMotion_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveDualHybridRootMotion_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ServerMoveDualHybridRootMotion_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ServerMoveDualHybridRootMotion_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5783,7 +5802,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnC
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveDualHybridRootMotion_OnCommandRequest: Parameters.ClientMovementBase %s is not resolved on this worker."),
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveDualHybridRootMotion_OnRPCPayload: Parameters.ClientMovementBase %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
@@ -5805,7 +5824,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnC
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerMoveDualHybridRootMotion_OnCommandRequest: Function not found. Object: %s, Function: ServerMoveDualHybridRootMotion."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerMoveDualHybridRootMotion_OnRPCPayload: Function not found. Object: %s, Function: ServerMoveDualHybridRootMotion."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -5815,10 +5834,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnC
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5826,13 +5844,13 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandRequest(co
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveDual_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveDual_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ServerMoveDual_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ServerMoveDual_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5895,7 +5913,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandRequest(co
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveDual_OnCommandRequest: Parameters.ClientMovementBase %s is not resolved on this worker."),
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMoveDual_OnRPCPayload: Parameters.ClientMovementBase %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
@@ -5917,7 +5935,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandRequest(co
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerMoveDual_OnCommandRequest: Function not found. Object: %s, Function: ServerMoveDual."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerMoveDual_OnRPCPayload: Function not found. Object: %s, Function: ServerMoveDual."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -5927,10 +5945,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandRequest(co
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -5938,13 +5955,13 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandRequest(const 
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMove_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMove_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ServerMove_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ServerMove_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -5995,7 +6012,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandRequest(const 
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMove_OnCommandRequest: Parameters.ClientMovementBase %s is not resolved on this worker."),
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerMove_OnRPCPayload: Parameters.ClientMovementBase %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
@@ -6017,7 +6034,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandRequest(const 
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerMove_OnCommandRequest: Function not found. Object: %s, Function: ServerMove."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerMove_OnRPCPayload: Function not found. Object: %s, Function: ServerMove."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -6027,7 +6044,47 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandRequest(const 
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+}
+void USpatialTypeBinding_SampleGameCharacter::TestMulticast_OnRPCPayload(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealTestMulticastRequest& EventData)
+{
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset()};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: TestMulticast_OnRPCPayload: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: TestMulticast_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Call implementation.
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: TestMulticast, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("TestMulticast"))))
+		{
+			TargetObject->ProcessEvent(Function, nullptr);
+		}
+		else
+		{
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: TestMulticast_OnRPCPayload: Function not found. Object: %s, Function: TestMulticast."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		return {};
+	};
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 
 void USpatialTypeBinding_SampleGameCharacter::Client_TestFunc_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclienttestfunc>& Op)

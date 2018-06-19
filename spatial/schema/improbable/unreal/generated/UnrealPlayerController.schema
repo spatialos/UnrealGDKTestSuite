@@ -115,3 +115,6 @@ component UnrealPlayerControllerServerRPCs {
 	command UnrealRPCCommandResponse playercontrollerservercamera(UnrealServerCameraRequest);
 	command UnrealRPCCommandResponse playercontrollerserveracknowledgepossession(UnrealServerAcknowledgePossessionRequest);
 }
+component UnrealPlayerControllerNetMulticastRPCs {
+	id = 100015;
+}

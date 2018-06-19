@@ -356,3 +356,12 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_None);
 }
+
+bool ASampleGameCharacter::TestMulticast_Validate()
+{
+	return true;
+}
+
+void ASampleGameCharacter::TestMulticast_Implementation()
+{
+}
