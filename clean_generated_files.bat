@@ -5,6 +5,18 @@ set GENERATED_SCHEMA="%~dp0spatial\schema\improbable\unreal\generated"
 set GENERATED_TYPE_BINDINGS="%~dp0Game\Source\SampleGame\Generated"
 set GENERATED_WORKER_FILES="%~dp0Game\Source\SpatialGDK\Generated"
 
+:: If '-a' argument is specified, clean all without prompt 
+IF /I "%1"=="-a" (
+   CALL :clean_schema
+   CALL :clean_type_bindings
+   CALL :clean_worker_files
+) ELSE (
+    GOTO main
+)
+EXIT /B 0
+
+:: If '-a' does not exist, prompt the user
+:main
 ECHO This script is intended to clean SampleGame generated files and therefore assumes its project structure.
 
 set /p CLEAN_SCHEMA=Clean generated schema?[Y/N]: 
@@ -49,3 +61,5 @@ IF EXIST %GENERATED_WORKER_FILES% (
     echo %GENERATED_WORKER_FILES% did not exist when performing the clean.
 )
 EXIT /B 0
+
+:done
