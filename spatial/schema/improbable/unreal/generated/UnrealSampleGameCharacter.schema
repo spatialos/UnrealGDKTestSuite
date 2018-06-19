@@ -52,8 +52,6 @@ component SampleGameCharacterMultiClientRepData {
 	bytes field_reprootmotion_authoritativerootmotion = 41; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion_acceleration = 42; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion_linearvelocity = 43; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
-<<<<<<< HEAD
-=======
 	int32 field_testcontainerstruct_structred_rootprop = 44; // COND_None // RootStruct::Struct_RedContainerStruct::TestContainerStruct::SampleGameCharacter
 	int32 field_testcontainerstruct_structblue_rootprop = 45; // COND_None // RootStruct::Struct_BlueContainerStruct::TestContainerStruct::SampleGameCharacter
 	int32 field_testcontainerstructthesecond_structred_rootprop = 46; // COND_None // RootStruct::Struct_RedContainerStruct::TestContainerStructTheSecond::SampleGameCharacter
@@ -86,7 +84,6 @@ component SampleGameCharacterMultiClientRepData {
 	int32 field_testtheonestructtorulethemall_structcontainer_structblue_rootprop = 73; // COND_None // RootStruct::Struct_BlueContainerStruct::Struct_ContainerTheOneStructToRuleThemAll::TestTheOneStructToRuleThemAll::SampleGameCharacter
 	int32 field_testtheonestructtorulethemall_structroot_rootprop = 74; // COND_None // RootStruct::Struct_RootTheOneStructToRuleThemAll::TestTheOneStructToRuleThemAll::SampleGameCharacter
 	int32 field_testtheonestructtorulethemall_rootprop = 75; // COND_None // TheOneStructToRuleThemAll::TestTheOneStructToRuleThemAll::SampleGameCharacter
->>>>>>> More testing
 }
 component SampleGameCharacterMigratableData {
 	id = 100024;
