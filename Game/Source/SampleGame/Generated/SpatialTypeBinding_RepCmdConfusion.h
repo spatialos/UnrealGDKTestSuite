@@ -59,6 +59,7 @@ private:
 	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData::Update& Update) const;
 	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData::Update& Update) const;
 	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealRepCmdConfusionMigratableData::Update& Update) const;
+	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs::Update& Update);
 
 	// RPC command sender functions.
 

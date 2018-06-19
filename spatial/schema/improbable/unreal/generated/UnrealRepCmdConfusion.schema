@@ -5,10 +5,10 @@ package improbable.unreal.generated;
 import "improbable/unreal/gdk/core_types.schema";
 
 component UnrealRepCmdConfusionSingleClientRepData {
-	id = 100035;
+	id = 100040;
 }
 component UnrealRepCmdConfusionMultiClientRepData {
-	id = 100036;
+	id = 100041;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
 	bool field_btearoff = 3; // COND_None // ::Actor
@@ -26,12 +26,15 @@ component UnrealRepCmdConfusionMultiClientRepData {
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
 }
 component UnrealRepCmdConfusionMigratableData {
-	id = 100037;
+	id = 100042;
 }
 
 component UnrealRepCmdConfusionClientRPCs {
-	id = 100038;
+	id = 100043;
 }
 component UnrealRepCmdConfusionServerRPCs {
-	id = 100039;
+	id = 100044;
+}
+component UnrealRepCmdConfusionNetMulticastRPCs {
+	id = 100045;
 }

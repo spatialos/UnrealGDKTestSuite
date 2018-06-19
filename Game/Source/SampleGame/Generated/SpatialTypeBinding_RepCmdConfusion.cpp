@@ -106,6 +106,16 @@ void USpatialTypeBinding_RepCmdConfusion::BindToView()
 			ReceiveUpdate_Migratable(ActorChannel, Op.Update);
 		}));
 	}
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs>& Op)
+	{
+		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs::ComponentId))
+		{
+			return;
+		}
+		ReceiveUpdate_NetMulticastRPCs(Op.EntityId, Op.Update);
+	}));
 }
 
 void USpatialTypeBinding_RepCmdConfusion::UnbindFromView()
@@ -187,6 +197,7 @@ worker::Entity USpatialTypeBinding_RepCmdConfusion::CreateActorEntity(const FStr
 		.AddComponent<improbable::unreal::generated::UnrealRepCmdConfusionMigratableData>(MigratableData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::UnrealRepCmdConfusionClientRPCs>(improbable::unreal::generated::UnrealRepCmdConfusionClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::UnrealRepCmdConfusionServerRPCs>(improbable::unreal::generated::UnrealRepCmdConfusionServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs>(improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
@@ -1086,5 +1097,9 @@ void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_MultiClient(USpatialActo
 }
 
 void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealRepCmdConfusionMigratableData::Update& Update) const
+{
+}
+
+void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs::Update& Update)
 {
 }

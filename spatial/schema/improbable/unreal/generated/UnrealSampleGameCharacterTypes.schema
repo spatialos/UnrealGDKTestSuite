@@ -14,3 +14,6 @@ type UnrealClientTestConstArgsRequest {
 type UnrealServerTestFuncRequest {
 	uint32 target_subobject_offset = 1;
 }
+type UnrealTestMulticastRequest {
+	uint32 target_subobject_offset = 1;
+}

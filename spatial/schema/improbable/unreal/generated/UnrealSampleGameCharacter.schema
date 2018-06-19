@@ -5,10 +5,10 @@ package improbable.unreal.generated;
 import "improbable/unreal/gdk/core_types.schema";
 
 component UnrealSampleGameCharacterSingleClientRepData {
-	id = 100020;
+	id = 100022;
 }
 component UnrealSampleGameCharacterMultiClientRepData {
-	id = 100021;
+	id = 100023;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
 	bool field_btearoff = 3; // COND_None // ::Actor
@@ -94,13 +94,13 @@ component UnrealSampleGameCharacterMultiClientRepData {
 	int32 field_testbookend = 83; // COND_None // ::SampleGameCharacter
 }
 component UnrealSampleGameCharacterMigratableData {
-	id = 100022;
+	id = 100024;
 }
 import "improbable/unreal/generated/UnrealSampleGameCharacterTypes.schema";
 import "improbable/unreal/generated/UnrealCharacterTypes.schema";
 
 component UnrealSampleGameCharacterClientRPCs {
-	id = 100023;
+	id = 100025;
 	command UnrealRPCCommandResponse samplegamecharacterclienttestfunc(UnrealClientTestFuncRequest);
 	command UnrealRPCCommandResponse samplegamecharacterclienttestconstargs(UnrealClientTestConstArgsRequest);
 	command UnrealRPCCommandResponse samplegamecharacterrootmotiondebugclientprintonscreen(UnrealRootMotionDebugClientPrintOnScreenRequest);
@@ -114,7 +114,7 @@ component UnrealSampleGameCharacterClientRPCs {
 	command UnrealRPCCommandResponse samplegamecharacterclientackgoodmove(UnrealClientAckGoodMoveRequest);
 }
 component UnrealSampleGameCharacterServerRPCs {
-	id = 100024;
+	id = 100026;
 	command UnrealRPCCommandResponse samplegamecharacterservertestfunc(UnrealServerTestFuncRequest);
 	command UnrealRPCCommandResponse samplegamecharacterservermoveold(UnrealServerMoveOldRequest);
 	command UnrealRPCCommandResponse samplegamecharacterservermovenobase(UnrealServerMoveNoBaseRequest);
@@ -122,4 +122,8 @@ component UnrealSampleGameCharacterServerRPCs {
 	command UnrealRPCCommandResponse samplegamecharacterservermovedualhybridrootmotion(UnrealServerMoveDualHybridRootMotionRequest);
 	command UnrealRPCCommandResponse samplegamecharacterservermovedual(UnrealServerMoveDualRequest);
 	command UnrealRPCCommandResponse samplegamecharacterservermove(UnrealServerMoveRequest);
+}
+component UnrealSampleGameCharacterNetMulticastRPCs {
+	id = 100027;
+	event UnrealTestMulticastRequest samplegamecharactertestmulticast;
 }
