@@ -14,10 +14,6 @@ CALL :clean_path %SPATIALGDK_BINARIESPATH%
 CALL :clean_path %SPATIALGDK_SCHEMAPATH%
 ECHO Finished cleaning up old symlinks
 
-ECHO Performing git clean
-git clean -xdf
-ECHO Finished git clean
-
 EXIT /B 0
 
 :clean_path
