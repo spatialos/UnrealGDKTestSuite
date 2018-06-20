@@ -26,6 +26,9 @@ struct FContainerStruct // Parent
 
 	UPROPERTY()
 	FRootStruct Struct_Blue;
+
+	UPROPERTY()
+	FRootStruct Struct_Array[3];
 };
 
 USTRUCT()
@@ -103,17 +106,17 @@ public:
 	UPROPERTY(Replicated)
 	FContainerStruct TestContainerStruct;
 
-	UPROPERTY(Replicated)
-	FContainerStruct TestContainerStructTheSecond;
+	//UPROPERTY(Replicated)
+	//FContainerStruct TestContainerStructTheSecond;
 
-	UPROPERTY(Replicated)
-	FContainerContainerStruct TestContainerContainerStruct;
+	//UPROPERTY(Replicated)
+	//FContainerContainerStruct TestContainerContainerStruct;
 
-	UPROPERTY(Replicated)
-	FContainerContainerContainerStruct TestContainerContainerContainerStruct;
+	//UPROPERTY(Replicated)
+	//FContainerContainerContainerStruct TestContainerContainerContainerStruct;
 
-	UPROPERTY(Replicated)
-	FTheOneStructToRuleThemAll TestTheOneStructToRuleThemAll;
+	//UPROPERTY(Replicated)
+	//FTheOneStructToRuleThemAll TestTheOneStructToRuleThemAll;
 
 protected:
 

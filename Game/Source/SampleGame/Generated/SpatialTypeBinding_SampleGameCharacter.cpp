@@ -107,36 +107,9 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(43, FRepHandleData(Class, {"RepRootMotion", "LinearVelocity"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"TestContainerStruct", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(45, FRepHandleData(Class, {"TestContainerStruct", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(46, FRepHandleData(Class, {"TestContainerStructTheSecond", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(47, FRepHandleData(Class, {"TestContainerStructTheSecond", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(48, FRepHandleData(Class, {"TestContainerContainerStruct", "Struct_ContainerCar", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(49, FRepHandleData(Class, {"TestContainerContainerStruct", "Struct_ContainerCar", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(50, FRepHandleData(Class, {"TestContainerContainerStruct", "Struct_ContainerPlane", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(51, FRepHandleData(Class, {"TestContainerContainerStruct", "Struct_ContainerPlane", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(52, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerDog", "Struct_ContainerCar", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(53, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerDog", "Struct_ContainerCar", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(54, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerDog", "Struct_ContainerPlane", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(55, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerDog", "Struct_ContainerPlane", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(56, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerCat", "Struct_ContainerCar", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(57, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerCat", "Struct_ContainerCar", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(58, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerCat", "Struct_ContainerPlane", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(59, FRepHandleData(Class, {"TestContainerContainerContainerStruct", "Struct_ContainerContainerCat", "Struct_ContainerPlane", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(60, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerDog", "Struct_ContainerCar", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(61, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerDog", "Struct_ContainerCar", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(62, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerDog", "Struct_ContainerPlane", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(63, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerDog", "Struct_ContainerPlane", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(64, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerCat", "Struct_ContainerCar", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(65, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerCat", "Struct_ContainerCar", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(66, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerCat", "Struct_ContainerPlane", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(67, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainerContainer", "Struct_ContainerContainerCat", "Struct_ContainerPlane", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(68, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerCar", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(69, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerCar", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(70, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerPlane", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(71, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_ContainerContainer", "Struct_ContainerPlane", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(72, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_Container", "Struct_Red", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(73, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_Container", "Struct_Blue", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(74, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "Struct_Root", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(75, FRepHandleData(Class, {"TestTheOneStructToRuleThemAll", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(46, FRepHandleData(Class, {"TestContainerStruct", "Struct_Array", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(47, FRepHandleData(Class, {"TestContainerStruct", "Struct_Array", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 4));
+	RepHandleToPropertyMap.Add(48, FRepHandleData(Class, {"TestContainerStruct", "Struct_Array", "RootProp"}, COND_None, REPNOTIFY_OnChanged, 8));
 }
 
 void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
@@ -1142,214 +1115,25 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			OutUpdate.set_field_testcontainerstruct_structblue_rootprop(int32_t(Value));
 			break;
 		}
-		case 46: // field_testcontainerstructthesecond_structred_rootprop
+		case 46: // field_testcontainerstruct_structarray_rootprop0
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainerstructthesecond_structred_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainerstruct_structarray_rootprop0(int32_t(Value));
 			break;
 		}
-		case 47: // field_testcontainerstructthesecond_structblue_rootprop
+		case 47: // field_testcontainerstruct_structarray_rootprop1
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainerstructthesecond_structblue_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainerstruct_structarray_rootprop1(int32_t(Value));
 			break;
 		}
-		case 48: // field_testcontainercontainerstruct_structcontainercar_structred_rootprop
+		case 48: // field_testcontainerstruct_structarray_rootprop2
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testcontainercontainerstruct_structcontainercar_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 49: // field_testcontainercontainerstruct_structcontainercar_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testcontainercontainerstruct_structcontainercar_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 50: // field_testcontainercontainerstruct_structcontainerplane_structred_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testcontainercontainerstruct_structcontainerplane_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 51: // field_testcontainercontainerstruct_structcontainerplane_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testcontainercontainerstruct_structcontainerplane_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 52: // field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structred_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 53: // field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 54: // field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structred_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 55: // field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 56: // field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structred_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 57: // field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 58: // field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structred_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 59: // field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 60: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structred_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 61: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 62: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structred_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 63: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 64: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structred_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 65: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 66: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structred_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 67: // field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 68: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structred_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 69: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 70: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structred_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 71: // field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 72: // field_testtheonestructtorulethemall_structcontainer_structred_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainer_structred_rootprop(int32_t(Value));
-			break;
-		}
-		case 73: // field_testtheonestructtorulethemall_structcontainer_structblue_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structcontainer_structblue_rootprop(int32_t(Value));
-			break;
-		}
-		case 74: // field_testtheonestructtorulethemall_structroot_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_structroot_rootprop(int32_t(Value));
-			break;
-		}
-		case 75: // field_testtheonestructtorulethemall_rootprop
-		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
-
-			OutUpdate.set_field_testtheonestructtorulethemall_rootprop(int32_t(Value));
+			OutUpdate.set_field_testcontainerstruct_structarray_rootprop2(int32_t(Value));
 			break;
 		}
 	default:
@@ -2859,9 +2643,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainerstructthesecond_structred_rootprop().empty())
+	if (!Update.field_testcontainerstruct_structarray_rootprop0().empty())
 	{
-		// field_testcontainerstructthesecond_structred_rootprop
+		// field_testcontainerstruct_structarray_rootprop0
 		uint16 Handle = 46;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2871,6 +2655,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ClientVeryShortAdjustPositionRequest RPCPayload;
 =======
@@ -2878,6 +2663,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 =======
 			Value = (*Update.field_testcontainerstructthesecond_structred_rootprop().data());
 >>>>>>> More testing
+=======
+			Value = (*Update.field_testcontainerstruct_structarray_rootprop0().data());
+>>>>>>> Updated generated files
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2889,9 +2677,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainerstructthesecond_structblue_rootprop().empty())
+	if (!Update.field_testcontainerstruct_structarray_rootprop1().empty())
 	{
-		// field_testcontainerstructthesecond_structblue_rootprop
+		// field_testcontainerstruct_structarray_rootprop1
 		uint16 Handle = 47;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2899,7 +2687,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainerstructthesecond_structblue_rootprop().data());
+			Value = (*Update.field_testcontainerstruct_structarray_rootprop1().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2911,9 +2699,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 				Handle);
 		}
 	}
-	if (!Update.field_testcontainercontainerstruct_structcontainercar_structred_rootprop().empty())
+	if (!Update.field_testcontainerstruct_structarray_rootprop2().empty())
 	{
-		// field_testcontainercontainerstruct_structcontainercar_structred_rootprop
+		// field_testcontainerstruct_structarray_rootprop2
 		uint16 Handle = 48;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2921,601 +2709,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testcontainercontainerstruct_structcontainercar_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testcontainercontainerstruct_structcontainercar_structblue_rootprop().empty())
-	{
-		// field_testcontainercontainerstruct_structcontainercar_structblue_rootprop
-		uint16 Handle = 49;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testcontainercontainerstruct_structcontainercar_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testcontainercontainerstruct_structcontainerplane_structred_rootprop().empty())
-	{
-		// field_testcontainercontainerstruct_structcontainerplane_structred_rootprop
-		uint16 Handle = 50;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testcontainercontainerstruct_structcontainerplane_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testcontainercontainerstruct_structcontainerplane_structblue_rootprop().empty())
-	{
-		// field_testcontainercontainerstruct_structcontainerplane_structblue_rootprop
-		uint16 Handle = 51;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testcontainercontainerstruct_structcontainerplane_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structred_rootprop().empty())
-	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structred_rootprop
-		uint16 Handle = 52;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structblue_rootprop().empty())
-	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structblue_rootprop
-		uint16 Handle = 53;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainercar_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structred_rootprop().empty())
-	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structred_rootprop
-		uint16 Handle = 54;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structblue_rootprop().empty())
-	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structblue_rootprop
-		uint16 Handle = 55;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainerdog_structcontainerplane_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structred_rootprop().empty())
-	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structred_rootprop
-		uint16 Handle = 56;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structblue_rootprop().empty())
-	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structblue_rootprop
-		uint16 Handle = 57;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainercar_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structred_rootprop().empty())
-	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structred_rootprop
-		uint16 Handle = 58;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structblue_rootprop().empty())
-	{
-		// field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structblue_rootprop
-		uint16 Handle = 59;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testcontainercontainercontainerstruct_structcontainercontainercat_structcontainerplane_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structred_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structred_rootprop
-		uint16 Handle = 60;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structblue_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structblue_rootprop
-		uint16 Handle = 61;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainercar_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structred_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structred_rootprop
-		uint16 Handle = 62;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structblue_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structblue_rootprop
-		uint16 Handle = 63;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainerdog_structcontainerplane_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structred_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structred_rootprop
-		uint16 Handle = 64;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structblue_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structblue_rootprop
-		uint16 Handle = 65;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainercar_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structred_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structred_rootprop
-		uint16 Handle = 66;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structblue_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structblue_rootprop
-		uint16 Handle = 67;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainercontainer_structcontainercontainercat_structcontainerplane_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structred_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structred_rootprop
-		uint16 Handle = 68;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structblue_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structblue_rootprop
-		uint16 Handle = 69;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainercar_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structred_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structred_rootprop
-		uint16 Handle = 70;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structblue_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structblue_rootprop
-		uint16 Handle = 71;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainercontainer_structcontainerplane_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainer_structred_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainer_structred_rootprop
-		uint16 Handle = 72;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainer_structred_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structcontainer_structblue_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structcontainer_structblue_rootprop
-		uint16 Handle = 73;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structcontainer_structblue_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_structroot_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_structroot_rootprop
-		uint16 Handle = 74;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_structroot_rootprop().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_testtheonestructtorulethemall_rootprop().empty())
-	{
-		// field_testtheonestructtorulethemall_rootprop
-		uint16 Handle = 75;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
-
-			Value = (*Update.field_testtheonestructtorulethemall_rootprop().data());
+			Value = (*Update.field_testcontainerstruct_structarray_rootprop2().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
