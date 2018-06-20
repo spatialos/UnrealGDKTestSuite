@@ -106,7 +106,7 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(43, FRepHandleData(Class, {"RepRootMotion", "LinearVelocity"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::BindToView()
+void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 {
 	TSharedPtr<worker::View> View = Interop->GetSpatialOS()->GetView().Pin();
 	ViewCallbacks.Init(View);
@@ -137,18 +137,21 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView()
 			check(ActorChannel);
 			ReceiveUpdate_MultiClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>& Op)
+		if (!bIsClient)
 		{
-			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::ComponentId))
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>& Op)
 			{
-				return;
-			}
-			USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
-			check(ActorChannel);
-			ReceiveUpdate_Migratable(ActorChannel, Op.Update);
-		}));
+				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::ComponentId))
+				{
+					return;
+				}
+				USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
+				check(ActorChannel);
+				ReceiveUpdate_Migratable(ActorChannel, Op.Update);
+			}));
+		}
 	}
 	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>([this](
 		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>& Op)

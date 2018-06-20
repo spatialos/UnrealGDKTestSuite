@@ -23,7 +23,7 @@ public:
 	UClass* GetBoundClass() const override;
 
 	void Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap) override;
-	void BindToView() override;
+	void BindToView(bool bIsClient) override;
 	void UnbindFromView() override;
 
 	worker::Entity CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const override;

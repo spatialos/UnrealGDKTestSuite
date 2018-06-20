@@ -67,7 +67,7 @@ void USpatialTypeBinding_WheeledVehicle::Init(USpatialInterop* InInterop, USpati
 	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"Controller"}, COND_None, REPNOTIFY_OnChanged, 0));
 }
 
-void USpatialTypeBinding_WheeledVehicle::BindToView()
+void USpatialTypeBinding_WheeledVehicle::BindToView(bool bIsClient)
 {
 	TSharedPtr<worker::View> View = Interop->GetSpatialOS()->GetView().Pin();
 	ViewCallbacks.Init(View);
@@ -98,18 +98,21 @@ void USpatialTypeBinding_WheeledVehicle::BindToView()
 			check(ActorChannel);
 			ReceiveUpdate_MultiClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealWheeledVehicleMigratableData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealWheeledVehicleMigratableData>& Op)
+		if (!bIsClient)
 		{
-			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealWheeledVehicleMigratableData::ComponentId))
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealWheeledVehicleMigratableData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealWheeledVehicleMigratableData>& Op)
 			{
-				return;
-			}
-			USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
-			check(ActorChannel);
-			ReceiveUpdate_Migratable(ActorChannel, Op.Update);
-		}));
+				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealWheeledVehicleMigratableData::ComponentId))
+				{
+					return;
+				}
+				USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
+				check(ActorChannel);
+				ReceiveUpdate_Migratable(ActorChannel, Op.Update);
+			}));
+		}
 	}
 	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealWheeledVehicleNetMulticastRPCs>([this](
 		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealWheeledVehicleNetMulticastRPCs>& Op)

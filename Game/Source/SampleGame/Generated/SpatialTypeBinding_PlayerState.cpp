@@ -72,7 +72,7 @@ void USpatialTypeBinding_PlayerState::Init(USpatialInterop* InInterop, USpatialP
 	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"PlayerNamePrivate"}, COND_None, REPNOTIFY_OnChanged, 0));
 }
 
-void USpatialTypeBinding_PlayerState::BindToView()
+void USpatialTypeBinding_PlayerState::BindToView(bool bIsClient)
 {
 	TSharedPtr<worker::View> View = Interop->GetSpatialOS()->GetView().Pin();
 	ViewCallbacks.Init(View);
@@ -103,18 +103,21 @@ void USpatialTypeBinding_PlayerState::BindToView()
 			check(ActorChannel);
 			ReceiveUpdate_MultiClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealPlayerStateMigratableData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealPlayerStateMigratableData>& Op)
+		if (!bIsClient)
 		{
-			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealPlayerStateMigratableData::ComponentId))
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealPlayerStateMigratableData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealPlayerStateMigratableData>& Op)
 			{
-				return;
-			}
-			USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
-			check(ActorChannel);
-			ReceiveUpdate_Migratable(ActorChannel, Op.Update);
-		}));
+				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealPlayerStateMigratableData::ComponentId))
+				{
+					return;
+				}
+				USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
+				check(ActorChannel);
+				ReceiveUpdate_Migratable(ActorChannel, Op.Update);
+			}));
+		}
 	}
 	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealPlayerStateNetMulticastRPCs>([this](
 		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealPlayerStateNetMulticastRPCs>& Op)
