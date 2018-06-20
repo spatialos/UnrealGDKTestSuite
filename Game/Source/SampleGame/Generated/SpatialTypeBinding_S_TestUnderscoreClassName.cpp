@@ -41,7 +41,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::Init(USpatialInterop* InInte
 {
 	Super::Init(InInterop, InPackageMap);
 
-	RPCToSenderMap.Emplace("ClientUnderscoreRPC", &USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_SendCommand);
+	RPCToSenderMap.Emplace("ClientUnderscoreRPC", &USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_SendRPC);
 
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("S_TestUnderscoreClassName"));
 
@@ -107,9 +107,19 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::BindToView()
 			ReceiveUpdate_Migratable(ActorChannel, Op.Update);
 		}));
 	}
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSTestUnderscoreClassNameNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameNetMulticastRPCs>& Op)
+	{
+		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSTestUnderscoreClassNameNetMulticastRPCs::ComponentId))
+		{
+			return;
+		}
+		ReceiveUpdate_NetMulticastRPCs(Op.EntityId, Op.Update);
+	}));
 
 	using ClientRPCCommandTypes = improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Stestunderscoreclassnameclientunderscorerpc>(std::bind(&USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Stestunderscoreclassnameclientunderscorerpc>(std::bind(&USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Stestunderscoreclassnameclientunderscorerpc>(std::bind(&USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandResponse, this, std::placeholders::_1)));
 }
 
@@ -192,6 +202,7 @@ worker::Entity USpatialTypeBinding_S_TestUnderscoreClassName::CreateActorEntity(
 		.AddComponent<improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData>(MigratableData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs>(improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::UnrealSTestUnderscoreClassNameServerRPCs>(improbable::unreal::generated::UnrealSTestUnderscoreClassNameServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealSTestUnderscoreClassNameNetMulticastRPCs>(improbable::unreal::generated::UnrealSTestUnderscoreClassNameNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
@@ -420,21 +431,42 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ServerSendUpdate_MultiClient
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_locationoffset(improbable::Vector3f(Value.X, Value.Y, Value.Z));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+				OutUpdate.set_field_attachmentreplication_locationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 9: // field_attachmentreplication_relativescale3d
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_relativescale3d(improbable::Vector3f(Value.X, Value.Y, Value.Z));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+				OutUpdate.set_field_attachmentreplication_relativescale3d(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 10: // field_attachmentreplication_rotationoffset
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_rotationoffset(improbable::unreal::UnrealFRotator(Value.Yaw, Value.Pitch, Value.Roll));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+				OutUpdate.set_field_attachmentreplication_rotationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 11: // field_attachmentreplication_attachsocket
@@ -768,10 +800,13 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(US
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			{
-				auto& Vector = (*Update.field_attachmentreplication_locationoffset().data());
-				Value.X = Vector.x();
-				Value.Y = Vector.y();
-				Value.Z = Vector.z();
+				auto& ValueDataStr = (*Update.field_attachmentreplication_locationoffset().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -795,10 +830,13 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(US
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			{
-				auto& Vector = (*Update.field_attachmentreplication_relativescale3d().data());
-				Value.X = Vector.x();
-				Value.Y = Vector.y();
-				Value.Z = Vector.z();
+				auto& ValueDataStr = (*Update.field_attachmentreplication_relativescale3d().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -822,10 +860,13 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(US
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
 			{
-				auto& Rotator = (*Update.field_attachmentreplication_rotationoffset().data());
-				Value.Yaw = Rotator.yaw();
-				Value.Pitch = Rotator.pitch();
-				Value.Roll = Rotator.roll();
+				auto& ValueDataStr = (*Update.field_attachmentreplication_rotationoffset().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -1064,7 +1105,10 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_Migratable(USp
 {
 }
 
-void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealSTestUnderscoreClassNameNetMulticastRPCs::Update& Update)
+{
+}
+void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -1076,22 +1120,22 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_SendComm
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealClientUnderscoreRPCRequest Request;
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealClientUnderscoreRPCRequest RPCPayload;
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ClientUnderscoreRPC, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
-}
 
-void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>& Op)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -1099,13 +1143,13 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnComman
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientUnderscoreRPC_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientUnderscoreRPC_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ClientUnderscoreRPC_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ClientUnderscoreRPC_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -1122,7 +1166,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnComman
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientUnderscoreRPC_OnCommandRequest: Function not found. Object: %s, Function: ClientUnderscoreRPC."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ClientUnderscoreRPC_OnRPCPayload: Function not found. Object: %s, Function: ClientUnderscoreRPC."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -1132,7 +1176,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnComman
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 
 void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>& Op)

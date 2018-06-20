@@ -42,7 +42,7 @@ void USpatialTypeBinding_WheeledVehicle::Init(USpatialInterop* InInterop, USpati
 {
 	Super::Init(InInterop, InPackageMap);
 
-	RPCToSenderMap.Emplace("ServerUpdateState", &USpatialTypeBinding_WheeledVehicle::ServerUpdateState_SendCommand);
+	RPCToSenderMap.Emplace("ServerUpdateState", &USpatialTypeBinding_WheeledVehicle::ServerUpdateState_SendRPC);
 
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("WheeledVehicle"));
 
@@ -111,9 +111,19 @@ void USpatialTypeBinding_WheeledVehicle::BindToView()
 			ReceiveUpdate_Migratable(ActorChannel, Op.Update);
 		}));
 	}
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealWheeledVehicleNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealWheeledVehicleNetMulticastRPCs>& Op)
+	{
+		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealWheeledVehicleNetMulticastRPCs::ComponentId))
+		{
+			return;
+		}
+		ReceiveUpdate_NetMulticastRPCs(Op.EntityId, Op.Update);
+	}));
 
 	using ServerRPCCommandTypes = improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Wheeledvehicleserverupdatestate>(std::bind(&USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Wheeledvehicleserverupdatestate>(std::bind(&USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Wheeledvehicleserverupdatestate>(std::bind(&USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnCommandResponse, this, std::placeholders::_1)));
 }
 
@@ -196,6 +206,7 @@ worker::Entity USpatialTypeBinding_WheeledVehicle::CreateActorEntity(const FStri
 		.AddComponent<improbable::unreal::generated::UnrealWheeledVehicleMigratableData>(MigratableData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::UnrealWheeledVehicleClientRPCs>(improbable::unreal::generated::UnrealWheeledVehicleClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs>(improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealWheeledVehicleNetMulticastRPCs>(improbable::unreal::generated::UnrealWheeledVehicleNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
@@ -424,21 +435,42 @@ void USpatialTypeBinding_WheeledVehicle::ServerSendUpdate_MultiClient(const uint
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_locationoffset(improbable::Vector3f(Value.X, Value.Y, Value.Z));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+				OutUpdate.set_field_attachmentreplication_locationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 9: // field_attachmentreplication_relativescale3d
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_relativescale3d(improbable::Vector3f(Value.X, Value.Y, Value.Z));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+				OutUpdate.set_field_attachmentreplication_relativescale3d(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 10: // field_attachmentreplication_rotationoffset
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_rotationoffset(improbable::unreal::UnrealFRotator(Value.Yaw, Value.Pitch, Value.Roll));
+			{
+				TArray<uint8> ValueData;
+				FMemoryWriter ValueDataWriter(ValueData);
+				bool bSuccess = true;
+				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+				OutUpdate.set_field_attachmentreplication_rotationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
 			break;
 		}
 		case 11: // field_attachmentreplication_attachsocket
@@ -825,10 +857,13 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			{
-				auto& Vector = (*Update.field_attachmentreplication_locationoffset().data());
-				Value.X = Vector.x();
-				Value.Y = Vector.y();
-				Value.Z = Vector.z();
+				auto& ValueDataStr = (*Update.field_attachmentreplication_locationoffset().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -852,10 +887,13 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			{
-				auto& Vector = (*Update.field_attachmentreplication_relativescale3d().data());
-				Value.X = Vector.x();
-				Value.Y = Vector.y();
-				Value.Z = Vector.z();
+				auto& ValueDataStr = (*Update.field_attachmentreplication_relativescale3d().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -879,10 +917,13 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_MultiClient(USpatialActor
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
 			{
-				auto& Rotator = (*Update.field_attachmentreplication_rotationoffset().data());
-				Value.Yaw = Rotator.yaw();
-				Value.Pitch = Rotator.pitch();
-				Value.Roll = Rotator.roll();
+				auto& ValueDataStr = (*Update.field_attachmentreplication_rotationoffset().data());
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FMemoryReader ValueDataReader(ValueData);
+				bool bSuccess = true;
+				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -1255,7 +1296,10 @@ void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_Migratable(USpatialActorC
 {
 }
 
-void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+void USpatialTypeBinding_WheeledVehicle::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealWheeledVehicleNetMulticastRPCs::Update& Update)
+{
+}
+void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in WheeledVehicleMovementComponent.generated.h (in a macro that is then put in WheeledVehicleMovementComponent.h UCLASS macro)
 	WheeledVehicleMovementComponent_eventServerUpdateState_Parms StructuredParams = *static_cast<WheeledVehicleMovementComponent_eventServerUpdateState_Parms*>(Parameters);
@@ -1270,27 +1314,27 @@ void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_SendCommand(worker::C
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealServerUpdateStateRequest Request;
-		Request.set_field_insteeringinput(StructuredParams.InSteeringInput);
-		Request.set_field_inthrottleinput(StructuredParams.InThrottleInput);
-		Request.set_field_inbrakeinput(StructuredParams.InBrakeInput);
-		Request.set_field_inhandbrakeinput(StructuredParams.InHandbrakeInput);
-		Request.set_field_currentgear(int32_t(StructuredParams.CurrentGear));
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealServerUpdateStateRequest RPCPayload;
+		RPCPayload.set_field_insteeringinput(StructuredParams.InSteeringInput);
+		RPCPayload.set_field_inthrottleinput(StructuredParams.InThrottleInput);
+		RPCPayload.set_field_inbrakeinput(StructuredParams.InBrakeInput);
+		RPCPayload.set_field_inhandbrakeinput(StructuredParams.InHandbrakeInput);
+		RPCPayload.set_field_currentgear(int32_t(StructuredParams.CurrentGear));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: ServerUpdateState, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
-}
 
-void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>& Op)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -1298,13 +1342,13 @@ void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnCommandRequest(cons
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerUpdateState_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ServerUpdateState_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: ServerUpdateState_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: ServerUpdateState_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -1332,7 +1376,7 @@ void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnCommandRequest(cons
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerUpdateState_OnCommandRequest: Function not found. Object: %s, Function: ServerUpdateState."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: ServerUpdateState_OnRPCPayload: Function not found. Object: %s, Function: ServerUpdateState."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -1342,7 +1386,7 @@ void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnCommandRequest(cons
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 
 void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealWheeledVehicleServerRPCs::Commands::Wheeledvehicleserverupdatestate>& Op)

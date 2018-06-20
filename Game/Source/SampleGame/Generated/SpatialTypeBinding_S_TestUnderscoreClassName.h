@@ -59,12 +59,13 @@ private:
 	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSTestUnderscoreClassNameSingleClientRepData::Update& Update) const;
 	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSTestUnderscoreClassNameMultiClientRepData::Update& Update) const;
 	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSTestUnderscoreClassNameMigratableData::Update& Update) const;
+	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealSTestUnderscoreClassNameNetMulticastRPCs::Update& Update);
 
 	// RPC command sender functions.
-	void ClientUnderscoreRPC_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void ClientUnderscoreRPC_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
-	void ClientUnderscoreRPC_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>& Op);
+	void ClientUnderscoreRPC_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>& Op);
 
 	// RPC command response handler functions.
 	void ClientUnderscoreRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSTestUnderscoreClassNameClientRPCs::Commands::Stestunderscoreclassnameclientunderscorerpc>& Op);

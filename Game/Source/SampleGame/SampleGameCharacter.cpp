@@ -162,6 +162,14 @@ void ASampleGameCharacter::MoveRight(float Value)
 	}
 }
 
+bool ASampleGameCharacter::TestMulticast_Validate()
+{
+	return true;
+}
+
+void ASampleGameCharacter::TestMulticast_Implementation()
+{
+}
 //void ASampleGameCharacter::Server_TestFunc_Implementation(const TArray<FTestMixedStruct>& StructArg)
 void ASampleGameCharacter::Server_TestFunc_Implementation()
 {
