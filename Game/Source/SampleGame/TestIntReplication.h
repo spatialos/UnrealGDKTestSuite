@@ -4,51 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ReplicationTestCase.h"
 #include "TestIntReplication.generated.h"
-
-UCLASS(Abstract)
-class SAMPLEGAME_API AReplicationTestCase : public AActor
-{
-	GENERATED_BODY()
-
-public:
-
-	AReplicationTestCase();
-
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION()
-	void OnRep_TestBookend();
-
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-protected:
-
-	UFUNCTION()
-	void SignalReplicationSetup();
-
-	UFUNCTION()
-	void SignalResponseRecieved();
-
-	UFUNCTION()
-	virtual void ValidateClientReplicationImpl()
-	PURE_VIRTUAL(AReplicationTestCase::ValidateClientReplicationImpl(), );
-
-	UFUNCTION()
-	virtual void SendTestResponseRPCImpl()
-	PURE_VIRTUAL(AReplicationTestCase::SendTestResponseRPCImpl(), );
-
-	UPROPERTY()
-	FString TestName;
-
-private:
-
-	UPROPERTY(ReplicatedUsing = OnRep_TestBookend)
-	int TestBookend;
-
-	UPROPERTY()
-	int RPCResponsecCount;
-};
 
 UCLASS()
 class SAMPLEGAME_API ATestIntReplication : public AReplicationTestCase
