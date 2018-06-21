@@ -5,23 +5,15 @@
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 
-// Sets default values
-ATestIntReplication::ATestIntReplication()
+AReplicationTestCase::AReplicationTestCase()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
-
-}
-
-// Called when the game starts or when spawned
-void ATestIntReplication::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 // Called every frame
-void ATestIntReplication::Tick(float DeltaTime)
+void AReplicationTestCase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
@@ -29,12 +21,42 @@ void ATestIntReplication::Tick(float DeltaTime)
 	{
 		if (AGameModeBase* GameMode = World->GetAuthGameMode())
 		{
-			if (RPCResponseType == GameMode->GetNumPlayers())
+			if (RPCResponsecCount == GameMode->GetNumPlayers())
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Test complete!"));
+				UE_LOG(LogTemp, Warning, TEXT("TestCase: %s: Test complete!"), *TestName);
 			}
 		}
 	}
+}
+
+void AReplicationTestCase::OnRep_TestBookend()
+{
+	UE_LOG(LogTemp, Warning, TEXT("TestCase %s: Validating replication"), *TestName);
+
+	ValidateClientReplicationImpl();
+
+	UE_LOG(LogTemp, Warning, TEXT("TestCase %s: Replication successful on client, sending response RPC"), *TestName);
+
+	SendTestResponseRPCImpl();
+}
+
+void AReplicationTestCase::SignalReplicationSetup()
+{
+	TestBookend += 1;
+
+	UE_LOG(LogTemp, Warning, TEXT("TestCase: %s : Replication setup on Server"), *TestName);
+}
+
+void AReplicationTestCase::SignalResponseRecieved()
+{
+	RPCResponsecCount++;
+	UE_LOG(LogTemp, Warning, TEXT("TestCase %s: Response RPC recieved from a client"), *TestName);
+}
+
+void AReplicationTestCase::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME_CONDITION(AReplicationTestCase, TestBookend, COND_None);
 }
 
 bool ATestIntReplication::Server_TestIntFunc_Validate()
@@ -53,13 +75,12 @@ void ATestIntReplication::Server_TestIntFunc_Implementation()
 	Test32UInt = 0xDEADBEEF;
 	Test64UInt = 0xDEADBEEFDEADBEEF;
 
-	TestBookend += 1;
-
-	UE_LOG(LogTemp, Warning, TEXT("SERVER TESTSSSS!"));
+	SignalReplicationSetup();
 }
 
 void ATestIntReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION(ATestIntReplication, Test8Int, COND_None);
 	DOREPLIFETIME_CONDITION(ATestIntReplication, Test16Int, COND_None);
 	DOREPLIFETIME_CONDITION(ATestIntReplication, Test32Int, COND_None);
@@ -68,7 +89,6 @@ void ATestIntReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >
 	DOREPLIFETIME_CONDITION(ATestIntReplication, Test16UInt, COND_None);
 	DOREPLIFETIME_CONDITION(ATestIntReplication, Test32UInt, COND_None);
 	DOREPLIFETIME_CONDITION(ATestIntReplication, Test64UInt, COND_None);
-	DOREPLIFETIME_CONDITION(ATestIntReplication, TestBookend, COND_None);
 }
 
 bool ATestIntReplication::Server_ReportReplication_Validate(int8 Rep8Int, int16 Rep16Int, int32 Rep32Int, int64 Rep64Int, uint8 Rep8UInt, uint16 Rep16UInt, uint32 Rep32UInt, uint64 Rep64UInt)
@@ -87,14 +107,11 @@ void ATestIntReplication::Server_ReportReplication_Implementation(int8 Rep8Int, 
 	check(Rep32UInt == 0xDEADBEEF);
 	check(Rep64UInt == 0xDEADBEEFDEADBEEF);
 
-	UE_LOG(LogTemp, Warning, TEXT("ON RPC resp!!!!"));
-
-	RPCResponseType++;
+	SignalResponseRecieved();
 }
 
-void ATestIntReplication::OnRep_TestBookend()
+void ATestIntReplication::ValidateClientReplicationImpl()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ON REP!!!!"));
 	check(Test8Int == (1 << 6));
 	check(Test16Int == (1 << 14));
 	check(Test32Int == 0xDEADBEEF);
@@ -103,6 +120,9 @@ void ATestIntReplication::OnRep_TestBookend()
 	check(Test16UInt == 0xDEAD);
 	check(Test32UInt == 0xDEADBEEF);
 	check(Test64UInt == 0xDEADBEEFDEADBEEF);
+}
 
+void ATestIntReplication::SendTestResponseRPCImpl()
+{
 	Server_ReportReplication(Test8Int, Test16Int, Test32Int, Test64Int, Test8UInt, Test16UInt, Test32UInt, Test64UInt);
 }

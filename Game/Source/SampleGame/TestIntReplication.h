@@ -6,22 +6,57 @@
 #include "GameFramework/Actor.h"
 #include "TestIntReplication.generated.h"
 
-UCLASS()
-class SAMPLEGAME_API ATestIntReplication : public AActor
+UCLASS(Abstract)
+class SAMPLEGAME_API AReplicationTestCase : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ATestIntReplication();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+public:
 
-public:	
+	AReplicationTestCase();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	void OnRep_TestBookend();
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+protected:
+
+	UFUNCTION()
+	void SignalReplicationSetup();
+
+	UFUNCTION()
+	void SignalResponseRecieved();
+
+	UFUNCTION()
+	virtual void ValidateClientReplicationImpl()
+	PURE_VIRTUAL(AReplicationTestCase::ValidateClientReplicationImpl(), );
+
+	UFUNCTION()
+	virtual void SendTestResponseRPCImpl()
+	PURE_VIRTUAL(AReplicationTestCase::SendTestResponseRPCImpl(), );
+
+	UPROPERTY()
+	FString TestName;
+
+private:
+
+	UPROPERTY(ReplicatedUsing = OnRep_TestBookend)
+	int TestBookend;
+
+	UPROPERTY()
+	int RPCResponsecCount;
+};
+
+UCLASS()
+class SAMPLEGAME_API ATestIntReplication : public AReplicationTestCase
+{
+	GENERATED_BODY()
+public:	
+
+	ATestIntReplication() { TestName == "Int types"; }
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_TestIntFunc();
@@ -29,11 +64,13 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReportReplication(int8 Rep8Int, int16 Rep16Int, int32 Rep32Int, int64 Rep64Int, uint8 Rep8UInt, uint16 Rep16UInt, uint32 Rep32UInt, uint64 Rep64UInt);
 
-	UFUNCTION()
-	void OnRep_TestBookend();
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	UPROPERTY(ReplicatedUsing = OnRep_TestBookend)
-	int TestBookend;
+	UFUNCTION()
+	virtual void ValidateClientReplicationImpl() override;
+
+	UFUNCTION()
+	virtual void SendTestResponseRPCImpl() override;
 
 	UPROPERTY(Replicated)
 	int8 Test8Int;
@@ -58,6 +95,4 @@ public:
 
 	UPROPERTY(Replicated)
 	uint64 Test64UInt;
-
-	int RPCResponseType;
 };
