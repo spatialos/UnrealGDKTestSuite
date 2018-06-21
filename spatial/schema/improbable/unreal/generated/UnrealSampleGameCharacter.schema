@@ -92,6 +92,7 @@ component UnrealSampleGameCharacterMultiClientRepData {
 	bytes field_testbar_mystruct = 81; // COND_None // Bar::TestBar::SampleGameCharacter
 	bytes field_testbar_netserializestruct = 82; // COND_None // Bar::TestBar::SampleGameCharacter
 	int32 field_testbookend = 83; // COND_None // ::SampleGameCharacter
+	UnrealObjectRef field_intreptest = 84; // COND_None // ::SampleGameCharacter
 }
 component UnrealSampleGameCharacterMigratableData {
 	id = 100024;

@@ -58,4 +58,6 @@ public:
 
 	UPROPERTY(Replicated)
 	uint64 Test64UInt;
+
+	int RPCResponseType;
 };

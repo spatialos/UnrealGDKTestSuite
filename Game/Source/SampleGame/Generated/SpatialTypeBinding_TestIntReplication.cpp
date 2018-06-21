@@ -41,8 +41,8 @@ void USpatialTypeBinding_TestIntReplication::Init(USpatialInterop* InInterop, US
 {
 	Super::Init(InInterop, InPackageMap);
 
-	RPCToSenderMap.Emplace("Server_TestIntFunc", &USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_SendCommand);
-	RPCToSenderMap.Emplace("Server_ReportReplication", &USpatialTypeBinding_TestIntReplication::Server_ReportReplication_SendCommand);
+	RPCToSenderMap.Emplace("Server_TestIntFunc", &USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_SendRPC);
+	RPCToSenderMap.Emplace("Server_ReportReplication", &USpatialTypeBinding_TestIntReplication::Server_ReportReplication_SendRPC);
 
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("TestIntReplication"));
 
@@ -117,10 +117,20 @@ void USpatialTypeBinding_TestIntReplication::BindToView()
 			ReceiveUpdate_Migratable(ActorChannel, Op.Update);
 		}));
 	}
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealTestIntReplicationNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealTestIntReplicationNetMulticastRPCs>& Op)
+	{
+		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealTestIntReplicationNetMulticastRPCs::ComponentId))
+		{
+			return;
+		}
+		ReceiveUpdate_NetMulticastRPCs(Op.EntityId, Op.Update);
+	}));
 
 	using ServerRPCCommandTypes = improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Testintreplicationservertestintfunc>(std::bind(&USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_OnCommandRequest, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Testintreplicationserverreportreplication>(std::bind(&USpatialTypeBinding_TestIntReplication::Server_ReportReplication_OnCommandRequest, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Testintreplicationservertestintfunc>(std::bind(&USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Testintreplicationserverreportreplication>(std::bind(&USpatialTypeBinding_TestIntReplication::Server_ReportReplication_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Testintreplicationservertestintfunc>(std::bind(&USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Testintreplicationserverreportreplication>(std::bind(&USpatialTypeBinding_TestIntReplication::Server_ReportReplication_OnCommandResponse, this, std::placeholders::_1)));
 }
@@ -204,6 +214,7 @@ worker::Entity USpatialTypeBinding_TestIntReplication::CreateActorEntity(const F
 		.AddComponent<improbable::unreal::generated::UnrealTestIntReplicationMigratableData>(MigratableData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::UnrealTestIntReplicationClientRPCs>(improbable::unreal::generated::UnrealTestIntReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs>(improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::UnrealTestIntReplicationNetMulticastRPCs>(improbable::unreal::generated::UnrealTestIntReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
@@ -1367,7 +1378,10 @@ void USpatialTypeBinding_TestIntReplication::ReceiveUpdate_Migratable(USpatialAc
 {
 }
 
-void USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+void USpatialTypeBinding_TestIntReplication::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealTestIntReplicationNetMulticastRPCs::Update& Update)
+{
+}
+void USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -1379,22 +1393,22 @@ void USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_SendCommand(work
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealServerTestIntFuncRequest Request;
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealServerTestIntFuncRequest RPCPayload;
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Server_TestIntFunc, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationservertestintfunc>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
-}
 
-void USpatialTypeBinding_TestIntReplication::Server_ReportReplication_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationservertestintfunc>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_TestIntReplication::Server_ReportReplication_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in TestIntReplication.generated.h (in a macro that is then put in TestIntReplication.h UCLASS macro)
 	TestIntReplication_eventServer_ReportReplication_Parms StructuredParams = *static_cast<TestIntReplication_eventServer_ReportReplication_Parms*>(Parameters);
@@ -1409,30 +1423,30 @@ void USpatialTypeBinding_TestIntReplication::Server_ReportReplication_SendComman
 			return {TargetObject};
 		}
 
-		// Build request.
-		improbable::unreal::generated::UnrealServerReportReplicationRequest Request;
-		Request.set_field_rep8int(int32_t(StructuredParams.Rep8Int));
-		Request.set_field_rep16int(int32_t(StructuredParams.Rep16Int));
-		Request.set_field_rep32int(int32_t(StructuredParams.Rep32Int));
-		Request.set_field_rep64int(int64_t(StructuredParams.Rep64Int));
-		Request.set_field_rep8uint(uint32_t(StructuredParams.Rep8UInt));
-		Request.set_field_rep16uint(uint32_t(StructuredParams.Rep16UInt));
-		Request.set_field_rep32uint(uint32_t(StructuredParams.Rep32UInt));
-		Request.set_field_rep64uint(uint64_t(StructuredParams.Rep64UInt));
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealServerReportReplicationRequest RPCPayload;
+		RPCPayload.set_field_rep8int(int32_t(StructuredParams.Rep8Int));
+		RPCPayload.set_field_rep16int(int32_t(StructuredParams.Rep16Int));
+		RPCPayload.set_field_rep32int(int32_t(StructuredParams.Rep32Int));
+		RPCPayload.set_field_rep64int(int64_t(StructuredParams.Rep64Int));
+		RPCPayload.set_field_rep8uint(uint32_t(StructuredParams.Rep8UInt));
+		RPCPayload.set_field_rep16uint(uint32_t(StructuredParams.Rep16UInt));
+		RPCPayload.set_field_rep32uint(uint32_t(StructuredParams.Rep32UInt));
+		RPCPayload.set_field_rep64uint(uint64_t(StructuredParams.Rep64UInt));
 
-		// Send command request.
-		Request.set_target_subobject_offset(TargetObjectRef.offset());
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Server_ReportReplication, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
-		auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationserverreportreplication>(TargetObjectRef.entity(), Request, 0);
-		return {RequestId.Id};
-	};
-	Interop->SendCommandRequest_Internal(Sender, /*bReliable*/ true);
-}
 
-void USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationservertestintfunc>& Op)
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationserverreportreplication>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationservertestintfunc>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -1440,13 +1454,13 @@ void USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_OnCommandRequest
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_TestIntFunc_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_TestIntFunc_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: Server_TestIntFunc_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: Server_TestIntFunc_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -1463,7 +1477,7 @@ void USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_OnCommandRequest
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_TestIntFunc_OnCommandRequest: Function not found. Object: %s, Function: Server_TestIntFunc."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_TestIntFunc_OnRPCPayload: Function not found. Object: %s, Function: Server_TestIntFunc."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -1473,10 +1487,9 @@ void USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_OnCommandRequest
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationservertestintfunc>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_TestIntReplication::Server_ReportReplication_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationserverreportreplication>& Op)
+void USpatialTypeBinding_TestIntReplication::Server_ReportReplication_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationserverreportreplication>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -1484,13 +1497,13 @@ void USpatialTypeBinding_TestIntReplication::Server_ReportReplication_OnCommandR
 		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
 		if (!TargetNetGUID.IsValid())
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_ReportReplication_OnCommandRequest: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_ReportReplication_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: Server_ReportReplication_OnCommandRequest: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: Server_ReportReplication_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
@@ -1521,7 +1534,7 @@ void USpatialTypeBinding_TestIntReplication::Server_ReportReplication_OnCommandR
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_ReportReplication_OnCommandRequest: Function not found. Object: %s, Function: Server_ReportReplication."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_ReportReplication_OnRPCPayload: Function not found. Object: %s, Function: Server_ReportReplication."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
@@ -1531,7 +1544,7 @@ void USpatialTypeBinding_TestIntReplication::Server_ReportReplication_OnCommandR
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationserverreportreplication>(Op.RequestId, {});
 		return {};
 	};
-	Interop->SendCommandResponse_Internal(Receiver);
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 
 void USpatialTypeBinding_TestIntReplication::Server_TestIntFunc_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationservertestintfunc>& Op)

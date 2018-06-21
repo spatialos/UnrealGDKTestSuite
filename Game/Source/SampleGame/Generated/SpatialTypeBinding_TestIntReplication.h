@@ -59,14 +59,15 @@ private:
 	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealTestIntReplicationSingleClientRepData::Update& Update) const;
 	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealTestIntReplicationMultiClientRepData::Update& Update) const;
 	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealTestIntReplicationMigratableData::Update& Update) const;
+	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealTestIntReplicationNetMulticastRPCs::Update& Update);
 
 	// RPC command sender functions.
-	void Server_TestIntFunc_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
-	void Server_ReportReplication_SendCommand(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void Server_TestIntFunc_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void Server_ReportReplication_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
-	void Server_TestIntFunc_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationservertestintfunc>& Op);
-	void Server_ReportReplication_OnCommandRequest(const worker::CommandRequestOp<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationserverreportreplication>& Op);
+	void Server_TestIntFunc_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationservertestintfunc>& Op);
+	void Server_ReportReplication_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationserverreportreplication>& Op);
 
 	// RPC command response handler functions.
 	void Server_TestIntFunc_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealTestIntReplicationServerRPCs::Commands::Testintreplicationservertestintfunc>& Op);

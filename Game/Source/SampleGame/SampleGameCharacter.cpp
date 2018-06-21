@@ -60,9 +60,6 @@ ASampleGameCharacter::ASampleGameCharacter()
 												   // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 												   // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
-	IntRepTest = NewObject<ATestIntReplication>();
-	IntRepTest->SetOwner(this);
-
 	TestPODStructArray.AddDefaulted(5);
 	for (int i = 0; i < 8; ++i)
 	{
@@ -74,6 +71,13 @@ ASampleGameCharacter::ASampleGameCharacter()
 void ASampleGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UWorld* World = GetWorld();
+	if (World && GetNetMode() == NM_DedicatedServer)
+	{
+		IntRepTest = World->SpawnActor<ATestIntReplication>();
+		IntRepTest->SetOwner(this);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -359,6 +363,8 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBar, COND_None);
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_None);
+
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, IntRepTest, COND_None);
 }
 
 bool ASampleGameCharacter::TestMulticast_Validate()

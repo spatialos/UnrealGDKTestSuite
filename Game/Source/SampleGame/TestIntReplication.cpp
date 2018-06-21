@@ -2,6 +2,7 @@
 
 #include "TestIntReplication.h"
 
+#include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 
 // Sets default values
@@ -9,6 +10,7 @@ ATestIntReplication::ATestIntReplication()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
 
 }
 
@@ -16,14 +18,23 @@ ATestIntReplication::ATestIntReplication()
 void ATestIntReplication::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void ATestIntReplication::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
+	if (UWorld* World = GetWorld())
+	{
+		if (AGameModeBase* GameMode = World->GetAuthGameMode())
+		{
+			if (RPCResponseType == GameMode->GetNumPlayers())
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Test complete!"));
+			}
+		}
+	}
 }
 
 bool ATestIntReplication::Server_TestIntFunc_Validate()
@@ -42,10 +53,9 @@ void ATestIntReplication::Server_TestIntFunc_Implementation()
 	Test32UInt = 0xDEADBEEF;
 	Test64UInt = 0xDEADBEEFDEADBEEF;
 
-	// Nested struct replication end
 	TestBookend += 1;
 
-	UE_LOG(LogTemp, Warning, TEXT("M HEEEEEEEEEEERE"));
+	UE_LOG(LogTemp, Warning, TEXT("SERVER TESTSSSS!"));
 }
 
 void ATestIntReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
@@ -58,6 +68,7 @@ void ATestIntReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >
 	DOREPLIFETIME_CONDITION(ATestIntReplication, Test16UInt, COND_None);
 	DOREPLIFETIME_CONDITION(ATestIntReplication, Test32UInt, COND_None);
 	DOREPLIFETIME_CONDITION(ATestIntReplication, Test64UInt, COND_None);
+	DOREPLIFETIME_CONDITION(ATestIntReplication, TestBookend, COND_None);
 }
 
 bool ATestIntReplication::Server_ReportReplication_Validate(int8 Rep8Int, int16 Rep16Int, int32 Rep32Int, int64 Rep64Int, uint8 Rep8UInt, uint16 Rep16UInt, uint32 Rep32UInt, uint64 Rep64UInt)
@@ -67,11 +78,23 @@ bool ATestIntReplication::Server_ReportReplication_Validate(int8 Rep8Int, int16 
 
 void ATestIntReplication::Server_ReportReplication_Implementation(int8 Rep8Int, int16 Rep16Int, int32 Rep32Int, int64 Rep64Int, uint8 Rep8UInt, uint16 Rep16UInt, uint32 Rep32UInt, uint64 Rep64UInt)
 {
+	check(Rep8Int == (1 << 6));
+	check(Rep16Int == (1 << 14));
+	check(Rep32Int == 0xDEADBEEF);
+	check(Rep64Int == 0xDEADBEEFDEADBEEF);
+	check(Rep8UInt == 0xDE);
+	check(Rep16UInt == 0xDEAD);
+	check(Rep32UInt == 0xDEADBEEF);
+	check(Rep64UInt == 0xDEADBEEFDEADBEEF);
 
+	UE_LOG(LogTemp, Warning, TEXT("ON RPC resp!!!!"));
+
+	RPCResponseType++;
 }
 
 void ATestIntReplication::OnRep_TestBookend()
 {
+	UE_LOG(LogTemp, Warning, TEXT("ON REP!!!!"));
 	check(Test8Int == (1 << 6));
 	check(Test16Int == (1 << 14));
 	check(Test32Int == 0xDEADBEEF);
@@ -80,4 +103,6 @@ void ATestIntReplication::OnRep_TestBookend()
 	check(Test16UInt == 0xDEAD);
 	check(Test32UInt == 0xDEADBEEF);
 	check(Test64UInt == 0xDEADBEEFDEADBEEF);
+
+	Server_ReportReplication(Test8Int, Test16Int, Test32Int, Test64Int, Test8UInt, Test16UInt, Test32UInt, Test64UInt);
 }

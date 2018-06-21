@@ -301,15 +301,16 @@ public:
 	double TestDouble;
 	// POD properties end
 
-	UPROPERTY(replicated)
+	UPROPERTY(Replicated)
 	TArray<FBar> BarArray;
 
-	UPROPERTY(replicated)
+	UPROPERTY(Replicated)
 	FBar TestBar;
 
 	UPROPERTY(ReplicatedUsing = OnRep_TestBookend)
 	int TestBookend;
 
+	UPROPERTY(Replicated)
 	ATestIntReplication* IntRepTest;
 
 	UFUNCTION(Client, Reliable)
