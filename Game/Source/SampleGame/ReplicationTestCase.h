@@ -48,4 +48,6 @@ private:
 
 	UPROPERTY()
 	int RPCResponsecCount;
+
+	bool bSuccess;
 };

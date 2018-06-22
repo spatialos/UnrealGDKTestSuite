@@ -148,6 +148,7 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(82, FRepHandleData(Class, {"TestBar", "NetSerializeStruct"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(83, FRepHandleData(Class, {"TestBookend"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(84, FRepHandleData(Class, {"IntRepTest"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(85, FRepHandleData(Class, {"FloatRepTest"}, COND_None, REPNOTIFY_OnChanged, 0));
 }
 
 void USpatialTypeBinding_SampleGameCharacter::BindToView()
@@ -1389,6 +1390,29 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			else
 			{
 				OutUpdate.set_field_intreptest(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 85: // field_floatreptest
+		{
+			ATestFloatReplication* Value = *(reinterpret_cast<ATestFloatReplication* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 85);
+				}
+				else
+				{
+					OutUpdate.set_field_floatreptest(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_floatreptest(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
@@ -3817,6 +3841,62 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
 						checkf(Cast<ATestIntReplication>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
 						Value = Cast<ATestIntReplication>(Object_Raw);
+					}
+					else
+					{
+						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+							*Interop->GetSpatialOS()->GetWorkerId(),
+							*ObjectRefToString(ObjectRef),
+							*ActorChannel->Actor->GetName(),
+							ActorChannel->GetEntityId().ToSpatialEntityId(),
+							*RepData->Property->GetName(),
+							Handle);
+						bWriteObjectProperty = false;
+						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					}
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
+		}
+	}
+	if (!Update.field_floatreptest().empty())
+	{
+		// field_floatreptest
+		uint16 Handle = 85;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			ATestFloatReplication* Value = *(reinterpret_cast<ATestFloatReplication* const*>(PropertyData));
+
+			{
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_floatreptest().data());
+				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				{
+					Value = nullptr;
+				}
+				else
+				{
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+					if (NetGUID.IsValid())
+					{
+						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<ATestFloatReplication>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+						Value = Cast<ATestFloatReplication>(Object_Raw);
 					}
 					else
 					{

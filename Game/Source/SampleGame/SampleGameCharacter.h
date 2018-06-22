@@ -8,6 +8,8 @@
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
 #include "TestIntReplication.h"
+#include "TestFloatReplication.h"
+#include "TestBoolReplication.h"
 #include "SampleGameCharacter.generated.h"
 
 USTRUCT(BlueprintType)
@@ -312,6 +314,12 @@ public:
 
 	UPROPERTY(Replicated)
 	ATestIntReplication* IntRepTest;
+
+	UPROPERTY(Replicated)
+	ATestFloatReplication* FloatRepTest;
+
+	UPROPERTY(Replicated)
+	ATestBoolReplication* BoolRepTest;
 
 	UFUNCTION(Client, Reliable)
 	void Client_TestConstArgs(FConstStruct ConstStruct);

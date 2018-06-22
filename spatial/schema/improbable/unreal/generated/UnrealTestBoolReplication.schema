@@ -4,11 +4,11 @@ package improbable.unreal.generated;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component UnrealTestIntReplicationSingleClientRepData {
-	id = 100046;
+component UnrealTestBoolReplicationSingleClientRepData {
+	id = 100058;
 }
-component UnrealTestIntReplicationMultiClientRepData {
-	id = 100047;
+component UnrealTestBoolReplicationMultiClientRepData {
+	id = 100059;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
 	bool field_btearoff = 3; // COND_None // ::Actor
@@ -25,28 +25,21 @@ component UnrealTestIntReplicationMultiClientRepData {
 	uint32 field_role = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
 	int32 field_testbookend = 16; // COND_None // ::ReplicationTestCase
-	int32 field_test8int = 17; // COND_None // ::TestIntReplication
-	int32 field_test16int = 18; // COND_None // ::TestIntReplication
-	int32 field_test32int = 19; // COND_None // ::TestIntReplication
-	int64 field_test64int = 20; // COND_None // ::TestIntReplication
-	uint32 field_test8uint = 21; // COND_None // ::TestIntReplication
-	uint32 field_test16uint = 22; // COND_None // ::TestIntReplication
-	uint32 field_test32uint = 23; // COND_None // ::TestIntReplication
-	uint64 field_test64uint = 24; // COND_None // ::TestIntReplication
+	bool field_testbool = 17; // COND_None // ::TestBoolReplication
 }
-component UnrealTestIntReplicationMigratableData {
-	id = 100048;
+component UnrealTestBoolReplicationMigratableData {
+	id = 100060;
 }
-import "improbable/unreal/generated/UnrealTestIntReplicationTypes.schema";
+import "improbable/unreal/generated/UnrealTestBoolReplicationTypes.schema";
 
-component UnrealTestIntReplicationClientRPCs {
-	id = 100049;
+component UnrealTestBoolReplicationClientRPCs {
+	id = 100061;
 }
-component UnrealTestIntReplicationServerRPCs {
-	id = 100050;
-	command UnrealRPCCommandResponse testintreplicationservertestintfunc(UnrealServerTestIntFuncRequest);
-	command UnrealRPCCommandResponse testintreplicationserverreportreplication(UnrealServerReportReplicationRequest);
+component UnrealTestBoolReplicationServerRPCs {
+	id = 100062;
+	command UnrealRPCCommandResponse testboolreplicationservertestboolfunc(UnrealServerTestBoolFuncRequest);
+	command UnrealRPCCommandResponse testboolreplicationserverreportreplication(UnrealServerReportReplicationRequest);
 }
-component UnrealTestIntReplicationNetMulticastRPCs {
-	id = 100051;
+component UnrealTestBoolReplicationNetMulticastRPCs {
+	id = 100063;
 }

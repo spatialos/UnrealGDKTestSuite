@@ -1,0 +1,13 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated;
+
+import "improbable/unreal/gdk/core_types.schema";
+
+type UnrealServerTestBoolFuncRequest {
+	uint32 target_subobject_offset = 1;
+}
+type UnrealServerReportReplicationRequest {
+	uint32 target_subobject_offset = 1;
+	bool field_repbool = 2;
+}

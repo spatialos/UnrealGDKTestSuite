@@ -76,7 +76,8 @@ void ASampleGameCharacter::BeginPlay()
 	if (World && GetNetMode() == NM_DedicatedServer)
 	{
 		IntRepTest = World->SpawnActor<ATestIntReplication>();
-		IntRepTest->SetOwner(this);
+		FloatRepTest = World->SpawnActor<ATestFloatReplication>();
+		BoolRepTest = World->SpawnActor<ATestBoolReplication>();
 	}
 }
 
@@ -126,6 +127,8 @@ void ASampleGameCharacter::DebugCmd()
 
 	Server_TestFunc();
 	IntRepTest->Server_TestIntFunc();
+	FloatRepTest->Server_TestFloatFunc();
+	//BoolRepTest->Server_TestBoolFunc();
 	//Server_TestFunc(TempArray);
 }
 
@@ -365,6 +368,8 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_None);
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, IntRepTest, COND_None);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, FloatRepTest, COND_None);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, BoolRepTest, COND_None);
 }
 
 bool ASampleGameCharacter::TestMulticast_Validate()
