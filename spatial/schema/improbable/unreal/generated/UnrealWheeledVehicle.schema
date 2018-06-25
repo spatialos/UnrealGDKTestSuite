@@ -1,6 +1,6 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated;
+package improbable.unreal.generated.wheeledvehicle;
 
 import "improbable/unreal/gdk/core_types.schema";
 
@@ -38,7 +38,7 @@ component UnrealWheeledVehicleClientRPCs {
 }
 component UnrealWheeledVehicleServerRPCs {
 	id = 100032;
-	command UnrealRPCCommandResponse wheeledvehicleserverupdatestate(UnrealServerUpdateStateRequest);
+	command UnrealRPCCommandResponse wheeledvehicleserverupdatestate(wheeledvehiclemovementcomponent.UnrealServerUpdateStateRequest);
 }
 component UnrealWheeledVehicleNetMulticastRPCs {
 	id = 100033;

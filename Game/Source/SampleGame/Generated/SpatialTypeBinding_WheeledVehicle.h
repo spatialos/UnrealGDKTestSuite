@@ -7,7 +7,7 @@
 #include <improbable/view.h>
 #include <improbable/unreal/gdk/core_types.h>
 #include <improbable/unreal/gdk/unreal_metadata.h>
-#include <improbable/unreal/generated/UnrealWheeledVehicle.h>
+#include <improbable/unreal/generated/WheeledVehicle/UnrealWheeledVehicle.h>
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_WheeledVehicle.generated.h"

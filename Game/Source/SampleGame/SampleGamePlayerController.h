@@ -14,4 +14,7 @@ class SAMPLEGAME_API ASampleGamePlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void TestRPC();
+
 };
