@@ -7,7 +7,7 @@
 #include <improbable/view.h>
 #include <improbable/unreal/gdk/core_types.h>
 #include <improbable/unreal/gdk/unreal_metadata.h>
-#include <improbable/unreal/generated/PlayerState/UnrealPlayerState.h>
+#include <improbable/unreal/generated/UnrealPlayerState.h>
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_PlayerState.generated.h"
@@ -47,19 +47,19 @@ private:
 	void BuildSpatialComponentUpdate(
 		const FPropertyChangeState& Changes,
 		USpatialActorChannel* Channel,
-		improbable::unreal::generated::UnrealPlayerStateSingleClientRepData::Update& SingleClientUpdate,
+		improbable::unreal::generated::playerstate::UnrealPlayerStateSingleClientRepData::Update& SingleClientUpdate,
 		bool& bSingleClientUpdateChanged,
-		improbable::unreal::generated::UnrealPlayerStateMultiClientRepData::Update& MultiClientUpdate,
+		improbable::unreal::generated::playerstate::UnrealPlayerStateMultiClientRepData::Update& MultiClientUpdate,
 		bool& bMultiClientUpdateChanged,
-		improbable::unreal::generated::UnrealPlayerStateMigratableData::Update& MigratableDataUpdate,
+		improbable::unreal::generated::playerstate::UnrealPlayerStateMigratableData::Update& MigratableDataUpdate,
 		bool& bMigratableDataUpdateChanged) const;
-	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealPlayerStateSingleClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealPlayerStateMultiClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealPlayerStateMigratableData::Update& OutUpdate) const;
-	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealPlayerStateSingleClientRepData::Update& Update) const;
-	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealPlayerStateMultiClientRepData::Update& Update) const;
-	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealPlayerStateMigratableData::Update& Update) const;
-	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealPlayerStateNetMulticastRPCs::Update& Update);
+	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::playerstate::UnrealPlayerStateSingleClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::playerstate::UnrealPlayerStateMultiClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::playerstate::UnrealPlayerStateMigratableData::Update& OutUpdate) const;
+	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::playerstate::UnrealPlayerStateSingleClientRepData::Update& Update) const;
+	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::playerstate::UnrealPlayerStateMultiClientRepData::Update& Update) const;
+	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::playerstate::UnrealPlayerStateMigratableData::Update& Update) const;
+	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::playerstate::UnrealPlayerStateNetMulticastRPCs::Update& Update);
 
 	// RPC command sender functions.
 

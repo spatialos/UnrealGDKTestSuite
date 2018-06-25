@@ -114,11 +114,11 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 
 	if (Interop->GetNetDriver()->GetNetMode() == NM_Client)
 	{
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -126,11 +126,11 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 			check(ActorChannel);
 			ReceiveUpdate_SingleClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMultiClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMultiClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMultiClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -140,11 +140,11 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 		}));
 		if (!bIsClient)
 		{
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>& Op)
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData>& Op)
 			{
 				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::ComponentId))
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData::ComponentId))
 				{
 					return;
 				}
@@ -154,18 +154,18 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 			}));
 		}
 	}
-	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>([this](
-		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>& Op)
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterNetMulticastRPCs>& Op)
 	{
 		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::ComponentId))
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterNetMulticastRPCs::ComponentId))
 		{
 			return;
 		}
 		ReceiveUpdate_NetMulticastRPCs(Op.EntityId, Op.Update);
 	}));
 
-	using ClientRPCCommandTypes = improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands;
+	using ClientRPCCommandTypes = improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands;
 	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterrootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientveryshortadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatwalk>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload, this, std::placeholders::_1)));
@@ -185,7 +185,7 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientackgoodmove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandResponse, this, std::placeholders::_1)));
 
-	using ServerRPCCommandTypes = improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands;
+	using ServerRPCCommandTypes = improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands;
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharactertestrpc>(std::bind(&USpatialTypeBinding_SampleGameCharacter::TestRPC_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload, this, std::placeholders::_1)));
@@ -217,14 +217,14 @@ worker::Entity USpatialTypeBinding_SampleGameCharacter::CreateActorEntity(const 
 	}
 
 	// Setup initial data.
-	improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Data SingleClientData;
-	improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData::Data SingleClientData;
+	improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Data MultiClientData;
-	improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMultiClientRepData::Data MultiClientData;
+	improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Data MigratableData;
-	improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update MigratableDataUpdate;
+	improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData::Data MigratableData;
+	improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData::Update MigratableDataUpdate;
 	bool bMigratableDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 	SingleClientUpdate.ApplyTo(SingleClientData);
@@ -276,23 +276,23 @@ worker::Entity USpatialTypeBinding_SampleGameCharacter::CreateActorEntity(const 
 		.SetPersistence(true)
 		.SetReadAcl(AnyUnrealWorkerOrClient)
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData>(SingleClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData>(MultiClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>(MigratableData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs>(improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs>(improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>(improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData>(SingleClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMultiClientRepData>(MultiClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData>(MigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs>(improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Data{}, OwningClientOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs>(improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterNetMulticastRPCs>(improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
 void USpatialTypeBinding_SampleGameCharacter::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
 {
 	// Build SpatialOS updates.
-	improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update MigratableDataUpdate;
+	improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData::Update MigratableDataUpdate;
 	bool bMigratableDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 
@@ -300,15 +300,15 @@ void USpatialTypeBinding_SampleGameCharacter::SendComponentUpdates(const FProper
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	if (bSingleClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
 	}
 	if (bMultiClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
 	if (bMigratableDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
 	}
 }
 
@@ -330,19 +330,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveAddComponent(USpatialActorC
 	auto* SingleClientAddOp = Cast<UUnrealSampleGameCharacterSingleClientRepDataAddComponentOp>(AddComponentOp);
 	if (SingleClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
 		ReceiveUpdate_SingleClient(Channel, Update);
 	}
 	auto* MultiClientAddOp = Cast<UUnrealSampleGameCharacterMultiClientRepDataAddComponentOp>(AddComponentOp);
 	if (MultiClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
 		ReceiveUpdate_MultiClient(Channel, Update);
 	}
 	auto* MigratableDataAddOp = Cast<UUnrealSampleGameCharacterMigratableDataAddComponentOp>(AddComponentOp);
 	if (MigratableDataAddOp)
 	{
-		auto Update = improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
+		auto Update = improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
 		ReceiveUpdate_Migratable(Channel, Update);
 	}
 }
@@ -354,9 +354,9 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_S
 	{
 		if (!bAutonomousProxy)
 		{
-			Interest.emplace(improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::ComponentId, worker::InterestOverride{false});
+			Interest.emplace(improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
@@ -364,11 +364,11 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_S
 void USpatialTypeBinding_SampleGameCharacter::BuildSpatialComponentUpdate(
 	const FPropertyChangeState& Changes,
 	USpatialActorChannel* Channel,
-	improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update& SingleClientUpdate,
+	improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData::Update& SingleClientUpdate,
 	bool& bSingleClientUpdateChanged,
-	improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Update& MultiClientUpdate,
+	improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update& MigratableDataUpdate,
+	improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData::Update& MigratableDataUpdate,
 	bool& bMigratableDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
@@ -426,11 +426,11 @@ void USpatialTypeBinding_SampleGameCharacter::BuildSpatialComponentUpdate(
 	}
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -962,24 +962,24 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 	}
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update& OutUpdate) const
+void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update& Update) const
+void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterSingleClientRepData::Update& Update) const
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TArray<UProperty*> RepNotifies;
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies);
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Update& Update) const
+void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMultiClientRepData::Update& Update) const
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TSet<UProperty*> RepNotifies;
 
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
-	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::ComponentId);
+	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::ComponentId);
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
@@ -2347,11 +2347,11 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update& Update) const
+void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterMigratableData::Update& Update) const
 {
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::Update& Update)
+void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterNetMulticastRPCs::Update& Update)
 {
 	for (auto& event : Update.samplegamecharactertestmulticast())
 	{
@@ -2375,7 +2375,7 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealRootMotionDebugClientPrintOnScreenRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealRootMotionDebugClientPrintOnScreenRequest RPCPayload;
 		RPCPayload.set_field_instring(TCHAR_TO_UTF8(*StructuredParams.InString));
 
 		// Send RPC
@@ -2385,7 +2385,7 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
@@ -2406,7 +2406,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientVeryShortAdjustPositionRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealClientVeryShortAdjustPositionRequest RPCPayload;
 		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
@@ -2446,7 +2446,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2464,7 +2464,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendRPC(worker::Co
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientCheatWalkRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealClientCheatWalkRequest RPCPayload;
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2473,7 +2473,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendRPC(worker::Co
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
@@ -2491,7 +2491,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendRPC(worker::C
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientCheatGhostRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealClientCheatGhostRequest RPCPayload;
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2500,7 +2500,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendRPC(worker::C
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
@@ -2518,7 +2518,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendRPC(worker::Con
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientCheatFlyRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealClientCheatFlyRequest RPCPayload;
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2527,7 +2527,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendRPC(worker::Con
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
@@ -2548,7 +2548,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientAdjustRootMotionSourcePositionRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealClientAdjustRootMotionSourcePositionRequest RPCPayload;
 		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
@@ -2607,7 +2607,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2628,7 +2628,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientAdjustRootMotionPositionRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealClientAdjustRootMotionPositionRequest RPCPayload;
 		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		RPCPayload.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
 		{
@@ -2678,7 +2678,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2699,7 +2699,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC(worke
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientAdjustPositionRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealClientAdjustPositionRequest RPCPayload;
 		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
@@ -2747,7 +2747,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC(worke
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2768,7 +2768,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendRPC(worker::
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientAckGoodMoveRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealClientAckGoodMoveRequest RPCPayload;
 		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 
 		// Send RPC
@@ -2778,7 +2778,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendRPC(worker::
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2796,7 +2796,7 @@ void USpatialTypeBinding_SampleGameCharacter::TestRPC_SendRPC(worker::Connection
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealTestRPCRequest RPCPayload;
+		improbable::unreal::generated::samplegamecharacter::UnrealTestRPCRequest RPCPayload;
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2805,7 +2805,7 @@ void USpatialTypeBinding_SampleGameCharacter::TestRPC_SendRPC(worker::Connection
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharactertestrpc>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharactertestrpc>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
@@ -2826,7 +2826,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendRPC(worker::Conn
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealServerMoveOldRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealServerMoveOldRequest RPCPayload;
 		RPCPayload.set_field_oldtimestamp(StructuredParams.OldTimeStamp);
 		{
 			TArray<uint8> ValueData;
@@ -2845,7 +2845,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendRPC(worker::Conn
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2866,7 +2866,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC(worker::C
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealServerMoveNoBaseRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealServerMoveNoBaseRequest RPCPayload;
 		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
@@ -2896,7 +2896,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC(worker::C
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2917,7 +2917,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC(worke
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealServerMoveDualNoBaseRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealServerMoveDualNoBaseRequest RPCPayload;
 		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
 		{
 			TArray<uint8> ValueData;
@@ -2958,7 +2958,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC(worke
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2979,7 +2979,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealServerMoveDualHybridRootMotionRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealServerMoveDualHybridRootMotionRequest RPCPayload;
 		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
 		{
 			TArray<uint8> ValueData;
@@ -3039,7 +3039,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -3060,7 +3060,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC(worker::Con
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealServerMoveDualRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealServerMoveDualRequest RPCPayload;
 		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
 		{
 			TArray<uint8> ValueData;
@@ -3120,7 +3120,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC(worker::Con
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -3141,7 +3141,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC(worker::Connect
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealServerMoveRequest RPCPayload;
+		improbable::unreal::generated::character::UnrealServerMoveRequest RPCPayload;
 		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
@@ -3190,7 +3190,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC(worker::Connect
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -3208,7 +3208,7 @@ void USpatialTypeBinding_SampleGameCharacter::TestMulticast_SendRPC(worker::Conn
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealTestMulticastRequest RPCPayload;
+		improbable::unreal::generated::samplegamecharacter::UnrealTestMulticastRequest RPCPayload;
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3217,15 +3217,15 @@ void USpatialTypeBinding_SampleGameCharacter::TestMulticast_SendRPC(worker::Conn
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::Update Update;
+			improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterNetMulticastRPCs::Update Update;
 			Update.add_samplegamecharactertestmulticast(RPCPayload);
 			checkf(Update.samplegamecharactertestmulticast().size() == 1, TEXT("TestMulticast_SendCommand: More than one event being sent"));
-			Connection->SendComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>(TargetObjectRef.entity(), Update);
+			Connection->SendComponentUpdate<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterNetMulticastRPCs>(TargetObjectRef.entity(), Update);
 			return {};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
-void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>& Op)
+void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3270,12 +3270,12 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3359,12 +3359,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRP
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3402,12 +3402,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload(const
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3445,12 +3445,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload(cons
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3488,12 +3488,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload(const 
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3598,12 +3598,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3698,12 +3698,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnR
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3796,12 +3796,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3846,12 +3846,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(con
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::TestRPC_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharactertestrpc>& Op)
+void USpatialTypeBinding_SampleGameCharacter::TestRPC_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharactertestrpc>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3889,12 +3889,12 @@ void USpatialTypeBinding_SampleGameCharacter::TestRPC_OnRPCPayload(const worker:
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharactertestrpc>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharactertestrpc>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3949,12 +3949,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const w
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4021,12 +4021,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(cons
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4105,12 +4105,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4216,12 +4216,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4327,12 +4327,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4426,12 +4426,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const work
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::TestMulticast_OnRPCPayload(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealTestMulticastRequest& EventData)
+void USpatialTypeBinding_SampleGameCharacter::TestMulticast_OnRPCPayload(const worker::EntityId EntityId, const improbable::unreal::generated::samplegamecharacter::UnrealTestMulticastRequest& EventData)
 {
 	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
@@ -4472,82 +4472,82 @@ void USpatialTypeBinding_SampleGameCharacter::TestMulticast_OnRPCPayload(const w
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 
-void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>& Op)
+void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("RootMotionDebugClientPrintOnScreen"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientVeryShortAdjustPosition"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientCheatWalk"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientCheatGhost"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientCheatFly"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientAdjustRootMotionSourcePosition"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientAdjustRootMotionPosition"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientAdjustPosition"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientAckGoodMove"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::TestRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharactertestrpc>& Op)
+void USpatialTypeBinding_SampleGameCharacter::TestRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharactertestrpc>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("TestRPC"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveOld"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveNoBase"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveDualNoBase"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveDualHybridRootMotion"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveDual"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerMove"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }

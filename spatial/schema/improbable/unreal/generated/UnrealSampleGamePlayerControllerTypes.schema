@@ -7,3 +7,6 @@ import "improbable/unreal/gdk/core_types.schema";
 type UnrealTestRPCRequest {
 	uint32 target_subobject_offset = 1;
 }
+type UnrealTestMulticastRequest {
+	uint32 target_subobject_offset = 1;
+}

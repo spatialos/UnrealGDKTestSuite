@@ -118,4 +118,5 @@ component UnrealSampleGamePlayerControllerServerRPCs {
 }
 component UnrealSampleGamePlayerControllerNetMulticastRPCs {
 	id = 100015;
+	event UnrealTestMulticastRequest samplegameplayercontrollertestmulticast;
 }

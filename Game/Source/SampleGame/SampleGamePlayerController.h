@@ -17,4 +17,7 @@ class SAMPLEGAME_API ASampleGamePlayerController : public APlayerController
 	UFUNCTION(Server, Reliable, WithValidation)
 	void TestRPC();
 
+	UFUNCTION(NetMulticast, Unreliable, WithValidation)
+	void TestMulticast();
+
 };
