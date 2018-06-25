@@ -72,7 +72,7 @@ void USpatialTypeBinding_PlayerState::Init(USpatialInterop* InInterop, USpatialP
 	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"PlayerNamePrivate"}, COND_None, REPNOTIFY_OnChanged, 0));
 }
 
-void USpatialTypeBinding_PlayerState::BindToView(bool bIsClient)
+void USpatialTypeBinding_PlayerState::BindToView()
 {
 	TSharedPtr<worker::View> View = Interop->GetSpatialOS()->GetView().Pin();
 	ViewCallbacks.Init(View);
@@ -103,21 +103,18 @@ void USpatialTypeBinding_PlayerState::BindToView(bool bIsClient)
 			check(ActorChannel);
 			ReceiveUpdate_MultiClient(ActorChannel, Op.Update);
 		}));
-		if (!bIsClient)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealPlayerStateMigratableData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealPlayerStateMigratableData>& Op)
 		{
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealPlayerStateMigratableData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealPlayerStateMigratableData>& Op)
+			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealPlayerStateMigratableData::ComponentId))
 			{
-				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealPlayerStateMigratableData::ComponentId))
-				{
-					return;
-				}
-				USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
-				check(ActorChannel);
-				ReceiveUpdate_Migratable(ActorChannel, Op.Update);
-			}));
-		}
+				return;
+			}
+			USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
+			check(ActorChannel);
+			ReceiveUpdate_Migratable(ActorChannel, Op.Update);
+		}));
 	}
 	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealPlayerStateNetMulticastRPCs>([this](
 		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealPlayerStateNetMulticastRPCs>& Op)
@@ -419,18 +416,9 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
-				if (!NetGUID.IsValid())
-				{
-					if (Value->IsFullNameStableForNetworking())
-					{
-						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
-					}
-				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
-					// A legal static object reference should never be unresolved.
-					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 7);
 				}
 				else
@@ -500,18 +488,9 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
-				if (!NetGUID.IsValid())
-				{
-					if (Value->IsFullNameStableForNetworking())
-					{
-						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
-					}
-				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
-					// A legal static object reference should never be unresolved.
-					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 12);
 				}
 				else
@@ -532,18 +511,9 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
-				if (!NetGUID.IsValid())
-				{
-					if (Value->IsFullNameStableForNetworking())
-					{
-						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
-					}
-				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
-					// A legal static object reference should never be unresolved.
-					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 13);
 				}
 				else
@@ -571,18 +541,9 @@ void USpatialTypeBinding_PlayerState::ServerSendUpdate_MultiClient(const uint8* 
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
-				if (!NetGUID.IsValid())
-				{
-					if (Value->IsFullNameStableForNetworking())
-					{
-						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
-					}
-				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
-					// A legal static object reference should never be unresolved.
-					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 15);
 				}
 				else
@@ -898,8 +859,6 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1068,8 +1027,6 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1126,8 +1083,6 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1213,8 +1168,6 @@ void USpatialTypeBinding_PlayerState::ReceiveUpdate_MultiClient(USpatialActorCha
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
