@@ -209,6 +209,8 @@ void ASampleGameCharacter::Server_TestFunc_Implementation()
 	//TestUEnumCArray[TestEnumArrayIdx] = EnumNamespace::Enum_0;
 	//TestEnumArrayIdx++;
 
+	StablyNamedObj = GetMesh()->SkeletalMesh;
+
 	TestEnumTArray.Push(ETest8Enum::Enum_0);
 	TestUEnumTArray.Push(EnumNamespace::Enum_0);
 	// Enum property changes end
@@ -332,6 +334,8 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestNetSerializeArray, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStruct, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestPODStruct, COND_SimulatedOnly);
+
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, StablyNamedObj, COND_None);
 
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestObjectArray, COND_SimulatedOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayReplication, COND_None);

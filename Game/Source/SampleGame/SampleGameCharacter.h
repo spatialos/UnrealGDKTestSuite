@@ -227,6 +227,9 @@ public:
 	UPROPERTY(Replicated)
 	FTestPODStruct TestPODStruct;
 
+	UPROPERTY(Replicated)
+	USkeletalMesh* StablyNamedObj;
+
 	//UPROPERTY(Replicated)
 	//TArray<UObject*> TestObjectArray;
 
