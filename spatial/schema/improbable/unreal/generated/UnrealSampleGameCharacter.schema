@@ -83,5 +83,5 @@ component UnrealSampleGameCharacterServerRPCs {
 }
 component UnrealSampleGameCharacterNetMulticastRPCs {
 	id = 100027;
-	event UnrealTestMulticastRequest samplegamecharactertestmulticast;
+	event samplegamecharacter.UnrealTestMulticastRequest samplegamecharactertestmulticast;
 }
