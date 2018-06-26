@@ -4,7 +4,7 @@ package improbable.unreal.generated.wheeledvehiclemovementcomponent;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-type UnrealServerUpdateStateRequest {
+type ServerUpdateStateRequest {
 	uint32 target_subobject_offset = 1;
 	float field_insteeringinput = 2;
 	float field_inthrottleinput = 3;

@@ -4,9 +4,9 @@ package improbable.unreal.generated.samplegameplayercontroller;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-type UnrealTestRPCRequest {
+type TestRPCRequest {
 	uint32 target_subobject_offset = 1;
 }
-type UnrealTestMulticastRequest {
+type TestMulticastRequest {
 	uint32 target_subobject_offset = 1;
 }

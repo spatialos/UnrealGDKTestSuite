@@ -4,10 +4,10 @@ package improbable.unreal.generated.samplegamecharacter;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component UnrealSampleGameCharacterSingleClientRepData {
+component SampleGameCharacterSingleClientRepData {
 	id = 100022;
 }
-component UnrealSampleGameCharacterMultiClientRepData {
+component SampleGameCharacterMultiClientRepData {
 	id = 100023;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
@@ -53,35 +53,35 @@ component UnrealSampleGameCharacterMultiClientRepData {
 	bytes field_reprootmotion_acceleration = 42; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion_linearvelocity = 43; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 }
-component UnrealSampleGameCharacterMigratableData {
+component SampleGameCharacterMigratableData {
 	id = 100024;
 }
 import "improbable/unreal/generated/UnrealSampleGameCharacterTypes.schema";
 import "improbable/unreal/generated/UnrealCharacterTypes.schema";
 
-component UnrealSampleGameCharacterClientRPCs {
+component SampleGameCharacterClientRPCs {
 	id = 100025;
-	command UnrealRPCCommandResponse rootmotiondebugclientprintonscreen(character.UnrealRootMotionDebugClientPrintOnScreenRequest);
-	command UnrealRPCCommandResponse clientveryshortadjustposition(character.UnrealClientVeryShortAdjustPositionRequest);
-	command UnrealRPCCommandResponse clientcheatwalk(character.UnrealClientCheatWalkRequest);
-	command UnrealRPCCommandResponse clientcheatghost(character.UnrealClientCheatGhostRequest);
-	command UnrealRPCCommandResponse clientcheatfly(character.UnrealClientCheatFlyRequest);
-	command UnrealRPCCommandResponse clientadjustrootmotionsourceposition(character.UnrealClientAdjustRootMotionSourcePositionRequest);
-	command UnrealRPCCommandResponse clientadjustrootmotionposition(character.UnrealClientAdjustRootMotionPositionRequest);
-	command UnrealRPCCommandResponse clientadjustposition(character.UnrealClientAdjustPositionRequest);
-	command UnrealRPCCommandResponse clientackgoodmove(character.UnrealClientAckGoodMoveRequest);
+	command UnrealRPCCommandResponse rootmotiondebugclientprintonscreen(character.RootMotionDebugClientPrintOnScreenRequest);
+	command UnrealRPCCommandResponse clientveryshortadjustposition(character.ClientVeryShortAdjustPositionRequest);
+	command UnrealRPCCommandResponse clientcheatwalk(character.ClientCheatWalkRequest);
+	command UnrealRPCCommandResponse clientcheatghost(character.ClientCheatGhostRequest);
+	command UnrealRPCCommandResponse clientcheatfly(character.ClientCheatFlyRequest);
+	command UnrealRPCCommandResponse clientadjustrootmotionsourceposition(character.ClientAdjustRootMotionSourcePositionRequest);
+	command UnrealRPCCommandResponse clientadjustrootmotionposition(character.ClientAdjustRootMotionPositionRequest);
+	command UnrealRPCCommandResponse clientadjustposition(character.ClientAdjustPositionRequest);
+	command UnrealRPCCommandResponse clientackgoodmove(character.ClientAckGoodMoveRequest);
 }
-component UnrealSampleGameCharacterServerRPCs {
+component SampleGameCharacterServerRPCs {
 	id = 100026;
-	command UnrealRPCCommandResponse testrpc(samplegamecharacter.UnrealTestRPCRequest);
-	command UnrealRPCCommandResponse servermoveold(character.UnrealServerMoveOldRequest);
-	command UnrealRPCCommandResponse servermovenobase(character.UnrealServerMoveNoBaseRequest);
-	command UnrealRPCCommandResponse servermovedualnobase(character.UnrealServerMoveDualNoBaseRequest);
-	command UnrealRPCCommandResponse servermovedualhybridrootmotion(character.UnrealServerMoveDualHybridRootMotionRequest);
-	command UnrealRPCCommandResponse servermovedual(character.UnrealServerMoveDualRequest);
-	command UnrealRPCCommandResponse servermove(character.UnrealServerMoveRequest);
+	command UnrealRPCCommandResponse testrpc(samplegamecharacter.TestRPCRequest);
+	command UnrealRPCCommandResponse servermoveold(character.ServerMoveOldRequest);
+	command UnrealRPCCommandResponse servermovenobase(character.ServerMoveNoBaseRequest);
+	command UnrealRPCCommandResponse servermovedualnobase(character.ServerMoveDualNoBaseRequest);
+	command UnrealRPCCommandResponse servermovedualhybridrootmotion(character.ServerMoveDualHybridRootMotionRequest);
+	command UnrealRPCCommandResponse servermovedual(character.ServerMoveDualRequest);
+	command UnrealRPCCommandResponse servermove(character.ServerMoveRequest);
 }
-component UnrealSampleGameCharacterNetMulticastRPCs {
+component SampleGameCharacterNetMulticastRPCs {
 	id = 100027;
-	event samplegamecharacter.UnrealTestMulticastRequest testmulticast;
+	event samplegamecharacter.TestMulticastRequest testmulticast;
 }
