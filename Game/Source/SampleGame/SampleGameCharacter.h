@@ -65,6 +65,9 @@ protected:
 
 	void Interact();
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void TestRPC();
+
 	UFUNCTION(NetMulticast, Unreliable, WithValidation)
 	void TestMulticast();
 
