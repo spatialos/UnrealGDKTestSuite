@@ -1,10 +1,10 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated;
+package improbable.unreal.generated.samplegamecharacter;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-type UnrealServerShowThingsRequest {
+type ServerShowThingsRequest {
 	uint32 target_subobject_offset = 1;
 	UnrealObjectRef field_struct_myobject = 2;
 	list<bytes> field_arrayofstruct = 3;
@@ -13,9 +13,9 @@ type UnrealServerShowThingsRequest {
 	list<bytes> field_cstylestructs_mycstylestruct = 6;
 	list<bytes> field_cstylestructs_mycstylensstruct = 7;
 }
-type UnrealServerDoThingsRequest {
+type ServerDoThingsRequest {
 	uint32 target_subobject_offset = 1;
 }
-type UnrealTestMulticastRequest {
+type TestMulticastRequest {
 	uint32 target_subobject_offset = 1;
 }

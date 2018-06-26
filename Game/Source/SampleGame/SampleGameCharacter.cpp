@@ -83,12 +83,27 @@ bool ASampleGameCharacter::Server_DoThings_Validate()
 
 void ASampleGameCharacter::Server_DoThings_Implementation()
 {
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASampleGameCharacter::StaticClass(), FoundActors);
-	check(FoundActors.Num() > 0);
+	AActor* Actor;
 
-	int ActorIndex = FMath::RandRange(0, FoundActors.Num() - 1);
-	AActor* Actor = FoundActors[ActorIndex];
+	static bool bToggle = false;
+	if (bToggle)
+	{
+		TArray<AActor*> FoundActors;
+		UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName(TEXT("MyTag")), FoundActors);
+		check(FoundActors.Num() > 0);
+		Actor = FoundActors[0];
+	}
+	else
+	{
+		TArray<AActor*> FoundActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASampleGameCharacter::StaticClass(), FoundActors);
+		check(FoundActors.Num() > 0);
+
+		int ActorIndex = FMath::RandRange(0, FoundActors.Num() - 1);
+		Actor = FoundActors[ActorIndex];
+	}
+	bToggle = !bToggle;
+
 	MyStruct.MyObject = Actor;
 	MyNSStruct.MyObject = Actor;
 	
