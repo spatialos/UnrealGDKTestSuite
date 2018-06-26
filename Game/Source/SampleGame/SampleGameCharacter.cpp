@@ -9,6 +9,7 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "SampleGameGameStateBase.h"
 #include "SpatialNetDriver.h"
 
@@ -16,6 +17,8 @@
 
 //////////////////////////////////////////////////////////////////////////
 // ASampleGameCharacter
+
+DEFINE_LOG_CATEGORY_STATIC(LogSampleGameCharacter, Log, All);
 
 ASampleGameCharacter::ASampleGameCharacter()
 {
@@ -59,6 +62,145 @@ ASampleGameCharacter::ASampleGameCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+}
+
+void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASampleGameCharacter, MyStruct);
+	//DOREPLIFETIME(ASampleGameCharacter, MyCStyleStruct);
+	DOREPLIFETIME(ASampleGameCharacter, MyArrayOfStruct);
+	DOREPLIFETIME(ASampleGameCharacter, MyNSStruct);
+	DOREPLIFETIME(ASampleGameCharacter, MyCStyleNSStruct);
+	DOREPLIFETIME(ASampleGameCharacter, MyArrayOfNSStruct);
+}
+
+bool ASampleGameCharacter::Server_DoThings_Validate()
+{
+	return true;
+}
+
+void ASampleGameCharacter::Server_DoThings_Implementation()
+{
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASampleGameCharacter::StaticClass(), FoundActors);
+	check(FoundActors.Num() > 0);
+
+	int ActorIndex = FMath::RandRange(0, FoundActors.Num() - 1);
+	AActor* Actor = FoundActors[ActorIndex];
+	MyStruct.MyObject = Actor;
+	MyNSStruct.MyObject = Actor;
+	
+	static int CStyleIndex = 0;
+	MyCStyleStruct[CStyleIndex].MyObject = Actor;
+	MyCStyleNSStruct[CStyleIndex].MyObject = Actor;
+	CStyleIndex = (CStyleIndex + 1) % 5;
+
+	MyArrayOfStruct.Add({Actor});
+	MyArrayOfNSStruct.Add({Actor});
+}
+
+void ASampleGameCharacter::ShowThings()
+{
+	UE_LOG(LogSampleGameCharacter, Log, TEXT("!!! ShowThings:"));
+	UE_LOG(LogSampleGameCharacter, Log, TEXT("MyStruct: %s"), *UKismetSystemLibrary::GetDisplayName(MyStruct.MyObject));
+	UE_LOG(LogSampleGameCharacter, Log, TEXT("MyNSStruct: %s"), *UKismetSystemLibrary::GetDisplayName(MyNSStruct.MyObject));
+
+	{
+		FString MyCStyleStructString;
+		for (int i = 0; i < 5; i++)
+		{
+			MyCStyleStructString += FString::Printf(TEXT("%s, "), *UKismetSystemLibrary::GetDisplayName(MyCStyleStruct[i].MyObject));
+		}
+		UE_LOG(LogSampleGameCharacter, Log, TEXT("MyCStyleStruct: %s"), *MyCStyleStructString);
+	}
+
+	{
+		FString MyCStyleNSStructString;
+		for (int i = 0; i < 5; i++)
+		{
+			MyCStyleNSStructString += FString::Printf(TEXT("%s, "), *UKismetSystemLibrary::GetDisplayName(MyCStyleNSStruct[i].MyObject));
+		}
+		UE_LOG(LogSampleGameCharacter, Log, TEXT("MyNSCStyleStruct: %s"), *MyCStyleNSStructString);
+	}
+
+	{
+		FString MyArrayOfStructString;
+		for (auto& Item : MyArrayOfStruct)
+		{
+			MyArrayOfStructString += FString::Printf(TEXT("%s, "), *UKismetSystemLibrary::GetDisplayName(Item.MyObject));
+		}
+		UE_LOG(LogSampleGameCharacter, Log, TEXT("MyArrayOfStruct: %s"), *MyArrayOfStructString);
+	}
+
+	{
+		FString MyArrayOfNSStructString;
+		for (auto& Item : MyArrayOfNSStruct)
+		{
+			MyArrayOfNSStructString += FString::Printf(TEXT("%s, "), *UKismetSystemLibrary::GetDisplayName(Item.MyObject));
+		}
+		UE_LOG(LogSampleGameCharacter, Log, TEXT("MyArrayOfNSStruct: %s"), *MyArrayOfNSStructString);
+	}
+}
+
+void ASampleGameCharacter::SendThings()
+{
+	FMyCStyleStructs CStyleStructs;
+	for (int i = 0; i < 5; i++)
+	{
+		CStyleStructs.MyCStyleStruct[i] = MyCStyleStruct[i];
+		CStyleStructs.MyCStyleNSStruct[i] = MyCStyleNSStruct[i];
+	}
+	Server_ShowThings(MyStruct, MyArrayOfStruct, MyNSStruct, MyArrayOfNSStruct, CStyleStructs);
+}
+
+bool ASampleGameCharacter::Server_ShowThings_Validate(FMyStruct Struct, const TArray<FMyStruct>& ArrayOfStruct, FMyNSStruct NSStruct, const TArray<FMyNSStruct>& ArrayOfNSStruct, const FMyCStyleStructs& CStyleStructs)
+{
+	return true;
+}
+
+void ASampleGameCharacter::Server_ShowThings_Implementation(FMyStruct Struct, const TArray<FMyStruct>& ArrayOfStruct, FMyNSStruct NSStruct, const TArray<FMyNSStruct>& ArrayOfNSStruct, const FMyCStyleStructs& CStyleStructs)
+{
+	UE_LOG(LogSampleGameCharacter, Log, TEXT("!!! Server_ShowThings:"));
+	UE_LOG(LogSampleGameCharacter, Log, TEXT("MyStruct: %s"), *UKismetSystemLibrary::GetDisplayName(Struct.MyObject));
+	UE_LOG(LogSampleGameCharacter, Log, TEXT("MyNSStruct: %s"), *UKismetSystemLibrary::GetDisplayName(NSStruct.MyObject));
+
+	{
+		FString MyCStyleStructString;
+		for (int i = 0; i < 5; i++)
+		{
+			MyCStyleStructString += FString::Printf(TEXT("%s, "), *UKismetSystemLibrary::GetDisplayName(CStyleStructs.MyCStyleStruct[i].MyObject));
+		}
+		UE_LOG(LogSampleGameCharacter, Log, TEXT("MyCStyleStruct: %s"), *MyCStyleStructString);
+	}
+
+	{
+		FString MyCStyleNSStructString;
+		for (int i = 0; i < 5; i++)
+		{
+			MyCStyleNSStructString += FString::Printf(TEXT("%s, "), *UKismetSystemLibrary::GetDisplayName(CStyleStructs.MyCStyleNSStruct[i].MyObject));
+		}
+		UE_LOG(LogSampleGameCharacter, Log, TEXT("MyNSCStyleStruct: %s"), *MyCStyleNSStructString);
+	}
+
+	{
+		FString MyArrayOfStructString;
+		for (auto& Item : ArrayOfStruct)
+		{
+			MyArrayOfStructString += FString::Printf(TEXT("%s, "), *UKismetSystemLibrary::GetDisplayName(Item.MyObject));
+		}
+		UE_LOG(LogSampleGameCharacter, Log, TEXT("MyArrayOfStruct: %s"), *MyArrayOfStructString);
+	}
+
+	{
+		FString MyArrayOfNSStructString;
+		for (auto& Item : ArrayOfNSStruct)
+		{
+			MyArrayOfNSStructString += FString::Printf(TEXT("%s, "), *UKismetSystemLibrary::GetDisplayName(Item.MyObject));
+		}
+		UE_LOG(LogSampleGameCharacter, Log, TEXT("MyArrayOfNSStruct: %s"), *MyArrayOfNSStructString);
+	}
 }
 
 void ASampleGameCharacter::BeginPlay()

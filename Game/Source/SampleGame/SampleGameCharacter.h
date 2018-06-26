@@ -7,6 +7,51 @@
 #include "GameFramework/Character.h"
 #include "SampleGameCharacter.generated.h"
 
+USTRUCT()
+struct FMyStruct
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	UObject* MyObject;
+};
+
+USTRUCT()
+struct FMyNSStruct
+{
+	GENERATED_BODY()
+
+	bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
+	{
+		Ar << MyObject;
+		return true;
+	}
+
+	UPROPERTY()
+	UObject* MyObject;
+};
+
+USTRUCT()
+struct FMyCStyleStructs
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FMyStruct MyCStyleStruct[5];
+
+	UPROPERTY()
+	FMyNSStruct MyCStyleNSStruct[5];
+};
+
+template<>
+struct TStructOpsTypeTraits<FMyNSStruct> : public TStructOpsTypeTraitsBase2<FMyNSStruct>
+{
+	enum 
+	{
+		WithNetSerializer = true
+	};
+};
+
 UCLASS(config=Game)
 class ASampleGameCharacter : public ACharacter
 {
@@ -22,6 +67,8 @@ class ASampleGameCharacter : public ACharacter
 public:
 	ASampleGameCharacter();
 
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	virtual void BeginPlay() override;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -31,6 +78,37 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	UPROPERTY(Replicated)
+	FMyStruct MyStruct;
+
+	//UPROPERTY(Replicated)
+	FMyStruct MyCStyleStruct[5];
+
+	UPROPERTY(Replicated)
+	TArray<FMyStruct> MyArrayOfStruct;
+
+	UPROPERTY(Replicated)
+	FMyNSStruct MyNSStruct;
+
+	UPROPERTY(Replicated)
+	FMyNSStruct MyCStyleNSStruct[5];
+
+	UPROPERTY(Replicated)
+	TArray<FMyNSStruct> MyArrayOfNSStruct;
+
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
+	void Server_DoThings();
+
+	UFUNCTION(BlueprintCallable)
+	void ShowThings();
+
+	UFUNCTION(BlueprintCallable)
+	void SendThings();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_ShowThings(FMyStruct Struct, const TArray<FMyStruct>& ArrayOfStruct,
+		FMyNSStruct NSStruct, const TArray<FMyNSStruct>& ArrayOfNSStruct, const FMyCStyleStructs& CStyleStructs);
 
 protected:
 

@@ -4,6 +4,18 @@ package improbable.unreal.generated;
 
 import "improbable/unreal/gdk/core_types.schema";
 
+type UnrealServerShowThingsRequest {
+	uint32 target_subobject_offset = 1;
+	UnrealObjectRef field_struct_myobject = 2;
+	list<bytes> field_arrayofstruct = 3;
+	bytes field_nsstruct = 4;
+	list<bytes> field_arrayofnsstruct = 5;
+	list<bytes> field_cstylestructs_mycstylestruct = 6;
+	list<bytes> field_cstylestructs_mycstylensstruct = 7;
+}
+type UnrealServerDoThingsRequest {
+	uint32 target_subobject_offset = 1;
+}
 type UnrealTestMulticastRequest {
 	uint32 target_subobject_offset = 1;
 }

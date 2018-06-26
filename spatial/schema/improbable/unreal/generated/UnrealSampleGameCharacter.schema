@@ -52,6 +52,15 @@ component UnrealSampleGameCharacterMultiClientRepData {
 	bytes field_reprootmotion_authoritativerootmotion = 41; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion_acceleration = 42; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion_linearvelocity = 43; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
+	UnrealObjectRef field_mystruct_myobject = 44; // COND_None // MyStruct::MyStruct::SampleGameCharacter
+	list<bytes> field_myarrayofstruct = 45; // COND_None // ::SampleGameCharacter
+	bytes field_mynsstruct = 46; // COND_None // ::SampleGameCharacter
+	bytes field_mycstylensstruct0 = 47; // COND_None // ::SampleGameCharacter
+	bytes field_mycstylensstruct1 = 48; // COND_None // ::SampleGameCharacter
+	bytes field_mycstylensstruct2 = 49; // COND_None // ::SampleGameCharacter
+	bytes field_mycstylensstruct3 = 50; // COND_None // ::SampleGameCharacter
+	bytes field_mycstylensstruct4 = 51; // COND_None // ::SampleGameCharacter
+	list<bytes> field_myarrayofnsstruct = 52; // COND_None // ::SampleGameCharacter
 }
 component UnrealSampleGameCharacterMigratableData {
 	id = 100024;
@@ -73,6 +82,8 @@ component UnrealSampleGameCharacterClientRPCs {
 }
 component UnrealSampleGameCharacterServerRPCs {
 	id = 100026;
+	command UnrealRPCCommandResponse samplegamecharacterservershowthings(UnrealServerShowThingsRequest);
+	command UnrealRPCCommandResponse samplegamecharacterserverdothings(UnrealServerDoThingsRequest);
 	command UnrealRPCCommandResponse samplegamecharacterservermoveold(UnrealServerMoveOldRequest);
 	command UnrealRPCCommandResponse samplegamecharacterservermovenobase(UnrealServerMoveNoBaseRequest);
 	command UnrealRPCCommandResponse samplegamecharacterservermovedualnobase(UnrealServerMoveDualNoBaseRequest);

@@ -14,6 +14,8 @@
 #include "SpatialUnrealObjectRef.h"
 #include "SpatialActorChannel.h"
 #include "SpatialPackageMapClient.h"
+#include "SpatialMemoryReader.h"
+#include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 #include "SampleGameCharacter.h"
@@ -50,6 +52,8 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RPCToSenderMap.Emplace("ClientAdjustRootMotionPosition", &USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_SendRPC);
 	RPCToSenderMap.Emplace("ClientAdjustPosition", &USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC);
 	RPCToSenderMap.Emplace("ClientAckGoodMove", &USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendRPC);
+	RPCToSenderMap.Emplace("Server_ShowThings", &USpatialTypeBinding_SampleGameCharacter::Server_ShowThings_SendRPC);
+	RPCToSenderMap.Emplace("Server_DoThings", &USpatialTypeBinding_SampleGameCharacter::Server_DoThings_SendRPC);
 	RPCToSenderMap.Emplace("ServerMoveOld", &USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendRPC);
 	RPCToSenderMap.Emplace("ServerMoveNoBase", &USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC);
 	RPCToSenderMap.Emplace("ServerMoveDualNoBase", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC);
@@ -104,6 +108,15 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(41, FRepHandleData(Class, {"RepRootMotion", "AuthoritativeRootMotion"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(42, FRepHandleData(Class, {"RepRootMotion", "Acceleration"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(43, FRepHandleData(Class, {"RepRootMotion", "LinearVelocity"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"MyStruct", "MyObject"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(45, FRepHandleData(Class, {"MyArrayOfStruct"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(46, FRepHandleData(Class, {"MyNSStruct"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(47, FRepHandleData(Class, {"MyCStyleNSStruct"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(48, FRepHandleData(Class, {"MyCStyleNSStruct"}, COND_None, REPNOTIFY_OnChanged, 8));
+	RepHandleToPropertyMap.Add(49, FRepHandleData(Class, {"MyCStyleNSStruct"}, COND_None, REPNOTIFY_OnChanged, 16));
+	RepHandleToPropertyMap.Add(50, FRepHandleData(Class, {"MyCStyleNSStruct"}, COND_None, REPNOTIFY_OnChanged, 24));
+	RepHandleToPropertyMap.Add(51, FRepHandleData(Class, {"MyCStyleNSStruct"}, COND_None, REPNOTIFY_OnChanged, 32));
+	RepHandleToPropertyMap.Add(52, FRepHandleData(Class, {"MyArrayOfNSStruct"}, COND_None, REPNOTIFY_OnChanged, 0));
 }
 
 void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
@@ -185,12 +198,16 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientackgoodmove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandResponse, this, std::placeholders::_1)));
 
 	using ServerRPCCommandTypes = improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands;
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservershowthings>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Server_ShowThings_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterserverdothings>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Server_DoThings_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedual>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservershowthings>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Server_ShowThings_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterserverdothings>(std::bind(&USpatialTypeBinding_SampleGameCharacter::Server_DoThings_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandResponse, this, std::placeholders::_1)));
@@ -470,14 +487,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 		{
 			const FRepMovement& Value = *(reinterpret_cast<FRepMovement const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
-				OutUpdate.set_field_replicatedmovement(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
+			OutUpdate.set_field_replicatedmovement(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 7: // field_attachmentreplication_attachparent
@@ -516,42 +531,36 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_attachmentreplication_locationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			OutUpdate.set_field_attachmentreplication_locationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 9: // field_attachmentreplication_relativescale3d
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_attachmentreplication_relativescale3d(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			OutUpdate.set_field_attachmentreplication_relativescale3d(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 10: // field_attachmentreplication_rotationoffset
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-				OutUpdate.set_field_attachmentreplication_rotationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+			OutUpdate.set_field_attachmentreplication_rotationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 11: // field_attachmentreplication_attachsocket
@@ -778,28 +787,24 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_replicatedbasedmovement_location(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			OutUpdate.set_field_replicatedbasedmovement_location(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 22: // field_replicatedbasedmovement_rotation
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-				OutUpdate.set_field_replicatedbasedmovement_rotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+			OutUpdate.set_field_replicatedbasedmovement_rotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 23: // field_replicatedbasedmovement_bserverhasbasecomponent
@@ -915,28 +920,24 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_reprootmotion_location(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			OutUpdate.set_field_reprootmotion_location(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 36: // field_reprootmotion_rotation
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-				OutUpdate.set_field_reprootmotion_rotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+			OutUpdate.set_field_reprootmotion_rotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 37: // field_reprootmotion_movementbase
@@ -996,42 +997,172 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 		{
 			const FRootMotionSourceGroup& Value = *(reinterpret_cast<FRootMotionSourceGroup const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRootMotionSourceGroup&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
-				OutUpdate.set_field_reprootmotion_authoritativerootmotion(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRootMotionSourceGroup&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
+			OutUpdate.set_field_reprootmotion_authoritativerootmotion(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 42: // field_reprootmotion_acceleration
 		{
 			const FVector_NetQuantize10& Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize10&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-				OutUpdate.set_field_reprootmotion_acceleration(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			OutUpdate.set_field_reprootmotion_acceleration(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 43: // field_reprootmotion_linearvelocity
 		{
 			const FVector_NetQuantize10& Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(Data));
 
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			OutUpdate.set_field_reprootmotion_linearvelocity(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			break;
+		}
+		case 44: // field_mystruct_myobject
+		{
+			UObject* Value = *(reinterpret_cast<UObject* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 44);
+				}
+				else
+				{
+					OutUpdate.set_field_mystruct_myobject(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_mystruct_myobject(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 45: // field_myarrayofstruct
+		{
+			const TArray<FMyStruct>& Value = *(reinterpret_cast<TArray<FMyStruct> const*>(Data));
+
+			::worker::List<std::string> List;
+			for(int i = 0; i < Value.Num(); i++)
 			{
 				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize10&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-				OutUpdate.set_field_reprootmotion_linearvelocity(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+				FMyStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FMyStruct*>(&Value[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
+			OutUpdate.set_field_myarrayofstruct(List);
+			break;
+		}
+		case 46: // field_mynsstruct
+		{
+			const FMyNSStruct& Value = *(reinterpret_cast<FMyNSStruct const*>(Data));
+
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FMyNSStruct&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+			OutUpdate.set_field_mynsstruct(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			break;
+		}
+		case 47: // field_mycstylensstruct0
+		{
+			const FMyNSStruct& Value = *(reinterpret_cast<FMyNSStruct const*>(Data));
+
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FMyNSStruct&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+			OutUpdate.set_field_mycstylensstruct0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			break;
+		}
+		case 48: // field_mycstylensstruct1
+		{
+			const FMyNSStruct& Value = *(reinterpret_cast<FMyNSStruct const*>(Data));
+
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FMyNSStruct&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+			OutUpdate.set_field_mycstylensstruct1(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			break;
+		}
+		case 49: // field_mycstylensstruct2
+		{
+			const FMyNSStruct& Value = *(reinterpret_cast<FMyNSStruct const*>(Data));
+
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FMyNSStruct&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+			OutUpdate.set_field_mycstylensstruct2(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			break;
+		}
+		case 50: // field_mycstylensstruct3
+		{
+			const FMyNSStruct& Value = *(reinterpret_cast<FMyNSStruct const*>(Data));
+
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FMyNSStruct&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+			OutUpdate.set_field_mycstylensstruct3(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			break;
+		}
+		case 51: // field_mycstylensstruct4
+		{
+			const FMyNSStruct& Value = *(reinterpret_cast<FMyNSStruct const*>(Data));
+
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FMyNSStruct&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+			OutUpdate.set_field_mycstylensstruct4(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			break;
+		}
+		case 52: // field_myarrayofnsstruct
+		{
+			const TArray<FMyNSStruct>& Value = *(reinterpret_cast<TArray<FMyNSStruct> const*>(Data));
+
+			::worker::List<std::string> List;
+			for(int i = 0; i < Value.Num(); i++)
+			{
+				TArray<uint8> ValueData;
+				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+				bool bSuccess = true;
+				(const_cast<FMyNSStruct&>(Value[i])).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			OutUpdate.set_field_myarrayofnsstruct(List);
 			break;
 		}
 	default:
@@ -1195,15 +1326,13 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRepMovement Value = *(reinterpret_cast<FRepMovement const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_replicatedmovement().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
-			}
+			auto& ValueDataStr = (*Update.field_replicatedmovement().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1226,37 +1355,35 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachparent().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachparent().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<AActor>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<AActor>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1283,15 +1410,13 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_attachmentreplication_locationoffset().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_attachmentreplication_locationoffset().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1313,15 +1438,13 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_attachmentreplication_relativescale3d().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_attachmentreplication_relativescale3d().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1343,15 +1466,13 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_attachmentreplication_rotationoffset().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			}
+			auto& ValueDataStr = (*Update.field_attachmentreplication_rotationoffset().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1396,37 +1517,35 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachcomponent().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachcomponent().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<USceneComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<USceneComponent>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<USceneComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<USceneComponent>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1454,37 +1573,35 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<AActor>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<AActor>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1541,37 +1658,35 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<APawn>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<APawn>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<APawn>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<APawn>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1599,37 +1714,35 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			APlayerState* Value = *(reinterpret_cast<APlayerState* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_playerstate().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_playerstate().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<APlayerState>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<APlayerState>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<APlayerState>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<APlayerState>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1679,37 +1792,35 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			AController* Value = *(reinterpret_cast<AController* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_controller().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_controller().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<AController>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<AController>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<AController>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<AController>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1737,37 +1848,35 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_replicatedbasedmovement_movementbase().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_replicatedbasedmovement_movementbase().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<UPrimitiveComponent>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<UPrimitiveComponent>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1816,15 +1925,13 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_replicatedbasedmovement_location().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_replicatedbasedmovement_location().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1846,15 +1953,13 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_replicatedbasedmovement_rotation().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			}
+			auto& ValueDataStr = (*Update.field_replicatedbasedmovement_rotation().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2097,37 +2202,35 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			UAnimMontage* Value = *(reinterpret_cast<UAnimMontage* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion_animmontage().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion_animmontage().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UAnimMontage>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<UAnimMontage>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<UAnimMontage>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<UAnimMontage>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -2176,15 +2279,13 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_location().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_reprootmotion_location().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2206,15 +2307,13 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_rotation().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			}
+			auto& ValueDataStr = (*Update.field_reprootmotion_rotation().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2237,37 +2336,35 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion_movementbase().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion_movementbase().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<UPrimitiveComponent>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<UPrimitiveComponent>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -2360,15 +2457,13 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRootMotionSourceGroup Value = *(reinterpret_cast<FRootMotionSourceGroup const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_authoritativerootmotion().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
-			}
+			auto& ValueDataStr = (*Update.field_reprootmotion_authoritativerootmotion().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2390,15 +2485,13 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector_NetQuantize10 Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_acceleration().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_reprootmotion_acceleration().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2420,14 +2513,300 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector_NetQuantize10 Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(PropertyData));
 
+			auto& ValueDataStr = (*Update.field_reprootmotion_linearvelocity().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_mystruct_myobject().empty())
+	{
+		// field_mystruct_myobject
+		uint16 Handle = 44;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			UObject* Value = *(reinterpret_cast<UObject* const*>(PropertyData));
+
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_mystruct_myobject().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_linearvelocity().data());
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UObject>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<UObject>(Object_Raw);
+				}
+				else
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
+		}
+	}
+	if (!Update.field_myarrayofstruct().empty())
+	{
+		// field_myarrayofstruct
+		uint16 Handle = 45;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			TArray<FMyStruct> Value = *(reinterpret_cast<TArray<FMyStruct> *>(PropertyData));
+
+			auto& List = (*Update.field_myarrayofstruct().data());
+			Value.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
+			{
+				auto& ValueDataStr = List[i];
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
+				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+				FMyStruct::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Value[i]));
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_mynsstruct().empty())
+	{
+		// field_mynsstruct
+		uint16 Handle = 46;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FMyNSStruct Value = *(reinterpret_cast<FMyNSStruct const*>(PropertyData));
+
+			auto& ValueDataStr = (*Update.field_mynsstruct().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_mycstylensstruct0().empty())
+	{
+		// field_mycstylensstruct0
+		uint16 Handle = 47;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FMyNSStruct Value = *(reinterpret_cast<FMyNSStruct const*>(PropertyData));
+
+			auto& ValueDataStr = (*Update.field_mycstylensstruct0().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_mycstylensstruct1().empty())
+	{
+		// field_mycstylensstruct1
+		uint16 Handle = 48;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FMyNSStruct Value = *(reinterpret_cast<FMyNSStruct const*>(PropertyData));
+
+			auto& ValueDataStr = (*Update.field_mycstylensstruct1().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_mycstylensstruct2().empty())
+	{
+		// field_mycstylensstruct2
+		uint16 Handle = 49;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FMyNSStruct Value = *(reinterpret_cast<FMyNSStruct const*>(PropertyData));
+
+			auto& ValueDataStr = (*Update.field_mycstylensstruct2().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_mycstylensstruct3().empty())
+	{
+		// field_mycstylensstruct3
+		uint16 Handle = 50;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FMyNSStruct Value = *(reinterpret_cast<FMyNSStruct const*>(PropertyData));
+
+			auto& ValueDataStr = (*Update.field_mycstylensstruct3().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_mycstylensstruct4().empty())
+	{
+		// field_mycstylensstruct4
+		uint16 Handle = 51;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			FMyNSStruct Value = *(reinterpret_cast<FMyNSStruct const*>(PropertyData));
+
+			auto& ValueDataStr = (*Update.field_mycstylensstruct4().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_myarrayofnsstruct().empty())
+	{
+		// field_myarrayofnsstruct
+		uint16 Handle = 52;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			TArray<FMyNSStruct> Value = *(reinterpret_cast<TArray<FMyNSStruct> *>(PropertyData));
+
+			auto& List = (*Update.field_myarrayofnsstruct().data());
+			Value.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
+			{
+				auto& ValueDataStr = List[i];
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+				Value[i].NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
@@ -2472,7 +2851,9 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealRootMotionDebugClientPrintOnScreenRequest RPCPayload;
-		RPCPayload.set_field_instring(TCHAR_TO_UTF8(*StructuredParams.InString));
+		{
+			RPCPayload.set_field_instring(TCHAR_TO_UTF8(*StructuredParams.InString));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2503,44 +2884,56 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealClientVeryShortAdjustPositionRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		{
+			RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 			RPCPayload.set_field_newloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		if (StructuredParams.NewBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewBase);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.NewBase != nullptr)
 			{
-				if (StructuredParams.NewBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewBase);
+					if (StructuredParams.NewBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientVeryShortAdjustPosition queued. StructuredParams.NewBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.NewBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientVeryShortAdjustPosition queued. StructuredParams.NewBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.NewBase};
+				}
+				else
+				{
+					RPCPayload.set_field_newbase(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_newbase(ObjectRef);
+				RPCPayload.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
 		}
-		RPCPayload.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
-		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
-		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		{
+			RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
+		}
+		{
+			RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
+		}
+		{
+			RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2652,20 +3045,26 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealClientAdjustRootMotionSourcePositionRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		{
+			RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FRootMotionSourceGroup&>(StructuredParams.ServerRootMotion)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
 			RPCPayload.set_field_serverrootmotion(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_bhasanimrootmotion(StructuredParams.bHasAnimRootMotion);
-		RPCPayload.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
+		{
+			RPCPayload.set_field_bhasanimrootmotion(StructuredParams.bHasAnimRootMotion);
+		}
+		{
+			RPCPayload.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.ServerLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
@@ -2673,42 +3072,54 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantizeNormal&>(StructuredParams.ServerRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
 			RPCPayload.set_field_serverrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_servervelz(StructuredParams.ServerVelZ);
-		if (StructuredParams.ServerBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
-			if (!NetGUID.IsValid())
+			RPCPayload.set_field_servervelz(StructuredParams.ServerVelZ);
+		}
+		{
+			if (StructuredParams.ServerBase != nullptr)
 			{
-				if (StructuredParams.ServerBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ServerBase);
+					if (StructuredParams.ServerBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ServerBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientAdjustRootMotionSourcePosition queued. StructuredParams.ServerBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ServerBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientAdjustRootMotionSourcePosition queued. StructuredParams.ServerBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ServerBase};
+				}
+				else
+				{
+					RPCPayload.set_field_serverbase(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_serverbase(ObjectRef);
+				RPCPayload.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
 		}
-		RPCPayload.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
-		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
-		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		{
+			RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
+		}
+		{
+			RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
+		}
+		{
+			RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2739,11 +3150,15 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealClientAdjustRootMotionPositionRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
-		RPCPayload.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
+		{
+			RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		}
+		{
+			RPCPayload.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.ServerLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
@@ -2751,42 +3166,54 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantizeNormal&>(StructuredParams.ServerRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
 			RPCPayload.set_field_serverrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_servervelz(StructuredParams.ServerVelZ);
-		if (StructuredParams.ServerBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
-			if (!NetGUID.IsValid())
+			RPCPayload.set_field_servervelz(StructuredParams.ServerVelZ);
+		}
+		{
+			if (StructuredParams.ServerBase != nullptr)
 			{
-				if (StructuredParams.ServerBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ServerBase);
+					if (StructuredParams.ServerBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ServerBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientAdjustRootMotionPosition queued. StructuredParams.ServerBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ServerBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientAdjustRootMotionPosition queued. StructuredParams.ServerBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ServerBase};
+				}
+				else
+				{
+					RPCPayload.set_field_serverbase(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_serverbase(ObjectRef);
+				RPCPayload.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
 		}
-		RPCPayload.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
-		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
-		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		{
+			RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
+		}
+		{
+			RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
+		}
+		{
+			RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2817,10 +3244,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC(worke
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealClientAdjustPositionRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		{
+			RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
@@ -2828,41 +3257,51 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC(worke
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewVel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 			RPCPayload.set_field_newvel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		if (StructuredParams.NewBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewBase);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.NewBase != nullptr)
 			{
-				if (StructuredParams.NewBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewBase);
+					if (StructuredParams.NewBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientAdjustPosition queued. StructuredParams.NewBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.NewBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientAdjustPosition queued. StructuredParams.NewBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.NewBase};
+				}
+				else
+				{
+					RPCPayload.set_field_newbase(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_newbase(ObjectRef);
+				RPCPayload.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
 		}
-		RPCPayload.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
-		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
-		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		{
+			RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
+		}
+		{
+			RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
+		}
+		{
+			RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2893,7 +3332,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendRPC(worker::
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealClientAckGoodMoveRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		{
+			RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2906,6 +3347,146 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendRPC(worker::
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::Server_ShowThings_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+{
+	// This struct is declared in SampleGameCharacter.generated.h (in a macro that is then put in SampleGameCharacter.h UCLASS macro)
+	SampleGameCharacter_eventServer_ShowThings_Parms StructuredParams = *static_cast<SampleGameCharacter_eventServer_ShowThings_Parms*>(Parameters);
+
+	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
+	{
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+		{
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_ShowThings queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
+		}
+
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealServerShowThingsRequest RPCPayload;
+		{
+			if (StructuredParams.Struct.MyObject != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Struct.MyObject);
+				if (!NetGUID.IsValid())
+				{
+					if (StructuredParams.Struct.MyObject->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Struct.MyObject);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_ShowThings queued. StructuredParams.Struct.MyObject is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.Struct.MyObject};
+				}
+				else
+				{
+					RPCPayload.set_field_struct_myobject(ObjectRef);
+				}
+			}
+			else
+			{
+				RPCPayload.set_field_struct_myobject(SpatialConstants::NULL_OBJECT_REF);
+			}
+		}
+		{
+			::worker::List<std::string> List;
+			for(int i = 0; i < StructuredParams.ArrayOfStruct.Num(); i++)
+			{
+				TArray<uint8> ValueData;
+				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+				FMyStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FMyStruct*>(&StructuredParams.ArrayOfStruct[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			RPCPayload.set_field_arrayofstruct(List);
+		}
+		{
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FMyNSStruct&>(StructuredParams.NSStruct)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+			RPCPayload.set_field_nsstruct(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+		}
+		{
+			::worker::List<std::string> List;
+			for(int i = 0; i < StructuredParams.ArrayOfNSStruct.Num(); i++)
+			{
+				TArray<uint8> ValueData;
+				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+				bool bSuccess = true;
+				(const_cast<FMyNSStruct&>(StructuredParams.ArrayOfNSStruct[i])).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			RPCPayload.set_field_arrayofnsstruct(List);
+		}
+		{
+			::worker::List<std::string> List;
+			for(int i = 0; i < sizeof(StructuredParams.CStyleStructs.MyCStyleStruct) / sizeof(StructuredParams.CStyleStructs.MyCStyleStruct[0]); i++)
+			{
+				TArray<uint8> ValueData;
+				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+				FMyStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FMyStruct*>(&StructuredParams.CStyleStructs.MyCStyleStruct[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			RPCPayload.set_field_cstylestructs_mycstylestruct(List);
+		}
+		{
+			::worker::List<std::string> List;
+			for(int i = 0; i < sizeof(StructuredParams.CStyleStructs.MyCStyleNSStruct) / sizeof(StructuredParams.CStyleStructs.MyCStyleNSStruct[0]); i++)
+			{
+				TArray<uint8> ValueData;
+				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+				bool bSuccess = true;
+				(const_cast<FMyNSStruct&>(StructuredParams.CStyleStructs.MyCStyleNSStruct[i])).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			RPCPayload.set_field_cstylestructs_mycstylensstruct(List);
+		}
+
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Server_ShowThings, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservershowthings>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_SampleGameCharacter::Server_DoThings_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+{
+	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
+	{
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+		{
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_DoThings queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
+		}
+
+		// Build RPC Payload.
+		improbable::unreal::generated::UnrealServerDoThingsRequest RPCPayload;
+
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Server_DoThings, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterserverdothings>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -2924,16 +3505,20 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendRPC(worker::Conn
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealServerMoveOldRequest RPCPayload;
-		RPCPayload.set_field_oldtimestamp(StructuredParams.OldTimeStamp);
+		{
+			RPCPayload.set_field_oldtimestamp(StructuredParams.OldTimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.OldAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 			RPCPayload.set_field_oldaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_oldmoveflags(uint32_t(StructuredParams.OldMoveFlags));
+		{
+			RPCPayload.set_field_oldmoveflags(uint32_t(StructuredParams.OldMoveFlags));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2964,10 +3549,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC(worker::C
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealServerMoveNoBaseRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		{
+			RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
@@ -2975,16 +3562,24 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC(worker::C
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		{
+			RPCPayload.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
+		}
+		{
+			RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		}
+		{
+			RPCPayload.set_field_view(uint32_t(StructuredParams.View));
+		}
+		{
+			RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3015,21 +3610,29 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC(worke
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealServerMoveDualNoBaseRequest RPCPayload;
-		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		{
+			RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
+		}
+		{
+			RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
+		}
+		{
+			RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
@@ -3037,16 +3640,24 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC(worke
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		{
+			RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
+		}
+		{
+			RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		}
+		{
+			RPCPayload.set_field_view(uint32_t(StructuredParams.View));
+		}
+		{
+			RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3077,21 +3688,29 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealServerMoveDualHybridRootMotionRequest RPCPayload;
-		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		{
+			RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
+		}
+		{
+			RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
+		}
+		{
+			RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
@@ -3099,42 +3718,54 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
-		if (StructuredParams.ClientMovementBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
-			if (!NetGUID.IsValid())
+			RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
+		}
+		{
+			RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		}
+		{
+			RPCPayload.set_field_view(uint32_t(StructuredParams.View));
+		}
+		{
+			if (StructuredParams.ClientMovementBase != nullptr)
 			{
-				if (StructuredParams.ClientMovementBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
+					if (StructuredParams.ClientMovementBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerMoveDualHybridRootMotion queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ClientMovementBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerMoveDualHybridRootMotion queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ClientMovementBase};
+				}
+				else
+				{
+					RPCPayload.set_field_clientmovementbase(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_clientmovementbase(ObjectRef);
+				RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
 		}
-		RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		{
+			RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3165,21 +3796,29 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC(worker::Con
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealServerMoveDualRequest RPCPayload;
-		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		{
+			RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
+		}
+		{
+			RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
+		}
+		{
+			RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
@@ -3187,42 +3826,54 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC(worker::Con
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
-		if (StructuredParams.ClientMovementBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
-			if (!NetGUID.IsValid())
+			RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
+		}
+		{
+			RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		}
+		{
+			RPCPayload.set_field_view(uint32_t(StructuredParams.View));
+		}
+		{
+			if (StructuredParams.ClientMovementBase != nullptr)
 			{
-				if (StructuredParams.ClientMovementBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
+					if (StructuredParams.ClientMovementBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerMoveDual queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ClientMovementBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerMoveDual queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ClientMovementBase};
+				}
+				else
+				{
+					RPCPayload.set_field_clientmovementbase(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_clientmovementbase(ObjectRef);
+				RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
 		}
-		RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		{
+			RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3253,10 +3904,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC(worker::Connect
 
 		// Build RPC Payload.
 		improbable::unreal::generated::UnrealServerMoveRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		{
+			RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
@@ -3264,42 +3917,54 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC(worker::Connect
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
-		if (StructuredParams.ClientMovementBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
-			if (!NetGUID.IsValid())
+			RPCPayload.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
+		}
+		{
+			RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
+		}
+		{
+			RPCPayload.set_field_view(uint32_t(StructuredParams.View));
+		}
+		{
+			if (StructuredParams.ClientMovementBase != nullptr)
 			{
-				if (StructuredParams.ClientMovementBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
+					if (StructuredParams.ClientMovementBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerMove queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ClientMovementBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerMove queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ClientMovementBase};
+				}
+				else
+				{
+					RPCPayload.set_field_clientmovementbase(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_clientmovementbase(ObjectRef);
+				RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
 		}
-		RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		{
+			RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3369,7 +4034,9 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 		Character_eventRootMotionDebugClientPrintOnScreen_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.InString = FString(UTF8_TO_TCHAR(Op.Request.field_instring().c_str()));
+		{
+			Parameters.InString = FString(UTF8_TO_TCHAR(Op.Request.field_instring().c_str()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: RootMotionDebugClientPrintOnScreen, target: %s %s"),
@@ -3421,12 +4088,14 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRP
 		Character_eventClientVeryShortAdjustPosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_newloc();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.NewLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
@@ -3459,10 +4128,18 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRP
 				}
 			}
 		}
-		Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		{
+			Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename()).data());
+		}
+		{
+			Parameters.bHasBase = Op.Request.field_bhasbase();
+		}
+		{
+			Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
+		}
+		{
+			Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientVeryShortAdjustPosition, target: %s %s"),
@@ -3649,23 +4326,29 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 		Character_eventClientAdjustRootMotionSourcePosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_serverrootmotion();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ServerRootMotion.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
 		}
-		Parameters.bHasAnimRootMotion = Op.Request.field_bhasanimrootmotion();
-		Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition();
+		{
+			Parameters.bHasAnimRootMotion = Op.Request.field_bhasanimrootmotion();
+		}
+		{
+			Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_serverloc();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ServerLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
@@ -3674,12 +4357,14 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			auto& ValueDataStr = Op.Request.field_serverrotation();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ServerRotation.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
 		}
-		Parameters.ServerVelZ = Op.Request.field_servervelz();
+		{
+			Parameters.ServerVelZ = Op.Request.field_servervelz();
+		}
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_serverbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
@@ -3708,10 +4393,18 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 				}
 			}
 		}
-		Parameters.ServerBoneName = FName((Op.Request.field_serverbonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		{
+			Parameters.ServerBoneName = FName((Op.Request.field_serverbonename()).data());
+		}
+		{
+			Parameters.bHasBase = Op.Request.field_bhasbase();
+		}
+		{
+			Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
+		}
+		{
+			Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAdjustRootMotionSourcePosition, target: %s %s"),
@@ -3763,13 +4456,17 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnR
 		Character_eventClientAdjustRootMotionPosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
-		Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition();
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp();
+		}
+		{
+			Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_serverloc();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ServerLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
@@ -3778,12 +4475,14 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnR
 			auto& ValueDataStr = Op.Request.field_serverrotation();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ServerRotation.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
 		}
-		Parameters.ServerVelZ = Op.Request.field_servervelz();
+		{
+			Parameters.ServerVelZ = Op.Request.field_servervelz();
+		}
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_serverbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
@@ -3812,10 +4511,18 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnR
 				}
 			}
 		}
-		Parameters.ServerBoneName = FName((Op.Request.field_serverbonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		{
+			Parameters.ServerBoneName = FName((Op.Request.field_serverbonename()).data());
+		}
+		{
+			Parameters.bHasBase = Op.Request.field_bhasbase();
+		}
+		{
+			Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
+		}
+		{
+			Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAdjustRootMotionPosition, target: %s %s"),
@@ -3867,12 +4574,14 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(
 		Character_eventClientAdjustPosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_newloc();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.NewLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
@@ -3881,7 +4590,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(
 			auto& ValueDataStr = Op.Request.field_newvel();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.NewVel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
@@ -3914,10 +4623,18 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(
 				}
 			}
 		}
-		Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		{
+			Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename()).data());
+		}
+		{
+			Parameters.bHasBase = Op.Request.field_bhasbase();
+		}
+		{
+			Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
+		}
+		{
+			Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAdjustPosition, target: %s %s"),
@@ -3969,7 +4686,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(con
 		Character_eventClientAckGoodMove_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAckGoodMove, target: %s %s"),
@@ -3991,6 +4710,189 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(con
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>(Op.RequestId, {});
+		return {};
+	};
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+}
+void USpatialTypeBinding_SampleGameCharacter::Server_ShowThings_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservershowthings>& Op)
+{
+	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), {}, {}};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			// A legal static object reference should never be unresolved.
+			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_ShowThings_OnRPCPayload: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: Server_ShowThings_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Declare parameters.
+		// This struct is declared in SampleGameCharacter.generated.h (in a macro that is then put in SampleGameCharacter.h UCLASS macro)
+		SampleGameCharacter_eventServer_ShowThings_Parms Parameters;
+
+		// Extract from request data.
+		{
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_struct_myobject();
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Parameters.Struct.MyObject = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UObject>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Parameters.Struct.MyObject = Cast<UObject>(Object_Raw);
+				}
+				else
+				{
+					// A legal static object reference should never be unresolved.
+					checkf(ObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_ShowThings_OnRPCPayload: Parameters.Struct.MyObject %s is not resolved on this worker."),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef));
+					return {ObjectRef};
+				}
+			}
+		}
+		{
+			auto& List = Op.Request.field_arrayofstruct();
+			Parameters.ArrayOfStruct.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
+			{
+				auto& ValueDataStr = List[i];
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+				FMyStruct::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Parameters.ArrayOfStruct[i]));
+			}
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_nsstruct();
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Parameters.NSStruct.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+		}
+		{
+			auto& List = Op.Request.field_arrayofnsstruct();
+			Parameters.ArrayOfNSStruct.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
+			{
+				auto& ValueDataStr = List[i];
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+				bool bSuccess = true;
+				Parameters.ArrayOfNSStruct[i].NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+			}
+		}
+		{
+			auto& List = Op.Request.field_cstylestructs_mycstylestruct();
+			for(int i = 0; i < List.size(); i++)
+			{
+				auto& ValueDataStr = List[i];
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+				FMyStruct::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Parameters.CStyleStructs.MyCStyleStruct[i]));
+			}
+		}
+		{
+			auto& List = Op.Request.field_cstylestructs_mycstylensstruct();
+			for(int i = 0; i < List.size(); i++)
+			{
+				auto& ValueDataStr = List[i];
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+				bool bSuccess = true;
+				Parameters.CStyleStructs.MyCStyleNSStruct[i].NetSerialize(ValueDataReader, PackageMap, bSuccess);
+				checkf(bSuccess, TEXT("NetSerialize on FMyNSStruct failed."));
+			}
+		}
+
+		// Call implementation.
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: Server_ShowThings, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Server_ShowThings"))))
+		{
+			TargetObject->ProcessEvent(Function, &Parameters);
+		}
+		else
+		{
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_ShowThings_OnRPCPayload: Function not found. Object: %s, Function: Server_ShowThings."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		// Send command response.
+		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
+		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservershowthings>(Op.RequestId, {});
+		return {};
+	};
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+}
+void USpatialTypeBinding_SampleGameCharacter::Server_DoThings_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterserverdothings>& Op)
+{
+	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), {}, {}};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			// A legal static object reference should never be unresolved.
+			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_DoThings_OnRPCPayload: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: Server_DoThings_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Call implementation.
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: Server_DoThings, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Server_DoThings"))))
+		{
+			TargetObject->ProcessEvent(Function, nullptr);
+		}
+		else
+		{
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_DoThings_OnRPCPayload: Function not found. Object: %s, Function: Server_DoThings."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		// Send command response.
+		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
+		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterserverdothings>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
@@ -4021,17 +4923,21 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const w
 		Character_eventServerMoveOld_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.OldTimeStamp = Op.Request.field_oldtimestamp();
+		{
+			Parameters.OldTimeStamp = Op.Request.field_oldtimestamp();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_oldaccel();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.OldAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
-		Parameters.OldMoveFlags = uint8(uint8(Op.Request.field_oldmoveflags()));
+		{
+			Parameters.OldMoveFlags = uint8(uint8(Op.Request.field_oldmoveflags()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveOld, target: %s %s"),
@@ -4083,12 +4989,14 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(cons
 		Character_eventServerMoveNoBase_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_inaccel();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
@@ -4097,15 +5005,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(cons
 			auto& ValueDataStr = Op.Request.field_clientloc();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		{
+			Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
+		}
+		{
+			Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
+		}
+		{
+			Parameters.View = Op.Request.field_view();
+		}
+		{
+			Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveNoBase, target: %s %s"),
@@ -4157,24 +5073,32 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(
 		Character_eventServerMoveDualNoBase_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
+		{
+			Parameters.TimeStamp0 = Op.Request.field_timestamp0();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel0.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
-		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = Op.Request.field_view0();
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		{
+			Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
+		}
+		{
+			Parameters.View0 = Op.Request.field_view0();
+		}
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_inaccel();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
@@ -4183,15 +5107,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(
 			auto& ValueDataStr = Op.Request.field_clientloc();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		{
+			Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
+		}
+		{
+			Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
+		}
+		{
+			Parameters.View = Op.Request.field_view();
+		}
+		{
+			Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveDualNoBase, target: %s %s"),
@@ -4243,24 +5175,32 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 		Character_eventServerMoveDualHybridRootMotion_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
+		{
+			Parameters.TimeStamp0 = Op.Request.field_timestamp0();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel0.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
-		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = Op.Request.field_view0();
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		{
+			Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
+		}
+		{
+			Parameters.View0 = Op.Request.field_view0();
+		}
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_inaccel();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
@@ -4269,14 +5209,20 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 			auto& ValueDataStr = Op.Request.field_clientloc();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
+		{
+			Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
+		}
+		{
+			Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
+		}
+		{
+			Parameters.View = Op.Request.field_view();
+		}
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
@@ -4305,8 +5251,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 				}
 			}
 		}
-		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		{
+			Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
+		}
+		{
+			Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveDualHybridRootMotion, target: %s %s"),
@@ -4358,24 +5308,32 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 		Character_eventServerMoveDual_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
+		{
+			Parameters.TimeStamp0 = Op.Request.field_timestamp0();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel0.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
-		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = Op.Request.field_view0();
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		{
+			Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
+		}
+		{
+			Parameters.View0 = Op.Request.field_view0();
+		}
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_inaccel();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
@@ -4384,14 +5342,20 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 			auto& ValueDataStr = Op.Request.field_clientloc();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
+		{
+			Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
+		}
+		{
+			Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
+		}
+		{
+			Parameters.View = Op.Request.field_view();
+		}
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
@@ -4420,8 +5384,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 				}
 			}
 		}
-		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		{
+			Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
+		}
+		{
+			Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveDual, target: %s %s"),
@@ -4473,12 +5441,14 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const work
 		Character_eventServerMove_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp();
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_inaccel();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
@@ -4487,14 +5457,20 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const work
 			auto& ValueDataStr = Op.Request.field_clientloc();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
+		{
+			Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
+		}
+		{
+			Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
+		}
+		{
+			Parameters.View = Op.Request.field_view();
+		}
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
@@ -4523,8 +5499,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const work
 				}
 			}
 		}
-		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		{
+			Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
+		}
+		{
+			Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMove, target: %s %s"),
@@ -4636,6 +5616,16 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandResp
 void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientAckGoodMove"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
+}
+
+void USpatialTypeBinding_SampleGameCharacter::Server_ShowThings_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservershowthings>& Op)
+{
+	Interop->HandleCommandResponse_Internal(TEXT("Server_ShowThings"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
+}
+
+void USpatialTypeBinding_SampleGameCharacter::Server_DoThings_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterserverdothings>& Op)
+{
+	Interop->HandleCommandResponse_Internal(TEXT("Server_DoThings"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
 void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)
