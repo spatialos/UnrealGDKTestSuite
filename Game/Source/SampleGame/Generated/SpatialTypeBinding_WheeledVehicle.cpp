@@ -1385,11 +1385,19 @@ void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_SendRPC(worker::Conne
 
 		// Build RPC Payload.
 		improbable::unreal::generated::wheeledvehiclemovementcomponent::ServerUpdateStateRequest RPCPayload;
+<<<<<<< HEAD
 		RPCPayload.set_field_insteeringinput(StructuredParams.InSteeringInput);
 		RPCPayload.set_field_inthrottleinput(StructuredParams.InThrottleInput);
 		RPCPayload.set_field_inbrakeinput(StructuredParams.InBrakeInput);
 		RPCPayload.set_field_inhandbrakeinput(StructuredParams.InHandbrakeInput);
 		RPCPayload.set_field_currentgear(int32_t(StructuredParams.CurrentGear));
+=======
+		RPCPayload.set_field_insteeringinput0(StructuredParams.InSteeringInput);
+		RPCPayload.set_field_inthrottleinput0(StructuredParams.InThrottleInput);
+		RPCPayload.set_field_inbrakeinput0(StructuredParams.InBrakeInput);
+		RPCPayload.set_field_inhandbrakeinput0(StructuredParams.InHandbrakeInput);
+		RPCPayload.set_field_currentgear0(int32_t(StructuredParams.CurrentGear));
+>>>>>>> Updated type bindings
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1429,11 +1437,11 @@ void USpatialTypeBinding_WheeledVehicle::ServerUpdateState_OnRPCPayload(const wo
 		WheeledVehicleMovementComponent_eventServerUpdateState_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.InSteeringInput = Op.Request.field_insteeringinput();
-		Parameters.InThrottleInput = Op.Request.field_inthrottleinput();
-		Parameters.InBrakeInput = Op.Request.field_inbrakeinput();
-		Parameters.InHandbrakeInput = Op.Request.field_inhandbrakeinput();
-		Parameters.CurrentGear = Op.Request.field_currentgear();
+		Parameters.InSteeringInput = Op.Request.field_insteeringinput0();
+		Parameters.InThrottleInput = Op.Request.field_inthrottleinput0();
+		Parameters.InBrakeInput = Op.Request.field_inbrakeinput0();
+		Parameters.InHandbrakeInput = Op.Request.field_inhandbrakeinput0();
+		Parameters.CurrentGear = Op.Request.field_currentgear0();
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerUpdateState, target: %s %s"),
