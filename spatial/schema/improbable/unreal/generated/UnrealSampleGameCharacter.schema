@@ -1,13 +1,13 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated;
+package improbable.unreal.generated.samplegamecharacter;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component UnrealSampleGameCharacterSingleClientRepData {
+component SampleGameCharacterSingleClientRepData {
 	id = 100022;
 }
-component UnrealSampleGameCharacterMultiClientRepData {
+component SampleGameCharacterMultiClientRepData {
 	id = 100023;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
@@ -62,68 +62,69 @@ component UnrealSampleGameCharacterMultiClientRepData {
 	float field_testpodstruct_fvar = 51; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
 	int32 field_testpodstruct_ivar = 52; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
 	double field_testpodstruct_dvar = 53; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
-	int32 field_testcarrayreplication0 = 54; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication1 = 55; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication2 = 56; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication3 = 57; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication4 = 58; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication5 = 59; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication6 = 60; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication7 = 61; // COND_None // ::SampleGameCharacter
-	uint32 field_test8enum = 62; // COND_None // ::SampleGameCharacter
-	uint32 field_test16enum = 63; // COND_None // ::SampleGameCharacter
-	uint32 field_test32enum = 64; // COND_None // ::SampleGameCharacter
-	int64 field_test64enum = 65; // COND_None // ::SampleGameCharacter
-	list<uint32> field_testenumtarray = 66; // COND_None // ::SampleGameCharacter
-	uint32 field_testuenum = 67; // COND_None // ::SampleGameCharacter
-	list<uint32> field_testuenumtarray = 68; // COND_None // ::SampleGameCharacter
-	int32 field_test8int = 69; // COND_None // ::SampleGameCharacter
-	int32 field_test16int = 70; // COND_None // ::SampleGameCharacter
-	int32 field_test32int = 71; // COND_None // ::SampleGameCharacter
-	int64 field_test64int = 72; // COND_None // ::SampleGameCharacter
-	uint32 field_test8uint = 73; // COND_None // ::SampleGameCharacter
-	uint32 field_test16uint = 74; // COND_None // ::SampleGameCharacter
-	uint32 field_test32uint = 75; // COND_None // ::SampleGameCharacter
-	uint64 field_test64uint = 76; // COND_None // ::SampleGameCharacter
-	float field_testfloat = 77; // COND_None // ::SampleGameCharacter
-	double field_testdouble = 78; // COND_None // ::SampleGameCharacter
-	list<bytes> field_bararray = 79; // COND_None // ::SampleGameCharacter
-	list<bytes> field_testbar_cantreplicatethismember = 80; // COND_None // Bar::TestBar::SampleGameCharacter
-	bytes field_testbar_mystruct = 81; // COND_None // Bar::TestBar::SampleGameCharacter
-	bytes field_testbar_netserializestruct = 82; // COND_None // Bar::TestBar::SampleGameCharacter
-	int32 field_testbookend = 83; // COND_None // ::SampleGameCharacter
+	UnrealObjectRef field_stablynamedobj = 54; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication0 = 55; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication1 = 56; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication2 = 57; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication3 = 58; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication4 = 59; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication5 = 60; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication6 = 61; // COND_None // ::SampleGameCharacter
+	int32 field_testcarrayreplication7 = 62; // COND_None // ::SampleGameCharacter
+	uint32 field_test8enum = 63; // COND_None // ::SampleGameCharacter
+	uint32 field_test16enum = 64; // COND_None // ::SampleGameCharacter
+	uint32 field_test32enum = 65; // COND_None // ::SampleGameCharacter
+	int64 field_test64enum = 66; // COND_None // ::SampleGameCharacter
+	list<uint32> field_testenumtarray = 67; // COND_None // ::SampleGameCharacter
+	uint32 field_testuenum = 68; // COND_None // ::SampleGameCharacter
+	list<uint32> field_testuenumtarray = 69; // COND_None // ::SampleGameCharacter
+	int32 field_test8int = 70; // COND_None // ::SampleGameCharacter
+	int32 field_test16int = 71; // COND_None // ::SampleGameCharacter
+	int32 field_test32int = 72; // COND_None // ::SampleGameCharacter
+	int64 field_test64int = 73; // COND_None // ::SampleGameCharacter
+	uint32 field_test8uint = 74; // COND_None // ::SampleGameCharacter
+	uint32 field_test16uint = 75; // COND_None // ::SampleGameCharacter
+	uint32 field_test32uint = 76; // COND_None // ::SampleGameCharacter
+	uint64 field_test64uint = 77; // COND_None // ::SampleGameCharacter
+	float field_testfloat = 78; // COND_None // ::SampleGameCharacter
+	double field_testdouble = 79; // COND_None // ::SampleGameCharacter
+	list<bytes> field_bararray = 80; // COND_None // ::SampleGameCharacter
+	list<bytes> field_testbar_cantreplicatethismember = 81; // COND_None // Bar::TestBar::SampleGameCharacter
+	bytes field_testbar_mystruct = 82; // COND_None // Bar::TestBar::SampleGameCharacter
+	bytes field_testbar_netserializestruct = 83; // COND_None // Bar::TestBar::SampleGameCharacter
+	int32 field_testbookend = 84; // COND_None // ::SampleGameCharacter
 }
-component UnrealSampleGameCharacterMigratableData {
+component SampleGameCharacterMigratableData {
 	id = 100024;
 }
 import "improbable/unreal/generated/UnrealSampleGameCharacterTypes.schema";
 import "improbable/unreal/generated/UnrealCharacterTypes.schema";
 
-component UnrealSampleGameCharacterClientRPCs {
+component SampleGameCharacterClientRPCs {
 	id = 100025;
-	command UnrealRPCCommandResponse samplegamecharacterclienttestfunc(UnrealClientTestFuncRequest);
-	command UnrealRPCCommandResponse samplegamecharacterclienttestconstargs(UnrealClientTestConstArgsRequest);
-	command UnrealRPCCommandResponse samplegamecharacterrootmotiondebugclientprintonscreen(UnrealRootMotionDebugClientPrintOnScreenRequest);
-	command UnrealRPCCommandResponse samplegamecharacterclientveryshortadjustposition(UnrealClientVeryShortAdjustPositionRequest);
-	command UnrealRPCCommandResponse samplegamecharacterclientcheatwalk(UnrealClientCheatWalkRequest);
-	command UnrealRPCCommandResponse samplegamecharacterclientcheatghost(UnrealClientCheatGhostRequest);
-	command UnrealRPCCommandResponse samplegamecharacterclientcheatfly(UnrealClientCheatFlyRequest);
-	command UnrealRPCCommandResponse samplegamecharacterclientadjustrootmotionsourceposition(UnrealClientAdjustRootMotionSourcePositionRequest);
-	command UnrealRPCCommandResponse samplegamecharacterclientadjustrootmotionposition(UnrealClientAdjustRootMotionPositionRequest);
-	command UnrealRPCCommandResponse samplegamecharacterclientadjustposition(UnrealClientAdjustPositionRequest);
-	command UnrealRPCCommandResponse samplegamecharacterclientackgoodmove(UnrealClientAckGoodMoveRequest);
+	command UnrealRPCCommandResponse clienttestfunc(samplegamecharacter.ClientTestFuncRequest);
+	command UnrealRPCCommandResponse clienttestconstargs(samplegamecharacter.ClientTestConstArgsRequest);
+	command UnrealRPCCommandResponse rootmotiondebugclientprintonscreen(character.RootMotionDebugClientPrintOnScreenRequest);
+	command UnrealRPCCommandResponse clientveryshortadjustposition(character.ClientVeryShortAdjustPositionRequest);
+	command UnrealRPCCommandResponse clientcheatwalk(character.ClientCheatWalkRequest);
+	command UnrealRPCCommandResponse clientcheatghost(character.ClientCheatGhostRequest);
+	command UnrealRPCCommandResponse clientcheatfly(character.ClientCheatFlyRequest);
+	command UnrealRPCCommandResponse clientadjustrootmotionsourceposition(character.ClientAdjustRootMotionSourcePositionRequest);
+	command UnrealRPCCommandResponse clientadjustrootmotionposition(character.ClientAdjustRootMotionPositionRequest);
+	command UnrealRPCCommandResponse clientadjustposition(character.ClientAdjustPositionRequest);
+	command UnrealRPCCommandResponse clientackgoodmove(character.ClientAckGoodMoveRequest);
 }
-component UnrealSampleGameCharacterServerRPCs {
+component SampleGameCharacterServerRPCs {
 	id = 100026;
-	command UnrealRPCCommandResponse samplegamecharacterservertestfunc(UnrealServerTestFuncRequest);
-	command UnrealRPCCommandResponse samplegamecharacterservermoveold(UnrealServerMoveOldRequest);
-	command UnrealRPCCommandResponse samplegamecharacterservermovenobase(UnrealServerMoveNoBaseRequest);
-	command UnrealRPCCommandResponse samplegamecharacterservermovedualnobase(UnrealServerMoveDualNoBaseRequest);
-	command UnrealRPCCommandResponse samplegamecharacterservermovedualhybridrootmotion(UnrealServerMoveDualHybridRootMotionRequest);
-	command UnrealRPCCommandResponse samplegamecharacterservermovedual(UnrealServerMoveDualRequest);
-	command UnrealRPCCommandResponse samplegamecharacterservermove(UnrealServerMoveRequest);
+	command UnrealRPCCommandResponse servertestfunc(samplegamecharacter.ServerTestFuncRequest);
+	command UnrealRPCCommandResponse servermoveold(character.ServerMoveOldRequest);
+	command UnrealRPCCommandResponse servermovenobase(character.ServerMoveNoBaseRequest);
+	command UnrealRPCCommandResponse servermovedualnobase(character.ServerMoveDualNoBaseRequest);
+	command UnrealRPCCommandResponse servermovedualhybridrootmotion(character.ServerMoveDualHybridRootMotionRequest);
+	command UnrealRPCCommandResponse servermovedual(character.ServerMoveDualRequest);
+	command UnrealRPCCommandResponse servermove(character.ServerMoveRequest);
 }
-component UnrealSampleGameCharacterNetMulticastRPCs {
+component SampleGameCharacterNetMulticastRPCs {
 	id = 100027;
-	event UnrealTestMulticastRequest samplegamecharactertestmulticast;
+	event samplegamecharacter.TestMulticastRequest testmulticast;
 }

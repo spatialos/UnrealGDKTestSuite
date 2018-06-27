@@ -18,9 +18,9 @@
 #include "SpatialInterop.h"
 #include "SampleGameTestClasses.h"
 
-#include "UnrealRepCmdConfusionSingleClientRepDataAddComponentOp.h"
-#include "UnrealRepCmdConfusionMultiClientRepDataAddComponentOp.h"
-#include "UnrealRepCmdConfusionMigratableDataAddComponentOp.h"
+#include "RepCmdConfusionSingleClientRepDataAddComponentOp.h"
+#include "RepCmdConfusionMultiClientRepDataAddComponentOp.h"
+#include "RepCmdConfusionMigratableDataAddComponentOp.h"
 
 const FRepHandlePropertyMap& USpatialTypeBinding_RepCmdConfusion::GetRepHandlePropertyMap() const
 {
@@ -62,18 +62,18 @@ void USpatialTypeBinding_RepCmdConfusion::Init(USpatialInterop* InInterop, USpat
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged, 0));
 }
 
-void USpatialTypeBinding_RepCmdConfusion::BindToView()
+void USpatialTypeBinding_RepCmdConfusion::BindToView(bool bIsClient)
 {
 	TSharedPtr<worker::View> View = Interop->GetSpatialOS()->GetView().Pin();
 	ViewCallbacks.Init(View);
 
 	if (Interop->GetNetDriver()->GetNetMode() == NM_Client)
 	{
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -81,11 +81,11 @@ void USpatialTypeBinding_RepCmdConfusion::BindToView()
 			check(ActorChannel);
 			ReceiveUpdate_SingleClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -93,24 +93,27 @@ void USpatialTypeBinding_RepCmdConfusion::BindToView()
 			check(ActorChannel);
 			ReceiveUpdate_MultiClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealRepCmdConfusionMigratableData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealRepCmdConfusionMigratableData>& Op)
+		if (!bIsClient)
 		{
-			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealRepCmdConfusionMigratableData::ComponentId))
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData>& Op)
 			{
-				return;
-			}
-			USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
-			check(ActorChannel);
-			ReceiveUpdate_Migratable(ActorChannel, Op.Update);
-		}));
+				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::ComponentId))
+				{
+					return;
+				}
+				USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
+				check(ActorChannel);
+				ReceiveUpdate_Migratable(ActorChannel, Op.Update);
+			}));
+		}
 	}
-	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs>([this](
-		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs>& Op)
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionNetMulticastRPCs>& Op)
 	{
 		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs::ComponentId))
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionNetMulticastRPCs::ComponentId))
 		{
 			return;
 		}
@@ -133,14 +136,14 @@ worker::Entity USpatialTypeBinding_RepCmdConfusion::CreateActorEntity(const FStr
 	}
 
 	// Setup initial data.
-	improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData::Data SingleClientData;
-	improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData::Data SingleClientData;
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData::Data MultiClientData;
-	improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Data MultiClientData;
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::UnrealRepCmdConfusionMigratableData::Data MigratableData;
-	improbable::unreal::generated::UnrealRepCmdConfusionMigratableData::Update MigratableDataUpdate;
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Data MigratableData;
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update MigratableDataUpdate;
 	bool bMigratableDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 	SingleClientUpdate.ApplyTo(SingleClientData);
@@ -192,23 +195,23 @@ worker::Entity USpatialTypeBinding_RepCmdConfusion::CreateActorEntity(const FStr
 		.SetPersistence(true)
 		.SetReadAcl(AnyUnrealWorkerOrClient)
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData>(SingleClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData>(MultiClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealRepCmdConfusionMigratableData>(MigratableData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealRepCmdConfusionClientRPCs>(improbable::unreal::generated::UnrealRepCmdConfusionClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::generated::UnrealRepCmdConfusionServerRPCs>(improbable::unreal::generated::UnrealRepCmdConfusionServerRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs>(improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData>(SingleClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData>(MultiClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData>(MigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionClientRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionClientRPCs::Data{}, OwningClientOnly)
+		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionServerRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionNetMulticastRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
 void USpatialTypeBinding_RepCmdConfusion::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
 {
 	// Build SpatialOS updates.
-	improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::UnrealRepCmdConfusionMigratableData::Update MigratableDataUpdate;
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update MigratableDataUpdate;
 	bool bMigratableDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 
@@ -216,15 +219,15 @@ void USpatialTypeBinding_RepCmdConfusion::SendComponentUpdates(const FPropertyCh
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	if (bSingleClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
 	}
 	if (bMultiClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
 	if (bMigratableDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealRepCmdConfusionMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
 	}
 }
 
@@ -243,22 +246,22 @@ void USpatialTypeBinding_RepCmdConfusion::SendRPCCommand(UObject* TargetObject, 
 
 void USpatialTypeBinding_RepCmdConfusion::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
 {
-	auto* SingleClientAddOp = Cast<UUnrealRepCmdConfusionSingleClientRepDataAddComponentOp>(AddComponentOp);
+	auto* SingleClientAddOp = Cast<URepCmdConfusionSingleClientRepDataAddComponentOp>(AddComponentOp);
 	if (SingleClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
 		ReceiveUpdate_SingleClient(Channel, Update);
 	}
-	auto* MultiClientAddOp = Cast<UUnrealRepCmdConfusionMultiClientRepDataAddComponentOp>(AddComponentOp);
+	auto* MultiClientAddOp = Cast<URepCmdConfusionMultiClientRepDataAddComponentOp>(AddComponentOp);
 	if (MultiClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
 		ReceiveUpdate_MultiClient(Channel, Update);
 	}
-	auto* MigratableDataAddOp = Cast<UUnrealRepCmdConfusionMigratableDataAddComponentOp>(AddComponentOp);
+	auto* MigratableDataAddOp = Cast<URepCmdConfusionMigratableDataAddComponentOp>(AddComponentOp);
 	if (MigratableDataAddOp)
 	{
-		auto Update = improbable::unreal::generated::UnrealRepCmdConfusionMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
+		auto Update = improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
 		ReceiveUpdate_Migratable(Channel, Update);
 	}
 }
@@ -270,9 +273,9 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_R
 	{
 		if (!bAutonomousProxy)
 		{
-			Interest.emplace(improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData::ComponentId, worker::InterestOverride{false});
+			Interest.emplace(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::generated::UnrealRepCmdConfusionMigratableData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
@@ -280,11 +283,11 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_R
 void USpatialTypeBinding_RepCmdConfusion::BuildSpatialComponentUpdate(
 	const FPropertyChangeState& Changes,
 	USpatialActorChannel* Channel,
-	improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData::Update& SingleClientUpdate,
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData::Update& SingleClientUpdate,
 	bool& bSingleClientUpdateChanged,
-	improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData::Update& MultiClientUpdate,
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::generated::UnrealRepCmdConfusionMigratableData::Update& MigratableDataUpdate,
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update& MigratableDataUpdate,
 	bool& bMigratableDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
@@ -342,11 +345,11 @@ void USpatialTypeBinding_RepCmdConfusion::BuildSpatialComponentUpdate(
 	}
 }
 
-void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -406,9 +409,18 @@ void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_MultiClient(const uin
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 7);
 				}
 				else
@@ -478,9 +490,18 @@ void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_MultiClient(const uin
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 12);
 				}
 				else
@@ -501,9 +522,18 @@ void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_MultiClient(const uin
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 13);
 				}
 				else
@@ -531,9 +561,18 @@ void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_MultiClient(const uin
 			if (Value != nullptr)
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
 					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 15);
 				}
 				else
@@ -553,24 +592,24 @@ void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_MultiClient(const uin
 	}
 }
 
-void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealRepCmdConfusionMigratableData::Update& OutUpdate) const
+void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealRepCmdConfusionSingleClientRepData::Update& Update) const
+void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData::Update& Update) const
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TArray<UProperty*> RepNotifies;
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies);
 }
 
-void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealRepCmdConfusionMultiClientRepData::Update& Update) const
+void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Update& Update) const
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TSet<UProperty*> RepNotifies;
 
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
-	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::UnrealRepCmdConfusionClientRPCs::ComponentId);
+	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionClientRPCs::ComponentId);
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
@@ -765,6 +804,8 @@ void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_MultiClient(USpatialActo
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -933,6 +974,8 @@ void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_MultiClient(USpatialActo
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -989,6 +1032,8 @@ void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_MultiClient(USpatialActo
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1074,6 +1119,8 @@ void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_MultiClient(USpatialActo
 							ActorChannel->GetEntityId().ToSpatialEntityId(),
 							*RepData->Property->GetName(),
 							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
 						bWriteObjectProperty = false;
 						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 					}
@@ -1096,10 +1143,10 @@ void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_MultiClient(USpatialActo
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealRepCmdConfusionMigratableData::Update& Update) const
+void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update& Update) const
 {
 }
 
-void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealRepCmdConfusionNetMulticastRPCs::Update& Update)
+void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::repcmdconfusion::RepCmdConfusionNetMulticastRPCs::Update& Update)
 {
 }
