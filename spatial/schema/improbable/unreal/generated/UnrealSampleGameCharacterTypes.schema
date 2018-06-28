@@ -11,6 +11,9 @@ type ClientTestConstArgsRequest {
 	uint32 target_subobject_offset = 1;
 	UnrealObjectRef field_conststruct_constobj = 2;
 }
+type TestRPCRequest {
+	uint32 target_subobject_offset = 1;
+}
 type ServerTestFuncRequest {
 	uint32 target_subobject_offset = 1;
 }

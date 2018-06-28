@@ -47,26 +47,26 @@ private:
 	void BuildSpatialComponentUpdate(
 		const FPropertyChangeState& Changes,
 		USpatialActorChannel* Channel,
-		improbable::unreal::generated::s_testunderscoreclassname::STestUnderscoreClassNameSingleClientRepData::Update& SingleClientUpdate,
+		improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameSingleClientRepData::Update& SingleClientUpdate,
 		bool& bSingleClientUpdateChanged,
-		improbable::unreal::generated::s_testunderscoreclassname::STestUnderscoreClassNameMultiClientRepData::Update& MultiClientUpdate,
+		improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameMultiClientRepData::Update& MultiClientUpdate,
 		bool& bMultiClientUpdateChanged,
-		improbable::unreal::generated::s_testunderscoreclassname::STestUnderscoreClassNameMigratableData::Update& MigratableDataUpdate,
+		improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameMigratableData::Update& MigratableDataUpdate,
 		bool& bMigratableDataUpdateChanged) const;
-	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::s_testunderscoreclassname::STestUnderscoreClassNameSingleClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::s_testunderscoreclassname::STestUnderscoreClassNameMultiClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::s_testunderscoreclassname::STestUnderscoreClassNameMigratableData::Update& OutUpdate) const;
-	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::s_testunderscoreclassname::STestUnderscoreClassNameSingleClientRepData::Update& Update) const;
-	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::s_testunderscoreclassname::STestUnderscoreClassNameMultiClientRepData::Update& Update) const;
-	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::s_testunderscoreclassname::STestUnderscoreClassNameMigratableData::Update& Update) const;
-	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::s_testunderscoreclassname::STestUnderscoreClassNameNetMulticastRPCs::Update& Update);
+	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameSingleClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameMultiClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameMigratableData::Update& OutUpdate) const;
+	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameSingleClientRepData::Update& Update) const;
+	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameMultiClientRepData::Update& Update) const;
+	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameMigratableData::Update& Update) const;
+	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameNetMulticastRPCs::Update& Update);
 
 	// RPC command sender functions.
 	void ClientUnderscoreRPC_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
-	void ClientUnderscoreRPC_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::s_testunderscoreclassname::STestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>& Op);
+	void ClientUnderscoreRPC_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>& Op);
 
 	// RPC command response handler functions.
-	void ClientUnderscoreRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::s_testunderscoreclassname::STestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>& Op);
+	void ClientUnderscoreRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>& Op);
 };
