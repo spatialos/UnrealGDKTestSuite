@@ -69,13 +69,6 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	//DOREPLIFETIME(ASampleGameCharacter, TestContainerStruct);
 }
 
-bool FTestStruct::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
-{
-	Ar << TestInt;
-
-	return true;
-}
-
 void ASampleGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();

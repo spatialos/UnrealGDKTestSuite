@@ -13,3 +13,15 @@ void ASampleGameGameStateBase::FakeServerHasBegunPlay()
 	bReplicatedHasBegunPlay = true;
 	OnRep_ReplicatedHasBegunPlay();
 }
+
+void ASampleGameGameStateBase::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(ASampleGameGameStateBase, m_numberOfPlayers);
+}
+
+void ASampleGameGameStateBase::NotifyReplicatedCurrentWeatherState()
+{
+
+}

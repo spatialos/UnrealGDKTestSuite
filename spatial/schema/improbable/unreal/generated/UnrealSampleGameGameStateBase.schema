@@ -1,0 +1,61 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated.samplegamegamestatebase;
+
+import "improbable/unreal/gdk/core_types.schema";
+
+component SampleGameGameStateBaseSingleClientRepData {
+	id = 100016;
+}
+component SampleGameGameStateBaseMultiClientRepData {
+	id = 100017;
+	bool field_bhidden0 = 1; // COND_None // ::Actor
+	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
+	bool field_btearoff0 = 3; // COND_None // ::Actor
+	bool field_bcanbedamaged0 = 4; // COND_None // ::Actor
+	uint32 field_remoterole0 = 5; // COND_None // ::Actor
+	bytes field_replicatedmovement0 = 6; // COND_SimulatedOrPhysics // ::Actor
+	UnrealObjectRef field_attachmentreplication0_attachparent0 = 7; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication0_locationoffset0 = 8; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication0_relativescale3d0 = 9; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication0_rotationoffset0 = 10; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	string field_attachmentreplication0_attachsocket0 = 11; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	UnrealObjectRef field_attachmentreplication0_attachcomponent0 = 12; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
+	uint32 field_role0 = 14; // COND_None // ::Actor
+	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
+	uint32 field_gamemodeclass0 = 16; // COND_InitialOnly // ::GameStateBase
+	uint32 field_spectatorclass0 = 17; // COND_None // ::GameStateBase
+	bool field_breplicatedhasbegunplay0 = 18; // COND_None // ::GameStateBase
+	float field_replicatedworldtimeseconds0 = 19; // COND_None // ::GameStateBase
+	int32 field_mnumberofplayers0 = 20; // COND_None // ::SampleGameGameStateBase
+	list<int32> field_mscoreperplayer0 = 21; // COND_None // ::SampleGameGameStateBase
+	list<bytes> field_mgamestateperteam0 = 22; // COND_None // ::SampleGameGameStateBase
+	int32 field_mscoretowin0 = 23; // COND_None // ::SampleGameGameStateBase
+	int32 field_mtimeremaining0 = 24; // COND_None // ::SampleGameGameStateBase
+	int32 field_mnumberofjoinedplayers0 = 25; // COND_None // ::SampleGameGameStateBase
+	int32 field_mnumberofneededplayers0 = 26; // COND_None // ::SampleGameGameStateBase
+	string field_mcurrentweatherstate0 = 27; // COND_None // ::SampleGameGameStateBase
+	int32 field_msessionhighscore0 = 28; // COND_None // ::SampleGameGameStateBase
+	string field_msessionhighscorename0 = 29; // COND_None // ::SampleGameGameStateBase
+	int32 field_mnumberoflifetimehighscores0 = 30; // COND_None // ::SampleGameGameStateBase
+	int32 field_mlifetimehighscores0 = 31; // COND_None // ::SampleGameGameStateBase
+	int32 field_mlifetimehighscores1 = 32; // COND_None // ::SampleGameGameStateBase
+	int32 field_mlifetimehighscores2 = 33; // COND_None // ::SampleGameGameStateBase
+	string field_mlifetimehighscorenames0 = 34; // COND_None // ::SampleGameGameStateBase
+	string field_mlifetimehighscorenames1 = 35; // COND_None // ::SampleGameGameStateBase
+	string field_mlifetimehighscorenames2 = 36; // COND_None // ::SampleGameGameStateBase
+}
+component SampleGameGameStateBaseMigratableData {
+	id = 100018;
+}
+
+component SampleGameGameStateBaseClientRPCs {
+	id = 100019;
+}
+component SampleGameGameStateBaseServerRPCs {
+	id = 100020;
+}
+component SampleGameGameStateBaseNetMulticastRPCs {
+	id = 100021;
+}

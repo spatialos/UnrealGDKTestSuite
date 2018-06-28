@@ -57,16 +57,19 @@ EXIT /B 0
 IF EXIST %GENERATED_WORKER_FILES% (
     rmdir /s /q %GENERATED_WORKER_FILES%
     echo Generated worker code has been sucessfully removed.
-
     echo After removing generated worker code it is reccomended to run Codegen.bat
-    set /p WORKER_CODEGEN=Clean generated schema?[Y/N]: 
-    IF /I %WORKER_CODEGEN% == Y (
-        CALL Game/Scripts/Codegen.bat
-        echo Successfully generated worker code.
-    )
+    CALL :worker_codegen
 ) ELSE (
     echo %GENERATED_WORKER_FILES% did not exist when performing the clean.
 )
 EXIT /B 0
 
+:worker_codegen
+set /p WORKER_CODEGEN=Run Codegen.bat?[Y/N]: 
+IF /I %WORKER_CODEGEN% == Y (
+    CALL Game/Scripts/Codegen.bat
+    echo Successfully generated worker code.
+)
+    
+EXIT /B 0
 :done

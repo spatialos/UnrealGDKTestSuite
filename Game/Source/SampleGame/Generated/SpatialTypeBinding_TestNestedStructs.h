@@ -62,8 +62,14 @@ private:
 	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::testnestedstructs::TestNestedStructsNetMulticastRPCs::Update& Update);
 
 	// RPC command sender functions.
+	void DoTheThingCStyleArray_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void DoTheThing_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
+	void DoTheThingCStyleArray_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testnestedstructs::TestNestedStructsServerRPCs::Commands::Dothethingcstylearray>& Op);
+	void DoTheThing_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testnestedstructs::TestNestedStructsServerRPCs::Commands::Dothething>& Op);
 
 	// RPC command response handler functions.
+	void DoTheThingCStyleArray_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testnestedstructs::TestNestedStructsServerRPCs::Commands::Dothethingcstylearray>& Op);
+	void DoTheThing_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testnestedstructs::TestNestedStructsServerRPCs::Commands::Dothething>& Op);
 };
