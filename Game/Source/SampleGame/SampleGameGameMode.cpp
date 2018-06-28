@@ -13,6 +13,5 @@ ASampleGameGameMode::ASampleGameGameMode()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 
-
 	PlayerControllerClass = ASampleGamePlayerController::StaticClass();
 }
