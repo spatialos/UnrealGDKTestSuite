@@ -1,13 +1,13 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated;
+package improbable.unreal.generated.repcmdconfusion;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component UnrealRepCmdConfusionSingleClientRepData {
+component RepCmdConfusionSingleClientRepData {
 	id = 100040;
 }
-component UnrealRepCmdConfusionMultiClientRepData {
+component RepCmdConfusionMultiClientRepData {
 	id = 100041;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
@@ -25,16 +25,16 @@ component UnrealRepCmdConfusionMultiClientRepData {
 	uint32 field_role = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
 }
-component UnrealRepCmdConfusionMigratableData {
+component RepCmdConfusionMigratableData {
 	id = 100042;
 }
 
-component UnrealRepCmdConfusionClientRPCs {
+component RepCmdConfusionClientRPCs {
 	id = 100043;
 }
-component UnrealRepCmdConfusionServerRPCs {
+component RepCmdConfusionServerRPCs {
 	id = 100044;
 }
-component UnrealRepCmdConfusionNetMulticastRPCs {
+component RepCmdConfusionNetMulticastRPCs {
 	id = 100045;
 }
