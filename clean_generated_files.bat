@@ -53,8 +53,7 @@ EXIT /B 0
 :worker_codegen
 SET /p WORKER_CODEGEN=Run Codegen.bat?[Y/N]: 
 IF /I %WORKER_CODEGEN% == Y (
-    CALL Game/Scripts/Codegen.bat
-    ECHO Successfully generated worker code.
+    %~dp0Game/Scripts/Codegen.bat
 ) 
 EXIT /B 0
 
