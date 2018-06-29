@@ -80,6 +80,9 @@ void USpatialTypeBinding_TestNestedStructs::Init(USpatialInterop* InInterop, USp
 	RepHandleToPropertyMap.Add(31, FRepHandleData(Class, {"TestContainerStruct", "Container_Int_Array"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(32, FRepHandleData(Class, {"TestContainerStruct", "Container_Int_Array"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(33, FRepHandleData(Class, {"TestContainerStruct", "Dynamic_Struct_Array"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(34, FRepHandleData(Class, {"m_equippedSkeletalMeshes"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(35, FRepHandleData(Class, {"m_equippedSkeletalMeshes"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(36, FRepHandleData(Class, {"m_equippedSkeletalMeshes"}, COND_None, REPNOTIFY_OnChanged, 0));
 }
 
 void USpatialTypeBinding_TestNestedStructs::BindToView(bool bIsClient)
@@ -616,6 +619,102 @@ void USpatialTypeBinding_TestNestedStructs::ServerSendUpdate_MultiClient(const u
 				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			OutUpdate.set_field_testcontainerstruct0_dynamicstructarray0(List);
+			break;
+		}
+		case 34: // field_mequippedskeletalmeshes0
+		{
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 34);
+				}
+				else
+				{
+					OutUpdate.set_field_mequippedskeletalmeshes0(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_mequippedskeletalmeshes0(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 35: // field_mequippedskeletalmeshes1
+		{
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 35);
+				}
+				else
+				{
+					OutUpdate.set_field_mequippedskeletalmeshes1(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_mequippedskeletalmeshes1(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 36: // field_mequippedskeletalmeshes2
+		{
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 36);
+				}
+				else
+				{
+					OutUpdate.set_field_mequippedskeletalmeshes2(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_mequippedskeletalmeshes2(SpatialConstants::NULL_OBJECT_REF);
+			}
 			break;
 		}
 	default:
@@ -1380,6 +1479,180 @@ void USpatialTypeBinding_TestNestedStructs::ReceiveUpdate_MultiClient(USpatialAc
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
 				*RepData->Property->GetName(),
 				Handle);
+		}
+	}
+	if (!Update.field_mequippedskeletalmeshes0().empty())
+	{
+		// field_mequippedskeletalmeshes0
+		uint16 Handle = 34;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(PropertyData));
+
+			{
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_mequippedskeletalmeshes0().data());
+				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				{
+					Value = nullptr;
+				}
+				else
+				{
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+					if (NetGUID.IsValid())
+					{
+						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<USkeletalMesh>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+						Value = Cast<USkeletalMesh>(Object_Raw);
+					}
+					else
+					{
+						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+							*Interop->GetSpatialOS()->GetWorkerId(),
+							*ObjectRefToString(ObjectRef),
+							*ActorChannel->Actor->GetName(),
+							ActorChannel->GetEntityId().ToSpatialEntityId(),
+							*RepData->Property->GetName(),
+							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
+						bWriteObjectProperty = false;
+						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					}
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
+		}
+	}
+	if (!Update.field_mequippedskeletalmeshes1().empty())
+	{
+		// field_mequippedskeletalmeshes1
+		uint16 Handle = 35;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(PropertyData));
+
+			{
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_mequippedskeletalmeshes1().data());
+				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				{
+					Value = nullptr;
+				}
+				else
+				{
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+					if (NetGUID.IsValid())
+					{
+						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<USkeletalMesh>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+						Value = Cast<USkeletalMesh>(Object_Raw);
+					}
+					else
+					{
+						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+							*Interop->GetSpatialOS()->GetWorkerId(),
+							*ObjectRefToString(ObjectRef),
+							*ActorChannel->Actor->GetName(),
+							ActorChannel->GetEntityId().ToSpatialEntityId(),
+							*RepData->Property->GetName(),
+							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
+						bWriteObjectProperty = false;
+						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					}
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
+		}
+	}
+	if (!Update.field_mequippedskeletalmeshes2().empty())
+	{
+		// field_mequippedskeletalmeshes2
+		uint16 Handle = 36;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(PropertyData));
+
+			{
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_mequippedskeletalmeshes2().data());
+				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				{
+					Value = nullptr;
+				}
+				else
+				{
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+					if (NetGUID.IsValid())
+					{
+						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<USkeletalMesh>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+						Value = Cast<USkeletalMesh>(Object_Raw);
+					}
+					else
+					{
+						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+							*Interop->GetSpatialOS()->GetWorkerId(),
+							*ObjectRefToString(ObjectRef),
+							*ActorChannel->Actor->GetName(),
+							ActorChannel->GetEntityId().ToSpatialEntityId(),
+							*RepData->Property->GetName(),
+							Handle);
+						// A legal static object reference should never be unresolved.
+						check(ObjectRef.path().empty());
+						bWriteObjectProperty = false;
+						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					}
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
 		}
 	}
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());

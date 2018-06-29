@@ -42,6 +42,9 @@ component TestNestedStructsMultiClientRepData {
 	int32 field_testcontainerstruct0_containerintarray0 = 31; // COND_None // ContainerStruct::TestContainerStruct::TestNestedStructs
 	int32 field_testcontainerstruct0_containerintarray1 = 32; // COND_None // ContainerStruct::TestContainerStruct::TestNestedStructs
 	list<bytes> field_testcontainerstruct0_dynamicstructarray0 = 33; // COND_None // ContainerStruct::TestContainerStruct::TestNestedStructs
+	UnrealObjectRef field_mequippedskeletalmeshes0 = 34; // COND_None // ::TestNestedStructs
+	UnrealObjectRef field_mequippedskeletalmeshes1 = 35; // COND_None // ::TestNestedStructs
+	UnrealObjectRef field_mequippedskeletalmeshes2 = 36; // COND_None // ::TestNestedStructs
 }
 component TestNestedStructsMigratableData {
 	id = 100012;

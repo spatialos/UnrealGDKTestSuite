@@ -202,6 +202,9 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
 	void DoTheThingCStyleArray(const FString& PrintMe, const FTestStructCStyleArray& TheTestStructCStyleArrayRPC, const TArray<FTestStructCStyleArray>& DynamicStructArrayRPC);
 
+	UPROPERTY(Replicated)
+	class USkeletalMesh* m_equippedSkeletalMeshes[3];
+
 	//UPROPERTY(Replicated)
 	//FContainerStruct TestContainerStructArray[2];
 
