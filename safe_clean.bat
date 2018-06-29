@@ -6,7 +6,8 @@ SET SPATIALGDK_MODULEPATH="%~dp0Game\Source\SpatialGDK"
 SET SPATIALGDK_SCRIPTSPATH="%~dp0Game\Scripts"
 SET SPATIALGDK_BINARIESPATH="%~dp0Game\Binaries\ThirdParty\Improbable"
 SET SPATIALGDK_SCHEMAPATH="%~dp0spatial\schema\improbable\unreal\gdk"
-SET SPATIALGDK_UNREALGDKPATH="%~dp0..\unreal-gdk"
+:: This var is only used for the automated process which is run with the '-a' command line argument. Users should change this accordingly.
+SET SPATIALGDK_UNREALGDKPATH="%~dp0..\unreal-gdk" 
 
 :: If '-a' argument is specified, clean all without prompt 
 IF /I "%1"=="-a" (
