@@ -58,5 +58,3 @@ IF /I %WORKER_CODEGEN% == Y (
     %~dp0Game/Scripts/Codegen.bat
 ) 
 EXIT /B 0
-
-:done
