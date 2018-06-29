@@ -7,9 +7,9 @@
 #include "CoreMinimal.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
-#include "TestIntReplication.h"
-#include "TestFloatReplication.h"
-#include "TestBoolReplication.h"
+#include "Tests/TestIntReplication.h"
+#include "Tests/TestFloatReplication.h"
+#include "Tests/TestBoolReplication.h"
 #include "SampleGameCharacter.generated.h"
 
 USTRUCT(BlueprintType)

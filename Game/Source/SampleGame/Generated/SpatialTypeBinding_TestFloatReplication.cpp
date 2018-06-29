@@ -16,7 +16,7 @@
 #include "SpatialPackageMapClient.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
-#include "TestFloatReplication.h"
+#include "Tests/TestFloatReplication.h"
 
 #include "TestFloatReplicationSingleClientRepDataAddComponentOp.h"
 #include "TestFloatReplicationMultiClientRepDataAddComponentOp.h"
