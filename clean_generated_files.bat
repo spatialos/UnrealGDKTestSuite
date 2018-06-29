@@ -9,7 +9,9 @@ SET GENERATED_WORKER_FILES="%~dp0Game\Source\SpatialGDK\Generated"
 IF /I "%1"=="-a" (
    CALL :clean_path %GENERATED_SCHEMA%
    CALL :clean_path %GENERATED_TYPE_BINDINGS%
-   CALL :clean_worker_files
+   CALL :clean_path %GENERATED_WORKER_FILES%
+   ECHO Running Game/Scripts/Codegen.bat
+   CALL %~dp0Game/Scripts/Codegen.bat
 ) ELSE (
     GOTO main
 )
