@@ -39,7 +39,7 @@ EXIT /B 0
 
 :clean_worker_files
 CALL :clean_path %GENERATED_WORKER_FILES%
-ECHO After removing generated worker code it is reccomended to run Codegen.bat
+ECHO After removing generated worker code it is recommended to run Codegen.bat
 CALL :worker_codegen    
 EXIT /B 0
 
