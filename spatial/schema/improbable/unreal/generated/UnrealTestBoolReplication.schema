@@ -1,13 +1,13 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated;
+package improbable.unreal.generated.testboolreplication;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component UnrealTestBoolReplicationSingleClientRepData {
+component TestBoolReplicationSingleClientRepData {
 	id = 100058;
 }
-component UnrealTestBoolReplicationMultiClientRepData {
+component TestBoolReplicationMultiClientRepData {
 	id = 100059;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
@@ -27,19 +27,19 @@ component UnrealTestBoolReplicationMultiClientRepData {
 	int32 field_testbookend = 16; // COND_None // ::ReplicationTestCase
 	bool field_testbool = 17; // COND_None // ::TestBoolReplication
 }
-component UnrealTestBoolReplicationMigratableData {
+component TestBoolReplicationMigratableData {
 	id = 100060;
 }
 import "improbable/unreal/generated/UnrealTestBoolReplicationTypes.schema";
 
-component UnrealTestBoolReplicationClientRPCs {
+component TestBoolReplicationClientRPCs {
 	id = 100061;
 }
-component UnrealTestBoolReplicationServerRPCs {
+component TestBoolReplicationServerRPCs {
 	id = 100062;
-	command UnrealRPCCommandResponse testboolreplicationservertestboolfunc(UnrealServerTestBoolFuncRequest);
-	command UnrealRPCCommandResponse testboolreplicationserverreportreplication(UnrealServerReportReplicationRequest);
+	command UnrealRPCCommandResponse servertestboolfunc(testboolreplication.ServerTestBoolFuncRequest);
+	command UnrealRPCCommandResponse serverreportreplication(testboolreplication.ServerReportReplicationRequest);
 }
-component UnrealTestBoolReplicationNetMulticastRPCs {
+component TestBoolReplicationNetMulticastRPCs {
 	id = 100063;
 }

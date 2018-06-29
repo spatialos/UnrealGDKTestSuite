@@ -23,7 +23,7 @@ public:
 	UClass* GetBoundClass() const override;
 
 	void Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap) override;
-	void BindToView() override;
+	void BindToView(bool bIsClient) override;
 	void UnbindFromView() override;
 
 	worker::Entity CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const override;
@@ -47,29 +47,29 @@ private:
 	void BuildSpatialComponentUpdate(
 		const FPropertyChangeState& Changes,
 		USpatialActorChannel* Channel,
-		improbable::unreal::generated::UnrealTestFloatReplicationSingleClientRepData::Update& SingleClientUpdate,
+		improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData::Update& SingleClientUpdate,
 		bool& bSingleClientUpdateChanged,
-		improbable::unreal::generated::UnrealTestFloatReplicationMultiClientRepData::Update& MultiClientUpdate,
+		improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData::Update& MultiClientUpdate,
 		bool& bMultiClientUpdateChanged,
-		improbable::unreal::generated::UnrealTestFloatReplicationMigratableData::Update& MigratableDataUpdate,
+		improbable::unreal::generated::testfloatreplication::TestFloatReplicationMigratableData::Update& MigratableDataUpdate,
 		bool& bMigratableDataUpdateChanged) const;
-	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealTestFloatReplicationSingleClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealTestFloatReplicationMultiClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealTestFloatReplicationMigratableData::Update& OutUpdate) const;
-	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealTestFloatReplicationSingleClientRepData::Update& Update) const;
-	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealTestFloatReplicationMultiClientRepData::Update& Update) const;
-	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealTestFloatReplicationMigratableData::Update& Update) const;
-	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealTestFloatReplicationNetMulticastRPCs::Update& Update);
+	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfloatreplication::TestFloatReplicationMigratableData::Update& OutUpdate) const;
+	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData::Update& Update) const;
+	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData::Update& Update) const;
+	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testfloatreplication::TestFloatReplicationMigratableData::Update& Update) const;
+	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::testfloatreplication::TestFloatReplicationNetMulticastRPCs::Update& Update);
 
 	// RPC command sender functions.
 	void Server_TestFloatFunc_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void Server_ReportReplication_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
-	void Server_TestFloatFunc_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealTestFloatReplicationServerRPCs::Commands::Testfloatreplicationservertestfloatfunc>& Op);
-	void Server_ReportReplication_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealTestFloatReplicationServerRPCs::Commands::Testfloatreplicationserverreportreplication>& Op);
+	void Server_TestFloatFunc_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Servertestfloatfunc>& Op);
+	void Server_ReportReplication_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Serverreportreplication>& Op);
 
 	// RPC command response handler functions.
-	void Server_TestFloatFunc_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealTestFloatReplicationServerRPCs::Commands::Testfloatreplicationservertestfloatfunc>& Op);
-	void Server_ReportReplication_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealTestFloatReplicationServerRPCs::Commands::Testfloatreplicationserverreportreplication>& Op);
+	void Server_TestFloatFunc_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Servertestfloatfunc>& Op);
+	void Server_ReportReplication_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Serverreportreplication>& Op);
 };

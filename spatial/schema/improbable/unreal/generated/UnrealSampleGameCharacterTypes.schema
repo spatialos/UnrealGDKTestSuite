@@ -1,19 +1,22 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated;
+package improbable.unreal.generated.samplegamecharacter;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-type UnrealClientTestFuncRequest {
+type ClientTestFuncRequest {
 	uint32 target_subobject_offset = 1;
 }
-type UnrealClientTestConstArgsRequest {
+type ClientTestConstArgsRequest {
 	uint32 target_subobject_offset = 1;
 	UnrealObjectRef field_conststruct_constobj = 2;
 }
-type UnrealServerTestFuncRequest {
+type TestRPCRequest {
 	uint32 target_subobject_offset = 1;
 }
-type UnrealTestMulticastRequest {
+type ServerTestFuncRequest {
+	uint32 target_subobject_offset = 1;
+}
+type TestMulticastRequest {
 	uint32 target_subobject_offset = 1;
 }

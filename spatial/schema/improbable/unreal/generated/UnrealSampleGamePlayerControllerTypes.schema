@@ -1,13 +1,12 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.testboolreplication;
+package improbable.unreal.generated.samplegameplayercontroller;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-type ServerTestBoolFuncRequest {
+type TestRPCRequest {
 	uint32 target_subobject_offset = 1;
 }
-type ServerReportReplicationRequest {
+type TestMulticastRequest {
 	uint32 target_subobject_offset = 1;
-	bool field_repbool = 2;
 }

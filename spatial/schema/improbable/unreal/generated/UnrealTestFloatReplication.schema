@@ -1,13 +1,13 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated;
+package improbable.unreal.generated.testfloatreplication;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component UnrealTestFloatReplicationSingleClientRepData {
+component TestFloatReplicationSingleClientRepData {
 	id = 100052;
 }
-component UnrealTestFloatReplicationMultiClientRepData {
+component TestFloatReplicationMultiClientRepData {
 	id = 100053;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
@@ -28,19 +28,19 @@ component UnrealTestFloatReplicationMultiClientRepData {
 	float field_testfloat = 17; // COND_None // ::TestFloatReplication
 	double field_testdouble = 18; // COND_None // ::TestFloatReplication
 }
-component UnrealTestFloatReplicationMigratableData {
+component TestFloatReplicationMigratableData {
 	id = 100054;
 }
 import "improbable/unreal/generated/UnrealTestFloatReplicationTypes.schema";
 
-component UnrealTestFloatReplicationClientRPCs {
+component TestFloatReplicationClientRPCs {
 	id = 100055;
 }
-component UnrealTestFloatReplicationServerRPCs {
+component TestFloatReplicationServerRPCs {
 	id = 100056;
-	command UnrealRPCCommandResponse testfloatreplicationservertestfloatfunc(UnrealServerTestFloatFuncRequest);
-	command UnrealRPCCommandResponse testfloatreplicationserverreportreplication(UnrealServerReportReplicationRequest);
+	command UnrealRPCCommandResponse servertestfloatfunc(testfloatreplication.ServerTestFloatFuncRequest);
+	command UnrealRPCCommandResponse serverreportreplication(testfloatreplication.ServerReportReplicationRequest);
 }
-component UnrealTestFloatReplicationNetMulticastRPCs {
+component TestFloatReplicationNetMulticastRPCs {
 	id = 100057;
 }

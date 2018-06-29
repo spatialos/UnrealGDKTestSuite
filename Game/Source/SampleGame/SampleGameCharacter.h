@@ -230,6 +230,9 @@ public:
 	UPROPERTY(Replicated)
 	FTestPODStruct TestPODStruct;
 
+	UPROPERTY(Replicated)
+	USkeletalMesh* StablyNamedObj;
+
 	//UPROPERTY(Replicated)
 	//TArray<UObject*> TestObjectArray;
 
@@ -373,6 +376,9 @@ protected:
 	// End of APawn interface
 
 	void Interact();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void TestRPC();
 
 	UFUNCTION(NetMulticast, Unreliable, WithValidation)
 	void TestMulticast();
