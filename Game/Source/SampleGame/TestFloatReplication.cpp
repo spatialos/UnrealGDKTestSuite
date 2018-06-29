@@ -12,8 +12,8 @@ bool ATestFloatReplication::Server_TestFloatFunc_Validate()
 
 void ATestFloatReplication::Server_TestFloatFunc_Implementation()
 {
-	TestFloat = TNumericLimits<float>::Max();
-	TestDouble = TNumericLimits<double>::Max();
+	TestFloat = 25.0f;
+	TestDouble = 50.0;
 
 	SignalReplicationSetup();
 }
@@ -32,16 +32,16 @@ bool ATestFloatReplication::Server_ReportReplication_Validate(float RepFloat, do
 
 void ATestFloatReplication::Server_ReportReplication_Implementation(float RepFloat, double RepDouble)
 {
-	check(RepFloat == TNumericLimits<float>::Max());
-	check(RepDouble == TNumericLimits<double>::Max());
+	check(FMath::IsNearlyEqual(RepFloat, 25.0f));
+	check(FMath::IsNearlyEqual(RepDouble, 50.0));
 
 	SignalResponseRecieved();
 }
 
 void ATestFloatReplication::ValidateClientReplicationImpl()
 {
-	check(TestFloat == TNumericLimits<float>::Max());
-	check(TestDouble == TNumericLimits<double>::Max());
+	check(FMath::IsNearlyEqual(TestFloat, 25.0f));
+	check(FMath::IsNearlyEqual(TestDouble, 50.0));
 }
 
 void ATestFloatReplication::SendTestResponseRPCImpl()
