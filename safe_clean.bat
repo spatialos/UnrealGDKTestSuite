@@ -1,17 +1,31 @@
 @ECHO OFF
 
+:: Users should configure these to match their setup.
 SET SPATIALGDK_PLUGINSPATH="%~dp0\Game\Plugins\SpatialGDK"
 SET SPATIALGDK_MODULEPATH="%~dp0\Game\Source\SpatialGDK"
 SET SPATIALGDK_SCRIPTSPATH="%~dp0\Game\Scripts"
 SET SPATIALGDK_BINARIESPATH="%~dp0\Game\Binaries\ThirdParty\Improbable"
 SET SPATIALGDK_SCHEMAPATH="%~dp0\spatial\schema\improbable\unreal\gdk"
+SET SPATIALGDK_UNREALGDKPATH="%~dp0\..\unreal-gdk"
+
+:: If '-a' argument is specified, clean all without prompt 
+IF /I "%1"=="-a" (
+    CALL :clean_all_symlinks
+    CALL :git_clean_xdf
+    ECHO Creating symlinks with known path (in this script) %SPATIALGDK_UNREALGDKPATH%
+    CALL create_gdk_symlink.bat %SPATIALGDK_UNREALGDKPATH%
+) ELSE (
+    GOTO main
+)
+EXIT /B 0
 
 :: First section is for cleaning known UnrealGDK symlinks and running git clean.
+:main
 SET /p NUKE=Would you like to clean all symlinks, uncommited changes and all built files (git clean -xdf)?[Y/N]: 
 IF /I %NUKE% == Y (
     CALL :clean_all_symlinks
     CALL :git_clean_xdf
-    GOTO :build_symlinks
+    CALL :build_symlinks
 )
 EXIT /B 0
 
