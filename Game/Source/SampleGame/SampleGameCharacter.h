@@ -22,6 +22,8 @@ class ASampleGameCharacter : public ACharacter
 public:
 	ASampleGameCharacter();
 
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	virtual void BeginPlay() override;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */

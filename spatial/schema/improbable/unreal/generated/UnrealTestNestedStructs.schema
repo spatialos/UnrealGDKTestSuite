@@ -1,0 +1,64 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated.testnestedstructs;
+
+import "improbable/unreal/gdk/core_types.schema";
+
+component TestNestedStructsSingleClientRepData {
+	id = 100010;
+}
+component TestNestedStructsMultiClientRepData {
+	id = 100011;
+	int32 field_testcontainerstruct0_structred0_rootprop0 = 1; // COND_None // RootStruct::Struct_RedContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structred0_rootarray0 = 2; // COND_None // RootStruct::Struct_RedContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structred0_rootarray1 = 3; // COND_None // RootStruct::Struct_RedContainerStruct::TestContainerStruct::TestNestedStructs
+	string field_testcontainerstruct0_structred0_stringarray0 = 4; // COND_None // RootStruct::Struct_RedContainerStruct::TestContainerStruct::TestNestedStructs
+	string field_testcontainerstruct0_structred0_stringarray1 = 5; // COND_None // RootStruct::Struct_RedContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structblue0_rootprop0 = 6; // COND_None // RootStruct::Struct_BlueContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structblue0_rootarray0 = 7; // COND_None // RootStruct::Struct_BlueContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structblue0_rootarray1 = 8; // COND_None // RootStruct::Struct_BlueContainerStruct::TestContainerStruct::TestNestedStructs
+	string field_testcontainerstruct0_structblue0_stringarray0 = 9; // COND_None // RootStruct::Struct_BlueContainerStruct::TestContainerStruct::TestNestedStructs
+	string field_testcontainerstruct0_structblue0_stringarray1 = 10; // COND_None // RootStruct::Struct_BlueContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structarray0_rootprop0 = 11; // COND_None // RootStruct::Struct_ArrayContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structarray0_rootarray0 = 12; // COND_None // RootStruct::Struct_ArrayContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structarray0_rootarray1 = 13; // COND_None // RootStruct::Struct_ArrayContainerStruct::TestContainerStruct::TestNestedStructs
+	string field_testcontainerstruct0_structarray0_stringarray0 = 14; // COND_None // RootStruct::Struct_ArrayContainerStruct::TestContainerStruct::TestNestedStructs
+	string field_testcontainerstruct0_structarray0_stringarray1 = 15; // COND_None // RootStruct::Struct_ArrayContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structarray1_rootprop0 = 16; // COND_None // RootStruct::Struct_ArrayContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structarray1_rootarray0 = 17; // COND_None // RootStruct::Struct_ArrayContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structarray1_rootarray1 = 18; // COND_None // RootStruct::Struct_ArrayContainerStruct::TestContainerStruct::TestNestedStructs
+	string field_testcontainerstruct0_structarray1_stringarray0 = 19; // COND_None // RootStruct::Struct_ArrayContainerStruct::TestContainerStruct::TestNestedStructs
+	string field_testcontainerstruct0_structarray1_stringarray1 = 20; // COND_None // RootStruct::Struct_ArrayContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structarrayanother0_rootprop0 = 21; // COND_None // RootStruct::Struct_Array_ANOTHERContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structarrayanother0_rootarray0 = 22; // COND_None // RootStruct::Struct_Array_ANOTHERContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structarrayanother0_rootarray1 = 23; // COND_None // RootStruct::Struct_Array_ANOTHERContainerStruct::TestContainerStruct::TestNestedStructs
+	string field_testcontainerstruct0_structarrayanother0_stringarray0 = 24; // COND_None // RootStruct::Struct_Array_ANOTHERContainerStruct::TestContainerStruct::TestNestedStructs
+	string field_testcontainerstruct0_structarrayanother0_stringarray1 = 25; // COND_None // RootStruct::Struct_Array_ANOTHERContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structarrayanother1_rootprop0 = 26; // COND_None // RootStruct::Struct_Array_ANOTHERContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structarrayanother1_rootarray0 = 27; // COND_None // RootStruct::Struct_Array_ANOTHERContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_structarrayanother1_rootarray1 = 28; // COND_None // RootStruct::Struct_Array_ANOTHERContainerStruct::TestContainerStruct::TestNestedStructs
+	string field_testcontainerstruct0_structarrayanother1_stringarray0 = 29; // COND_None // RootStruct::Struct_Array_ANOTHERContainerStruct::TestContainerStruct::TestNestedStructs
+	string field_testcontainerstruct0_structarrayanother1_stringarray1 = 30; // COND_None // RootStruct::Struct_Array_ANOTHERContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_containerintarray0 = 31; // COND_None // ContainerStruct::TestContainerStruct::TestNestedStructs
+	int32 field_testcontainerstruct0_containerintarray1 = 32; // COND_None // ContainerStruct::TestContainerStruct::TestNestedStructs
+	list<bytes> field_testcontainerstruct0_dynamicstructarray0 = 33; // COND_None // ContainerStruct::TestContainerStruct::TestNestedStructs
+	UnrealObjectRef field_mequippedskeletalmeshes0 = 34; // COND_None // ::TestNestedStructs
+	UnrealObjectRef field_mequippedskeletalmeshes1 = 35; // COND_None // ::TestNestedStructs
+	UnrealObjectRef field_mequippedskeletalmeshes2 = 36; // COND_None // ::TestNestedStructs
+}
+component TestNestedStructsMigratableData {
+	id = 100012;
+}
+import "improbable/unreal/generated/UnrealTestNestedStructsTypes.schema";
+
+component TestNestedStructsClientRPCs {
+	id = 100013;
+}
+component TestNestedStructsServerRPCs {
+	id = 100014;
+	command UnrealRPCCommandResponse dothethingcstylearray(testnestedstructs.DoTheThingCStyleArrayRequest);
+	command UnrealRPCCommandResponse dothething(testnestedstructs.DoTheThingRequest);
+}
+component TestNestedStructsNetMulticastRPCs {
+	id = 100015;
+}
