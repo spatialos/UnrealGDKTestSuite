@@ -12,5 +12,6 @@ class SAMPLEGAME_API ASampleGameGameStateBase : public AGameStateBase
 	GENERATED_BODY()
 
 public:
+
 	void FakeServerHasBegunPlay();
 };

@@ -1,6 +1,7 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "SampleGameGameMode.h"
+#include "SampleGameGameStateBase.h"
 #include "UObject/ConstructorHelpers.h"
 
 ASampleGameGameMode::ASampleGameGameMode()
@@ -11,4 +12,6 @@ ASampleGameGameMode::ASampleGameGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+
+	GameStateClass = ASampleGameGameStateBase::StaticClass();
 }
