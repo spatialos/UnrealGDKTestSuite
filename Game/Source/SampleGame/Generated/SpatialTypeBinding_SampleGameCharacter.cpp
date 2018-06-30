@@ -1,6 +1,5 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-
 #include "SpatialTypeBinding_SampleGameCharacter.h"
 
 #include "GameFramework/PlayerState.h"
@@ -14,13 +13,20 @@
 #include "SpatialUnrealObjectRef.h"
 #include "SpatialActorChannel.h"
 #include "SpatialPackageMapClient.h"
+#include "SpatialMemoryReader.h"
+#include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 #include "SampleGameCharacter.h"
 
-#include "UnrealSampleGameCharacterSingleClientRepDataAddComponentOp.h"
-#include "UnrealSampleGameCharacterMultiClientRepDataAddComponentOp.h"
-#include "UnrealSampleGameCharacterMigratableDataAddComponentOp.h"
+#include "SampleGameCharacterSingleClientRepDataAddComponentOp.h"
+#include "SampleGameCharacterMultiClientRepDataAddComponentOp.h"
+#include "SampleGameCharacterMigratableDataAddComponentOp.h"
+
+#include "SpatialTypeBinding_SampleGameComponent.h"
+#include "SampleGameComponentSingleClientRepDataAddComponentOp.h"
+#include "SampleGameComponentMultiClientRepDataAddComponentOp.h"
+#include "SampleGameComponentMigratableDataAddComponentOp.h"
 
 const FRepHandlePropertyMap& USpatialTypeBinding_SampleGameCharacter::GetRepHandlePropertyMap() const
 {
@@ -56,6 +62,7 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RPCToSenderMap.Emplace("ServerMoveDualHybridRootMotion", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_SendRPC);
 	RPCToSenderMap.Emplace("ServerMoveDual", &USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC);
 	RPCToSenderMap.Emplace("ServerMove", &USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC);
+	RPCToSenderMap.Emplace("TestRPC", &USpatialTypeBinding_SampleGameCharacter::TestRPC_SendRPC);
 	RPCToSenderMap.Emplace("TestMulticast", &USpatialTypeBinding_SampleGameCharacter::TestMulticast_SendRPC);
 
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("SampleGameCharacter"));
@@ -113,11 +120,11 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 
 	if (Interop->GetNetDriver()->GetNetMode() == NM_Client)
 	{
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -125,11 +132,11 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 			check(ActorChannel);
 			ReceiveUpdate_SingleClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -139,11 +146,11 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 		}));
 		if (!bIsClient)
 		{
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>& Op)
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData>& Op)
 			{
 				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::ComponentId))
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData::ComponentId))
 				{
 					return;
 				}
@@ -153,50 +160,52 @@ void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
 			}));
 		}
 	}
-	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>([this](
-		const worker::ComponentUpdateOp<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>& Op)
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs>& Op)
 	{
 		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::ComponentId))
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs::ComponentId))
 		{
 			return;
 		}
 		ReceiveUpdate_NetMulticastRPCs(Op.EntityId, Op.Update);
 	}));
 
-	using ClientRPCCommandTypes = improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterrootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientveryshortadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatwalk>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatghost>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientcheatfly>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionsourceposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Samplegamecharacterclientackgoodmove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterrootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientveryshortadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientcheatwalk>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientcheatghost>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientcheatfly>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionsourceposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientadjustrootmotionposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Samplegamecharacterclientackgoodmove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandResponse, this, std::placeholders::_1)));
+	using ClientRPCCommandTypes = improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands;
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Rootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Clientveryshortadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Clientcheatwalk>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Clientcheatghost>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Clientcheatfly>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Clientadjustrootmotionsourceposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Clientadjustrootmotionposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Clientadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Clientackgoodmove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Rootmotiondebugclientprintonscreen>(std::bind(&USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Clientveryshortadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Clientcheatwalk>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Clientcheatghost>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Clientcheatfly>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Clientadjustrootmotionsourceposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Clientadjustrootmotionposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Clientadjustposition>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Clientackgoodmove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandResponse, this, std::placeholders::_1)));
 
-	using ServerRPCCommandTypes = improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermovedual>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Samplegamecharacterservermove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermovedual>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Samplegamecharacterservermove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandResponse, this, std::placeholders::_1)));
+	using ServerRPCCommandTypes = improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands;
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servermovedual>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servermove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Testrpc>(std::bind(&USpatialTypeBinding_SampleGameCharacter::TestRPC_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servermoveold>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servermovenobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servermovedualnobase>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servermovedual>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servermove>(std::bind(&USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Testrpc>(std::bind(&USpatialTypeBinding_SampleGameCharacter::TestRPC_OnCommandResponse, this, std::placeholders::_1)));
 }
 
 void USpatialTypeBinding_SampleGameCharacter::UnbindFromView()
@@ -214,19 +223,36 @@ worker::Entity USpatialTypeBinding_SampleGameCharacter::CreateActorEntity(const 
 	}
 
 	// Setup initial data.
-	improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Data SingleClientData;
-	improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData::Data SingleClientData;
+	improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Data MultiClientData;
-	improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData::Data MultiClientData;
+	improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Data MigratableData;
-	improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update MigratableDataUpdate;
+	improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData::Data MigratableData;
+	improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData::Update MigratableDataUpdate;
 	bool bMigratableDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 	SingleClientUpdate.ApplyTo(SingleClientData);
 	MultiClientUpdate.ApplyTo(MultiClientData);
 	MigratableDataUpdate.ApplyTo(MigratableData);
+
+	improbable::unreal::generated::samplegamecomponent::SampleGameComponentSingleClientRepData::Data SingleClientSampleGameComponentData;
+	improbable::unreal::generated::samplegamecomponent::SampleGameComponentSingleClientRepData::Update SingleClientSampleGameComponentUpdate;
+	bool bSingleClientSampleGameComponentUpdateChanged = false;
+	improbable::unreal::generated::samplegamecomponent::SampleGameComponentMultiClientRepData::Data MultiClientSampleGameComponentData;
+	improbable::unreal::generated::samplegamecomponent::SampleGameComponentMultiClientRepData::Update MultiClientSampleGameComponentUpdate;
+	bool bMultiClientSampleGameComponentUpdateChanged = false;
+	improbable::unreal::generated::samplegamecomponent::SampleGameComponentMigratableData::Data SampleGameComponentMigratableData;
+	improbable::unreal::generated::samplegamecomponent::SampleGameComponentMigratableData::Update SampleGameComponentMigratableDataUpdate;
+	bool bSampleGameComponentMigratableDataUpdateChanged = false;
+
+	FPropertyChangeState SampleGameComponentChangeState = Channel->CreateSubobjectChangeState(Channel->Actor->FindComponentByClass<USampleGameComponent>());
+	USpatialTypeBinding_SampleGameComponent* SampleGameComponentTypeBinding = Cast<USpatialTypeBinding_SampleGameComponent>(Interop->GetTypeBindingByClass(USampleGameComponent::StaticClass()));
+	SampleGameComponentTypeBinding->BuildSpatialComponentUpdate(SampleGameComponentChangeState, Channel, SingleClientSampleGameComponentUpdate, bSingleClientSampleGameComponentUpdateChanged, MultiClientSampleGameComponentUpdate, bMultiClientSampleGameComponentUpdateChanged, SampleGameComponentMigratableDataUpdate, bSampleGameComponentMigratableDataUpdateChanged);
+	SingleClientSampleGameComponentUpdate.ApplyTo(SingleClientSampleGameComponentData);
+	MultiClientSampleGameComponentUpdate.ApplyTo(MultiClientSampleGameComponentData);
+	SampleGameComponentMigratableDataUpdate.ApplyTo(SampleGameComponentMigratableData);
 
 	// Create entity.
 	std::string ClientWorkerIdString = TCHAR_TO_UTF8(*ClientWorkerId);
@@ -273,23 +299,25 @@ worker::Entity USpatialTypeBinding_SampleGameCharacter::CreateActorEntity(const 
 		.SetPersistence(true)
 		.SetReadAcl(AnyUnrealWorkerOrClient)
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData>(SingleClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData>(MultiClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>(MigratableData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs>(improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs>(improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>(improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData>(SingleClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData>(MultiClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData>(MigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs>(improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Data{}, OwningClientOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs>(improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs>(improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecomponent::SampleGameComponentSingleClientRepData>(SingleClientSampleGameComponentData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::samplegamecomponent::SampleGameComponentMultiClientRepData>(MultiClientSampleGameComponentData, WorkersOnly)
 		.Build();
 }
 
 void USpatialTypeBinding_SampleGameCharacter::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
 {
 	// Build SpatialOS updates.
-	improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update MigratableDataUpdate;
+	improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData::Update MigratableDataUpdate;
 	bool bMigratableDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 
@@ -297,15 +325,15 @@ void USpatialTypeBinding_SampleGameCharacter::SendComponentUpdates(const FProper
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	if (bSingleClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
 	}
 	if (bMultiClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
 	if (bMigratableDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
 	}
 }
 
@@ -324,22 +352,22 @@ void USpatialTypeBinding_SampleGameCharacter::SendRPCCommand(UObject* TargetObje
 
 void USpatialTypeBinding_SampleGameCharacter::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
 {
-	auto* SingleClientAddOp = Cast<UUnrealSampleGameCharacterSingleClientRepDataAddComponentOp>(AddComponentOp);
+	auto* SingleClientAddOp = Cast<USampleGameCharacterSingleClientRepDataAddComponentOp>(AddComponentOp);
 	if (SingleClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
 		ReceiveUpdate_SingleClient(Channel, Update);
 	}
-	auto* MultiClientAddOp = Cast<UUnrealSampleGameCharacterMultiClientRepDataAddComponentOp>(AddComponentOp);
+	auto* MultiClientAddOp = Cast<USampleGameCharacterMultiClientRepDataAddComponentOp>(AddComponentOp);
 	if (MultiClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
 		ReceiveUpdate_MultiClient(Channel, Update);
 	}
-	auto* MigratableDataAddOp = Cast<UUnrealSampleGameCharacterMigratableDataAddComponentOp>(AddComponentOp);
+	auto* MigratableDataAddOp = Cast<USampleGameCharacterMigratableDataAddComponentOp>(AddComponentOp);
 	if (MigratableDataAddOp)
 	{
-		auto Update = improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
+		auto Update = improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
 		ReceiveUpdate_Migratable(Channel, Update);
 	}
 }
@@ -351,9 +379,9 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_S
 	{
 		if (!bAutonomousProxy)
 		{
-			Interest.emplace(improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::ComponentId, worker::InterestOverride{false});
+			Interest.emplace(improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
@@ -361,11 +389,11 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_S
 void USpatialTypeBinding_SampleGameCharacter::BuildSpatialComponentUpdate(
 	const FPropertyChangeState& Changes,
 	USpatialActorChannel* Channel,
-	improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update& SingleClientUpdate,
+	improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData::Update& SingleClientUpdate,
 	bool& bSingleClientUpdateChanged,
-	improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Update& MultiClientUpdate,
+	improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update& MigratableDataUpdate,
+	improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData::Update& MigratableDataUpdate,
 	bool& bMigratableDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
@@ -423,64 +451,62 @@ void USpatialTypeBinding_SampleGameCharacter::BuildSpatialComponentUpdate(
 	}
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
-		case 1: // field_bhidden
+		case 1: // field_bhidden0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_bhidden(Value);
+			OutUpdate.set_field_bhidden0(Value);
 			break;
 		}
-		case 2: // field_breplicatemovement
+		case 2: // field_breplicatemovement0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_breplicatemovement(Value);
+			OutUpdate.set_field_breplicatemovement0(Value);
 			break;
 		}
-		case 3: // field_btearoff
+		case 3: // field_btearoff0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_btearoff(Value);
+			OutUpdate.set_field_btearoff0(Value);
 			break;
 		}
-		case 4: // field_bcanbedamaged
+		case 4: // field_bcanbedamaged0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_bcanbedamaged(Value);
+			OutUpdate.set_field_bcanbedamaged0(Value);
 			break;
 		}
-		case 5: // field_remoterole
+		case 5: // field_remoterole0
 		{
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(Data));
 
-			OutUpdate.set_field_remoterole(uint32_t(Value));
+			OutUpdate.set_field_remoterole0(uint32_t(Value));
 			break;
 		}
-		case 6: // field_replicatedmovement
+		case 6: // field_replicatedmovement0
 		{
 			const FRepMovement& Value = *(reinterpret_cast<FRepMovement const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
-				OutUpdate.set_field_replicatedmovement(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
+			OutUpdate.set_field_replicatedmovement0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
-		case 7: // field_attachmentreplication_attachparent
+		case 7: // field_attachmentreplication0_attachparent0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
 
@@ -503,65 +529,59 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication_attachparent(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachparent0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_attachmentreplication_attachparent(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_attachmentreplication0_attachparent0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 8: // field_attachmentreplication_locationoffset
+		case 8: // field_attachmentreplication0_locationoffset0
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_attachmentreplication_locationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			OutUpdate.set_field_attachmentreplication0_locationoffset0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
-		case 9: // field_attachmentreplication_relativescale3d
+		case 9: // field_attachmentreplication0_relativescale3d0
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_attachmentreplication_relativescale3d(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			OutUpdate.set_field_attachmentreplication0_relativescale3d0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
-		case 10: // field_attachmentreplication_rotationoffset
+		case 10: // field_attachmentreplication0_rotationoffset0
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-				OutUpdate.set_field_attachmentreplication_rotationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+			OutUpdate.set_field_attachmentreplication0_rotationoffset0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
-		case 11: // field_attachmentreplication_attachsocket
+		case 11: // field_attachmentreplication0_attachsocket0
 		{
 			FName Value = *(reinterpret_cast<FName const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_attachsocket(TCHAR_TO_UTF8(*Value.ToString()));
+			OutUpdate.set_field_attachmentreplication0_attachsocket0(TCHAR_TO_UTF8(*Value.ToString()));
 			break;
 		}
-		case 12: // field_attachmentreplication_attachcomponent
+		case 12: // field_attachmentreplication0_attachcomponent0
 		{
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(Data));
 
@@ -584,16 +604,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication_attachcomponent(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachcomponent0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_attachmentreplication_attachcomponent(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_attachmentreplication0_attachcomponent0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 13: // field_owner
+		case 13: // field_owner0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
 
@@ -616,23 +636,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_owner(ObjectRef);
+					OutUpdate.set_field_owner0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_owner(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_owner0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 14: // field_role
+		case 14: // field_role0
 		{
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(Data));
 
-			OutUpdate.set_field_role(uint32_t(Value));
+			OutUpdate.set_field_role0(uint32_t(Value));
 			break;
 		}
-		case 15: // field_instigator
+		case 15: // field_instigator0
 		{
 			APawn* Value = *(reinterpret_cast<APawn* const*>(Data));
 
@@ -655,16 +675,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_instigator(ObjectRef);
+					OutUpdate.set_field_instigator0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_instigator(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_instigator0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 16: // field_playerstate
+		case 16: // field_playerstate0
 		{
 			APlayerState* Value = *(reinterpret_cast<APlayerState* const*>(Data));
 
@@ -687,23 +707,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_playerstate(ObjectRef);
+					OutUpdate.set_field_playerstate0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_playerstate(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_playerstate0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 17: // field_remoteviewpitch
+		case 17: // field_remoteviewpitch0
 		{
 			uint8 Value = *(reinterpret_cast<uint8 const*>(Data));
 
-			OutUpdate.set_field_remoteviewpitch(uint32_t(Value));
+			OutUpdate.set_field_remoteviewpitch0(uint32_t(Value));
 			break;
 		}
-		case 18: // field_controller
+		case 18: // field_controller0
 		{
 			AController* Value = *(reinterpret_cast<AController* const*>(Data));
 
@@ -726,16 +746,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_controller(ObjectRef);
+					OutUpdate.set_field_controller0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_controller(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_controller0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 19: // field_replicatedbasedmovement_movementbase
+		case 19: // field_replicatedbasedmovement0_movementbase0
 		{
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(Data));
 
@@ -758,121 +778,117 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_replicatedbasedmovement_movementbase(ObjectRef);
+					OutUpdate.set_field_replicatedbasedmovement0_movementbase0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_replicatedbasedmovement_movementbase(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_replicatedbasedmovement0_movementbase0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 20: // field_replicatedbasedmovement_bonename
+		case 20: // field_replicatedbasedmovement0_bonename0
 		{
 			FName Value = *(reinterpret_cast<FName const*>(Data));
 
-			OutUpdate.set_field_replicatedbasedmovement_bonename(TCHAR_TO_UTF8(*Value.ToString()));
+			OutUpdate.set_field_replicatedbasedmovement0_bonename0(TCHAR_TO_UTF8(*Value.ToString()));
 			break;
 		}
-		case 21: // field_replicatedbasedmovement_location
+		case 21: // field_replicatedbasedmovement0_location0
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_replicatedbasedmovement_location(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			OutUpdate.set_field_replicatedbasedmovement0_location0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
-		case 22: // field_replicatedbasedmovement_rotation
+		case 22: // field_replicatedbasedmovement0_rotation0
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-				OutUpdate.set_field_replicatedbasedmovement_rotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+			OutUpdate.set_field_replicatedbasedmovement0_rotation0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
-		case 23: // field_replicatedbasedmovement_bserverhasbasecomponent
+		case 23: // field_replicatedbasedmovement0_bserverhasbasecomponent0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_replicatedbasedmovement_bserverhasbasecomponent(Value);
+			OutUpdate.set_field_replicatedbasedmovement0_bserverhasbasecomponent0(Value);
 			break;
 		}
-		case 24: // field_replicatedbasedmovement_brelativerotation
+		case 24: // field_replicatedbasedmovement0_brelativerotation0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_replicatedbasedmovement_brelativerotation(Value);
+			OutUpdate.set_field_replicatedbasedmovement0_brelativerotation0(Value);
 			break;
 		}
-		case 25: // field_replicatedbasedmovement_bserverhasvelocity
+		case 25: // field_replicatedbasedmovement0_bserverhasvelocity0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_replicatedbasedmovement_bserverhasvelocity(Value);
+			OutUpdate.set_field_replicatedbasedmovement0_bserverhasvelocity0(Value);
 			break;
 		}
-		case 26: // field_animrootmotiontranslationscale
+		case 26: // field_animrootmotiontranslationscale0
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
-			OutUpdate.set_field_animrootmotiontranslationscale(Value);
+			OutUpdate.set_field_animrootmotiontranslationscale0(Value);
 			break;
 		}
-		case 27: // field_replicatedserverlasttransformupdatetimestamp
+		case 27: // field_replicatedserverlasttransformupdatetimestamp0
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
-			OutUpdate.set_field_replicatedserverlasttransformupdatetimestamp(Value);
+			OutUpdate.set_field_replicatedserverlasttransformupdatetimestamp0(Value);
 			break;
 		}
-		case 28: // field_replicatedmovementmode
+		case 28: // field_replicatedmovementmode0
 		{
 			uint8 Value = *(reinterpret_cast<uint8 const*>(Data));
 
-			OutUpdate.set_field_replicatedmovementmode(uint32_t(Value));
+			OutUpdate.set_field_replicatedmovementmode0(uint32_t(Value));
 			break;
 		}
-		case 29: // field_biscrouched
+		case 29: // field_biscrouched0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_biscrouched(Value);
+			OutUpdate.set_field_biscrouched0(Value);
 			break;
 		}
-		case 30: // field_jumpmaxholdtime
+		case 30: // field_jumpmaxholdtime0
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
-			OutUpdate.set_field_jumpmaxholdtime(Value);
+			OutUpdate.set_field_jumpmaxholdtime0(Value);
 			break;
 		}
-		case 31: // field_jumpmaxcount
+		case 31: // field_jumpmaxcount0
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_jumpmaxcount(int32_t(Value));
+			OutUpdate.set_field_jumpmaxcount0(int32_t(Value));
 			break;
 		}
-		case 32: // field_reprootmotion_bisactive
+		case 32: // field_reprootmotion0_bisactive0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_reprootmotion_bisactive(Value);
+			OutUpdate.set_field_reprootmotion0_bisactive0(Value);
 			break;
 		}
-		case 33: // field_reprootmotion_animmontage
+		case 33: // field_reprootmotion0_animmontage0
 		{
 			UAnimMontage* Value = *(reinterpret_cast<UAnimMontage* const*>(Data));
 
@@ -895,51 +911,47 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_reprootmotion_animmontage(ObjectRef);
+					OutUpdate.set_field_reprootmotion0_animmontage0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_reprootmotion_animmontage(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_reprootmotion0_animmontage0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 34: // field_reprootmotion_position
+		case 34: // field_reprootmotion0_position0
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
-			OutUpdate.set_field_reprootmotion_position(Value);
+			OutUpdate.set_field_reprootmotion0_position0(Value);
 			break;
 		}
-		case 35: // field_reprootmotion_location
+		case 35: // field_reprootmotion0_location0
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_reprootmotion_location(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			OutUpdate.set_field_reprootmotion0_location0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
-		case 36: // field_reprootmotion_rotation
+		case 36: // field_reprootmotion0_rotation0
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-				OutUpdate.set_field_reprootmotion_rotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+			OutUpdate.set_field_reprootmotion0_rotation0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
-		case 37: // field_reprootmotion_movementbase
+		case 37: // field_reprootmotion0_movementbase0
 		{
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(Data));
 
@@ -962,76 +974,70 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_reprootmotion_movementbase(ObjectRef);
+					OutUpdate.set_field_reprootmotion0_movementbase0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_reprootmotion_movementbase(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_reprootmotion0_movementbase0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 38: // field_reprootmotion_movementbasebonename
+		case 38: // field_reprootmotion0_movementbasebonename0
 		{
 			FName Value = *(reinterpret_cast<FName const*>(Data));
 
-			OutUpdate.set_field_reprootmotion_movementbasebonename(TCHAR_TO_UTF8(*Value.ToString()));
+			OutUpdate.set_field_reprootmotion0_movementbasebonename0(TCHAR_TO_UTF8(*Value.ToString()));
 			break;
 		}
-		case 39: // field_reprootmotion_brelativeposition
+		case 39: // field_reprootmotion0_brelativeposition0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_reprootmotion_brelativeposition(Value);
+			OutUpdate.set_field_reprootmotion0_brelativeposition0(Value);
 			break;
 		}
-		case 40: // field_reprootmotion_brelativerotation
+		case 40: // field_reprootmotion0_brelativerotation0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_reprootmotion_brelativerotation(Value);
+			OutUpdate.set_field_reprootmotion0_brelativerotation0(Value);
 			break;
 		}
-		case 41: // field_reprootmotion_authoritativerootmotion
+		case 41: // field_reprootmotion0_authoritativerootmotion0
 		{
 			const FRootMotionSourceGroup& Value = *(reinterpret_cast<FRootMotionSourceGroup const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRootMotionSourceGroup&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
-				OutUpdate.set_field_reprootmotion_authoritativerootmotion(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRootMotionSourceGroup&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
+			OutUpdate.set_field_reprootmotion0_authoritativerootmotion0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
-		case 42: // field_reprootmotion_acceleration
+		case 42: // field_reprootmotion0_acceleration0
 		{
 			const FVector_NetQuantize10& Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize10&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-				OutUpdate.set_field_reprootmotion_acceleration(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			OutUpdate.set_field_reprootmotion0_acceleration0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
-		case 43: // field_reprootmotion_linearvelocity
+		case 43: // field_reprootmotion0_linearvelocity0
 		{
 			const FVector_NetQuantize10& Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize10&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-				OutUpdate.set_field_reprootmotion_linearvelocity(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize10&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
+			OutUpdate.set_field_reprootmotion0_linearvelocity0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 	default:
@@ -1040,40 +1046,42 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 	}
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update& OutUpdate) const
+void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSampleGameCharacterSingleClientRepData::Update& Update) const
+void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegamecharacter::SampleGameCharacterSingleClientRepData::Update& Update) const
 {
+	AActor* TargetObject = ActorChannel->Actor;
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TArray<UProperty*> RepNotifies;
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies);
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSampleGameCharacterMultiClientRepData::Update& Update) const
+void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMultiClientRepData::Update& Update) const
 {
+	AActor* TargetObject = ActorChannel->Actor;
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TSet<UProperty*> RepNotifies;
 
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
-	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::ComponentId);
+	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::ComponentId);
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
-	if (!Update.field_bhidden().empty())
+	if (!Update.field_bhidden0().empty())
 	{
-		// field_bhidden
+		// field_bhidden0
 		uint16 Handle = 1;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_bhidden().data());
+			Value = (*Update.field_bhidden0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1083,19 +1091,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_breplicatemovement().empty())
+	if (!Update.field_breplicatemovement0().empty())
 	{
-		// field_breplicatemovement
+		// field_breplicatemovement0
 		uint16 Handle = 2;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_breplicatemovement().data());
+			Value = (*Update.field_breplicatemovement0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1105,19 +1113,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_btearoff().empty())
+	if (!Update.field_btearoff0().empty())
 	{
-		// field_btearoff
+		// field_btearoff0
 		uint16 Handle = 3;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_btearoff().data());
+			Value = (*Update.field_btearoff0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1127,19 +1135,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_bcanbedamaged().empty())
+	if (!Update.field_bcanbedamaged0().empty())
 	{
-		// field_bcanbedamaged
+		// field_bcanbedamaged0
 		uint16 Handle = 4;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_bcanbedamaged().data());
+			Value = (*Update.field_bcanbedamaged0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1149,9 +1157,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_remoterole().empty())
+	if (!Update.field_remoterole0().empty())
 	{
-		// field_remoterole
+		// field_remoterole0
 		uint16 Handle = 5;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1163,10 +1171,10 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				RepData = &HandleToPropertyMap[Handle];
 			}
 
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(PropertyData));
 
-			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_remoterole().data())));
+			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_remoterole0().data())));
 
 			// Downgrade role from AutonomousProxy to SimulatedProxy if we aren't authoritative over
 			// the server RPCs component.
@@ -1175,7 +1183,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Value = ROLE_SimulatedProxy;
 			}
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1185,27 +1193,25 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedmovement().empty())
+	if (!Update.field_replicatedmovement0().empty())
 	{
-		// field_replicatedmovement
+		// field_replicatedmovement0
 		uint16 Handle = 6;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FRepMovement Value = *(reinterpret_cast<FRepMovement const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_replicatedmovement().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
-			}
+			auto& ValueDataStr = (*Update.field_replicatedmovement0().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1215,54 +1221,52 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_attachparent().empty())
+	if (!Update.field_attachmentreplication0_attachparent0().empty())
 	{
-		// field_attachmentreplication_attachparent
+		// field_attachmentreplication0_attachparent0
 		uint16 Handle = 7;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachparent0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachparent().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<AActor>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<AActor>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1273,27 +1277,25 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_attachmentreplication_locationoffset().empty())
+	if (!Update.field_attachmentreplication0_locationoffset0().empty())
 	{
-		// field_attachmentreplication_locationoffset
+		// field_attachmentreplication0_locationoffset0
 		uint16 Handle = 8;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_attachmentreplication_locationoffset().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_attachmentreplication0_locationoffset0().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1303,27 +1305,25 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_relativescale3d().empty())
+	if (!Update.field_attachmentreplication0_relativescale3d0().empty())
 	{
-		// field_attachmentreplication_relativescale3d
+		// field_attachmentreplication0_relativescale3d0
 		uint16 Handle = 9;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_attachmentreplication_relativescale3d().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_attachmentreplication0_relativescale3d0().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1333,27 +1333,25 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_rotationoffset().empty())
+	if (!Update.field_attachmentreplication0_rotationoffset0().empty())
 	{
-		// field_attachmentreplication_rotationoffset
+		// field_attachmentreplication0_rotationoffset0
 		uint16 Handle = 10;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_attachmentreplication_rotationoffset().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			}
+			auto& ValueDataStr = (*Update.field_attachmentreplication0_rotationoffset0().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1363,19 +1361,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_attachsocket().empty())
+	if (!Update.field_attachmentreplication0_attachsocket0().empty())
 	{
-		// field_attachmentreplication_attachsocket
+		// field_attachmentreplication0_attachsocket0
 		uint16 Handle = 11;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FName Value = *(reinterpret_cast<FName const*>(PropertyData));
 
-			Value = FName(((*Update.field_attachmentreplication_attachsocket().data())).data());
+			Value = FName(((*Update.field_attachmentreplication0_attachsocket0().data())).data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1385,54 +1383,52 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_attachcomponent().empty())
+	if (!Update.field_attachmentreplication0_attachcomponent0().empty())
 	{
-		// field_attachmentreplication_attachcomponent
+		// field_attachmentreplication0_attachcomponent0
 		uint16 Handle = 12;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachcomponent0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachcomponent().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<USceneComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<USceneComponent>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<USceneComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<USceneComponent>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1443,54 +1439,52 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_owner().empty())
+	if (!Update.field_owner0().empty())
 	{
-		// field_owner
+		// field_owner0
 		uint16 Handle = 13;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<AActor>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<AActor>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1501,9 +1495,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_role().empty())
+	if (!Update.field_role0().empty())
 	{
-		// field_role
+		// field_role0
 		uint16 Handle = 14;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1515,12 +1509,12 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				RepData = &HandleToPropertyMap[Handle];
 			}
 
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(PropertyData));
 
-			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_role().data())));
+			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_role0().data())));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1530,54 +1524,52 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_instigator().empty())
+	if (!Update.field_instigator0().empty())
 	{
-		// field_instigator
+		// field_instigator0
 		uint16 Handle = 15;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<APawn>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<APawn>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<APawn>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<APawn>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1588,54 +1580,52 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_playerstate().empty())
+	if (!Update.field_playerstate0().empty())
 	{
-		// field_playerstate
+		// field_playerstate0
 		uint16 Handle = 16;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			APlayerState* Value = *(reinterpret_cast<APlayerState* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_playerstate0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_playerstate().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<APlayerState>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<APlayerState>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<APlayerState>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<APlayerState>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1646,19 +1636,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_remoteviewpitch().empty())
+	if (!Update.field_remoteviewpitch0().empty())
 	{
-		// field_remoteviewpitch
+		// field_remoteviewpitch0
 		uint16 Handle = 17;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			uint8 Value = *(reinterpret_cast<uint8 const*>(PropertyData));
 
-			Value = uint8(uint8((*Update.field_remoteviewpitch().data())));
+			Value = uint8(uint8((*Update.field_remoteviewpitch0().data())));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1668,54 +1658,52 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_controller().empty())
+	if (!Update.field_controller0().empty())
 	{
-		// field_controller
+		// field_controller0
 		uint16 Handle = 18;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			AController* Value = *(reinterpret_cast<AController* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_controller0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_controller().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<AController>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<AController>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<AController>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<AController>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1726,54 +1714,52 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_movementbase().empty())
+	if (!Update.field_replicatedbasedmovement0_movementbase0().empty())
 	{
-		// field_replicatedbasedmovement_movementbase
+		// field_replicatedbasedmovement0_movementbase0
 		uint16 Handle = 19;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_replicatedbasedmovement0_movementbase0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_replicatedbasedmovement_movementbase().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<UPrimitiveComponent>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<UPrimitiveComponent>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1784,19 +1770,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_bonename().empty())
+	if (!Update.field_replicatedbasedmovement0_bonename0().empty())
 	{
-		// field_replicatedbasedmovement_bonename
+		// field_replicatedbasedmovement0_bonename0
 		uint16 Handle = 20;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FName Value = *(reinterpret_cast<FName const*>(PropertyData));
 
-			Value = FName(((*Update.field_replicatedbasedmovement_bonename().data())).data());
+			Value = FName(((*Update.field_replicatedbasedmovement0_bonename0().data())).data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1806,27 +1792,25 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_location().empty())
+	if (!Update.field_replicatedbasedmovement0_location0().empty())
 	{
-		// field_replicatedbasedmovement_location
+		// field_replicatedbasedmovement0_location0
 		uint16 Handle = 21;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_replicatedbasedmovement_location().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_replicatedbasedmovement0_location0().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1836,27 +1820,25 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_rotation().empty())
+	if (!Update.field_replicatedbasedmovement0_rotation0().empty())
 	{
-		// field_replicatedbasedmovement_rotation
+		// field_replicatedbasedmovement0_rotation0
 		uint16 Handle = 22;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_replicatedbasedmovement_rotation().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			}
+			auto& ValueDataStr = (*Update.field_replicatedbasedmovement0_rotation0().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1866,19 +1848,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_bserverhasbasecomponent().empty())
+	if (!Update.field_replicatedbasedmovement0_bserverhasbasecomponent0().empty())
 	{
-		// field_replicatedbasedmovement_bserverhasbasecomponent
+		// field_replicatedbasedmovement0_bserverhasbasecomponent0
 		uint16 Handle = 23;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_replicatedbasedmovement_bserverhasbasecomponent().data());
+			Value = (*Update.field_replicatedbasedmovement0_bserverhasbasecomponent0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1888,19 +1870,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_brelativerotation().empty())
+	if (!Update.field_replicatedbasedmovement0_brelativerotation0().empty())
 	{
-		// field_replicatedbasedmovement_brelativerotation
+		// field_replicatedbasedmovement0_brelativerotation0
 		uint16 Handle = 24;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_replicatedbasedmovement_brelativerotation().data());
+			Value = (*Update.field_replicatedbasedmovement0_brelativerotation0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1910,19 +1892,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_bserverhasvelocity().empty())
+	if (!Update.field_replicatedbasedmovement0_bserverhasvelocity0().empty())
 	{
-		// field_replicatedbasedmovement_bserverhasvelocity
+		// field_replicatedbasedmovement0_bserverhasvelocity0
 		uint16 Handle = 25;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_replicatedbasedmovement_bserverhasvelocity().data());
+			Value = (*Update.field_replicatedbasedmovement0_bserverhasvelocity0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1932,19 +1914,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_animrootmotiontranslationscale().empty())
+	if (!Update.field_animrootmotiontranslationscale0().empty())
 	{
-		// field_animrootmotiontranslationscale
+		// field_animrootmotiontranslationscale0
 		uint16 Handle = 26;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
-			Value = (*Update.field_animrootmotiontranslationscale().data());
+			Value = (*Update.field_animrootmotiontranslationscale0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1954,19 +1936,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedserverlasttransformupdatetimestamp().empty())
+	if (!Update.field_replicatedserverlasttransformupdatetimestamp0().empty())
 	{
-		// field_replicatedserverlasttransformupdatetimestamp
+		// field_replicatedserverlasttransformupdatetimestamp0
 		uint16 Handle = 27;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
-			Value = (*Update.field_replicatedserverlasttransformupdatetimestamp().data());
+			Value = (*Update.field_replicatedserverlasttransformupdatetimestamp0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1976,19 +1958,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedmovementmode().empty())
+	if (!Update.field_replicatedmovementmode0().empty())
 	{
-		// field_replicatedmovementmode
+		// field_replicatedmovementmode0
 		uint16 Handle = 28;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			uint8 Value = *(reinterpret_cast<uint8 const*>(PropertyData));
 
-			Value = uint8(uint8((*Update.field_replicatedmovementmode().data())));
+			Value = uint8(uint8((*Update.field_replicatedmovementmode0().data())));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1998,19 +1980,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_biscrouched().empty())
+	if (!Update.field_biscrouched0().empty())
 	{
-		// field_biscrouched
+		// field_biscrouched0
 		uint16 Handle = 29;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_biscrouched().data());
+			Value = (*Update.field_biscrouched0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2020,19 +2002,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_jumpmaxholdtime().empty())
+	if (!Update.field_jumpmaxholdtime0().empty())
 	{
-		// field_jumpmaxholdtime
+		// field_jumpmaxholdtime0
 		uint16 Handle = 30;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
-			Value = (*Update.field_jumpmaxholdtime().data());
+			Value = (*Update.field_jumpmaxholdtime0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2042,19 +2024,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_jumpmaxcount().empty())
+	if (!Update.field_jumpmaxcount0().empty())
 	{
-		// field_jumpmaxcount
+		// field_jumpmaxcount0
 		uint16 Handle = 31;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_jumpmaxcount().data());
+			Value = (*Update.field_jumpmaxcount0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2064,19 +2046,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_bisactive().empty())
+	if (!Update.field_reprootmotion0_bisactive0().empty())
 	{
-		// field_reprootmotion_bisactive
+		// field_reprootmotion0_bisactive0
 		uint16 Handle = 32;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_reprootmotion_bisactive().data());
+			Value = (*Update.field_reprootmotion0_bisactive0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2086,54 +2068,52 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_animmontage().empty())
+	if (!Update.field_reprootmotion0_animmontage0().empty())
 	{
-		// field_reprootmotion_animmontage
+		// field_reprootmotion0_animmontage0
 		uint16 Handle = 33;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			UAnimMontage* Value = *(reinterpret_cast<UAnimMontage* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion0_animmontage0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion_animmontage().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UAnimMontage>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<UAnimMontage>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<UAnimMontage>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<UAnimMontage>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2144,19 +2124,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_reprootmotion_position().empty())
+	if (!Update.field_reprootmotion0_position0().empty())
 	{
-		// field_reprootmotion_position
+		// field_reprootmotion0_position0
 		uint16 Handle = 34;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
-			Value = (*Update.field_reprootmotion_position().data());
+			Value = (*Update.field_reprootmotion0_position0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2166,27 +2146,25 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_location().empty())
+	if (!Update.field_reprootmotion0_location0().empty())
 	{
-		// field_reprootmotion_location
+		// field_reprootmotion0_location0
 		uint16 Handle = 35;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_location().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_reprootmotion0_location0().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2196,27 +2174,25 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_rotation().empty())
+	if (!Update.field_reprootmotion0_rotation0().empty())
 	{
-		// field_reprootmotion_rotation
+		// field_reprootmotion0_rotation0
 		uint16 Handle = 36;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_rotation().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			}
+			auto& ValueDataStr = (*Update.field_reprootmotion0_rotation0().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2226,54 +2202,52 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_movementbase().empty())
+	if (!Update.field_reprootmotion0_movementbase0().empty())
 	{
-		// field_reprootmotion_movementbase
+		// field_reprootmotion0_movementbase0
 		uint16 Handle = 37;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion0_movementbase0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion_movementbase().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<UPrimitiveComponent>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<UPrimitiveComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<UPrimitiveComponent>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2284,19 +2258,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_reprootmotion_movementbasebonename().empty())
+	if (!Update.field_reprootmotion0_movementbasebonename0().empty())
 	{
-		// field_reprootmotion_movementbasebonename
+		// field_reprootmotion0_movementbasebonename0
 		uint16 Handle = 38;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FName Value = *(reinterpret_cast<FName const*>(PropertyData));
 
-			Value = FName(((*Update.field_reprootmotion_movementbasebonename().data())).data());
+			Value = FName(((*Update.field_reprootmotion0_movementbasebonename0().data())).data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2306,19 +2280,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_brelativeposition().empty())
+	if (!Update.field_reprootmotion0_brelativeposition0().empty())
 	{
-		// field_reprootmotion_brelativeposition
+		// field_reprootmotion0_brelativeposition0
 		uint16 Handle = 39;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_reprootmotion_brelativeposition().data());
+			Value = (*Update.field_reprootmotion0_brelativeposition0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2328,19 +2302,19 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_brelativerotation().empty())
+	if (!Update.field_reprootmotion0_brelativerotation0().empty())
 	{
-		// field_reprootmotion_brelativerotation
+		// field_reprootmotion0_brelativerotation0
 		uint16 Handle = 40;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_reprootmotion_brelativerotation().data());
+			Value = (*Update.field_reprootmotion0_brelativerotation0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2350,27 +2324,25 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_authoritativerootmotion().empty())
+	if (!Update.field_reprootmotion0_authoritativerootmotion0().empty())
 	{
-		// field_reprootmotion_authoritativerootmotion
+		// field_reprootmotion0_authoritativerootmotion0
 		uint16 Handle = 41;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FRootMotionSourceGroup Value = *(reinterpret_cast<FRootMotionSourceGroup const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_authoritativerootmotion().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
-			}
+			auto& ValueDataStr = (*Update.field_reprootmotion0_authoritativerootmotion0().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2380,27 +2352,25 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_acceleration().empty())
+	if (!Update.field_reprootmotion0_acceleration0().empty())
 	{
-		// field_reprootmotion_acceleration
+		// field_reprootmotion0_acceleration0
 		uint16 Handle = 42;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FVector_NetQuantize10 Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_acceleration().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_reprootmotion0_acceleration0().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2410,27 +2380,25 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_linearvelocity().empty())
+	if (!Update.field_reprootmotion0_linearvelocity0().empty())
 	{
-		// field_reprootmotion_linearvelocity
+		// field_reprootmotion0_linearvelocity0
 		uint16 Handle = 43;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FVector_NetQuantize10 Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_linearvelocity().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_reprootmotion0_linearvelocity0().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -2443,13 +2411,13 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::UnrealSampleGameCharacterMigratableData::Update& Update) const
+void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegamecharacter::SampleGameCharacterMigratableData::Update& Update) const
 {
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::Update& Update)
+void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs::Update& Update)
 {
-	for (auto& event : Update.samplegamecharactertestmulticast())
+	for (auto& event : Update.testmulticast())
 	{
 		TestMulticast_OnRPCPayload(EntityId, event);
 	}
@@ -2471,8 +2439,10 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealRootMotionDebugClientPrintOnScreenRequest RPCPayload;
-		RPCPayload.set_field_instring(TCHAR_TO_UTF8(*StructuredParams.InString));
+		improbable::unreal::generated::character::RootMotionDebugClientPrintOnScreenRequest RPCPayload;
+		{
+			RPCPayload.set_field_instring0(TCHAR_TO_UTF8(*StructuredParams.InString));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2481,7 +2451,7 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Rootmotiondebugclientprintonscreen>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
@@ -2502,45 +2472,57 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientVeryShortAdjustPositionRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		improbable::unreal::generated::character::ClientVeryShortAdjustPositionRequest RPCPayload;
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_newloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		if (StructuredParams.NewBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewBase);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.NewBase != nullptr)
 			{
-				if (StructuredParams.NewBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewBase);
+					if (StructuredParams.NewBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientVeryShortAdjustPosition queued. StructuredParams.NewBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.NewBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientVeryShortAdjustPosition queued. StructuredParams.NewBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.NewBase};
+				}
+				else
+				{
+					RPCPayload.set_field_newbase0(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_newbase(ObjectRef);
+				RPCPayload.set_field_newbase0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_newbasebonename0(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
 		}
-		RPCPayload.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
-		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
-		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		{
+			RPCPayload.set_field_bhasbase0(StructuredParams.bHasBase);
+		}
+		{
+			RPCPayload.set_field_bbaserelativeposition0(StructuredParams.bBaseRelativePosition);
+		}
+		{
+			RPCPayload.set_field_servermovementmode0(uint32_t(StructuredParams.ServerMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2549,7 +2531,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientveryshortadjustposition>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2567,7 +2549,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendRPC(worker::Co
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientCheatWalkRequest RPCPayload;
+		improbable::unreal::generated::character::ClientCheatWalkRequest RPCPayload;
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2576,7 +2558,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_SendRPC(worker::Co
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatwalk>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
@@ -2594,7 +2576,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendRPC(worker::C
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientCheatGhostRequest RPCPayload;
+		improbable::unreal::generated::character::ClientCheatGhostRequest RPCPayload;
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2603,7 +2585,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_SendRPC(worker::C
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatghost>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
@@ -2621,7 +2603,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendRPC(worker::Con
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientCheatFlyRequest RPCPayload;
+		improbable::unreal::generated::character::ClientCheatFlyRequest RPCPayload;
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2630,7 +2612,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_SendRPC(worker::Con
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatfly>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
@@ -2651,64 +2633,82 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientAdjustRootMotionSourcePositionRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		improbable::unreal::generated::character::ClientAdjustRootMotionSourcePositionRequest RPCPayload;
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FRootMotionSourceGroup&>(StructuredParams.ServerRootMotion)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
-			RPCPayload.set_field_serverrootmotion(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverrootmotion0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_bhasanimrootmotion(StructuredParams.bHasAnimRootMotion);
-		RPCPayload.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
+		{
+			RPCPayload.set_field_bhasanimrootmotion0(StructuredParams.bHasAnimRootMotion);
+		}
+		{
+			RPCPayload.set_field_servermontagetrackposition0(StructuredParams.ServerMontageTrackPosition);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.ServerLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_serverloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantizeNormal&>(StructuredParams.ServerRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
-			RPCPayload.set_field_serverrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverrotation0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_servervelz(StructuredParams.ServerVelZ);
-		if (StructuredParams.ServerBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
-			if (!NetGUID.IsValid())
+			RPCPayload.set_field_servervelz0(StructuredParams.ServerVelZ);
+		}
+		{
+			if (StructuredParams.ServerBase != nullptr)
 			{
-				if (StructuredParams.ServerBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ServerBase);
+					if (StructuredParams.ServerBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ServerBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientAdjustRootMotionSourcePosition queued. StructuredParams.ServerBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ServerBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientAdjustRootMotionSourcePosition queued. StructuredParams.ServerBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ServerBase};
+				}
+				else
+				{
+					RPCPayload.set_field_serverbase0(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_serverbase(ObjectRef);
+				RPCPayload.set_field_serverbase0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_serverbonename0(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
 		}
-		RPCPayload.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
-		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
-		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		{
+			RPCPayload.set_field_bhasbase0(StructuredParams.bHasBase);
+		}
+		{
+			RPCPayload.set_field_bbaserelativeposition0(StructuredParams.bBaseRelativePosition);
+		}
+		{
+			RPCPayload.set_field_servermovementmode0(uint32_t(StructuredParams.ServerMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2717,7 +2717,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustrootmotionsourceposition>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2738,55 +2738,71 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientAdjustRootMotionPositionRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
-		RPCPayload.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
+		improbable::unreal::generated::character::ClientAdjustRootMotionPositionRequest RPCPayload;
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
+		}
+		{
+			RPCPayload.set_field_servermontagetrackposition0(StructuredParams.ServerMontageTrackPosition);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.ServerLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_serverloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantizeNormal&>(StructuredParams.ServerRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
-			RPCPayload.set_field_serverrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverrotation0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_servervelz(StructuredParams.ServerVelZ);
-		if (StructuredParams.ServerBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
-			if (!NetGUID.IsValid())
+			RPCPayload.set_field_servervelz0(StructuredParams.ServerVelZ);
+		}
+		{
+			if (StructuredParams.ServerBase != nullptr)
 			{
-				if (StructuredParams.ServerBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ServerBase);
+					if (StructuredParams.ServerBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ServerBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientAdjustRootMotionPosition queued. StructuredParams.ServerBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ServerBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientAdjustRootMotionPosition queued. StructuredParams.ServerBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ServerBase};
+				}
+				else
+				{
+					RPCPayload.set_field_serverbase0(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_serverbase(ObjectRef);
+				RPCPayload.set_field_serverbase0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_serverbonename0(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
 		}
-		RPCPayload.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
-		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
-		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		{
+			RPCPayload.set_field_bhasbase0(StructuredParams.bHasBase);
+		}
+		{
+			RPCPayload.set_field_bbaserelativeposition0(StructuredParams.bBaseRelativePosition);
+		}
+		{
+			RPCPayload.set_field_servermovementmode0(uint32_t(StructuredParams.ServerMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2795,7 +2811,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustrootmotionposition>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2816,53 +2832,65 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC(worke
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientAdjustPositionRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		improbable::unreal::generated::character::ClientAdjustPositionRequest RPCPayload;
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_newloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewVel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_newvel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newvel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		if (StructuredParams.NewBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewBase);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.NewBase != nullptr)
 			{
-				if (StructuredParams.NewBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewBase);
+					if (StructuredParams.NewBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientAdjustPosition queued. StructuredParams.NewBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.NewBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientAdjustPosition queued. StructuredParams.NewBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.NewBase};
+				}
+				else
+				{
+					RPCPayload.set_field_newbase0(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_newbase(ObjectRef);
+				RPCPayload.set_field_newbase0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_newbasebonename0(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
 		}
-		RPCPayload.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
-		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
-		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		{
+			RPCPayload.set_field_bhasbase0(StructuredParams.bHasBase);
+		}
+		{
+			RPCPayload.set_field_bbaserelativeposition0(StructuredParams.bBaseRelativePosition);
+		}
+		{
+			RPCPayload.set_field_servermovementmode0(uint32_t(StructuredParams.ServerMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2871,7 +2899,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC(worke
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustposition>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2892,8 +2920,10 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendRPC(worker::
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealClientAckGoodMoveRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		improbable::unreal::generated::character::ClientAckGoodMoveRequest RPCPayload;
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2902,7 +2932,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendRPC(worker::
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientackgoodmove>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2923,17 +2953,21 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendRPC(worker::Conn
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealServerMoveOldRequest RPCPayload;
-		RPCPayload.set_field_oldtimestamp(StructuredParams.OldTimeStamp);
+		improbable::unreal::generated::character::ServerMoveOldRequest RPCPayload;
+		{
+			RPCPayload.set_field_oldtimestamp0(StructuredParams.OldTimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.OldAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_oldaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_oldaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_oldmoveflags(uint32_t(StructuredParams.OldMoveFlags));
+		{
+			RPCPayload.set_field_oldmoveflags0(uint32_t(StructuredParams.OldMoveFlags));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2942,7 +2976,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendRPC(worker::Conn
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermoveold>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -2963,28 +2997,38 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC(worker::C
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealServerMoveNoBaseRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		improbable::unreal::generated::character::ServerMoveNoBaseRequest RPCPayload;
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		{
+			RPCPayload.set_field_compressedmoveflags0(uint32_t(StructuredParams.CompressedMoveFlags));
+		}
+		{
+			RPCPayload.set_field_clientroll0(uint32_t(StructuredParams.ClientRoll));
+		}
+		{
+			RPCPayload.set_field_view0(uint32_t(StructuredParams.View));
+		}
+		{
+			RPCPayload.set_field_clientmovementmode0(uint32_t(StructuredParams.ClientMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2993,7 +3037,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC(worker::C
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovenobase>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -3014,39 +3058,55 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC(worke
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealServerMoveDualNoBaseRequest RPCPayload;
-		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
+		improbable::unreal::generated::character::ServerMoveDualNoBaseRequest RPCPayload;
+		{
+			RPCPayload.set_field_timestamp00(StructuredParams.TimeStamp0);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel00(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		{
+			RPCPayload.set_field_pendingflags0(uint32_t(StructuredParams.PendingFlags));
+		}
+		{
+			RPCPayload.set_field_view00(uint32_t(StructuredParams.View0));
+		}
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		{
+			RPCPayload.set_field_newflags0(uint32_t(StructuredParams.NewFlags));
+		}
+		{
+			RPCPayload.set_field_clientroll0(uint32_t(StructuredParams.ClientRoll));
+		}
+		{
+			RPCPayload.set_field_view0(uint32_t(StructuredParams.View));
+		}
+		{
+			RPCPayload.set_field_clientmovementmode0(uint32_t(StructuredParams.ClientMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3055,7 +3115,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC(worke
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedualnobase>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -3076,65 +3136,85 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealServerMoveDualHybridRootMotionRequest RPCPayload;
-		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
+		improbable::unreal::generated::character::ServerMoveDualHybridRootMotionRequest RPCPayload;
+		{
+			RPCPayload.set_field_timestamp00(StructuredParams.TimeStamp0);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel00(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		{
+			RPCPayload.set_field_pendingflags0(uint32_t(StructuredParams.PendingFlags));
+		}
+		{
+			RPCPayload.set_field_view00(uint32_t(StructuredParams.View0));
+		}
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
-		if (StructuredParams.ClientMovementBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
-			if (!NetGUID.IsValid())
+			RPCPayload.set_field_newflags0(uint32_t(StructuredParams.NewFlags));
+		}
+		{
+			RPCPayload.set_field_clientroll0(uint32_t(StructuredParams.ClientRoll));
+		}
+		{
+			RPCPayload.set_field_view0(uint32_t(StructuredParams.View));
+		}
+		{
+			if (StructuredParams.ClientMovementBase != nullptr)
 			{
-				if (StructuredParams.ClientMovementBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
+					if (StructuredParams.ClientMovementBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerMoveDualHybridRootMotion queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ClientMovementBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerMoveDualHybridRootMotion queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ClientMovementBase};
+				}
+				else
+				{
+					RPCPayload.set_field_clientmovementbase0(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_clientmovementbase(ObjectRef);
+				RPCPayload.set_field_clientmovementbase0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_clientbasebonename0(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
 		}
-		RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		{
+			RPCPayload.set_field_clientmovementmode0(uint32_t(StructuredParams.ClientMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3143,7 +3223,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedualhybridrootmotion>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -3164,65 +3244,85 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC(worker::Con
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealServerMoveDualRequest RPCPayload;
-		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
+		improbable::unreal::generated::character::ServerMoveDualRequest RPCPayload;
+		{
+			RPCPayload.set_field_timestamp00(StructuredParams.TimeStamp0);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel00(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		{
+			RPCPayload.set_field_pendingflags0(uint32_t(StructuredParams.PendingFlags));
+		}
+		{
+			RPCPayload.set_field_view00(uint32_t(StructuredParams.View0));
+		}
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
-		if (StructuredParams.ClientMovementBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
-			if (!NetGUID.IsValid())
+			RPCPayload.set_field_newflags0(uint32_t(StructuredParams.NewFlags));
+		}
+		{
+			RPCPayload.set_field_clientroll0(uint32_t(StructuredParams.ClientRoll));
+		}
+		{
+			RPCPayload.set_field_view0(uint32_t(StructuredParams.View));
+		}
+		{
+			if (StructuredParams.ClientMovementBase != nullptr)
 			{
-				if (StructuredParams.ClientMovementBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
+					if (StructuredParams.ClientMovementBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerMoveDual queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ClientMovementBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerMoveDual queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ClientMovementBase};
+				}
+				else
+				{
+					RPCPayload.set_field_clientmovementbase0(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_clientmovementbase(ObjectRef);
+				RPCPayload.set_field_clientmovementbase0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_clientbasebonename0(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
 		}
-		RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		{
+			RPCPayload.set_field_clientmovementmode0(uint32_t(StructuredParams.ClientMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3231,7 +3331,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC(worker::Con
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedual>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
@@ -3252,54 +3352,68 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC(worker::Connect
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealServerMoveRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		improbable::unreal::generated::character::ServerMoveRequest RPCPayload;
+		{
+			RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
-		if (StructuredParams.ClientMovementBase != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
-			if (!NetGUID.IsValid())
+			RPCPayload.set_field_compressedmoveflags0(uint32_t(StructuredParams.CompressedMoveFlags));
+		}
+		{
+			RPCPayload.set_field_clientroll0(uint32_t(StructuredParams.ClientRoll));
+		}
+		{
+			RPCPayload.set_field_view0(uint32_t(StructuredParams.View));
+		}
+		{
+			if (StructuredParams.ClientMovementBase != nullptr)
 			{
-				if (StructuredParams.ClientMovementBase->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
+					if (StructuredParams.ClientMovementBase->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerMove queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ClientMovementBase};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerMove queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ClientMovementBase};
+				}
+				else
+				{
+					RPCPayload.set_field_clientmovementbase0(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_clientmovementbase(ObjectRef);
+				RPCPayload.set_field_clientmovementbase0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_clientbasebonename0(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
 		}
-		RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		{
+			RPCPayload.set_field_clientmovementmode0(uint32_t(StructuredParams.ClientMovementMode));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3308,10 +3422,37 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC(worker::Connect
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermove>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_SampleGameCharacter::TestRPC_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+{
+	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
+	{
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+		{
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC TestRPC queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
+		}
+
+		// Build RPC Payload.
+		improbable::unreal::generated::samplegamecomponent::TestRPCRequest RPCPayload;
+
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: TestRPC, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Testrpc>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_SampleGameCharacter::TestMulticast_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3326,7 +3467,7 @@ void USpatialTypeBinding_SampleGameCharacter::TestMulticast_SendRPC(worker::Conn
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::UnrealTestMulticastRequest RPCPayload;
+		improbable::unreal::generated::samplegamecharacter::TestMulticastRequest RPCPayload;
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3335,15 +3476,15 @@ void USpatialTypeBinding_SampleGameCharacter::TestMulticast_SendRPC(worker::Conn
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs::Update Update;
-			Update.add_samplegamecharactertestmulticast(RPCPayload);
-			checkf(Update.samplegamecharactertestmulticast().size() == 1, TEXT("TestMulticast_SendCommand: More than one event being sent"));
-			Connection->SendComponentUpdate<improbable::unreal::generated::UnrealSampleGameCharacterNetMulticastRPCs>(TargetObjectRef.entity(), Update);
+			improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs::Update Update;
+			Update.add_testmulticast(RPCPayload);
+			checkf(Update.testmulticast().size() == 1, TEXT("TestMulticast_SendCommand: More than one event being sent"));
+			Connection->SendComponentUpdate<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterNetMulticastRPCs>(TargetObjectRef.entity(), Update);
 			return {};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
-void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>& Op)
+void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Rootmotiondebugclientprintonscreen>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3369,7 +3510,9 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 		Character_eventRootMotionDebugClientPrintOnScreen_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.InString = FString(UTF8_TO_TCHAR(Op.Request.field_instring().c_str()));
+		{
+			Parameters.InString = FString(UTF8_TO_TCHAR(Op.Request.field_instring0().c_str()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: RootMotionDebugClientPrintOnScreen, target: %s %s"),
@@ -3390,12 +3533,12 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Rootmotiondebugclientprintonscreen>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientveryshortadjustposition>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3421,18 +3564,20 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRP
 		Character_eventClientVeryShortAdjustPosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& ValueDataStr = Op.Request.field_newloc();
+			Parameters.TimeStamp = Op.Request.field_timestamp0();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_newloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.NewLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -3459,10 +3604,18 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRP
 				}
 			}
 		}
-		Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		{
+			Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename0()).data());
+		}
+		{
+			Parameters.bHasBase = Op.Request.field_bhasbase0();
+		}
+		{
+			Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition0();
+		}
+		{
+			Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode0()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientVeryShortAdjustPosition, target: %s %s"),
@@ -3483,12 +3636,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRP
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientveryshortadjustposition>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatwalk>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3528,12 +3681,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnRPCPayload(const
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatwalk>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatghost>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3573,12 +3726,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnRPCPayload(cons
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatghost>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatfly>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3618,12 +3771,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnRPCPayload(const 
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatfly>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustrootmotionsourceposition>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3649,39 +3802,47 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 		Character_eventClientAdjustRootMotionSourcePosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& ValueDataStr = Op.Request.field_serverrootmotion();
+			Parameters.TimeStamp = Op.Request.field_timestamp0();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_serverrootmotion0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ServerRootMotion.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
 		}
-		Parameters.bHasAnimRootMotion = Op.Request.field_bhasanimrootmotion();
-		Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition();
 		{
-			auto& ValueDataStr = Op.Request.field_serverloc();
+			Parameters.bHasAnimRootMotion = Op.Request.field_bhasanimrootmotion0();
+		}
+		{
+			Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition0();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_serverloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ServerLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_serverrotation();
+			auto& ValueDataStr = Op.Request.field_serverrotation0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ServerRotation.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
 		}
-		Parameters.ServerVelZ = Op.Request.field_servervelz();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_serverbase();
+			Parameters.ServerVelZ = Op.Request.field_servervelz0();
+		}
+		{
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_serverbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -3708,10 +3869,18 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 				}
 			}
 		}
-		Parameters.ServerBoneName = FName((Op.Request.field_serverbonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		{
+			Parameters.ServerBoneName = FName((Op.Request.field_serverbonename0()).data());
+		}
+		{
+			Parameters.bHasBase = Op.Request.field_bhasbase0();
+		}
+		{
+			Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition0();
+		}
+		{
+			Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode0()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAdjustRootMotionSourcePosition, target: %s %s"),
@@ -3732,12 +3901,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustrootmotionsourceposition>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustrootmotionposition>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3763,29 +3932,35 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnR
 		Character_eventClientAdjustRootMotionPosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
-		Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition();
 		{
-			auto& ValueDataStr = Op.Request.field_serverloc();
+			Parameters.TimeStamp = Op.Request.field_timestamp0();
+		}
+		{
+			Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition0();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_serverloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ServerLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_serverrotation();
+			auto& ValueDataStr = Op.Request.field_serverrotation0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ServerRotation.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
 		}
-		Parameters.ServerVelZ = Op.Request.field_servervelz();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_serverbase();
+			Parameters.ServerVelZ = Op.Request.field_servervelz0();
+		}
+		{
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_serverbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -3812,10 +3987,18 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnR
 				}
 			}
 		}
-		Parameters.ServerBoneName = FName((Op.Request.field_serverbonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		{
+			Parameters.ServerBoneName = FName((Op.Request.field_serverbonename0()).data());
+		}
+		{
+			Parameters.bHasBase = Op.Request.field_bhasbase0();
+		}
+		{
+			Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition0();
+		}
+		{
+			Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode0()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAdjustRootMotionPosition, target: %s %s"),
@@ -3836,12 +4019,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnR
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustrootmotionposition>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustposition>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3867,27 +4050,29 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(
 		Character_eventClientAdjustPosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& ValueDataStr = Op.Request.field_newloc();
+			Parameters.TimeStamp = Op.Request.field_timestamp0();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_newloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.NewLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_newvel();
+			auto& ValueDataStr = Op.Request.field_newvel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.NewVel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -3914,10 +4099,18 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(
 				}
 			}
 		}
-		Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		{
+			Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename0()).data());
+		}
+		{
+			Parameters.bHasBase = Op.Request.field_bhasbase0();
+		}
+		{
+			Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition0();
+		}
+		{
+			Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode0()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAdjustPosition, target: %s %s"),
@@ -3938,12 +4131,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustposition>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientackgoodmove>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -3969,7 +4162,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(con
 		Character_eventClientAckGoodMove_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp0();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAckGoodMove, target: %s %s"),
@@ -3990,12 +4185,12 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(con
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientackgoodmove>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermoveold>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4021,17 +4216,21 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const w
 		Character_eventServerMoveOld_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.OldTimeStamp = Op.Request.field_oldtimestamp();
 		{
-			auto& ValueDataStr = Op.Request.field_oldaccel();
+			Parameters.OldTimeStamp = Op.Request.field_oldtimestamp0();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_oldaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.OldAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
-		Parameters.OldMoveFlags = uint8(uint8(Op.Request.field_oldmoveflags()));
+		{
+			Parameters.OldMoveFlags = uint8(uint8(Op.Request.field_oldmoveflags0()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveOld, target: %s %s"),
@@ -4052,12 +4251,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const w
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermoveold>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovenobase>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4083,29 +4282,39 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(cons
 		Character_eventServerMoveNoBase_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel();
+			Parameters.TimeStamp = Op.Request.field_timestamp0();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_clientloc();
+			auto& ValueDataStr = Op.Request.field_clientloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		{
+			Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags0()));
+		}
+		{
+			Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll0()));
+		}
+		{
+			Parameters.View = Op.Request.field_view0();
+		}
+		{
+			Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode0()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveNoBase, target: %s %s"),
@@ -4126,12 +4335,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(cons
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovenobase>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedualnobase>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4157,41 +4366,57 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(
 		Character_eventServerMoveDualNoBase_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel0();
+			Parameters.TimeStamp0 = Op.Request.field_timestamp00();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_inaccel00();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel0.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
-		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = Op.Request.field_view0();
-		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel();
+			Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags0()));
+		}
+		{
+			Parameters.View0 = Op.Request.field_view00();
+		}
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp0();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_clientloc();
+			auto& ValueDataStr = Op.Request.field_clientloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		{
+			Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags0()));
+		}
+		{
+			Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll0()));
+		}
+		{
+			Parameters.View = Op.Request.field_view0();
+		}
+		{
+			Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode0()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveDualNoBase, target: %s %s"),
@@ -4212,12 +4437,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedualnobase>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedualhybridrootmotion>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4243,42 +4468,56 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 		Character_eventServerMoveDualHybridRootMotion_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel0();
+			Parameters.TimeStamp0 = Op.Request.field_timestamp00();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_inaccel00();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel0.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
-		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = Op.Request.field_view0();
-		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel();
+			Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags0()));
+		}
+		{
+			Parameters.View0 = Op.Request.field_view00();
+		}
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp0();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_clientloc();
+			auto& ValueDataStr = Op.Request.field_clientloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
+			Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags0()));
+		}
+		{
+			Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll0()));
+		}
+		{
+			Parameters.View = Op.Request.field_view0();
+		}
+		{
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -4305,8 +4544,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 				}
 			}
 		}
-		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		{
+			Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename0()).data());
+		}
+		{
+			Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode0()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveDualHybridRootMotion, target: %s %s"),
@@ -4327,12 +4570,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedualhybridrootmotion>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedual>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4358,42 +4601,56 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 		Character_eventServerMoveDual_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel0();
+			Parameters.TimeStamp0 = Op.Request.field_timestamp00();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_inaccel00();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel0.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
-		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = Op.Request.field_view0();
-		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel();
+			Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags0()));
+		}
+		{
+			Parameters.View0 = Op.Request.field_view00();
+		}
+		{
+			Parameters.TimeStamp = Op.Request.field_timestamp0();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_clientloc();
+			auto& ValueDataStr = Op.Request.field_clientloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
+			Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags0()));
+		}
+		{
+			Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll0()));
+		}
+		{
+			Parameters.View = Op.Request.field_view0();
+		}
+		{
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -4420,8 +4677,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 				}
 			}
 		}
-		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		{
+			Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename0()).data());
+		}
+		{
+			Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode0()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveDual, target: %s %s"),
@@ -4442,12 +4703,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedual>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermove>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -4473,30 +4734,38 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const work
 		Character_eventServerMove_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel();
+			Parameters.TimeStamp = Op.Request.field_timestamp0();
+		}
+		{
+			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_clientloc();
+			auto& ValueDataStr = Op.Request.field_clientloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
+			Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags0()));
+		}
+		{
+			Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll0()));
+		}
+		{
+			Parameters.View = Op.Request.field_view0();
+		}
+		{
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -4523,8 +4792,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const work
 				}
 			}
 		}
-		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		{
+			Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename0()).data());
+		}
+		{
+			Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode0()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMove, target: %s %s"),
@@ -4545,12 +4818,57 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const work
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermove>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_SampleGameCharacter::TestMulticast_OnRPCPayload(const worker::EntityId EntityId, const improbable::unreal::generated::UnrealTestMulticastRequest& EventData)
+void USpatialTypeBinding_SampleGameCharacter::TestRPC_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Testrpc>& Op)
+{
+	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), {}, {}};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			// A legal static object reference should never be unresolved.
+			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: TestRPC_OnRPCPayload: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: TestRPC_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Call implementation.
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: TestRPC, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("TestRPC"))))
+		{
+			TargetObject->ProcessEvent(Function, nullptr);
+		}
+		else
+		{
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: TestRPC_OnRPCPayload: Function not found. Object: %s, Function: TestRPC."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		// Send command response.
+		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
+		Connection->SendCommandResponse<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Testrpc>(Op.RequestId, {});
+		return {};
+	};
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+}
+void USpatialTypeBinding_SampleGameCharacter::TestMulticast_OnRPCPayload(const worker::EntityId EntityId, const improbable::unreal::generated::samplegamecharacter::TestMulticastRequest& EventData)
 {
 	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
 	{
@@ -4593,77 +4911,82 @@ void USpatialTypeBinding_SampleGameCharacter::TestMulticast_OnRPCPayload(const w
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 
-void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterrootmotiondebugclientprintonscreen>& Op)
+void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Rootmotiondebugclientprintonscreen>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("RootMotionDebugClientPrintOnScreen"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientveryshortadjustposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientveryshortadjustposition>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientVeryShortAdjustPosition"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatwalk>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatWalk_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatwalk>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientCheatWalk"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatghost>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatGhost_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatghost>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientCheatGhost"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientcheatfly>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientCheatFly_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientcheatfly>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientCheatFly"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionsourceposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustrootmotionsourceposition>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientAdjustRootMotionSourcePosition"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustrootmotionposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustrootmotionposition>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientAdjustRootMotionPosition"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientadjustposition>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientadjustposition>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientAdjustPosition"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterClientRPCs::Commands::Samplegamecharacterclientackgoodmove>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterClientRPCs::Commands::Clientackgoodmove>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientAckGoodMove"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermoveold>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermoveold>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveOld"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovenobase>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovenobase>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveNoBase"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualnobase>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedualnobase>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveDualNoBase"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedualhybridrootmotion>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedualhybridrootmotion>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveDualHybridRootMotion"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermovedual>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermovedual>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerMoveDual"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::UnrealSampleGameCharacterServerRPCs::Commands::Samplegamecharacterservermove>& Op)
+void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Servermove>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ServerMove"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
+}
+
+void USpatialTypeBinding_SampleGameCharacter::TestRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::samplegamecharacter::SampleGameCharacterServerRPCs::Commands::Testrpc>& Op)
+{
+	Interop->HandleCommandResponse_Internal(TEXT("TestRPC"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }

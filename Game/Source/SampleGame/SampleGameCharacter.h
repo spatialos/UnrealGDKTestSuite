@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
+#include "SampleGameComponent.h"
 #include "SampleGameCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -19,6 +20,9 @@ class ASampleGameCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	UPROPERTY()
+	class USampleGameComponent* SampleGameComponent;
 public:
 	ASampleGameCharacter();
 
