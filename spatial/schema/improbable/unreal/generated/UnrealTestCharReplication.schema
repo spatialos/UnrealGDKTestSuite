@@ -1,0 +1,44 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated.testcharreplication;
+
+import "improbable/unreal/gdk/core_types.schema";
+
+component TestCharReplicationSingleClientRepData {
+	id = 100064;
+}
+component TestCharReplicationMultiClientRepData {
+	id = 100065;
+	bool field_bhidden = 1; // COND_None // ::Actor
+	bool field_breplicatemovement = 2; // COND_None // ::Actor
+	bool field_btearoff = 3; // COND_None // ::Actor
+	bool field_bcanbedamaged = 4; // COND_None // ::Actor
+	uint32 field_remoterole = 5; // COND_None // ::Actor
+	bytes field_replicatedmovement = 6; // COND_SimulatedOrPhysics // ::Actor
+	UnrealObjectRef field_attachmentreplication_attachparent = 7; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication_locationoffset = 8; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication_relativescale3d = 9; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication_rotationoffset = 10; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	string field_attachmentreplication_attachsocket = 11; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	UnrealObjectRef field_attachmentreplication_attachcomponent = 12; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	UnrealObjectRef field_owner = 13; // COND_None // ::Actor
+	uint32 field_role = 14; // COND_None // ::Actor
+	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
+	int32 field_testbookend = 16; // COND_None // ::ReplicationTestCase
+}
+component TestCharReplicationMigratableData {
+	id = 100066;
+}
+import "improbable/unreal/generated/UnrealTestCharReplicationTypes.schema";
+
+component TestCharReplicationClientRPCs {
+	id = 100067;
+}
+component TestCharReplicationServerRPCs {
+	id = 100068;
+	command UnrealRPCCommandResponse servertestcharfunc(testcharreplication.ServerTestCharFuncRequest);
+	command UnrealRPCCommandResponse serverreportreplication(testcharreplication.ServerReportReplicationRequest);
+}
+component TestCharReplicationNetMulticastRPCs {
+	id = 100069;
+}
