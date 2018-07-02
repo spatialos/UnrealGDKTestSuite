@@ -16,7 +16,10 @@
 		{
 			"Name": "SpatialGDK",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"SpatialGDKEditorToolbar"
+			]
 		}
 	]
 }

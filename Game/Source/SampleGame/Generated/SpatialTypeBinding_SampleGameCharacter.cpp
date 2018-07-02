@@ -64,90 +64,141 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("SampleGameCharacter"));
 
 	// Populate RepHandleToPropertyMap.
-	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(2, FRepHandleData(Class, {"bReplicateMovement"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(4, FRepHandleData(Class, {"bCanBeDamaged"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(5, FRepHandleData(Class, {"RemoteRole"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(6, FRepHandleData(Class, {"ReplicatedMovement"}, COND_SimulatedOrPhysicsNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(7, FRepHandleData(Class, {"AttachmentReplication", "AttachParent"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(8, FRepHandleData(Class, {"AttachmentReplication", "LocationOffset"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(9, FRepHandleData(Class, {"AttachmentReplication", "RelativeScale3D"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(10, FRepHandleData(Class, {"AttachmentReplication", "RotationOffset"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(11, FRepHandleData(Class, {"AttachmentReplication", "AttachSocket"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(12, FRepHandleData(Class, {"AttachmentReplication", "AttachComponent"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"PlayerState"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"RemoteViewPitch"}, COND_SkipOwner, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"Controller"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"ReplicatedBasedMovement", "MovementBase"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"ReplicatedBasedMovement", "BoneName"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"ReplicatedBasedMovement", "Location"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"ReplicatedBasedMovement", "Rotation"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(23, FRepHandleData(Class, {"ReplicatedBasedMovement", "bServerHasBaseComponent"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(24, FRepHandleData(Class, {"ReplicatedBasedMovement", "bRelativeRotation"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(25, FRepHandleData(Class, {"ReplicatedBasedMovement", "bServerHasVelocity"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"AnimRootMotionTranslationScale"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(27, FRepHandleData(Class, {"ReplicatedServerLastTransformUpdateTimeStamp"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(28, FRepHandleData(Class, {"ReplicatedMovementMode"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(29, FRepHandleData(Class, {"bIsCrouched"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(30, FRepHandleData(Class, {"JumpMaxHoldTime"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(31, FRepHandleData(Class, {"JumpMaxCount"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(32, FRepHandleData(Class, {"RepRootMotion", "bIsActive"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(33, FRepHandleData(Class, {"RepRootMotion", "AnimMontage"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(34, FRepHandleData(Class, {"RepRootMotion", "Position"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(35, FRepHandleData(Class, {"RepRootMotion", "Location"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(36, FRepHandleData(Class, {"RepRootMotion", "Rotation"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(37, FRepHandleData(Class, {"RepRootMotion", "MovementBase"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(38, FRepHandleData(Class, {"RepRootMotion", "MovementBaseBoneName"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(39, FRepHandleData(Class, {"RepRootMotion", "bRelativePosition"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(40, FRepHandleData(Class, {"RepRootMotion", "bRelativeRotation"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(41, FRepHandleData(Class, {"RepRootMotion", "AuthoritativeRootMotion"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(42, FRepHandleData(Class, {"RepRootMotion", "Acceleration"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(43, FRepHandleData(Class, {"RepRootMotion", "LinearVelocity"}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"TestPODArray"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(45, FRepHandleData(Class, {"TestMixedStructArray"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(46, FRepHandleData(Class, {"TestPODStructArray"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(47, FRepHandleData(Class, {"TestNetSerializeArray"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(48, FRepHandleData(Class, {"TestMixedStruct", "PS"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(49, FRepHandleData(Class, {"TestMixedStruct", "FVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(50, FRepHandleData(Class, {"TestMixedStruct", "IVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(51, FRepHandleData(Class, {"TestPODStruct", "FVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(52, FRepHandleData(Class, {"TestPODStruct", "IVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(53, FRepHandleData(Class, {"TestPODStruct", "DVar"}, COND_SimulatedOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(54, FRepHandleData(Class, {"StablyNamedObj"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(55, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(56, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 4));
-	RepHandleToPropertyMap.Add(57, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 8));
-	RepHandleToPropertyMap.Add(58, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 12));
-	RepHandleToPropertyMap.Add(59, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 16));
-	RepHandleToPropertyMap.Add(60, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 20));
-	RepHandleToPropertyMap.Add(61, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 24));
-	RepHandleToPropertyMap.Add(62, FRepHandleData(Class, {"TestCArrayReplication"}, COND_None, REPNOTIFY_OnChanged, 28));
-	RepHandleToPropertyMap.Add(63, FRepHandleData(Class, {"Test8Enum"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(64, FRepHandleData(Class, {"Test16Enum"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(65, FRepHandleData(Class, {"Test32Enum"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(66, FRepHandleData(Class, {"Test64Enum"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(67, FRepHandleData(Class, {"TestEnumTArray"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(68, FRepHandleData(Class, {"TestUEnum"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(69, FRepHandleData(Class, {"TestUEnumTArray"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(70, FRepHandleData(Class, {"Test8Int"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(71, FRepHandleData(Class, {"Test16Int"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(72, FRepHandleData(Class, {"Test32Int"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(73, FRepHandleData(Class, {"Test64Int"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(74, FRepHandleData(Class, {"Test8UInt"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(75, FRepHandleData(Class, {"Test16UInt"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(76, FRepHandleData(Class, {"Test32UInt"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(77, FRepHandleData(Class, {"Test64UInt"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(78, FRepHandleData(Class, {"TestFloat"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(79, FRepHandleData(Class, {"TestDouble"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(80, FRepHandleData(Class, {"BarArray"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(81, FRepHandleData(Class, {"TestBar", "CantReplicateThisMember"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(82, FRepHandleData(Class, {"TestBar", "MyStruct"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(83, FRepHandleData(Class, {"TestBar", "NetSerializeStruct"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(84, FRepHandleData(Class, {"TestBookend"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(2, FRepHandleData(Class, {"bReplicateMovement"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(4, FRepHandleData(Class, {"bCanBeDamaged"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(5, FRepHandleData(Class, {"RemoteRole"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(6, FRepHandleData(Class, {"ReplicatedMovement"}, {0}, COND_SimulatedOrPhysicsNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(7, FRepHandleData(Class, {"AttachmentReplication", "AttachParent"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(8, FRepHandleData(Class, {"AttachmentReplication", "LocationOffset"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(9, FRepHandleData(Class, {"AttachmentReplication", "RelativeScale3D"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(10, FRepHandleData(Class, {"AttachmentReplication", "RotationOffset"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(11, FRepHandleData(Class, {"AttachmentReplication", "AttachSocket"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(12, FRepHandleData(Class, {"AttachmentReplication", "AttachComponent"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"PlayerState"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"RemoteViewPitch"}, {0}, COND_SkipOwner, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"Controller"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"ReplicatedBasedMovement", "MovementBase"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"ReplicatedBasedMovement", "BoneName"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"ReplicatedBasedMovement", "Location"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"ReplicatedBasedMovement", "Rotation"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(23, FRepHandleData(Class, {"ReplicatedBasedMovement", "bServerHasBaseComponent"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(24, FRepHandleData(Class, {"ReplicatedBasedMovement", "bRelativeRotation"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(25, FRepHandleData(Class, {"ReplicatedBasedMovement", "bServerHasVelocity"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"AnimRootMotionTranslationScale"}, {0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(27, FRepHandleData(Class, {"ReplicatedServerLastTransformUpdateTimeStamp"}, {0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(28, FRepHandleData(Class, {"ReplicatedMovementMode"}, {0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(29, FRepHandleData(Class, {"bIsCrouched"}, {0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(30, FRepHandleData(Class, {"JumpMaxHoldTime"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(31, FRepHandleData(Class, {"JumpMaxCount"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(32, FRepHandleData(Class, {"RepRootMotion", "bIsActive"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(33, FRepHandleData(Class, {"RepRootMotion", "AnimMontage"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(34, FRepHandleData(Class, {"RepRootMotion", "Position"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(35, FRepHandleData(Class, {"RepRootMotion", "Location"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(36, FRepHandleData(Class, {"RepRootMotion", "Rotation"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(37, FRepHandleData(Class, {"RepRootMotion", "MovementBase"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(38, FRepHandleData(Class, {"RepRootMotion", "MovementBaseBoneName"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(39, FRepHandleData(Class, {"RepRootMotion", "bRelativePosition"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(40, FRepHandleData(Class, {"RepRootMotion", "bRelativeRotation"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(41, FRepHandleData(Class, {"RepRootMotion", "AuthoritativeRootMotion"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(42, FRepHandleData(Class, {"RepRootMotion", "Acceleration"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(43, FRepHandleData(Class, {"RepRootMotion", "LinearVelocity"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"TestPODArray"}, {0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(45, FRepHandleData(Class, {"FooStructArray", "IntOne"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(46, FRepHandleData(Class, {"FooStructArray", "IntTwo"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(47, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {0, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(48, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {0, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(49, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(50, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 0, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(51, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 0, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(52, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {0, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(53, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {0, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(54, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(55, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 1, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(56, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 1, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(57, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {0, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(58, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {0, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(59, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(60, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 2, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(61, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 2, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(62, FRepHandleData(Class, {"FooStructArray", "IntOne"}, {1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(63, FRepHandleData(Class, {"FooStructArray", "IntTwo"}, {1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(64, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {1, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(65, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {1, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(66, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(67, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 0, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(68, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 0, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(69, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {1, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(70, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {1, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(71, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(72, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 1, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(73, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 1, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(74, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {1, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(75, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {1, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(76, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(77, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 2, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(78, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 2, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(79, FRepHandleData(Class, {"FooStructArray", "IntOne"}, {2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(80, FRepHandleData(Class, {"FooStructArray", "IntTwo"}, {2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(81, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {2, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(82, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {2, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(83, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(84, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 0, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(85, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 0, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(86, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {2, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(87, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {2, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(88, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(89, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 1, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(90, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 1, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(91, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {2, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(92, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {2, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(93, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(94, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 2, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(95, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 2, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(96, FRepHandleData(Class, {"TestMixedStructArray"}, {0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(97, FRepHandleData(Class, {"TestPODStructArray"}, {0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(98, FRepHandleData(Class, {"TestNetSerializeArray"}, {0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(99, FRepHandleData(Class, {"TestMixedStruct", "PS"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(100, FRepHandleData(Class, {"TestMixedStruct", "FVar"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(101, FRepHandleData(Class, {"TestMixedStruct", "IVar"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(102, FRepHandleData(Class, {"TestPODStruct", "FVar"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(103, FRepHandleData(Class, {"TestPODStruct", "IVar"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(104, FRepHandleData(Class, {"TestPODStruct", "DVar"}, {0, 0}, COND_SimulatedOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(105, FRepHandleData(Class, {"StablyNamedObj"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(106, FRepHandleData(Class, {"TestCArrayReplication"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(107, FRepHandleData(Class, {"TestCArrayReplication"}, {1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(108, FRepHandleData(Class, {"TestCArrayReplication"}, {2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(109, FRepHandleData(Class, {"TestCArrayReplication"}, {3}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(110, FRepHandleData(Class, {"TestCArrayReplication"}, {4}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(111, FRepHandleData(Class, {"TestCArrayReplication"}, {5}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(112, FRepHandleData(Class, {"TestCArrayReplication"}, {6}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(113, FRepHandleData(Class, {"TestCArrayReplication"}, {7}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(114, FRepHandleData(Class, {"Test8Enum"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(115, FRepHandleData(Class, {"Test16Enum"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(116, FRepHandleData(Class, {"Test32Enum"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(117, FRepHandleData(Class, {"Test64Enum"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(118, FRepHandleData(Class, {"TestEnumTArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(119, FRepHandleData(Class, {"TestUEnum"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(120, FRepHandleData(Class, {"TestUEnumTArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(121, FRepHandleData(Class, {"Test8Int"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(122, FRepHandleData(Class, {"Test16Int"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(123, FRepHandleData(Class, {"Test32Int"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(124, FRepHandleData(Class, {"Test64Int"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(125, FRepHandleData(Class, {"Test8UInt"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(126, FRepHandleData(Class, {"Test16UInt"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(127, FRepHandleData(Class, {"Test32UInt"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(128, FRepHandleData(Class, {"Test64UInt"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(129, FRepHandleData(Class, {"TestFloat"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(130, FRepHandleData(Class, {"TestDouble"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(131, FRepHandleData(Class, {"BarArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(132, FRepHandleData(Class, {"TestBar", "CantReplicateThisMember"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(133, FRepHandleData(Class, {"TestBar", "MyStruct"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(134, FRepHandleData(Class, {"TestBar", "NetSerializeStruct"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(135, FRepHandleData(Class, {"TestBookend"}, {0}, COND_None, REPNOTIFY_OnChanged));
 }
 
 void USpatialTypeBinding_SampleGameCharacter::BindToView(bool bIsClient)
@@ -481,42 +532,42 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 {
 	switch (Handle)
 	{
-		case 1: // field_bhidden
+		case 1: // field_bhidden0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_bhidden(Value);
+			OutUpdate.set_field_bhidden0(Value);
 			break;
 		}
-		case 2: // field_breplicatemovement
+		case 2: // field_breplicatemovement0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_breplicatemovement(Value);
+			OutUpdate.set_field_breplicatemovement0(Value);
 			break;
 		}
-		case 3: // field_btearoff
+		case 3: // field_btearoff0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_btearoff(Value);
+			OutUpdate.set_field_btearoff0(Value);
 			break;
 		}
-		case 4: // field_bcanbedamaged
+		case 4: // field_bcanbedamaged0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_bcanbedamaged(Value);
+			OutUpdate.set_field_bcanbedamaged0(Value);
 			break;
 		}
-		case 5: // field_remoterole
+		case 5: // field_remoterole0
 		{
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(Data));
 
-			OutUpdate.set_field_remoterole(uint32_t(Value));
+			OutUpdate.set_field_remoterole0(uint32_t(Value));
 			break;
 		}
-		case 6: // field_replicatedmovement
+		case 6: // field_replicatedmovement0
 		{
 			const FRepMovement& Value = *(reinterpret_cast<FRepMovement const*>(Data));
 
@@ -526,11 +577,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
-				OutUpdate.set_field_replicatedmovement(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_replicatedmovement0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 7: // field_attachmentreplication_attachparent
+		case 7: // field_attachmentreplication0_attachparent0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
 
@@ -553,16 +604,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication_attachparent(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachparent0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_attachmentreplication_attachparent(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_attachmentreplication0_attachparent0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 8: // field_attachmentreplication_locationoffset
+		case 8: // field_attachmentreplication0_locationoffset0
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
@@ -572,11 +623,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_attachmentreplication_locationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_attachmentreplication0_locationoffset0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 9: // field_attachmentreplication_relativescale3d
+		case 9: // field_attachmentreplication0_relativescale3d0
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
@@ -586,11 +637,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_attachmentreplication_relativescale3d(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_attachmentreplication0_relativescale3d0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 10: // field_attachmentreplication_rotationoffset
+		case 10: // field_attachmentreplication0_rotationoffset0
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
@@ -600,18 +651,18 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-				OutUpdate.set_field_attachmentreplication_rotationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_attachmentreplication0_rotationoffset0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 11: // field_attachmentreplication_attachsocket
+		case 11: // field_attachmentreplication0_attachsocket0
 		{
 			FName Value = *(reinterpret_cast<FName const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_attachsocket(TCHAR_TO_UTF8(*Value.ToString()));
+			OutUpdate.set_field_attachmentreplication0_attachsocket0(TCHAR_TO_UTF8(*Value.ToString()));
 			break;
 		}
-		case 12: // field_attachmentreplication_attachcomponent
+		case 12: // field_attachmentreplication0_attachcomponent0
 		{
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(Data));
 
@@ -634,16 +685,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication_attachcomponent(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachcomponent0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_attachmentreplication_attachcomponent(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_attachmentreplication0_attachcomponent0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 13: // field_owner
+		case 13: // field_owner0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
 
@@ -666,23 +717,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_owner(ObjectRef);
+					OutUpdate.set_field_owner0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_owner(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_owner0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 14: // field_role
+		case 14: // field_role0
 		{
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(Data));
 
-			OutUpdate.set_field_role(uint32_t(Value));
+			OutUpdate.set_field_role0(uint32_t(Value));
 			break;
 		}
-		case 15: // field_instigator
+		case 15: // field_instigator0
 		{
 			APawn* Value = *(reinterpret_cast<APawn* const*>(Data));
 
@@ -705,16 +756,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_instigator(ObjectRef);
+					OutUpdate.set_field_instigator0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_instigator(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_instigator0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 16: // field_playerstate
+		case 16: // field_playerstate0
 		{
 			APlayerState* Value = *(reinterpret_cast<APlayerState* const*>(Data));
 
@@ -737,23 +788,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_playerstate(ObjectRef);
+					OutUpdate.set_field_playerstate0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_playerstate(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_playerstate0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 17: // field_remoteviewpitch
+		case 17: // field_remoteviewpitch0
 		{
 			uint8 Value = *(reinterpret_cast<uint8 const*>(Data));
 
-			OutUpdate.set_field_remoteviewpitch(uint32_t(Value));
+			OutUpdate.set_field_remoteviewpitch0(uint32_t(Value));
 			break;
 		}
-		case 18: // field_controller
+		case 18: // field_controller0
 		{
 			AController* Value = *(reinterpret_cast<AController* const*>(Data));
 
@@ -776,16 +827,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_controller(ObjectRef);
+					OutUpdate.set_field_controller0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_controller(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_controller0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 19: // field_replicatedbasedmovement_movementbase
+		case 19: // field_replicatedbasedmovement0_movementbase0
 		{
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(Data));
 
@@ -808,23 +859,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_replicatedbasedmovement_movementbase(ObjectRef);
+					OutUpdate.set_field_replicatedbasedmovement0_movementbase0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_replicatedbasedmovement_movementbase(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_replicatedbasedmovement0_movementbase0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 20: // field_replicatedbasedmovement_bonename
+		case 20: // field_replicatedbasedmovement0_bonename0
 		{
 			FName Value = *(reinterpret_cast<FName const*>(Data));
 
-			OutUpdate.set_field_replicatedbasedmovement_bonename(TCHAR_TO_UTF8(*Value.ToString()));
+			OutUpdate.set_field_replicatedbasedmovement0_bonename0(TCHAR_TO_UTF8(*Value.ToString()));
 			break;
 		}
-		case 21: // field_replicatedbasedmovement_location
+		case 21: // field_replicatedbasedmovement0_location0
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
@@ -834,11 +885,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_replicatedbasedmovement_location(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_replicatedbasedmovement0_location0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 22: // field_replicatedbasedmovement_rotation
+		case 22: // field_replicatedbasedmovement0_rotation0
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
@@ -848,81 +899,81 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-				OutUpdate.set_field_replicatedbasedmovement_rotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_replicatedbasedmovement0_rotation0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 23: // field_replicatedbasedmovement_bserverhasbasecomponent
+		case 23: // field_replicatedbasedmovement0_bserverhasbasecomponent0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_replicatedbasedmovement_bserverhasbasecomponent(Value);
+			OutUpdate.set_field_replicatedbasedmovement0_bserverhasbasecomponent0(Value);
 			break;
 		}
-		case 24: // field_replicatedbasedmovement_brelativerotation
+		case 24: // field_replicatedbasedmovement0_brelativerotation0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_replicatedbasedmovement_brelativerotation(Value);
+			OutUpdate.set_field_replicatedbasedmovement0_brelativerotation0(Value);
 			break;
 		}
-		case 25: // field_replicatedbasedmovement_bserverhasvelocity
+		case 25: // field_replicatedbasedmovement0_bserverhasvelocity0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_replicatedbasedmovement_bserverhasvelocity(Value);
+			OutUpdate.set_field_replicatedbasedmovement0_bserverhasvelocity0(Value);
 			break;
 		}
-		case 26: // field_animrootmotiontranslationscale
+		case 26: // field_animrootmotiontranslationscale0
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
-			OutUpdate.set_field_animrootmotiontranslationscale(Value);
+			OutUpdate.set_field_animrootmotiontranslationscale0(Value);
 			break;
 		}
-		case 27: // field_replicatedserverlasttransformupdatetimestamp
+		case 27: // field_replicatedserverlasttransformupdatetimestamp0
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
-			OutUpdate.set_field_replicatedserverlasttransformupdatetimestamp(Value);
+			OutUpdate.set_field_replicatedserverlasttransformupdatetimestamp0(Value);
 			break;
 		}
-		case 28: // field_replicatedmovementmode
+		case 28: // field_replicatedmovementmode0
 		{
 			uint8 Value = *(reinterpret_cast<uint8 const*>(Data));
 
-			OutUpdate.set_field_replicatedmovementmode(uint32_t(Value));
+			OutUpdate.set_field_replicatedmovementmode0(uint32_t(Value));
 			break;
 		}
-		case 29: // field_biscrouched
+		case 29: // field_biscrouched0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_biscrouched(Value);
+			OutUpdate.set_field_biscrouched0(Value);
 			break;
 		}
-		case 30: // field_jumpmaxholdtime
+		case 30: // field_jumpmaxholdtime0
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
-			OutUpdate.set_field_jumpmaxholdtime(Value);
+			OutUpdate.set_field_jumpmaxholdtime0(Value);
 			break;
 		}
-		case 31: // field_jumpmaxcount
+		case 31: // field_jumpmaxcount0
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_jumpmaxcount(int32_t(Value));
+			OutUpdate.set_field_jumpmaxcount0(int32_t(Value));
 			break;
 		}
-		case 32: // field_reprootmotion_bisactive
+		case 32: // field_reprootmotion0_bisactive0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_reprootmotion_bisactive(Value);
+			OutUpdate.set_field_reprootmotion0_bisactive0(Value);
 			break;
 		}
-		case 33: // field_reprootmotion_animmontage
+		case 33: // field_reprootmotion0_animmontage0
 		{
 			UAnimMontage* Value = *(reinterpret_cast<UAnimMontage* const*>(Data));
 
@@ -945,23 +996,23 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_reprootmotion_animmontage(ObjectRef);
+					OutUpdate.set_field_reprootmotion0_animmontage0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_reprootmotion_animmontage(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_reprootmotion0_animmontage0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 34: // field_reprootmotion_position
+		case 34: // field_reprootmotion0_position0
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
-			OutUpdate.set_field_reprootmotion_position(Value);
+			OutUpdate.set_field_reprootmotion0_position0(Value);
 			break;
 		}
-		case 35: // field_reprootmotion_location
+		case 35: // field_reprootmotion0_location0
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
@@ -971,11 +1022,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_reprootmotion_location(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_reprootmotion0_location0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 36: // field_reprootmotion_rotation
+		case 36: // field_reprootmotion0_rotation0
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
@@ -985,11 +1036,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-				OutUpdate.set_field_reprootmotion_rotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_reprootmotion0_rotation0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 37: // field_reprootmotion_movementbase
+		case 37: // field_reprootmotion0_movementbase0
 		{
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(Data));
 
@@ -1012,37 +1063,37 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				}
 				else
 				{
-					OutUpdate.set_field_reprootmotion_movementbase(ObjectRef);
+					OutUpdate.set_field_reprootmotion0_movementbase0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_reprootmotion_movementbase(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_reprootmotion0_movementbase0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 38: // field_reprootmotion_movementbasebonename
+		case 38: // field_reprootmotion0_movementbasebonename0
 		{
 			FName Value = *(reinterpret_cast<FName const*>(Data));
 
-			OutUpdate.set_field_reprootmotion_movementbasebonename(TCHAR_TO_UTF8(*Value.ToString()));
+			OutUpdate.set_field_reprootmotion0_movementbasebonename0(TCHAR_TO_UTF8(*Value.ToString()));
 			break;
 		}
-		case 39: // field_reprootmotion_brelativeposition
+		case 39: // field_reprootmotion0_brelativeposition0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_reprootmotion_brelativeposition(Value);
+			OutUpdate.set_field_reprootmotion0_brelativeposition0(Value);
 			break;
 		}
-		case 40: // field_reprootmotion_brelativerotation
+		case 40: // field_reprootmotion0_brelativerotation0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_reprootmotion_brelativerotation(Value);
+			OutUpdate.set_field_reprootmotion0_brelativerotation0(Value);
 			break;
 		}
-		case 41: // field_reprootmotion_authoritativerootmotion
+		case 41: // field_reprootmotion0_authoritativerootmotion0
 		{
 			const FRootMotionSourceGroup& Value = *(reinterpret_cast<FRootMotionSourceGroup const*>(Data));
 
@@ -1052,11 +1103,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FRootMotionSourceGroup&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
-				OutUpdate.set_field_reprootmotion_authoritativerootmotion(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_reprootmotion0_authoritativerootmotion0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 42: // field_reprootmotion_acceleration
+		case 42: // field_reprootmotion0_acceleration0
 		{
 			const FVector_NetQuantize10& Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(Data));
 
@@ -1066,11 +1117,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FVector_NetQuantize10&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-				OutUpdate.set_field_reprootmotion_acceleration(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_reprootmotion0_acceleration0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 43: // field_reprootmotion_linearvelocity
+		case 43: // field_reprootmotion0_linearvelocity0
 		{
 			const FVector_NetQuantize10& Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(Data));
 
@@ -1080,11 +1131,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FVector_NetQuantize10&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-				OutUpdate.set_field_reprootmotion_linearvelocity(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_reprootmotion0_linearvelocity0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 44: // field_testpodarray
+		case 44: // field_testpodarray0
 		{
 			const TArray<float>& Value = *(reinterpret_cast<TArray<float> const*>(Data));
 
@@ -1093,10 +1144,367 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			{
 				List.emplace_back(Value[i]);
 			}
-			OutUpdate.set_field_testpodarray(List);
+			OutUpdate.set_field_testpodarray0(List);
 			break;
 		}
-		case 45: // field_testmixedstructarray
+		case 45: // field_foostructarray0_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_intone0(int32_t(Value));
+			break;
+		}
+		case 46: // field_foostructarray0_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_inttwo0(int32_t(Value));
+			break;
+		}
+		case 47: // field_foostructarray0_barstructarray0_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray0_intone0(int32_t(Value));
+			break;
+		}
+		case 48: // field_foostructarray0_barstructarray0_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray0_inttwo0(int32_t(Value));
+			break;
+		}
+		case 49: // field_foostructarray0_barstructarray0_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray0_floatarray0(Value);
+			break;
+		}
+		case 50: // field_foostructarray0_barstructarray0_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray0_floatarray1(Value);
+			break;
+		}
+		case 51: // field_foostructarray0_barstructarray0_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray0_floatarray2(Value);
+			break;
+		}
+		case 52: // field_foostructarray0_barstructarray1_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray1_intone0(int32_t(Value));
+			break;
+		}
+		case 53: // field_foostructarray0_barstructarray1_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray1_inttwo0(int32_t(Value));
+			break;
+		}
+		case 54: // field_foostructarray0_barstructarray1_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray1_floatarray0(Value);
+			break;
+		}
+		case 55: // field_foostructarray0_barstructarray1_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray1_floatarray1(Value);
+			break;
+		}
+		case 56: // field_foostructarray0_barstructarray1_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray1_floatarray2(Value);
+			break;
+		}
+		case 57: // field_foostructarray0_barstructarray2_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray2_intone0(int32_t(Value));
+			break;
+		}
+		case 58: // field_foostructarray0_barstructarray2_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray2_inttwo0(int32_t(Value));
+			break;
+		}
+		case 59: // field_foostructarray0_barstructarray2_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray2_floatarray0(Value);
+			break;
+		}
+		case 60: // field_foostructarray0_barstructarray2_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray2_floatarray1(Value);
+			break;
+		}
+		case 61: // field_foostructarray0_barstructarray2_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray2_floatarray2(Value);
+			break;
+		}
+		case 62: // field_foostructarray1_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_intone0(int32_t(Value));
+			break;
+		}
+		case 63: // field_foostructarray1_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_inttwo0(int32_t(Value));
+			break;
+		}
+		case 64: // field_foostructarray1_barstructarray0_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray0_intone0(int32_t(Value));
+			break;
+		}
+		case 65: // field_foostructarray1_barstructarray0_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray0_inttwo0(int32_t(Value));
+			break;
+		}
+		case 66: // field_foostructarray1_barstructarray0_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray0_floatarray0(Value);
+			break;
+		}
+		case 67: // field_foostructarray1_barstructarray0_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray0_floatarray1(Value);
+			break;
+		}
+		case 68: // field_foostructarray1_barstructarray0_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray0_floatarray2(Value);
+			break;
+		}
+		case 69: // field_foostructarray1_barstructarray1_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray1_intone0(int32_t(Value));
+			break;
+		}
+		case 70: // field_foostructarray1_barstructarray1_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray1_inttwo0(int32_t(Value));
+			break;
+		}
+		case 71: // field_foostructarray1_barstructarray1_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray1_floatarray0(Value);
+			break;
+		}
+		case 72: // field_foostructarray1_barstructarray1_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray1_floatarray1(Value);
+			break;
+		}
+		case 73: // field_foostructarray1_barstructarray1_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray1_floatarray2(Value);
+			break;
+		}
+		case 74: // field_foostructarray1_barstructarray2_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray2_intone0(int32_t(Value));
+			break;
+		}
+		case 75: // field_foostructarray1_barstructarray2_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray2_inttwo0(int32_t(Value));
+			break;
+		}
+		case 76: // field_foostructarray1_barstructarray2_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray2_floatarray0(Value);
+			break;
+		}
+		case 77: // field_foostructarray1_barstructarray2_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray2_floatarray1(Value);
+			break;
+		}
+		case 78: // field_foostructarray1_barstructarray2_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray2_floatarray2(Value);
+			break;
+		}
+		case 79: // field_foostructarray2_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_intone0(int32_t(Value));
+			break;
+		}
+		case 80: // field_foostructarray2_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_inttwo0(int32_t(Value));
+			break;
+		}
+		case 81: // field_foostructarray2_barstructarray0_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray0_intone0(int32_t(Value));
+			break;
+		}
+		case 82: // field_foostructarray2_barstructarray0_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray0_inttwo0(int32_t(Value));
+			break;
+		}
+		case 83: // field_foostructarray2_barstructarray0_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray0_floatarray0(Value);
+			break;
+		}
+		case 84: // field_foostructarray2_barstructarray0_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray0_floatarray1(Value);
+			break;
+		}
+		case 85: // field_foostructarray2_barstructarray0_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray0_floatarray2(Value);
+			break;
+		}
+		case 86: // field_foostructarray2_barstructarray1_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray1_intone0(int32_t(Value));
+			break;
+		}
+		case 87: // field_foostructarray2_barstructarray1_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray1_inttwo0(int32_t(Value));
+			break;
+		}
+		case 88: // field_foostructarray2_barstructarray1_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray1_floatarray0(Value);
+			break;
+		}
+		case 89: // field_foostructarray2_barstructarray1_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray1_floatarray1(Value);
+			break;
+		}
+		case 90: // field_foostructarray2_barstructarray1_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray1_floatarray2(Value);
+			break;
+		}
+		case 91: // field_foostructarray2_barstructarray2_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray2_intone0(int32_t(Value));
+			break;
+		}
+		case 92: // field_foostructarray2_barstructarray2_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray2_inttwo0(int32_t(Value));
+			break;
+		}
+		case 93: // field_foostructarray2_barstructarray2_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray2_floatarray0(Value);
+			break;
+		}
+		case 94: // field_foostructarray2_barstructarray2_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray2_floatarray1(Value);
+			break;
+		}
+		case 95: // field_foostructarray2_barstructarray2_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray2_floatarray2(Value);
+			break;
+		}
+		case 96: // field_testmixedstructarray0
 		{
 			const TArray<FTestMixedStruct>& Value = *(reinterpret_cast<TArray<FTestMixedStruct> const*>(Data));
 
@@ -1108,10 +1516,10 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				FTestMixedStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FTestMixedStruct*>(&Value[i])));
 				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
-			OutUpdate.set_field_testmixedstructarray(List);
+			OutUpdate.set_field_testmixedstructarray0(List);
 			break;
 		}
-		case 46: // field_testpodstructarray
+		case 97: // field_testpodstructarray0
 		{
 			const TArray<FTestPODStruct>& Value = *(reinterpret_cast<TArray<FTestPODStruct> const*>(Data));
 
@@ -1123,10 +1531,10 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				FTestPODStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FTestPODStruct*>(&Value[i])));
 				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
-			OutUpdate.set_field_testpodstructarray(List);
+			OutUpdate.set_field_testpodstructarray0(List);
 			break;
 		}
-		case 47: // field_testnetserializearray
+		case 98: // field_testnetserializearray0
 		{
 			const TArray<FRepMovement>& Value = *(reinterpret_cast<TArray<FRepMovement> const*>(Data));
 
@@ -1142,10 +1550,10 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 					List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 				}
 			}
-			OutUpdate.set_field_testnetserializearray(List);
+			OutUpdate.set_field_testnetserializearray0(List);
 			break;
 		}
-		case 48: // field_testmixedstruct_ps
+		case 99: // field_testmixedstruct0_ps0
 		{
 			APlayerState* Value = *(reinterpret_cast<APlayerState* const*>(Data));
 
@@ -1164,55 +1572,55 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 48);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 99);
 				}
 				else
 				{
-					OutUpdate.set_field_testmixedstruct_ps(ObjectRef);
+					OutUpdate.set_field_testmixedstruct0_ps0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_testmixedstruct_ps(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_testmixedstruct0_ps0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 49: // field_testmixedstruct_fvar
+		case 100: // field_testmixedstruct0_fvar0
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
-			OutUpdate.set_field_testmixedstruct_fvar(Value);
+			OutUpdate.set_field_testmixedstruct0_fvar0(Value);
 			break;
 		}
-		case 50: // field_testmixedstruct_ivar
+		case 101: // field_testmixedstruct0_ivar0
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
-			OutUpdate.set_field_testmixedstruct_ivar(Value);
+			OutUpdate.set_field_testmixedstruct0_ivar0(Value);
 			break;
 		}
-		case 51: // field_testpodstruct_fvar
+		case 102: // field_testpodstruct0_fvar0
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
-			OutUpdate.set_field_testpodstruct_fvar(Value);
+			OutUpdate.set_field_testpodstruct0_fvar0(Value);
 			break;
 		}
-		case 52: // field_testpodstruct_ivar
+		case 103: // field_testpodstruct0_ivar0
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testpodstruct_ivar(int32_t(Value));
+			OutUpdate.set_field_testpodstruct0_ivar0(int32_t(Value));
 			break;
 		}
-		case 53: // field_testpodstruct_dvar
+		case 104: // field_testpodstruct0_dvar0
 		{
 			double Value = *(reinterpret_cast<double const*>(Data));
 
-			OutUpdate.set_field_testpodstruct_dvar(Value);
+			OutUpdate.set_field_testpodstruct0_dvar0(Value);
 			break;
 		}
-		case 54: // field_stablynamedobj
+		case 105: // field_stablynamedobj0
 		{
 			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(Data));
 
@@ -1231,104 +1639,104 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 54);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 105);
 				}
 				else
 				{
-					OutUpdate.set_field_stablynamedobj(ObjectRef);
+					OutUpdate.set_field_stablynamedobj0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_stablynamedobj(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_stablynamedobj0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 55: // field_testcarrayreplication0
+		case 106: // field_testcarrayreplication0
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
 			OutUpdate.set_field_testcarrayreplication0(int32_t(Value));
 			break;
 		}
-		case 56: // field_testcarrayreplication1
+		case 107: // field_testcarrayreplication1
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
 			OutUpdate.set_field_testcarrayreplication1(int32_t(Value));
 			break;
 		}
-		case 57: // field_testcarrayreplication2
+		case 108: // field_testcarrayreplication2
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
 			OutUpdate.set_field_testcarrayreplication2(int32_t(Value));
 			break;
 		}
-		case 58: // field_testcarrayreplication3
+		case 109: // field_testcarrayreplication3
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
 			OutUpdate.set_field_testcarrayreplication3(int32_t(Value));
 			break;
 		}
-		case 59: // field_testcarrayreplication4
+		case 110: // field_testcarrayreplication4
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
 			OutUpdate.set_field_testcarrayreplication4(int32_t(Value));
 			break;
 		}
-		case 60: // field_testcarrayreplication5
+		case 111: // field_testcarrayreplication5
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
 			OutUpdate.set_field_testcarrayreplication5(int32_t(Value));
 			break;
 		}
-		case 61: // field_testcarrayreplication6
+		case 112: // field_testcarrayreplication6
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
 			OutUpdate.set_field_testcarrayreplication6(int32_t(Value));
 			break;
 		}
-		case 62: // field_testcarrayreplication7
+		case 113: // field_testcarrayreplication7
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
 			OutUpdate.set_field_testcarrayreplication7(int32_t(Value));
 			break;
 		}
-		case 63: // field_test8enum
+		case 114: // field_test8enum0
 		{
 			ETest8Enum Value = *(reinterpret_cast<ETest8Enum const*>(Data));
 
-			OutUpdate.set_field_test8enum(uint32(Value));
+			OutUpdate.set_field_test8enum0(uint32(Value));
 			break;
 		}
-		case 64: // field_test16enum
+		case 115: // field_test16enum0
 		{
 			ETest16Enum Value = *(reinterpret_cast<ETest16Enum const*>(Data));
 
-			OutUpdate.set_field_test16enum(uint32(Value));
+			OutUpdate.set_field_test16enum0(uint32(Value));
 			break;
 		}
-		case 65: // field_test32enum
+		case 116: // field_test32enum0
 		{
 			ETest32Enum Value = *(reinterpret_cast<ETest32Enum const*>(Data));
 
-			OutUpdate.set_field_test32enum(uint32(Value));
+			OutUpdate.set_field_test32enum0(uint32(Value));
 			break;
 		}
-		case 66: // field_test64enum
+		case 117: // field_test64enum0
 		{
 			ETest64Enum Value = *(reinterpret_cast<ETest64Enum const*>(Data));
 
-			OutUpdate.set_field_test64enum(int64(Value));
+			OutUpdate.set_field_test64enum0(int64(Value));
 			break;
 		}
-		case 67: // field_testenumtarray
+		case 118: // field_testenumtarray0
 		{
 			const TArray<ETest8Enum>& Value = *(reinterpret_cast<TArray<ETest8Enum> const*>(Data));
 
@@ -1337,17 +1745,17 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			{
 				List.emplace_back(uint32(Value[i]));
 			}
-			OutUpdate.set_field_testenumtarray(List);
+			OutUpdate.set_field_testenumtarray0(List);
 			break;
 		}
-		case 68: // field_testuenum
+		case 119: // field_testuenum0
 		{
 			TEnumAsByte<EnumNamespace::EUnrealTestEnum> Value = *(reinterpret_cast<TEnumAsByte<EnumNamespace::EUnrealTestEnum> const*>(Data));
 
-			OutUpdate.set_field_testuenum(uint32_t(Value));
+			OutUpdate.set_field_testuenum0(uint32_t(Value));
 			break;
 		}
-		case 69: // field_testuenumtarray
+		case 120: // field_testuenumtarray0
 		{
 			const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& Value = *(reinterpret_cast<TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>> const*>(Data));
 
@@ -1356,80 +1764,80 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			{
 				List.emplace_back(uint32_t(Value[i]));
 			}
-			OutUpdate.set_field_testuenumtarray(List);
+			OutUpdate.set_field_testuenumtarray0(List);
 			break;
 		}
-		case 70: // field_test8int
+		case 121: // field_test8int0
 		{
 			int8 Value = *(reinterpret_cast<int8 const*>(Data));
 
-			OutUpdate.set_field_test8int(int32_t(Value));
+			OutUpdate.set_field_test8int0(int32_t(Value));
 			break;
 		}
-		case 71: // field_test16int
+		case 122: // field_test16int0
 		{
 			int16 Value = *(reinterpret_cast<int16 const*>(Data));
 
-			OutUpdate.set_field_test16int(int32_t(Value));
+			OutUpdate.set_field_test16int0(int32_t(Value));
 			break;
 		}
-		case 72: // field_test32int
+		case 123: // field_test32int0
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_test32int(int32_t(Value));
+			OutUpdate.set_field_test32int0(int32_t(Value));
 			break;
 		}
-		case 73: // field_test64int
+		case 124: // field_test64int0
 		{
 			int64 Value = *(reinterpret_cast<int64 const*>(Data));
 
-			OutUpdate.set_field_test64int(int64_t(Value));
+			OutUpdate.set_field_test64int0(int64_t(Value));
 			break;
 		}
-		case 74: // field_test8uint
+		case 125: // field_test8uint0
 		{
 			uint8 Value = *(reinterpret_cast<uint8 const*>(Data));
 
-			OutUpdate.set_field_test8uint(uint32_t(Value));
+			OutUpdate.set_field_test8uint0(uint32_t(Value));
 			break;
 		}
-		case 75: // field_test16uint
+		case 126: // field_test16uint0
 		{
 			uint16 Value = *(reinterpret_cast<uint16 const*>(Data));
 
-			OutUpdate.set_field_test16uint(uint32_t(Value));
+			OutUpdate.set_field_test16uint0(uint32_t(Value));
 			break;
 		}
-		case 76: // field_test32uint
+		case 127: // field_test32uint0
 		{
 			uint32 Value = *(reinterpret_cast<uint32 const*>(Data));
 
-			OutUpdate.set_field_test32uint(uint32_t(Value));
+			OutUpdate.set_field_test32uint0(uint32_t(Value));
 			break;
 		}
-		case 77: // field_test64uint
+		case 128: // field_test64uint0
 		{
 			uint64 Value = *(reinterpret_cast<uint64 const*>(Data));
 
-			OutUpdate.set_field_test64uint(uint64_t(Value));
+			OutUpdate.set_field_test64uint0(uint64_t(Value));
 			break;
 		}
-		case 78: // field_testfloat
+		case 129: // field_testfloat0
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
-			OutUpdate.set_field_testfloat(Value);
+			OutUpdate.set_field_testfloat0(Value);
 			break;
 		}
-		case 79: // field_testdouble
+		case 130: // field_testdouble0
 		{
 			double Value = *(reinterpret_cast<double const*>(Data));
 
-			OutUpdate.set_field_testdouble(Value);
+			OutUpdate.set_field_testdouble0(Value);
 			break;
 		}
-		case 80: // field_bararray
+		case 131: // field_bararray0
 		{
 			const TArray<FBar>& Value = *(reinterpret_cast<TArray<FBar> const*>(Data));
 
@@ -1441,10 +1849,10 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				FBar::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FBar*>(&Value[i])));
 				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
-			OutUpdate.set_field_bararray(List);
+			OutUpdate.set_field_bararray0(List);
 			break;
 		}
-		case 81: // field_testbar_cantreplicatethismember
+		case 132: // field_testbar0_cantreplicatethismember0
 		{
 			const TArray<FFoo>& Value = *(reinterpret_cast<TArray<FFoo> const*>(Data));
 
@@ -1456,10 +1864,10 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				FFoo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FFoo*>(&Value[i])));
 				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
-			OutUpdate.set_field_testbar_cantreplicatethismember(List);
+			OutUpdate.set_field_testbar0_cantreplicatethismember0(List);
 			break;
 		}
-		case 82: // field_testbar_mystruct
+		case 133: // field_testbar0_mystruct0
 		{
 			const FTestStructWithNetSerialize& Value = *(reinterpret_cast<FTestStructWithNetSerialize const*>(Data));
 
@@ -1469,11 +1877,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FTestStructWithNetSerialize&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FTestStructWithNetSerialize failed."));
-				OutUpdate.set_field_testbar_mystruct(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_testbar0_mystruct0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 83: // field_testbar_netserializestruct
+		case 134: // field_testbar0_netserializestruct0
 		{
 			const FRepMovement& Value = *(reinterpret_cast<FRepMovement const*>(Data));
 
@@ -1483,15 +1891,15 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 				bool bSuccess = true;
 				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
-				OutUpdate.set_field_testbar_netserializestruct(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+				OutUpdate.set_field_testbar0_netserializestruct0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			break;
 		}
-		case 84: // field_testbookend
+		case 135: // field_testbookend0
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testbookend(int32_t(Value));
+			OutUpdate.set_field_testbookend0(int32_t(Value));
 			break;
 		}
 	default:
@@ -1521,9 +1929,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
-	if (!Update.field_bhidden().empty())
+	if (!Update.field_bhidden0().empty())
 	{
-		// field_bhidden
+		// field_bhidden0
 		uint16 Handle = 1;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1531,7 +1939,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_bhidden().data());
+			Value = (*Update.field_bhidden0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1543,9 +1951,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_breplicatemovement().empty())
+	if (!Update.field_breplicatemovement0().empty())
 	{
-		// field_breplicatemovement
+		// field_breplicatemovement0
 		uint16 Handle = 2;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1553,7 +1961,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_breplicatemovement().data());
+			Value = (*Update.field_breplicatemovement0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1565,9 +1973,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_btearoff().empty())
+	if (!Update.field_btearoff0().empty())
 	{
-		// field_btearoff
+		// field_btearoff0
 		uint16 Handle = 3;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1575,7 +1983,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_btearoff().data());
+			Value = (*Update.field_btearoff0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1587,9 +1995,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_bcanbedamaged().empty())
+	if (!Update.field_bcanbedamaged0().empty())
 	{
-		// field_bcanbedamaged
+		// field_bcanbedamaged0
 		uint16 Handle = 4;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1597,7 +2005,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_bcanbedamaged().data());
+			Value = (*Update.field_bcanbedamaged0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1609,9 +2017,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_remoterole().empty())
+	if (!Update.field_remoterole0().empty())
 	{
-		// field_remoterole
+		// field_remoterole0
 		uint16 Handle = 5;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1626,7 +2034,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(PropertyData));
 
-			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_remoterole().data())));
+			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_remoterole0().data())));
 
 			// Downgrade role from AutonomousProxy to SimulatedProxy if we aren't authoritative over
 			// the server RPCs component.
@@ -1645,9 +2053,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedmovement().empty())
+	if (!Update.field_replicatedmovement0().empty())
 	{
-		// field_replicatedmovement
+		// field_replicatedmovement0
 		uint16 Handle = 6;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1656,7 +2064,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FRepMovement Value = *(reinterpret_cast<FRepMovement const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_replicatedmovement().data());
+				auto& ValueDataStr = (*Update.field_replicatedmovement0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -1675,9 +2083,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_attachparent().empty())
+	if (!Update.field_attachmentreplication0_attachparent0().empty())
 	{
-		// field_attachmentreplication_attachparent
+		// field_attachmentreplication0_attachparent0
 		uint16 Handle = 7;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1687,7 +2095,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachparent().data());
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachparent0().data());
 				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 				{
@@ -1733,9 +2141,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_attachmentreplication_locationoffset().empty())
+	if (!Update.field_attachmentreplication0_locationoffset0().empty())
 	{
-		// field_attachmentreplication_locationoffset
+		// field_attachmentreplication0_locationoffset0
 		uint16 Handle = 8;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1744,7 +2152,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_attachmentreplication_locationoffset().data());
+				auto& ValueDataStr = (*Update.field_attachmentreplication0_locationoffset0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -1763,9 +2171,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_relativescale3d().empty())
+	if (!Update.field_attachmentreplication0_relativescale3d0().empty())
 	{
-		// field_attachmentreplication_relativescale3d
+		// field_attachmentreplication0_relativescale3d0
 		uint16 Handle = 9;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1774,7 +2182,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_attachmentreplication_relativescale3d().data());
+				auto& ValueDataStr = (*Update.field_attachmentreplication0_relativescale3d0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -1793,9 +2201,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_rotationoffset().empty())
+	if (!Update.field_attachmentreplication0_rotationoffset0().empty())
 	{
-		// field_attachmentreplication_rotationoffset
+		// field_attachmentreplication0_rotationoffset0
 		uint16 Handle = 10;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1804,7 +2212,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_attachmentreplication_rotationoffset().data());
+				auto& ValueDataStr = (*Update.field_attachmentreplication0_rotationoffset0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -1823,9 +2231,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_attachsocket().empty())
+	if (!Update.field_attachmentreplication0_attachsocket0().empty())
 	{
-		// field_attachmentreplication_attachsocket
+		// field_attachmentreplication0_attachsocket0
 		uint16 Handle = 11;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1833,7 +2241,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FName Value = *(reinterpret_cast<FName const*>(PropertyData));
 
-			Value = FName(((*Update.field_attachmentreplication_attachsocket().data())).data());
+			Value = FName(((*Update.field_attachmentreplication0_attachsocket0().data())).data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1845,9 +2253,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_attachcomponent().empty())
+	if (!Update.field_attachmentreplication0_attachcomponent0().empty())
 	{
-		// field_attachmentreplication_attachcomponent
+		// field_attachmentreplication0_attachcomponent0
 		uint16 Handle = 12;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1857,7 +2265,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(PropertyData));
 
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachcomponent().data());
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachcomponent0().data());
 				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 				{
@@ -1903,9 +2311,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_owner().empty())
+	if (!Update.field_owner0().empty())
 	{
-		// field_owner
+		// field_owner0
 		uint16 Handle = 13;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1915,7 +2323,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner().data());
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner0().data());
 				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 				{
@@ -1961,9 +2369,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_role().empty())
+	if (!Update.field_role0().empty())
 	{
-		// field_role
+		// field_role0
 		uint16 Handle = 14;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1978,7 +2386,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(PropertyData));
 
-			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_role().data())));
+			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_role0().data())));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1990,9 +2398,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_instigator().empty())
+	if (!Update.field_instigator0().empty())
 	{
-		// field_instigator
+		// field_instigator0
 		uint16 Handle = 15;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2002,7 +2410,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
 
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator().data());
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator0().data());
 				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 				{
@@ -2048,9 +2456,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_playerstate().empty())
+	if (!Update.field_playerstate0().empty())
 	{
-		// field_playerstate
+		// field_playerstate0
 		uint16 Handle = 16;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2060,7 +2468,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			APlayerState* Value = *(reinterpret_cast<APlayerState* const*>(PropertyData));
 
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_playerstate().data());
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_playerstate0().data());
 				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 				{
@@ -2106,9 +2514,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_remoteviewpitch().empty())
+	if (!Update.field_remoteviewpitch0().empty())
 	{
-		// field_remoteviewpitch
+		// field_remoteviewpitch0
 		uint16 Handle = 17;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2116,7 +2524,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			uint8 Value = *(reinterpret_cast<uint8 const*>(PropertyData));
 
-			Value = uint8(uint8((*Update.field_remoteviewpitch().data())));
+			Value = uint8(uint8((*Update.field_remoteviewpitch0().data())));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2128,9 +2536,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_controller().empty())
+	if (!Update.field_controller0().empty())
 	{
-		// field_controller
+		// field_controller0
 		uint16 Handle = 18;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2140,7 +2548,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			AController* Value = *(reinterpret_cast<AController* const*>(PropertyData));
 
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_controller().data());
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_controller0().data());
 				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 				{
@@ -2186,9 +2594,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_movementbase().empty())
+	if (!Update.field_replicatedbasedmovement0_movementbase0().empty())
 	{
-		// field_replicatedbasedmovement_movementbase
+		// field_replicatedbasedmovement0_movementbase0
 		uint16 Handle = 19;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2198,7 +2606,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(PropertyData));
 
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_replicatedbasedmovement_movementbase().data());
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_replicatedbasedmovement0_movementbase0().data());
 				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 				{
@@ -2244,9 +2652,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_bonename().empty())
+	if (!Update.field_replicatedbasedmovement0_bonename0().empty())
 	{
-		// field_replicatedbasedmovement_bonename
+		// field_replicatedbasedmovement0_bonename0
 		uint16 Handle = 20;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2254,7 +2662,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FName Value = *(reinterpret_cast<FName const*>(PropertyData));
 
-			Value = FName(((*Update.field_replicatedbasedmovement_bonename().data())).data());
+			Value = FName(((*Update.field_replicatedbasedmovement0_bonename0().data())).data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2266,9 +2674,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_location().empty())
+	if (!Update.field_replicatedbasedmovement0_location0().empty())
 	{
-		// field_replicatedbasedmovement_location
+		// field_replicatedbasedmovement0_location0
 		uint16 Handle = 21;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2277,7 +2685,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_replicatedbasedmovement_location().data());
+				auto& ValueDataStr = (*Update.field_replicatedbasedmovement0_location0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -2296,9 +2704,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_rotation().empty())
+	if (!Update.field_replicatedbasedmovement0_rotation0().empty())
 	{
-		// field_replicatedbasedmovement_rotation
+		// field_replicatedbasedmovement0_rotation0
 		uint16 Handle = 22;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2307,7 +2715,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_replicatedbasedmovement_rotation().data());
+				auto& ValueDataStr = (*Update.field_replicatedbasedmovement0_rotation0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -2326,9 +2734,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_bserverhasbasecomponent().empty())
+	if (!Update.field_replicatedbasedmovement0_bserverhasbasecomponent0().empty())
 	{
-		// field_replicatedbasedmovement_bserverhasbasecomponent
+		// field_replicatedbasedmovement0_bserverhasbasecomponent0
 		uint16 Handle = 23;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2336,7 +2744,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_replicatedbasedmovement_bserverhasbasecomponent().data());
+			Value = (*Update.field_replicatedbasedmovement0_bserverhasbasecomponent0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2348,9 +2756,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_brelativerotation().empty())
+	if (!Update.field_replicatedbasedmovement0_brelativerotation0().empty())
 	{
-		// field_replicatedbasedmovement_brelativerotation
+		// field_replicatedbasedmovement0_brelativerotation0
 		uint16 Handle = 24;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2358,7 +2766,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_replicatedbasedmovement_brelativerotation().data());
+			Value = (*Update.field_replicatedbasedmovement0_brelativerotation0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2370,9 +2778,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedbasedmovement_bserverhasvelocity().empty())
+	if (!Update.field_replicatedbasedmovement0_bserverhasvelocity0().empty())
 	{
-		// field_replicatedbasedmovement_bserverhasvelocity
+		// field_replicatedbasedmovement0_bserverhasvelocity0
 		uint16 Handle = 25;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2380,7 +2788,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_replicatedbasedmovement_bserverhasvelocity().data());
+			Value = (*Update.field_replicatedbasedmovement0_bserverhasvelocity0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2392,9 +2800,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_animrootmotiontranslationscale().empty())
+	if (!Update.field_animrootmotiontranslationscale0().empty())
 	{
-		// field_animrootmotiontranslationscale
+		// field_animrootmotiontranslationscale0
 		uint16 Handle = 26;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2402,7 +2810,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
-			Value = (*Update.field_animrootmotiontranslationscale().data());
+			Value = (*Update.field_animrootmotiontranslationscale0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2414,9 +2822,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedserverlasttransformupdatetimestamp().empty())
+	if (!Update.field_replicatedserverlasttransformupdatetimestamp0().empty())
 	{
-		// field_replicatedserverlasttransformupdatetimestamp
+		// field_replicatedserverlasttransformupdatetimestamp0
 		uint16 Handle = 27;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2424,7 +2832,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
-			Value = (*Update.field_replicatedserverlasttransformupdatetimestamp().data());
+			Value = (*Update.field_replicatedserverlasttransformupdatetimestamp0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2436,9 +2844,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedmovementmode().empty())
+	if (!Update.field_replicatedmovementmode0().empty())
 	{
-		// field_replicatedmovementmode
+		// field_replicatedmovementmode0
 		uint16 Handle = 28;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2446,7 +2854,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			uint8 Value = *(reinterpret_cast<uint8 const*>(PropertyData));
 
-			Value = uint8(uint8((*Update.field_replicatedmovementmode().data())));
+			Value = uint8(uint8((*Update.field_replicatedmovementmode0().data())));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2458,9 +2866,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_biscrouched().empty())
+	if (!Update.field_biscrouched0().empty())
 	{
-		// field_biscrouched
+		// field_biscrouched0
 		uint16 Handle = 29;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2468,7 +2876,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_biscrouched().data());
+			Value = (*Update.field_biscrouched0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2480,9 +2888,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_jumpmaxholdtime().empty())
+	if (!Update.field_jumpmaxholdtime0().empty())
 	{
-		// field_jumpmaxholdtime
+		// field_jumpmaxholdtime0
 		uint16 Handle = 30;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2490,7 +2898,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
-			Value = (*Update.field_jumpmaxholdtime().data());
+			Value = (*Update.field_jumpmaxholdtime0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2502,9 +2910,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_jumpmaxcount().empty())
+	if (!Update.field_jumpmaxcount0().empty())
 	{
-		// field_jumpmaxcount
+		// field_jumpmaxcount0
 		uint16 Handle = 31;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2512,7 +2920,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_jumpmaxcount().data());
+			Value = (*Update.field_jumpmaxcount0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2524,9 +2932,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_bisactive().empty())
+	if (!Update.field_reprootmotion0_bisactive0().empty())
 	{
-		// field_reprootmotion_bisactive
+		// field_reprootmotion0_bisactive0
 		uint16 Handle = 32;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2534,7 +2942,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_reprootmotion_bisactive().data());
+			Value = (*Update.field_reprootmotion0_bisactive0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2546,9 +2954,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_animmontage().empty())
+	if (!Update.field_reprootmotion0_animmontage0().empty())
 	{
-		// field_reprootmotion_animmontage
+		// field_reprootmotion0_animmontage0
 		uint16 Handle = 33;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2558,7 +2966,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			UAnimMontage* Value = *(reinterpret_cast<UAnimMontage* const*>(PropertyData));
 
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion_animmontage().data());
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion0_animmontage0().data());
 				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 				{
@@ -2604,9 +3012,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_reprootmotion_position().empty())
+	if (!Update.field_reprootmotion0_position0().empty())
 	{
-		// field_reprootmotion_position
+		// field_reprootmotion0_position0
 		uint16 Handle = 34;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2614,7 +3022,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
-			Value = (*Update.field_reprootmotion_position().data());
+			Value = (*Update.field_reprootmotion0_position0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2626,9 +3034,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_location().empty())
+	if (!Update.field_reprootmotion0_location0().empty())
 	{
-		// field_reprootmotion_location
+		// field_reprootmotion0_location0
 		uint16 Handle = 35;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2637,7 +3045,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_location().data());
+				auto& ValueDataStr = (*Update.field_reprootmotion0_location0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -2656,9 +3064,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_rotation().empty())
+	if (!Update.field_reprootmotion0_rotation0().empty())
 	{
-		// field_reprootmotion_rotation
+		// field_reprootmotion0_rotation0
 		uint16 Handle = 36;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2667,7 +3075,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_rotation().data());
+				auto& ValueDataStr = (*Update.field_reprootmotion0_rotation0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -2686,9 +3094,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_movementbase().empty())
+	if (!Update.field_reprootmotion0_movementbase0().empty())
 	{
-		// field_reprootmotion_movementbase
+		// field_reprootmotion0_movementbase0
 		uint16 Handle = 37;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2698,7 +3106,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(PropertyData));
 
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion_movementbase().data());
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion0_movementbase0().data());
 				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 				{
@@ -2744,9 +3152,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_reprootmotion_movementbasebonename().empty())
+	if (!Update.field_reprootmotion0_movementbasebonename0().empty())
 	{
-		// field_reprootmotion_movementbasebonename
+		// field_reprootmotion0_movementbasebonename0
 		uint16 Handle = 38;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2754,7 +3162,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FName Value = *(reinterpret_cast<FName const*>(PropertyData));
 
-			Value = FName(((*Update.field_reprootmotion_movementbasebonename().data())).data());
+			Value = FName(((*Update.field_reprootmotion0_movementbasebonename0().data())).data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2766,9 +3174,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_brelativeposition().empty())
+	if (!Update.field_reprootmotion0_brelativeposition0().empty())
 	{
-		// field_reprootmotion_brelativeposition
+		// field_reprootmotion0_brelativeposition0
 		uint16 Handle = 39;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2776,7 +3184,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_reprootmotion_brelativeposition().data());
+			Value = (*Update.field_reprootmotion0_brelativeposition0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2788,9 +3196,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_brelativerotation().empty())
+	if (!Update.field_reprootmotion0_brelativerotation0().empty())
 	{
-		// field_reprootmotion_brelativerotation
+		// field_reprootmotion0_brelativerotation0
 		uint16 Handle = 40;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2798,7 +3206,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_reprootmotion_brelativerotation().data());
+			Value = (*Update.field_reprootmotion0_brelativerotation0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -2810,9 +3218,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_authoritativerootmotion().empty())
+	if (!Update.field_reprootmotion0_authoritativerootmotion0().empty())
 	{
-		// field_reprootmotion_authoritativerootmotion
+		// field_reprootmotion0_authoritativerootmotion0
 		uint16 Handle = 41;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2821,7 +3229,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FRootMotionSourceGroup Value = *(reinterpret_cast<FRootMotionSourceGroup const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_authoritativerootmotion().data());
+				auto& ValueDataStr = (*Update.field_reprootmotion0_authoritativerootmotion0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -2840,9 +3248,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_acceleration().empty())
+	if (!Update.field_reprootmotion0_acceleration0().empty())
 	{
-		// field_reprootmotion_acceleration
+		// field_reprootmotion0_acceleration0
 		uint16 Handle = 42;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2851,7 +3259,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FVector_NetQuantize10 Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_acceleration().data());
+				auto& ValueDataStr = (*Update.field_reprootmotion0_acceleration0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -2870,9 +3278,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_reprootmotion_linearvelocity().empty())
+	if (!Update.field_reprootmotion0_linearvelocity0().empty())
 	{
-		// field_reprootmotion_linearvelocity
+		// field_reprootmotion0_linearvelocity0
 		uint16 Handle = 43;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2881,7 +3289,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FVector_NetQuantize10 Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_reprootmotion_linearvelocity().data());
+				auto& ValueDataStr = (*Update.field_reprootmotion0_linearvelocity0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -2900,9 +3308,9 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testpodarray().empty())
+	if (!Update.field_testpodarray0().empty())
 	{
-		// field_testpodarray
+		// field_testpodarray0
 		uint16 Handle = 44;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -2911,7 +3319,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			TArray<float> Value = *(reinterpret_cast<TArray<float> *>(PropertyData));
 
 			{
-				auto& List = (*Update.field_testpodarray().data());
+				auto& List = (*Update.field_testpodarray0().data());
 				Value.SetNum(List.size());
 				for(int i = 0; i < List.size(); i++)
 				{
@@ -2929,10 +3337,1132 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testmixedstructarray().empty())
+	if (!Update.field_foostructarray0_intone0().empty())
 	{
-		// field_testmixedstructarray
+		// field_foostructarray0_intone0
 		uint16 Handle = 45;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_inttwo0().empty())
+	{
+		// field_foostructarray0_inttwo0
+		uint16 Handle = 46;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray0_intone0().empty())
+	{
+		// field_foostructarray0_barstructarray0_intone0
+		uint16 Handle = 47;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray0_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray0_inttwo0().empty())
+	{
+		// field_foostructarray0_barstructarray0_inttwo0
+		uint16 Handle = 48;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray0_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray0_floatarray0().empty())
+	{
+		// field_foostructarray0_barstructarray0_floatarray0
+		uint16 Handle = 49;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray0_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray0_floatarray1().empty())
+	{
+		// field_foostructarray0_barstructarray0_floatarray1
+		uint16 Handle = 50;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray0_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray0_floatarray2().empty())
+	{
+		// field_foostructarray0_barstructarray0_floatarray2
+		uint16 Handle = 51;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray0_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray1_intone0().empty())
+	{
+		// field_foostructarray0_barstructarray1_intone0
+		uint16 Handle = 52;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray1_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray1_inttwo0().empty())
+	{
+		// field_foostructarray0_barstructarray1_inttwo0
+		uint16 Handle = 53;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray1_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray1_floatarray0().empty())
+	{
+		// field_foostructarray0_barstructarray1_floatarray0
+		uint16 Handle = 54;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray1_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray1_floatarray1().empty())
+	{
+		// field_foostructarray0_barstructarray1_floatarray1
+		uint16 Handle = 55;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray1_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray1_floatarray2().empty())
+	{
+		// field_foostructarray0_barstructarray1_floatarray2
+		uint16 Handle = 56;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray1_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray2_intone0().empty())
+	{
+		// field_foostructarray0_barstructarray2_intone0
+		uint16 Handle = 57;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray2_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray2_inttwo0().empty())
+	{
+		// field_foostructarray0_barstructarray2_inttwo0
+		uint16 Handle = 58;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray2_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray2_floatarray0().empty())
+	{
+		// field_foostructarray0_barstructarray2_floatarray0
+		uint16 Handle = 59;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray2_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray2_floatarray1().empty())
+	{
+		// field_foostructarray0_barstructarray2_floatarray1
+		uint16 Handle = 60;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray2_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray2_floatarray2().empty())
+	{
+		// field_foostructarray0_barstructarray2_floatarray2
+		uint16 Handle = 61;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray2_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_intone0().empty())
+	{
+		// field_foostructarray1_intone0
+		uint16 Handle = 62;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_inttwo0().empty())
+	{
+		// field_foostructarray1_inttwo0
+		uint16 Handle = 63;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray0_intone0().empty())
+	{
+		// field_foostructarray1_barstructarray0_intone0
+		uint16 Handle = 64;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray0_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray0_inttwo0().empty())
+	{
+		// field_foostructarray1_barstructarray0_inttwo0
+		uint16 Handle = 65;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray0_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray0_floatarray0().empty())
+	{
+		// field_foostructarray1_barstructarray0_floatarray0
+		uint16 Handle = 66;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray0_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray0_floatarray1().empty())
+	{
+		// field_foostructarray1_barstructarray0_floatarray1
+		uint16 Handle = 67;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray0_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray0_floatarray2().empty())
+	{
+		// field_foostructarray1_barstructarray0_floatarray2
+		uint16 Handle = 68;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray0_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray1_intone0().empty())
+	{
+		// field_foostructarray1_barstructarray1_intone0
+		uint16 Handle = 69;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray1_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray1_inttwo0().empty())
+	{
+		// field_foostructarray1_barstructarray1_inttwo0
+		uint16 Handle = 70;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray1_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray1_floatarray0().empty())
+	{
+		// field_foostructarray1_barstructarray1_floatarray0
+		uint16 Handle = 71;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray1_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray1_floatarray1().empty())
+	{
+		// field_foostructarray1_barstructarray1_floatarray1
+		uint16 Handle = 72;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray1_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray1_floatarray2().empty())
+	{
+		// field_foostructarray1_barstructarray1_floatarray2
+		uint16 Handle = 73;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray1_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray2_intone0().empty())
+	{
+		// field_foostructarray1_barstructarray2_intone0
+		uint16 Handle = 74;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray2_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray2_inttwo0().empty())
+	{
+		// field_foostructarray1_barstructarray2_inttwo0
+		uint16 Handle = 75;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray2_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray2_floatarray0().empty())
+	{
+		// field_foostructarray1_barstructarray2_floatarray0
+		uint16 Handle = 76;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray2_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray2_floatarray1().empty())
+	{
+		// field_foostructarray1_barstructarray2_floatarray1
+		uint16 Handle = 77;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray2_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray2_floatarray2().empty())
+	{
+		// field_foostructarray1_barstructarray2_floatarray2
+		uint16 Handle = 78;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray2_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_intone0().empty())
+	{
+		// field_foostructarray2_intone0
+		uint16 Handle = 79;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_inttwo0().empty())
+	{
+		// field_foostructarray2_inttwo0
+		uint16 Handle = 80;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray0_intone0().empty())
+	{
+		// field_foostructarray2_barstructarray0_intone0
+		uint16 Handle = 81;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray0_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray0_inttwo0().empty())
+	{
+		// field_foostructarray2_barstructarray0_inttwo0
+		uint16 Handle = 82;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray0_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray0_floatarray0().empty())
+	{
+		// field_foostructarray2_barstructarray0_floatarray0
+		uint16 Handle = 83;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray0_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray0_floatarray1().empty())
+	{
+		// field_foostructarray2_barstructarray0_floatarray1
+		uint16 Handle = 84;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray0_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray0_floatarray2().empty())
+	{
+		// field_foostructarray2_barstructarray0_floatarray2
+		uint16 Handle = 85;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray0_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray1_intone0().empty())
+	{
+		// field_foostructarray2_barstructarray1_intone0
+		uint16 Handle = 86;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray1_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray1_inttwo0().empty())
+	{
+		// field_foostructarray2_barstructarray1_inttwo0
+		uint16 Handle = 87;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray1_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray1_floatarray0().empty())
+	{
+		// field_foostructarray2_barstructarray1_floatarray0
+		uint16 Handle = 88;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray1_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray1_floatarray1().empty())
+	{
+		// field_foostructarray2_barstructarray1_floatarray1
+		uint16 Handle = 89;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray1_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray1_floatarray2().empty())
+	{
+		// field_foostructarray2_barstructarray1_floatarray2
+		uint16 Handle = 90;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray1_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray2_intone0().empty())
+	{
+		// field_foostructarray2_barstructarray2_intone0
+		uint16 Handle = 91;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray2_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray2_inttwo0().empty())
+	{
+		// field_foostructarray2_barstructarray2_inttwo0
+		uint16 Handle = 92;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray2_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray2_floatarray0().empty())
+	{
+		// field_foostructarray2_barstructarray2_floatarray0
+		uint16 Handle = 93;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray2_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray2_floatarray1().empty())
+	{
+		// field_foostructarray2_barstructarray2_floatarray1
+		uint16 Handle = 94;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray2_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray2_floatarray2().empty())
+	{
+		// field_foostructarray2_barstructarray2_floatarray2
+		uint16 Handle = 95;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray2_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_testmixedstructarray0().empty())
+	{
+		// field_testmixedstructarray0
+		uint16 Handle = 96;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2940,7 +4470,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			TArray<FTestMixedStruct> Value = *(reinterpret_cast<TArray<FTestMixedStruct> *>(PropertyData));
 
 			{
-				auto& List = (*Update.field_testmixedstructarray().data());
+				auto& List = (*Update.field_testmixedstructarray0().data());
 				Value.SetNum(List.size());
 				for(int i = 0; i < List.size(); i++)
 				{
@@ -2962,10 +4492,10 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testpodstructarray().empty())
+	if (!Update.field_testpodstructarray0().empty())
 	{
-		// field_testpodstructarray
-		uint16 Handle = 46;
+		// field_testpodstructarray0
+		uint16 Handle = 97;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -2973,7 +4503,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			TArray<FTestPODStruct> Value = *(reinterpret_cast<TArray<FTestPODStruct> *>(PropertyData));
 
 			{
-				auto& List = (*Update.field_testpodstructarray().data());
+				auto& List = (*Update.field_testpodstructarray0().data());
 				Value.SetNum(List.size());
 				for(int i = 0; i < List.size(); i++)
 				{
@@ -2995,10 +4525,10 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testnetserializearray().empty())
+	if (!Update.field_testnetserializearray0().empty())
 	{
-		// field_testnetserializearray
-		uint16 Handle = 47;
+		// field_testnetserializearray0
+		uint16 Handle = 98;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3006,7 +4536,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			TArray<FRepMovement> Value = *(reinterpret_cast<TArray<FRepMovement> *>(PropertyData));
 
 			{
-				auto& List = (*Update.field_testnetserializearray().data());
+				auto& List = (*Update.field_testnetserializearray0().data());
 				Value.SetNum(List.size());
 				for(int i = 0; i < List.size(); i++)
 				{
@@ -3032,10 +4562,10 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testmixedstruct_ps().empty())
+	if (!Update.field_testmixedstruct0_ps0().empty())
 	{
-		// field_testmixedstruct_ps
-		uint16 Handle = 48;
+		// field_testmixedstruct0_ps0
+		uint16 Handle = 99;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3044,7 +4574,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			APlayerState* Value = *(reinterpret_cast<APlayerState* const*>(PropertyData));
 
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_testmixedstruct_ps().data());
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_testmixedstruct0_ps0().data());
 				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 				{
@@ -3090,17 +4620,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			}
 		}
 	}
-	if (!Update.field_testmixedstruct_fvar().empty())
+	if (!Update.field_testmixedstruct0_fvar0().empty())
 	{
-		// field_testmixedstruct_fvar
-		uint16 Handle = 49;
+		// field_testmixedstruct0_fvar0
+		uint16 Handle = 100;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
-			Value = (*Update.field_testmixedstruct_fvar().data());
+			Value = (*Update.field_testmixedstruct0_fvar0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3112,17 +4642,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testmixedstruct_ivar().empty())
+	if (!Update.field_testmixedstruct0_ivar0().empty())
 	{
-		// field_testmixedstruct_ivar
-		uint16 Handle = 50;
+		// field_testmixedstruct0_ivar0
+		uint16 Handle = 101;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
-			Value = (*Update.field_testmixedstruct_ivar().data());
+			Value = (*Update.field_testmixedstruct0_ivar0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3134,17 +4664,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testpodstruct_fvar().empty())
+	if (!Update.field_testpodstruct0_fvar0().empty())
 	{
-		// field_testpodstruct_fvar
-		uint16 Handle = 51;
+		// field_testpodstruct0_fvar0
+		uint16 Handle = 102;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
-			Value = (*Update.field_testpodstruct_fvar().data());
+			Value = (*Update.field_testpodstruct0_fvar0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3156,17 +4686,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testpodstruct_ivar().empty())
+	if (!Update.field_testpodstruct0_ivar0().empty())
 	{
-		// field_testpodstruct_ivar
-		uint16 Handle = 52;
+		// field_testpodstruct0_ivar0
+		uint16 Handle = 103;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testpodstruct_ivar().data());
+			Value = (*Update.field_testpodstruct0_ivar0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3178,17 +4708,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testpodstruct_dvar().empty())
+	if (!Update.field_testpodstruct0_dvar0().empty())
 	{
-		// field_testpodstruct_dvar
-		uint16 Handle = 53;
+		// field_testpodstruct0_dvar0
+		uint16 Handle = 104;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			double Value = *(reinterpret_cast<double const*>(PropertyData));
 
-			Value = (*Update.field_testpodstruct_dvar().data());
+			Value = (*Update.field_testpodstruct0_dvar0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3200,10 +4730,10 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_stablynamedobj().empty())
+	if (!Update.field_stablynamedobj0().empty())
 	{
-		// field_stablynamedobj
-		uint16 Handle = 54;
+		// field_stablynamedobj0
+		uint16 Handle = 105;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3212,7 +4742,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(PropertyData));
 
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_stablynamedobj().data());
+				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_stablynamedobj0().data());
 				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 				{
@@ -3261,7 +4791,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication0().empty())
 	{
 		// field_testcarrayreplication0
-		uint16 Handle = 55;
+		uint16 Handle = 106;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3283,7 +4813,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication1().empty())
 	{
 		// field_testcarrayreplication1
-		uint16 Handle = 56;
+		uint16 Handle = 107;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3305,7 +4835,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication2().empty())
 	{
 		// field_testcarrayreplication2
-		uint16 Handle = 57;
+		uint16 Handle = 108;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3327,7 +4857,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication3().empty())
 	{
 		// field_testcarrayreplication3
-		uint16 Handle = 58;
+		uint16 Handle = 109;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3349,7 +4879,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication4().empty())
 	{
 		// field_testcarrayreplication4
-		uint16 Handle = 59;
+		uint16 Handle = 110;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3371,7 +4901,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication5().empty())
 	{
 		// field_testcarrayreplication5
-		uint16 Handle = 60;
+		uint16 Handle = 111;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3393,7 +4923,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication6().empty())
 	{
 		// field_testcarrayreplication6
-		uint16 Handle = 61;
+		uint16 Handle = 112;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3415,7 +4945,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 	if (!Update.field_testcarrayreplication7().empty())
 	{
 		// field_testcarrayreplication7
-		uint16 Handle = 62;
+		uint16 Handle = 113;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3434,17 +4964,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_test8enum().empty())
+	if (!Update.field_test8enum0().empty())
 	{
-		// field_test8enum
-		uint16 Handle = 63;
+		// field_test8enum0
+		uint16 Handle = 114;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			ETest8Enum Value = *(reinterpret_cast<ETest8Enum const*>(PropertyData));
 
-			Value = ETest8Enum((*Update.field_test8enum().data()));
+			Value = ETest8Enum((*Update.field_test8enum0().data()));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3456,17 +4986,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_test16enum().empty())
+	if (!Update.field_test16enum0().empty())
 	{
-		// field_test16enum
-		uint16 Handle = 64;
+		// field_test16enum0
+		uint16 Handle = 115;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			ETest16Enum Value = *(reinterpret_cast<ETest16Enum const*>(PropertyData));
 
-			Value = ETest16Enum((*Update.field_test16enum().data()));
+			Value = ETest16Enum((*Update.field_test16enum0().data()));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3478,17 +5008,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_test32enum().empty())
+	if (!Update.field_test32enum0().empty())
 	{
-		// field_test32enum
-		uint16 Handle = 65;
+		// field_test32enum0
+		uint16 Handle = 116;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			ETest32Enum Value = *(reinterpret_cast<ETest32Enum const*>(PropertyData));
 
-			Value = ETest32Enum((*Update.field_test32enum().data()));
+			Value = ETest32Enum((*Update.field_test32enum0().data()));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3500,17 +5030,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_test64enum().empty())
+	if (!Update.field_test64enum0().empty())
 	{
-		// field_test64enum
-		uint16 Handle = 66;
+		// field_test64enum0
+		uint16 Handle = 117;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			ETest64Enum Value = *(reinterpret_cast<ETest64Enum const*>(PropertyData));
 
-			Value = ETest64Enum((*Update.field_test64enum().data()));
+			Value = ETest64Enum((*Update.field_test64enum0().data()));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3522,10 +5052,10 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testenumtarray().empty())
+	if (!Update.field_testenumtarray0().empty())
 	{
-		// field_testenumtarray
-		uint16 Handle = 67;
+		// field_testenumtarray0
+		uint16 Handle = 118;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3533,7 +5063,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			TArray<ETest8Enum> Value = *(reinterpret_cast<TArray<ETest8Enum> *>(PropertyData));
 
 			{
-				auto& List = (*Update.field_testenumtarray().data());
+				auto& List = (*Update.field_testenumtarray0().data());
 				Value.SetNum(List.size());
 				for(int i = 0; i < List.size(); i++)
 				{
@@ -3551,17 +5081,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testuenum().empty())
+	if (!Update.field_testuenum0().empty())
 	{
-		// field_testuenum
-		uint16 Handle = 68;
+		// field_testuenum0
+		uint16 Handle = 119;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			TEnumAsByte<EnumNamespace::EUnrealTestEnum> Value = *(reinterpret_cast<TEnumAsByte<EnumNamespace::EUnrealTestEnum> const*>(PropertyData));
 
-			Value = TEnumAsByte<EnumNamespace::EUnrealTestEnum>(uint8((*Update.field_testuenum().data())));
+			Value = TEnumAsByte<EnumNamespace::EUnrealTestEnum>(uint8((*Update.field_testuenum0().data())));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3573,10 +5103,10 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testuenumtarray().empty())
+	if (!Update.field_testuenumtarray0().empty())
 	{
-		// field_testuenumtarray
-		uint16 Handle = 69;
+		// field_testuenumtarray0
+		uint16 Handle = 120;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3584,7 +5114,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>> Value = *(reinterpret_cast<TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>> *>(PropertyData));
 
 			{
-				auto& List = (*Update.field_testuenumtarray().data());
+				auto& List = (*Update.field_testuenumtarray0().data());
 				Value.SetNum(List.size());
 				for(int i = 0; i < List.size(); i++)
 				{
@@ -3602,17 +5132,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_test8int().empty())
+	if (!Update.field_test8int0().empty())
 	{
-		// field_test8int
-		uint16 Handle = 70;
+		// field_test8int0
+		uint16 Handle = 121;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int8 Value = *(reinterpret_cast<int8 const*>(PropertyData));
 
-			Value = int8((*Update.field_test8int().data()));
+			Value = int8((*Update.field_test8int0().data()));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3624,17 +5154,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_test16int().empty())
+	if (!Update.field_test16int0().empty())
 	{
-		// field_test16int
-		uint16 Handle = 71;
+		// field_test16int0
+		uint16 Handle = 122;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int16 Value = *(reinterpret_cast<int16 const*>(PropertyData));
 
-			Value = int16((*Update.field_test16int().data()));
+			Value = int16((*Update.field_test16int0().data()));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3646,17 +5176,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_test32int().empty())
+	if (!Update.field_test32int0().empty())
 	{
-		// field_test32int
-		uint16 Handle = 72;
+		// field_test32int0
+		uint16 Handle = 123;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_test32int().data());
+			Value = (*Update.field_test32int0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3668,17 +5198,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_test64int().empty())
+	if (!Update.field_test64int0().empty())
 	{
-		// field_test64int
-		uint16 Handle = 73;
+		// field_test64int0
+		uint16 Handle = 124;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int64 Value = *(reinterpret_cast<int64 const*>(PropertyData));
 
-			Value = (*Update.field_test64int().data());
+			Value = (*Update.field_test64int0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3690,17 +5220,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_test8uint().empty())
+	if (!Update.field_test8uint0().empty())
 	{
-		// field_test8uint
-		uint16 Handle = 74;
+		// field_test8uint0
+		uint16 Handle = 125;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			uint8 Value = *(reinterpret_cast<uint8 const*>(PropertyData));
 
-			Value = uint8(uint8((*Update.field_test8uint().data())));
+			Value = uint8(uint8((*Update.field_test8uint0().data())));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3712,17 +5242,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_test16uint().empty())
+	if (!Update.field_test16uint0().empty())
 	{
-		// field_test16uint
-		uint16 Handle = 75;
+		// field_test16uint0
+		uint16 Handle = 126;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			uint16 Value = *(reinterpret_cast<uint16 const*>(PropertyData));
 
-			Value = uint16((*Update.field_test16uint().data()));
+			Value = uint16((*Update.field_test16uint0().data()));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3734,17 +5264,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_test32uint().empty())
+	if (!Update.field_test32uint0().empty())
 	{
-		// field_test32uint
-		uint16 Handle = 76;
+		// field_test32uint0
+		uint16 Handle = 127;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			uint32 Value = *(reinterpret_cast<uint32 const*>(PropertyData));
 
-			Value = (*Update.field_test32uint().data());
+			Value = (*Update.field_test32uint0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3756,17 +5286,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_test64uint().empty())
+	if (!Update.field_test64uint0().empty())
 	{
-		// field_test64uint
-		uint16 Handle = 77;
+		// field_test64uint0
+		uint16 Handle = 128;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			uint64 Value = *(reinterpret_cast<uint64 const*>(PropertyData));
 
-			Value = (*Update.field_test64uint().data());
+			Value = (*Update.field_test64uint0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3778,17 +5308,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testfloat().empty())
+	if (!Update.field_testfloat0().empty())
 	{
-		// field_testfloat
-		uint16 Handle = 78;
+		// field_testfloat0
+		uint16 Handle = 129;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
-			Value = (*Update.field_testfloat().data());
+			Value = (*Update.field_testfloat0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3800,17 +5330,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testdouble().empty())
+	if (!Update.field_testdouble0().empty())
 	{
-		// field_testdouble
-		uint16 Handle = 79;
+		// field_testdouble0
+		uint16 Handle = 130;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			double Value = *(reinterpret_cast<double const*>(PropertyData));
 
-			Value = (*Update.field_testdouble().data());
+			Value = (*Update.field_testdouble0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -3822,10 +5352,10 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_bararray().empty())
+	if (!Update.field_bararray0().empty())
 	{
-		// field_bararray
-		uint16 Handle = 80;
+		// field_bararray0
+		uint16 Handle = 131;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3833,7 +5363,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			TArray<FBar> Value = *(reinterpret_cast<TArray<FBar> *>(PropertyData));
 
 			{
-				auto& List = (*Update.field_bararray().data());
+				auto& List = (*Update.field_bararray0().data());
 				Value.SetNum(List.size());
 				for(int i = 0; i < List.size(); i++)
 				{
@@ -3855,10 +5385,10 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testbar_cantreplicatethismember().empty())
+	if (!Update.field_testbar0_cantreplicatethismember0().empty())
 	{
-		// field_testbar_cantreplicatethismember
-		uint16 Handle = 81;
+		// field_testbar0_cantreplicatethismember0
+		uint16 Handle = 132;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3866,7 +5396,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			TArray<FFoo> Value = *(reinterpret_cast<TArray<FFoo> *>(PropertyData));
 
 			{
-				auto& List = (*Update.field_testbar_cantreplicatethismember().data());
+				auto& List = (*Update.field_testbar0_cantreplicatethismember0().data());
 				Value.SetNum(List.size());
 				for(int i = 0; i < List.size(); i++)
 				{
@@ -3888,10 +5418,10 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testbar_mystruct().empty())
+	if (!Update.field_testbar0_mystruct0().empty())
 	{
-		// field_testbar_mystruct
-		uint16 Handle = 82;
+		// field_testbar0_mystruct0
+		uint16 Handle = 133;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3899,7 +5429,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FTestStructWithNetSerialize Value = *(reinterpret_cast<FTestStructWithNetSerialize const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_testbar_mystruct().data());
+				auto& ValueDataStr = (*Update.field_testbar0_mystruct0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -3918,10 +5448,10 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testbar_netserializestruct().empty())
+	if (!Update.field_testbar0_netserializestruct0().empty())
 	{
-		// field_testbar_netserializestruct
-		uint16 Handle = 83;
+		// field_testbar0_netserializestruct0
+		uint16 Handle = 134;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -3929,7 +5459,7 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 			FRepMovement Value = *(reinterpret_cast<FRepMovement const*>(PropertyData));
 
 			{
-				auto& ValueDataStr = (*Update.field_testbar_netserializestruct().data());
+				auto& ValueDataStr = (*Update.field_testbar0_netserializestruct0().data());
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FMemoryReader ValueDataReader(ValueData);
@@ -3948,17 +5478,17 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testbookend().empty())
+	if (!Update.field_testbookend0().empty())
 	{
-		// field_testbookend
-		uint16 Handle = 84;
+		// field_testbookend0
+		uint16 Handle = 135;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testbookend().data());
+			Value = (*Update.field_testbookend0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -4047,12 +5577,12 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_SendRPC(worke
 			}
 			else
 			{
-				RPCPayload.set_field_conststruct_constobj(ObjectRef);
+				RPCPayload.set_field_conststruct0_constobj0(ObjectRef);
 			}
 		}
 		else
 		{
-			RPCPayload.set_field_conststruct_constobj(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_conststruct0_constobj0(SpatialConstants::NULL_OBJECT_REF);
 		}
 
 		// Send RPC
@@ -4084,7 +5614,7 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 
 		// Build RPC Payload.
 		improbable::unreal::generated::character::RootMotionDebugClientPrintOnScreenRequest RPCPayload;
-		RPCPayload.set_field_instring(TCHAR_TO_UTF8(*StructuredParams.InString));
+		RPCPayload.set_field_instring0(TCHAR_TO_UTF8(*StructuredParams.InString));
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4115,14 +5645,14 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ClientVeryShortAdjustPositionRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_newloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		if (StructuredParams.NewBase != nullptr)
 		{
@@ -4142,17 +5672,17 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_Send
 			}
 			else
 			{
-				RPCPayload.set_field_newbase(ObjectRef);
+				RPCPayload.set_field_newbase0(ObjectRef);
 			}
 		}
 		else
 		{
-			RPCPayload.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_newbase0(SpatialConstants::NULL_OBJECT_REF);
 		}
-		RPCPayload.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
-		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
-		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		RPCPayload.set_field_newbasebonename0(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
+		RPCPayload.set_field_bhasbase0(StructuredParams.bHasBase);
+		RPCPayload.set_field_bbaserelativeposition0(StructuredParams.bBaseRelativePosition);
+		RPCPayload.set_field_servermovementmode0(uint32_t(StructuredParams.ServerMovementMode));
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4264,24 +5794,24 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ClientAdjustRootMotionSourcePositionRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FRootMotionSourceGroup&>(StructuredParams.ServerRootMotion)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
-			RPCPayload.set_field_serverrootmotion(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverrootmotion0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_bhasanimrootmotion(StructuredParams.bHasAnimRootMotion);
-		RPCPayload.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
+		RPCPayload.set_field_bhasanimrootmotion0(StructuredParams.bHasAnimRootMotion);
+		RPCPayload.set_field_servermontagetrackposition0(StructuredParams.ServerMontageTrackPosition);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.ServerLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_serverloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4289,9 +5819,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantizeNormal&>(StructuredParams.ServerRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
-			RPCPayload.set_field_serverrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverrotation0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_servervelz(StructuredParams.ServerVelZ);
+		RPCPayload.set_field_servervelz0(StructuredParams.ServerVelZ);
 		if (StructuredParams.ServerBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
@@ -4310,17 +5840,17 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			}
 			else
 			{
-				RPCPayload.set_field_serverbase(ObjectRef);
+				RPCPayload.set_field_serverbase0(ObjectRef);
 			}
 		}
 		else
 		{
-			RPCPayload.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_serverbase0(SpatialConstants::NULL_OBJECT_REF);
 		}
-		RPCPayload.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
-		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
-		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		RPCPayload.set_field_serverbonename0(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
+		RPCPayload.set_field_bhasbase0(StructuredParams.bHasBase);
+		RPCPayload.set_field_bbaserelativeposition0(StructuredParams.bBaseRelativePosition);
+		RPCPayload.set_field_servermovementmode0(uint32_t(StructuredParams.ServerMovementMode));
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4351,15 +5881,15 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ClientAdjustRootMotionPositionRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
-		RPCPayload.set_field_servermontagetrackposition(StructuredParams.ServerMontageTrackPosition);
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
+		RPCPayload.set_field_servermontagetrackposition0(StructuredParams.ServerMontageTrackPosition);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.ServerLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_serverloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4367,9 +5897,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantizeNormal&>(StructuredParams.ServerRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
-			RPCPayload.set_field_serverrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_serverrotation0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_servervelz(StructuredParams.ServerVelZ);
+		RPCPayload.set_field_servervelz0(StructuredParams.ServerVelZ);
 		if (StructuredParams.ServerBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ServerBase);
@@ -4388,17 +5918,17 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_Sen
 			}
 			else
 			{
-				RPCPayload.set_field_serverbase(ObjectRef);
+				RPCPayload.set_field_serverbase0(ObjectRef);
 			}
 		}
 		else
 		{
-			RPCPayload.set_field_serverbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_serverbase0(SpatialConstants::NULL_OBJECT_REF);
 		}
-		RPCPayload.set_field_serverbonename(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
-		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
-		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		RPCPayload.set_field_serverbonename0(TCHAR_TO_UTF8(*StructuredParams.ServerBoneName.ToString()));
+		RPCPayload.set_field_bhasbase0(StructuredParams.bHasBase);
+		RPCPayload.set_field_bbaserelativeposition0(StructuredParams.bBaseRelativePosition);
+		RPCPayload.set_field_servermovementmode0(uint32_t(StructuredParams.ServerMovementMode));
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4429,14 +5959,14 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC(worke
 
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ClientAdjustPositionRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_newloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4444,7 +5974,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC(worke
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewVel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_newvel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newvel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		if (StructuredParams.NewBase != nullptr)
 		{
@@ -4464,17 +5994,17 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_SendRPC(worke
 			}
 			else
 			{
-				RPCPayload.set_field_newbase(ObjectRef);
+				RPCPayload.set_field_newbase0(ObjectRef);
 			}
 		}
 		else
 		{
-			RPCPayload.set_field_newbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_newbase0(SpatialConstants::NULL_OBJECT_REF);
 		}
-		RPCPayload.set_field_newbasebonename(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
-		RPCPayload.set_field_bhasbase(StructuredParams.bHasBase);
-		RPCPayload.set_field_bbaserelativeposition(StructuredParams.bBaseRelativePosition);
-		RPCPayload.set_field_servermovementmode(uint32_t(StructuredParams.ServerMovementMode));
+		RPCPayload.set_field_newbasebonename0(TCHAR_TO_UTF8(*StructuredParams.NewBaseBoneName.ToString()));
+		RPCPayload.set_field_bhasbase0(StructuredParams.bHasBase);
+		RPCPayload.set_field_bbaserelativeposition0(StructuredParams.bBaseRelativePosition);
+		RPCPayload.set_field_servermovementmode0(uint32_t(StructuredParams.ServerMovementMode));
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4505,7 +6035,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_SendRPC(worker::
 
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ClientAckGoodMoveRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4563,16 +6093,16 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_SendRPC(worker::Conn
 
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ServerMoveOldRequest RPCPayload;
-		RPCPayload.set_field_oldtimestamp(StructuredParams.OldTimeStamp);
+		RPCPayload.set_field_oldtimestamp0(StructuredParams.OldTimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.OldAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_oldaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_oldaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_oldmoveflags(uint32_t(StructuredParams.OldMoveFlags));
+		RPCPayload.set_field_oldmoveflags0(uint32_t(StructuredParams.OldMoveFlags));
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4603,14 +6133,14 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC(worker::C
 
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ServerMoveNoBaseRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4618,12 +6148,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_SendRPC(worker::C
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		RPCPayload.set_field_compressedmoveflags0(uint32_t(StructuredParams.CompressedMoveFlags));
+		RPCPayload.set_field_clientroll0(uint32_t(StructuredParams.ClientRoll));
+		RPCPayload.set_field_view0(uint32_t(StructuredParams.View));
+		RPCPayload.set_field_clientmovementmode0(uint32_t(StructuredParams.ClientMovementMode));
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4654,25 +6184,25 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC(worke
 
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ServerMoveDualNoBaseRequest RPCPayload;
-		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
+		RPCPayload.set_field_timestamp00(StructuredParams.TimeStamp0);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel00(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_pendingflags0(uint32_t(StructuredParams.PendingFlags));
+		RPCPayload.set_field_view00(uint32_t(StructuredParams.View0));
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4680,12 +6210,12 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_SendRPC(worke
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		RPCPayload.set_field_newflags0(uint32_t(StructuredParams.NewFlags));
+		RPCPayload.set_field_clientroll0(uint32_t(StructuredParams.ClientRoll));
+		RPCPayload.set_field_view0(uint32_t(StructuredParams.View));
+		RPCPayload.set_field_clientmovementmode0(uint32_t(StructuredParams.ClientMovementMode));
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4716,25 +6246,25 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ServerMoveDualHybridRootMotionRequest RPCPayload;
-		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
+		RPCPayload.set_field_timestamp00(StructuredParams.TimeStamp0);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel00(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_pendingflags0(uint32_t(StructuredParams.PendingFlags));
+		RPCPayload.set_field_view00(uint32_t(StructuredParams.View0));
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4742,11 +6272,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
+		RPCPayload.set_field_newflags0(uint32_t(StructuredParams.NewFlags));
+		RPCPayload.set_field_clientroll0(uint32_t(StructuredParams.ClientRoll));
+		RPCPayload.set_field_view0(uint32_t(StructuredParams.View));
 		if (StructuredParams.ClientMovementBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
@@ -4765,15 +6295,15 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_Sen
 			}
 			else
 			{
-				RPCPayload.set_field_clientmovementbase(ObjectRef);
+				RPCPayload.set_field_clientmovementbase0(ObjectRef);
 			}
 		}
 		else
 		{
-			RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_clientmovementbase0(SpatialConstants::NULL_OBJECT_REF);
 		}
-		RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		RPCPayload.set_field_clientbasebonename0(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
+		RPCPayload.set_field_clientmovementmode0(uint32_t(StructuredParams.ClientMovementMode));
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4804,25 +6334,25 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC(worker::Con
 
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ServerMoveDualRequest RPCPayload;
-		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp0);
+		RPCPayload.set_field_timestamp00(StructuredParams.TimeStamp0);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel0)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel00(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_pendingflags(uint32_t(StructuredParams.PendingFlags));
-		RPCPayload.set_field_view0(uint32_t(StructuredParams.View0));
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_pendingflags0(uint32_t(StructuredParams.PendingFlags));
+		RPCPayload.set_field_view00(uint32_t(StructuredParams.View0));
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4830,11 +6360,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC(worker::Con
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_newflags(uint32_t(StructuredParams.NewFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
+		RPCPayload.set_field_newflags0(uint32_t(StructuredParams.NewFlags));
+		RPCPayload.set_field_clientroll0(uint32_t(StructuredParams.ClientRoll));
+		RPCPayload.set_field_view0(uint32_t(StructuredParams.View));
 		if (StructuredParams.ClientMovementBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
@@ -4853,15 +6383,15 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_SendRPC(worker::Con
 			}
 			else
 			{
-				RPCPayload.set_field_clientmovementbase(ObjectRef);
+				RPCPayload.set_field_clientmovementbase0(ObjectRef);
 			}
 		}
 		else
 		{
-			RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_clientmovementbase0(SpatialConstants::NULL_OBJECT_REF);
 		}
-		RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		RPCPayload.set_field_clientbasebonename0(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
+		RPCPayload.set_field_clientmovementmode0(uint32_t(StructuredParams.ClientMovementMode));
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4892,14 +6422,14 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC(worker::Connect
 
 		// Build RPC Payload.
 		improbable::unreal::generated::character::ServerMoveRequest RPCPayload;
-		RPCPayload.set_field_timestamp(StructuredParams.TimeStamp);
+		RPCPayload.set_field_timestamp0(StructuredParams.TimeStamp);
 		{
 			TArray<uint8> ValueData;
 			FMemoryWriter ValueDataWriter(ValueData);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize10&>(StructuredParams.InAccel)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
-			RPCPayload.set_field_inaccel(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inaccel0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TArray<uint8> ValueData;
@@ -4907,11 +6437,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC(worker::Connect
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize100&>(StructuredParams.ClientLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			RPCPayload.set_field_clientloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_clientloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_compressedmoveflags(uint32_t(StructuredParams.CompressedMoveFlags));
-		RPCPayload.set_field_clientroll(uint32_t(StructuredParams.ClientRoll));
-		RPCPayload.set_field_view(uint32_t(StructuredParams.View));
+		RPCPayload.set_field_compressedmoveflags0(uint32_t(StructuredParams.CompressedMoveFlags));
+		RPCPayload.set_field_clientroll0(uint32_t(StructuredParams.ClientRoll));
+		RPCPayload.set_field_view0(uint32_t(StructuredParams.View));
 		if (StructuredParams.ClientMovementBase != nullptr)
 		{
 			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ClientMovementBase);
@@ -4930,15 +6460,15 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_SendRPC(worker::Connect
 			}
 			else
 			{
-				RPCPayload.set_field_clientmovementbase(ObjectRef);
+				RPCPayload.set_field_clientmovementbase0(ObjectRef);
 			}
 		}
 		else
 		{
-			RPCPayload.set_field_clientmovementbase(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_clientmovementbase0(SpatialConstants::NULL_OBJECT_REF);
 		}
-		RPCPayload.set_field_clientbasebonename(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
-		RPCPayload.set_field_clientmovementmode(uint32_t(StructuredParams.ClientMovementMode));
+		RPCPayload.set_field_clientbasebonename0(TCHAR_TO_UTF8(*StructuredParams.ClientBaseBoneName.ToString()));
+		RPCPayload.set_field_clientmovementmode0(uint32_t(StructuredParams.ClientMovementMode));
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -5054,7 +6584,7 @@ void USpatialTypeBinding_SampleGameCharacter::Client_TestConstArgs_OnRPCPayload(
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_conststruct_constobj();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_conststruct0_constobj0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -5132,7 +6662,7 @@ void USpatialTypeBinding_SampleGameCharacter::RootMotionDebugClientPrintOnScreen
 		Character_eventRootMotionDebugClientPrintOnScreen_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.InString = FString(UTF8_TO_TCHAR(Op.Request.field_instring().c_str()));
+		Parameters.InString = FString(UTF8_TO_TCHAR(Op.Request.field_instring0().c_str()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: RootMotionDebugClientPrintOnScreen, target: %s %s"),
@@ -5184,9 +6714,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRP
 		Character_eventClientVeryShortAdjustPosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.TimeStamp = Op.Request.field_timestamp0();
 		{
-			auto& ValueDataStr = Op.Request.field_newloc();
+			auto& ValueDataStr = Op.Request.field_newloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5195,7 +6725,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRP
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -5222,10 +6752,10 @@ void USpatialTypeBinding_SampleGameCharacter::ClientVeryShortAdjustPosition_OnRP
 				}
 			}
 		}
-		Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename0()).data());
+		Parameters.bHasBase = Op.Request.field_bhasbase0();
+		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition0();
+		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode0()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientVeryShortAdjustPosition, target: %s %s"),
@@ -5412,9 +6942,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 		Character_eventClientAdjustRootMotionSourcePosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.TimeStamp = Op.Request.field_timestamp0();
 		{
-			auto& ValueDataStr = Op.Request.field_serverrootmotion();
+			auto& ValueDataStr = Op.Request.field_serverrootmotion0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5422,10 +6952,10 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			Parameters.ServerRootMotion.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRootMotionSourceGroup failed."));
 		}
-		Parameters.bHasAnimRootMotion = Op.Request.field_bhasanimrootmotion();
-		Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition();
+		Parameters.bHasAnimRootMotion = Op.Request.field_bhasanimrootmotion0();
+		Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition0();
 		{
-			auto& ValueDataStr = Op.Request.field_serverloc();
+			auto& ValueDataStr = Op.Request.field_serverloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5434,7 +6964,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_serverrotation();
+			auto& ValueDataStr = Op.Request.field_serverrotation0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5442,9 +6972,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 			Parameters.ServerRotation.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
 		}
-		Parameters.ServerVelZ = Op.Request.field_servervelz();
+		Parameters.ServerVelZ = Op.Request.field_servervelz0();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_serverbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_serverbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -5471,10 +7001,10 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionSourcePositi
 				}
 			}
 		}
-		Parameters.ServerBoneName = FName((Op.Request.field_serverbonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		Parameters.ServerBoneName = FName((Op.Request.field_serverbonename0()).data());
+		Parameters.bHasBase = Op.Request.field_bhasbase0();
+		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition0();
+		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode0()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAdjustRootMotionSourcePosition, target: %s %s"),
@@ -5526,10 +7056,10 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnR
 		Character_eventClientAdjustRootMotionPosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
-		Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition();
+		Parameters.TimeStamp = Op.Request.field_timestamp0();
+		Parameters.ServerMontageTrackPosition = Op.Request.field_servermontagetrackposition0();
 		{
-			auto& ValueDataStr = Op.Request.field_serverloc();
+			auto& ValueDataStr = Op.Request.field_serverloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5538,7 +7068,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnR
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_serverrotation();
+			auto& ValueDataStr = Op.Request.field_serverrotation0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5546,9 +7076,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnR
 			Parameters.ServerRotation.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantizeNormal failed."));
 		}
-		Parameters.ServerVelZ = Op.Request.field_servervelz();
+		Parameters.ServerVelZ = Op.Request.field_servervelz0();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_serverbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_serverbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -5575,10 +7105,10 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustRootMotionPosition_OnR
 				}
 			}
 		}
-		Parameters.ServerBoneName = FName((Op.Request.field_serverbonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		Parameters.ServerBoneName = FName((Op.Request.field_serverbonename0()).data());
+		Parameters.bHasBase = Op.Request.field_bhasbase0();
+		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition0();
+		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode0()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAdjustRootMotionPosition, target: %s %s"),
@@ -5630,9 +7160,9 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(
 		Character_eventClientAdjustPosition_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.TimeStamp = Op.Request.field_timestamp0();
 		{
-			auto& ValueDataStr = Op.Request.field_newloc();
+			auto& ValueDataStr = Op.Request.field_newloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5641,7 +7171,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_newvel();
+			auto& ValueDataStr = Op.Request.field_newvel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5650,7 +7180,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -5677,10 +7207,10 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAdjustPosition_OnRPCPayload(
 				}
 			}
 		}
-		Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename()).data());
-		Parameters.bHasBase = Op.Request.field_bhasbase();
-		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition();
-		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode()));
+		Parameters.NewBaseBoneName = FName((Op.Request.field_newbasebonename0()).data());
+		Parameters.bHasBase = Op.Request.field_bhasbase0();
+		Parameters.bBaseRelativePosition = Op.Request.field_bbaserelativeposition0();
+		Parameters.ServerMovementMode = uint8(uint8(Op.Request.field_servermovementmode0()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAdjustPosition, target: %s %s"),
@@ -5732,7 +7262,7 @@ void USpatialTypeBinding_SampleGameCharacter::ClientAckGoodMove_OnRPCPayload(con
 		Character_eventClientAckGoodMove_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.TimeStamp = Op.Request.field_timestamp0();
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAckGoodMove, target: %s %s"),
@@ -5829,9 +7359,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const w
 		Character_eventServerMoveOld_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.OldTimeStamp = Op.Request.field_oldtimestamp();
+		Parameters.OldTimeStamp = Op.Request.field_oldtimestamp0();
 		{
-			auto& ValueDataStr = Op.Request.field_oldaccel();
+			auto& ValueDataStr = Op.Request.field_oldaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5839,7 +7369,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveOld_OnRPCPayload(const w
 			Parameters.OldAccel.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
-		Parameters.OldMoveFlags = uint8(uint8(Op.Request.field_oldmoveflags()));
+		Parameters.OldMoveFlags = uint8(uint8(Op.Request.field_oldmoveflags0()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveOld, target: %s %s"),
@@ -5891,9 +7421,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(cons
 		Character_eventServerMoveNoBase_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.TimeStamp = Op.Request.field_timestamp0();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel();
+			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5902,7 +7432,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(cons
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_clientloc();
+			auto& ValueDataStr = Op.Request.field_clientloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5910,10 +7440,10 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveNoBase_OnRPCPayload(cons
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags0()));
+		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll0()));
+		Parameters.View = Op.Request.field_view0();
+		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode0()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveNoBase, target: %s %s"),
@@ -5965,9 +7495,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(
 		Character_eventServerMoveDualNoBase_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
+		Parameters.TimeStamp0 = Op.Request.field_timestamp00();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel0();
+			auto& ValueDataStr = Op.Request.field_inaccel00();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5975,11 +7505,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(
 			Parameters.InAccel0.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
-		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = Op.Request.field_view0();
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags0()));
+		Parameters.View0 = Op.Request.field_view00();
+		Parameters.TimeStamp = Op.Request.field_timestamp0();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel();
+			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5988,7 +7518,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_clientloc();
+			auto& ValueDataStr = Op.Request.field_clientloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -5996,10 +7526,10 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualNoBase_OnRPCPayload(
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags0()));
+		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll0()));
+		Parameters.View = Op.Request.field_view0();
+		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode0()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveDualNoBase, target: %s %s"),
@@ -6051,9 +7581,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 		Character_eventServerMoveDualHybridRootMotion_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
+		Parameters.TimeStamp0 = Op.Request.field_timestamp00();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel0();
+			auto& ValueDataStr = Op.Request.field_inaccel00();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -6061,11 +7591,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 			Parameters.InAccel0.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
-		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = Op.Request.field_view0();
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags0()));
+		Parameters.View0 = Op.Request.field_view00();
+		Parameters.TimeStamp = Op.Request.field_timestamp0();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel();
+			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -6074,7 +7604,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_clientloc();
+			auto& ValueDataStr = Op.Request.field_clientloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -6082,11 +7612,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
+		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags0()));
+		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll0()));
+		Parameters.View = Op.Request.field_view0();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6113,8 +7643,8 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDualHybridRootMotion_OnR
 				}
 			}
 		}
-		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename0()).data());
+		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode0()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveDualHybridRootMotion, target: %s %s"),
@@ -6166,9 +7696,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 		Character_eventServerMoveDual_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp0 = Op.Request.field_timestamp0();
+		Parameters.TimeStamp0 = Op.Request.field_timestamp00();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel0();
+			auto& ValueDataStr = Op.Request.field_inaccel00();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -6176,11 +7706,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 			Parameters.InAccel0.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
-		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags()));
-		Parameters.View0 = Op.Request.field_view0();
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.PendingFlags = uint8(uint8(Op.Request.field_pendingflags0()));
+		Parameters.View0 = Op.Request.field_view00();
+		Parameters.TimeStamp = Op.Request.field_timestamp0();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel();
+			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -6189,7 +7719,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_clientloc();
+			auto& ValueDataStr = Op.Request.field_clientloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -6197,11 +7727,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
+		Parameters.NewFlags = uint8(uint8(Op.Request.field_newflags0()));
+		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll0()));
+		Parameters.View = Op.Request.field_view0();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6228,8 +7758,8 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMoveDual_OnRPCPayload(const 
 				}
 			}
 		}
-		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename0()).data());
+		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode0()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMoveDual, target: %s %s"),
@@ -6281,9 +7811,9 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const work
 		Character_eventServerMove_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TimeStamp = Op.Request.field_timestamp();
+		Parameters.TimeStamp = Op.Request.field_timestamp0();
 		{
-			auto& ValueDataStr = Op.Request.field_inaccel();
+			auto& ValueDataStr = Op.Request.field_inaccel0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -6292,7 +7822,7 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const work
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize10 failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_clientloc();
+			auto& ValueDataStr = Op.Request.field_clientloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FMemoryReader ValueDataReader(ValueData);
@@ -6300,11 +7830,11 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const work
 			Parameters.ClientLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 		}
-		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags()));
-		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll()));
-		Parameters.View = Op.Request.field_view();
+		Parameters.CompressedMoveFlags = uint8(uint8(Op.Request.field_compressedmoveflags0()));
+		Parameters.ClientRoll = uint8(uint8(Op.Request.field_clientroll0()));
+		Parameters.View = Op.Request.field_view0();
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_clientmovementbase0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6331,8 +7861,8 @@ void USpatialTypeBinding_SampleGameCharacter::ServerMove_OnRPCPayload(const work
 				}
 			}
 		}
-		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename()).data());
-		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode()));
+		Parameters.ClientBaseBoneName = FName((Op.Request.field_clientbasebonename0()).data());
+		Parameters.ClientMovementMode = uint8(uint8(Op.Request.field_clientmovementmode0()));
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerMove, target: %s %s"),

@@ -98,17 +98,50 @@ struct FConstStruct
 		const UObject* ConstObj;
 };
 
+// Static array testing start.
 USTRUCT()
 struct FCArrayStruct
 {
 	GENERATED_BODY();
 
 	UPROPERTY()
-		int CIntArray[8];
+	int CIntArray[3];
 
 	UPROPERTY()
-		float CFloatArray[8];
+		float CFloatArray[3];
 };
+
+USTRUCT(BlueprintType)
+struct FBarStruct
+{
+	GENERATED_BODY();
+
+	UPROPERTY()
+	int IntOne;
+
+	UPROPERTY()
+	int IntTwo;
+
+	UPROPERTY()
+	float FloatArray[3];
+};
+
+USTRUCT(BlueprintType)
+struct FFooStruct
+{
+	GENERATED_BODY();
+
+	UPROPERTY()
+	int IntOne;
+
+	UPROPERTY()
+	int IntTwo;
+
+	UPROPERTY()
+	FBarStruct BarStructArray[3];
+};
+// Static array testing end.
+
 
 // Enum tests start
 UENUM()
@@ -177,7 +210,7 @@ struct FBar
 	TArray<FFoo> CantReplicateThisMember;
 
 	UPROPERTY()
-		FTestStructWithNetSerialize MyStruct;
+	FTestStructWithNetSerialize MyStruct;
 
 	UPROPERTY()
 	FRepMovement NetSerializeStruct;
@@ -213,6 +246,9 @@ public:
 	TArray<float> TestPODArray;
 
 	UPROPERTY(Replicated)
+	FFooStruct FooStructArray[3];
+
+	UPROPERTY(Replicated)
 	TArray<FTestMixedStruct> TestMixedStructArray;
 
 	UPROPERTY(Replicated)
@@ -237,7 +273,7 @@ public:
 	int TestCArrayReplication[8];
 
 	//UPROPERTY(Replicated)
-	//FCArrayStruct TestCArrayStructReplication;
+	FCArrayStruct TestCArrayStructReplication;
 
 	//UPROPERTY(Replicated)
 	//FTestMixedStruct TestMixedStructCArrayReplication[8];
