@@ -62,14 +62,14 @@ private:
 	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::testboolreplication::TestBoolReplicationNetMulticastRPCs::Update& Update);
 
 	// RPC command sender functions.
-	void Server_TestBoolFunc_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void Server_ReportReplication_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void StartTest_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
-	void Server_TestBoolFunc_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testboolreplication::TestBoolReplicationServerRPCs::Commands::Servertestboolfunc>& Op);
 	void Server_ReportReplication_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testboolreplication::TestBoolReplicationServerRPCs::Commands::Serverreportreplication>& Op);
+	void StartTest_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testboolreplication::TestBoolReplicationServerRPCs::Commands::Starttest>& Op);
 
 	// RPC command response handler functions.
-	void Server_TestBoolFunc_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testboolreplication::TestBoolReplicationServerRPCs::Commands::Servertestboolfunc>& Op);
 	void Server_ReportReplication_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testboolreplication::TestBoolReplicationServerRPCs::Commands::Serverreportreplication>& Op);
+	void StartTest_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testboolreplication::TestBoolReplicationServerRPCs::Commands::Starttest>& Op);
 };

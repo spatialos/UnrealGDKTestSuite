@@ -25,19 +25,22 @@ component TestCharReplicationMultiClientRepData {
 	uint32 field_role = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
 	int32 field_testbookend = 16; // COND_None // ::ReplicationTestCase
+	bool field_brunning = 17; // COND_None // ::ReplicationTestCase
+	bool field_bsuccess = 18; // COND_None // ::ReplicationTestCase
 }
 component TestCharReplicationMigratableData {
 	id = 100066;
 }
 import "improbable/unreal/generated/UnrealTestCharReplicationTypes.schema";
+import "improbable/unreal/generated/UnrealReplicationTestCaseTypes.schema";
 
 component TestCharReplicationClientRPCs {
 	id = 100067;
 }
 component TestCharReplicationServerRPCs {
 	id = 100068;
-	command UnrealRPCCommandResponse servertestcharfunc(testcharreplication.ServerTestCharFuncRequest);
 	command UnrealRPCCommandResponse serverreportreplication(testcharreplication.ServerReportReplicationRequest);
+	command UnrealRPCCommandResponse starttest(replicationtestcase.StartTestRequest);
 }
 component TestCharReplicationNetMulticastRPCs {
 	id = 100069;

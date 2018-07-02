@@ -79,6 +79,7 @@ void ASampleGameCharacter::BeginPlay()
 		FloatRepTest = World->SpawnActor<ATestFloatReplication>();
 		BoolRepTest = World->SpawnActor<ATestBoolReplication>();
 		CharRepTest = World->SpawnActor<ATestCharReplication>();
+		FStringRepTest = World->SpawnActor<ATestFStringReplication>();
 	}
 }
 
@@ -127,10 +128,11 @@ void ASampleGameCharacter::DebugCmd()
 	TempArray.AddZeroed(4);
 
 	Server_TestFunc();
-	IntRepTest->Server_TestIntFunc();
-	FloatRepTest->Server_TestFloatFunc();
-	BoolRepTest->Server_TestBoolFunc();
-	CharRepTest->Server_TestCharFunc();
+	IntRepTest->StartTest();
+	FloatRepTest->StartTest();
+	BoolRepTest->StartTest();
+	CharRepTest->StartTest();
+	FStringRepTest->StartTest();
 	//Server_TestFunc(TempArray);
 }
 
@@ -377,6 +379,7 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, FloatRepTest, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, BoolRepTest, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, CharRepTest, COND_None);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, FStringRepTest, COND_None);
 }
 
 bool ASampleGameCharacter::TestMulticast_Validate()

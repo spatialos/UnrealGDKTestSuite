@@ -17,6 +17,7 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 #include "Tests/TestFloatReplication.h"
+#include "improbable/unreal/generated/UnrealReplicationTestCaseTypes.h"
 
 #include "TestFloatReplicationSingleClientRepDataAddComponentOp.h"
 #include "TestFloatReplicationMultiClientRepDataAddComponentOp.h"
@@ -41,8 +42,8 @@ void USpatialTypeBinding_TestFloatReplication::Init(USpatialInterop* InInterop, 
 {
 	Super::Init(InInterop, InPackageMap);
 
-	RPCToSenderMap.Emplace("Server_TestFloatFunc", &USpatialTypeBinding_TestFloatReplication::Server_TestFloatFunc_SendRPC);
 	RPCToSenderMap.Emplace("Server_ReportReplication", &USpatialTypeBinding_TestFloatReplication::Server_ReportReplication_SendRPC);
+	RPCToSenderMap.Emplace("StartTest", &USpatialTypeBinding_TestFloatReplication::StartTest_SendRPC);
 
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("TestFloatReplication"));
 
@@ -63,8 +64,10 @@ void USpatialTypeBinding_TestFloatReplication::Init(USpatialInterop* InInterop, 
 	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestBookend"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"TestFloat"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"TestDouble"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"bRunning"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"bSuccess"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"TestFloat"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"TestDouble"}, COND_None, REPNOTIFY_OnChanged, 0));
 }
 
 void USpatialTypeBinding_TestFloatReplication::BindToView(bool bIsClient)
@@ -126,10 +129,10 @@ void USpatialTypeBinding_TestFloatReplication::BindToView(bool bIsClient)
 	}));
 
 	using ServerRPCCommandTypes = improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servertestfloatfunc>(std::bind(&USpatialTypeBinding_TestFloatReplication::Server_TestFloatFunc_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverreportreplication>(std::bind(&USpatialTypeBinding_TestFloatReplication::Server_ReportReplication_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servertestfloatfunc>(std::bind(&USpatialTypeBinding_TestFloatReplication::Server_TestFloatFunc_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Starttest>(std::bind(&USpatialTypeBinding_TestFloatReplication::StartTest_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverreportreplication>(std::bind(&USpatialTypeBinding_TestFloatReplication::Server_ReportReplication_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Starttest>(std::bind(&USpatialTypeBinding_TestFloatReplication::StartTest_OnCommandResponse, this, std::placeholders::_1)));
 }
 
 void USpatialTypeBinding_TestFloatReplication::UnbindFromView()
@@ -604,14 +607,28 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 			OutUpdate.set_field_testbookend(int32_t(Value));
 			break;
 		}
-		case 17: // field_testfloat
+		case 17: // field_brunning
+		{
+			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
+
+			OutUpdate.set_field_brunning(Value);
+			break;
+		}
+		case 18: // field_bsuccess
+		{
+			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
+
+			OutUpdate.set_field_bsuccess(Value);
+			break;
+		}
+		case 19: // field_testfloat
 		{
 			float Value = *(reinterpret_cast<float const*>(Data));
 
 			OutUpdate.set_field_testfloat(Value);
 			break;
 		}
-		case 18: // field_testdouble
+		case 20: // field_testdouble
 		{
 			double Value = *(reinterpret_cast<double const*>(Data));
 
@@ -1194,10 +1211,54 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 				Handle);
 		}
 	}
+	if (!Update.field_brunning().empty())
+	{
+		// field_brunning
+		uint16 Handle = 17;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
+
+			Value = (*Update.field_brunning().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_bsuccess().empty())
+	{
+		// field_bsuccess
+		uint16 Handle = 18;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
+
+			Value = (*Update.field_bsuccess().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
 	if (!Update.field_testfloat().empty())
 	{
 		// field_testfloat
-		uint16 Handle = 17;
+		uint16 Handle = 19;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1219,7 +1280,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 	if (!Update.field_testdouble().empty())
 	{
 		// field_testdouble
-		uint16 Handle = 18;
+		uint16 Handle = 20;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1247,33 +1308,6 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_Migratable(USpatial
 
 void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::testfloatreplication::TestFloatReplicationNetMulticastRPCs::Update& Update)
 {
-}
-void USpatialTypeBinding_TestFloatReplication::Server_TestFloatFunc_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
-{
-	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
-	{
-		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
-		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_TestFloatFunc queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-			return {TargetObject};
-		}
-
-		// Build RPC Payload.
-		improbable::unreal::generated::testfloatreplication::ServerTestFloatFuncRequest RPCPayload;
-
-		// Send RPC
-		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
-		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Server_TestFloatFunc, target: %s %s"),
-			*Interop->GetSpatialOS()->GetWorkerId(),
-			*TargetObject->GetName(),
-			*ObjectRefToString(TargetObjectRef));
-
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Servertestfloatfunc>(TargetObjectRef.entity(), RPCPayload, 0);
-			return {RequestId.Id};
-	};
-	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_TestFloatReplication::Server_ReportReplication_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -1307,50 +1341,32 @@ void USpatialTypeBinding_TestFloatReplication::Server_ReportReplication_SendRPC(
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
-void USpatialTypeBinding_TestFloatReplication::Server_TestFloatFunc_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Servertestfloatfunc>& Op)
+void USpatialTypeBinding_TestFloatReplication::StartTest_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), {}, {}};
-		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
-		if (!TargetNetGUID.IsValid())
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
-			// A legal static object reference should never be unresolved.
-			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_TestFloatFunc_OnRPCPayload: Target object %s is not resolved on this worker."),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ObjectRefToString(TargetObjectRef));
-			return {TargetObjectRef};
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC StartTest queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
 		}
-		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: Server_TestFloatFunc_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
-			*Interop->GetSpatialOS()->GetWorkerId(),
-			*ObjectRefToString(TargetObjectRef),
-			*TargetNetGUID.ToString());
 
-		// Call implementation.
-		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: Server_TestFloatFunc, target: %s %s"),
+		// Build RPC Payload.
+		improbable::unreal::generated::replicationtestcase::StartTestRequest RPCPayload;
+
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: StartTest, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Server_TestFloatFunc"))))
-		{
-			TargetObject->ProcessEvent(Function, nullptr);
-		}
-		else
-		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_TestFloatFunc_OnRPCPayload: Function not found. Object: %s, Function: Server_TestFloatFunc."),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*TargetObject->GetFullName());
-		}
-
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Servertestfloatfunc>(Op.RequestId, {});
-		return {};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Starttest>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
 void USpatialTypeBinding_TestFloatReplication::Server_ReportReplication_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Serverreportreplication>& Op)
 {
@@ -1405,13 +1421,58 @@ void USpatialTypeBinding_TestFloatReplication::Server_ReportReplication_OnRPCPay
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-
-void USpatialTypeBinding_TestFloatReplication::Server_TestFloatFunc_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Servertestfloatfunc>& Op)
+void USpatialTypeBinding_TestFloatReplication::StartTest_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Starttest>& Op)
 {
-	Interop->HandleCommandResponse_Internal(TEXT("Server_TestFloatFunc"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
+	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), {}, {}};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			// A legal static object reference should never be unresolved.
+			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: StartTest_OnRPCPayload: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: StartTest_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Call implementation.
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: StartTest, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("StartTest"))))
+		{
+			TargetObject->ProcessEvent(Function, nullptr);
+		}
+		else
+		{
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: StartTest_OnRPCPayload: Function not found. Object: %s, Function: StartTest."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		// Send command response.
+		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
+		Connection->SendCommandResponse<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Starttest>(Op.RequestId, {});
+		return {};
+	};
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 
 void USpatialTypeBinding_TestFloatReplication::Server_ReportReplication_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Serverreportreplication>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("Server_ReportReplication"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
+}
+
+void USpatialTypeBinding_TestFloatReplication::StartTest_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Starttest>& Op)
+{
+	Interop->HandleCommandResponse_Internal(TEXT("StartTest"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }

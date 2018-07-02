@@ -5,18 +5,22 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ReplicationTestCase.h"
-#include "TestFloatReplication.generated.h"
+#include "TestFStringReplication.generated.h"
 
 UCLASS()
-class SAMPLEGAME_API ATestFloatReplication : public AReplicationTestCase
+class SAMPLEGAME_API ATestFStringReplication : public AReplicationTestCase
 {
 	GENERATED_BODY()
 public:	
 
-	ATestFloatReplication() { TestName = "Float types"; }
+	ATestFStringReplication() 
+		: TestFString("")
+	{ 
+		TestName = "FString types"; 
+	}
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_ReportReplication(float RepFloat, double RepDouble);
+	void Server_ReportReplication(const FString& RepFString);
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -30,8 +34,5 @@ public:
 	virtual void SendTestResponseRPCImpl() override;
 
 	UPROPERTY(Replicated)
-	float TestFloat;
-
-	UPROPERTY(Replicated)
-	double TestDouble;
+	FString TestFString;
 };

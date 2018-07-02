@@ -5,25 +5,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 
-bool ATestIntReplication::Server_TestIntFunc_Validate()
-{
-	return true;
-}
-
-void ATestIntReplication::Server_TestIntFunc_Implementation()
-{
-	Test8Int = (1 << 6);
-	Test16Int = (1 << 14);
-	Test32Int = 0xDEADBEEF;
-	Test64Int = 0xDEADBEEFDEADBEEF;
-	Test8UInt = 0xDE;
-	Test16UInt = 0xDEAD;
-	Test32UInt = 0xDEADBEEF;
-	Test64UInt = 0xDEADBEEFDEADBEEF;
-
-	SignalReplicationSetup();
-}
-
 void ATestIntReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -54,6 +35,20 @@ void ATestIntReplication::Server_ReportReplication_Implementation(int8 Rep8Int, 
 	check(Rep64UInt == 0xDEADBEEFDEADBEEF);
 
 	SignalResponseRecieved();
+}
+
+void ATestIntReplication::StartTestImpl()
+{
+	Test8Int = (1 << 6);
+	Test16Int = (1 << 14);
+	Test32Int = 0xDEADBEEF;
+	Test64Int = 0xDEADBEEFDEADBEEF;
+	Test8UInt = 0xDE;
+	Test16UInt = 0xDEAD;
+	Test32UInt = 0xDEADBEEF;
+	Test64UInt = 0xDEADBEEFDEADBEEF;
+
+	SignalReplicationSetup();
 }
 
 void ATestIntReplication::ValidateClientReplicationImpl()

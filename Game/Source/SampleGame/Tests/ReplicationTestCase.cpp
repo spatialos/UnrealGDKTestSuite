@@ -6,7 +6,8 @@
 #include "UnrealNetwork.h"
 
 AReplicationTestCase::AReplicationTestCase()
-	: bSuccess(false)
+	: bRunning(false)
+	, bSuccess(false)
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -18,7 +19,7 @@ void AReplicationTestCase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!bSuccess)
+	if (bRunning)
 	{
 		if (UWorld* World = GetWorld())
 		{
@@ -27,11 +28,27 @@ void AReplicationTestCase::Tick(float DeltaTime)
 				if (RPCResponsecCount == GameMode->GetNumPlayers())
 				{
 					UE_LOG(LogTemp, Warning, TEXT("TestCase: %s: Test complete!"), *TestName);
-					bSuccess = false;
+					bSuccess = true;
+					bRunning = false;
 				}
 			}
 		}
 	}
+}
+
+bool AReplicationTestCase::StartTest_Validate()
+{
+	return true;
+}
+
+void AReplicationTestCase::StartTest_Implementation()
+{
+	UE_LOG(LogTemp, Warning, TEXT("TestCase %s: Test started!"), *TestName);
+
+	bRunning = true;
+	RPCResponsecCount = 0;
+
+	StartTestImpl();
 }
 
 void AReplicationTestCase::OnRep_TestBookend()

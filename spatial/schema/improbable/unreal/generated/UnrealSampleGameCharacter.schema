@@ -97,6 +97,7 @@ component SampleGameCharacterMultiClientRepData {
 	UnrealObjectRef field_floatreptest = 86; // COND_None // ::SampleGameCharacter
 	UnrealObjectRef field_boolreptest = 87; // COND_None // ::SampleGameCharacter
 	UnrealObjectRef field_charreptest = 88; // COND_None // ::SampleGameCharacter
+	UnrealObjectRef field_fstringreptest = 89; // COND_None // ::SampleGameCharacter
 }
 component SampleGameCharacterMigratableData {
 	id = 100024;

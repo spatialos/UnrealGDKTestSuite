@@ -5,18 +5,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 
-bool ATestBoolReplication::Server_TestBoolFunc_Validate()
-{
-	return true;
-}
-
-void ATestBoolReplication::Server_TestBoolFunc_Implementation()
-{
-	TestBool = true;
-
-	SignalReplicationSetup();
-}
-
 void ATestBoolReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -33,6 +21,13 @@ void ATestBoolReplication::Server_ReportReplication_Implementation(bool RepBool)
 	check(RepBool == true);
 
 	SignalResponseRecieved();
+}
+
+void ATestBoolReplication::StartTestImpl()
+{
+	TestBool = true;
+
+	SignalReplicationSetup();
 }
 
 void ATestBoolReplication::ValidateClientReplicationImpl()

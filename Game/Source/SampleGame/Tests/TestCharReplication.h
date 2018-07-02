@@ -14,15 +14,15 @@ class SAMPLEGAME_API ATestCharReplication : public AReplicationTestCase
 	GENERATED_BODY()
 public:	
 
-	ATestCharReplication() { TestName == "Char types"; }
-
-	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_TestCharFunc();
+	ATestCharReplication() { TestName = "Char types"; }
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReportReplication();
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UFUNCTION()
+	virtual void StartTestImpl() override;
 
 	UFUNCTION()
 	virtual void ValidateClientReplicationImpl() override;

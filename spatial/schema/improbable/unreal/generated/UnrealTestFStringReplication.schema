@@ -1,14 +1,14 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.testintreplication;
+package improbable.unreal.generated.testfstringreplication;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component TestIntReplicationSingleClientRepData {
-	id = 100046;
+component TestFStringReplicationSingleClientRepData {
+	id = 100070;
 }
-component TestIntReplicationMultiClientRepData {
-	id = 100047;
+component TestFStringReplicationMultiClientRepData {
+	id = 100071;
 	bool field_bhidden = 1; // COND_None // ::Actor
 	bool field_breplicatemovement = 2; // COND_None // ::Actor
 	bool field_btearoff = 3; // COND_None // ::Actor
@@ -27,29 +27,22 @@ component TestIntReplicationMultiClientRepData {
 	int32 field_testbookend = 16; // COND_None // ::ReplicationTestCase
 	bool field_brunning = 17; // COND_None // ::ReplicationTestCase
 	bool field_bsuccess = 18; // COND_None // ::ReplicationTestCase
-	int32 field_test8int = 19; // COND_None // ::TestIntReplication
-	int32 field_test16int = 20; // COND_None // ::TestIntReplication
-	int32 field_test32int = 21; // COND_None // ::TestIntReplication
-	int64 field_test64int = 22; // COND_None // ::TestIntReplication
-	uint32 field_test8uint = 23; // COND_None // ::TestIntReplication
-	uint32 field_test16uint = 24; // COND_None // ::TestIntReplication
-	uint32 field_test32uint = 25; // COND_None // ::TestIntReplication
-	uint64 field_test64uint = 26; // COND_None // ::TestIntReplication
+	string field_testfstring = 19; // COND_None // ::TestFStringReplication
 }
-component TestIntReplicationMigratableData {
-	id = 100048;
+component TestFStringReplicationMigratableData {
+	id = 100072;
 }
-import "improbable/unreal/generated/UnrealTestIntReplicationTypes.schema";
+import "improbable/unreal/generated/UnrealTestFStringReplicationTypes.schema";
 import "improbable/unreal/generated/UnrealReplicationTestCaseTypes.schema";
 
-component TestIntReplicationClientRPCs {
-	id = 100049;
+component TestFStringReplicationClientRPCs {
+	id = 100073;
 }
-component TestIntReplicationServerRPCs {
-	id = 100050;
-	command UnrealRPCCommandResponse serverreportreplication(testintreplication.ServerReportReplicationRequest);
+component TestFStringReplicationServerRPCs {
+	id = 100074;
+	command UnrealRPCCommandResponse serverreportreplication(testfstringreplication.ServerReportReplicationRequest);
 	command UnrealRPCCommandResponse starttest(replicationtestcase.StartTestRequest);
 }
-component TestIntReplicationNetMulticastRPCs {
-	id = 100051;
+component TestFStringReplicationNetMulticastRPCs {
+	id = 100075;
 }

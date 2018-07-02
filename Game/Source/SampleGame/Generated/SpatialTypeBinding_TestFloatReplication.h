@@ -62,14 +62,14 @@ private:
 	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::testfloatreplication::TestFloatReplicationNetMulticastRPCs::Update& Update);
 
 	// RPC command sender functions.
-	void Server_TestFloatFunc_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void Server_ReportReplication_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void StartTest_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
-	void Server_TestFloatFunc_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Servertestfloatfunc>& Op);
 	void Server_ReportReplication_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Serverreportreplication>& Op);
+	void StartTest_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Starttest>& Op);
 
 	// RPC command response handler functions.
-	void Server_TestFloatFunc_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Servertestfloatfunc>& Op);
 	void Server_ReportReplication_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Serverreportreplication>& Op);
+	void StartTest_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Commands::Starttest>& Op);
 };

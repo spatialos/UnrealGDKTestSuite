@@ -5,16 +5,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 
-bool ATestCharReplication::Server_TestCharFunc_Validate()
-{
-	return true;
-}
-
-void ATestCharReplication::Server_TestCharFunc_Implementation()
-{
-	SignalReplicationSetup();
-}
-
 void ATestCharReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -30,6 +20,11 @@ void ATestCharReplication::Server_ReportReplication_Implementation()
 	UE_LOG(LogTemp, Warning, TEXT("TestCase %s: Not Supported by Unreal"), *TestName);
 
 	SignalResponseRecieved();
+}
+
+void ATestCharReplication::StartTestImpl()
+{
+	SignalReplicationSetup();
 }
 
 void ATestCharReplication::ValidateClientReplicationImpl()

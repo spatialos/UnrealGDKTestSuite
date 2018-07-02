@@ -5,19 +5,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 
-bool ATestFloatReplication::Server_TestFloatFunc_Validate()
-{
-	return true;
-}
-
-void ATestFloatReplication::Server_TestFloatFunc_Implementation()
-{
-	TestFloat = 25.0f;
-	TestDouble = 50.0;
-
-	SignalReplicationSetup();
-}
-
 void ATestFloatReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -36,6 +23,15 @@ void ATestFloatReplication::Server_ReportReplication_Implementation(float RepFlo
 	check(FMath::IsNearlyEqual(RepDouble, 50.0));
 
 	SignalResponseRecieved();
+}
+
+
+void ATestFloatReplication::StartTestImpl()
+{
+	TestFloat = 25.0f;
+	TestDouble = 50.0;
+
+	SignalReplicationSetup();
 }
 
 void ATestFloatReplication::ValidateClientReplicationImpl()

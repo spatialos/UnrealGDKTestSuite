@@ -16,16 +16,16 @@ public:
 	ATestBoolReplication() 
 		: TestBool(false)
 	{ 
-		TestName == "Bool types"; 
+		TestName = "Bool types"; 
 	}
-
-	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_TestBoolFunc();
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReportReplication(bool RepBool);
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UFUNCTION()
+	virtual void StartTestImpl() override;
 
 	UFUNCTION()
 	virtual void ValidateClientReplicationImpl() override;

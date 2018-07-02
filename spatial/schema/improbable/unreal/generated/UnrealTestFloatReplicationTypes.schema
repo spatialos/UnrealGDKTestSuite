@@ -4,9 +4,6 @@ package improbable.unreal.generated.testfloatreplication;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-type ServerTestFloatFuncRequest {
-	uint32 target_subobject_offset = 1;
-}
 type ServerReportReplicationRequest {
 	uint32 target_subobject_offset = 1;
 	float field_repfloat = 2;

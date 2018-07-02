@@ -18,6 +18,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void StartTest();
+
 	UFUNCTION()
 	void OnRep_TestBookend();
 
@@ -29,6 +32,10 @@ protected:
 
 	UFUNCTION()
 	void SignalResponseRecieved();
+
+	UFUNCTION()
+	virtual void StartTestImpl()
+	PURE_VIRTUAL(AReplicationTestCase::StartTestImpl(), );
 
 	UFUNCTION()
 	virtual void ValidateClientReplicationImpl()
@@ -49,5 +56,9 @@ private:
 	UPROPERTY()
 	int RPCResponsecCount;
 
+	UPROPERTY(Replicated)
+	bool bRunning;
+
+	UPROPERTY(Replicated)
 	bool bSuccess;
 };
