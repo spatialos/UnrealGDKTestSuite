@@ -369,10 +369,12 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, StablyNamedObj, COND_None);
 
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestObjectArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestObjectArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, SkeletalMeshes, COND_SimulatedOnly);
+
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayReplication, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayStructReplication, COND_SimulatedOnly);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayStructReplication, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test8Enum, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test16Enum, COND_None);

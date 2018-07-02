@@ -73,13 +73,13 @@ struct FTestPODStruct
 	GENERATED_BODY();
 
 	UPROPERTY()
-		float FVar;
+	float FVar;
 
 	UPROPERTY()
-		int IVar;
+	int IVar;
 
 	UPROPERTY()
-		double DVar;
+	double DVar;
 
 	void Modify()
 	{
@@ -95,7 +95,7 @@ struct FConstStruct
 	GENERATED_BODY();
 
 	UPROPERTY()
-		const UObject* ConstObj;
+	const UObject* ConstObj;
 };
 
 // Static array testing start.
@@ -108,7 +108,7 @@ struct FCArrayStruct
 	int CIntArray[3];
 
 	UPROPERTY()
-		float CFloatArray[3];
+	float CFloatArray[3];
 };
 
 USTRUCT(BlueprintType)
@@ -266,17 +266,17 @@ public:
 	UPROPERTY(Replicated)
 	USkeletalMesh* StablyNamedObj;
 
-	//UPROPERTY(Replicated)
-	//TArray<UObject*> TestObjectArray;
+	UPROPERTY(Replicated)
+	TArray<UObject*> TestObjectArray;
 
 	UPROPERTY(Replicated)
 	int TestCArrayReplication[8];
 
-	//UPROPERTY(Replicated)
+	UPROPERTY(Replicated)
 	FCArrayStruct TestCArrayStructReplication;
 
-	//UPROPERTY(Replicated)
-	//FTestMixedStruct TestMixedStructCArrayReplication[8];
+	UPROPERTY(Replicated)
+	FTestMixedStruct TestMixedStructCArrayReplication[8];
 
 	// Enum properties begin
 	UPROPERTY(Replicated)
@@ -344,6 +344,10 @@ public:
 
 	UPROPERTY(replicated)
 	FBar TestBar;
+
+	// Test Object pointer static array
+	UPROPERTY(Replicated)
+	class USkeletalMesh* SkeletalMeshes[3];
 
 	UPROPERTY(ReplicatedUsing = OnRep_TestBookend)
 	int TestBookend;
