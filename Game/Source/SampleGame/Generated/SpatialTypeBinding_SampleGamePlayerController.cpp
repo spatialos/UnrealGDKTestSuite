@@ -14,6 +14,8 @@
 #include "SpatialUnrealObjectRef.h"
 #include "SpatialActorChannel.h"
 #include "SpatialPackageMapClient.h"
+#include "SpatialMemoryReader.h"
+#include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 #include "SampleGamePlayerController.h"
@@ -589,28 +591,24 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_SingleClie
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-				OutUpdate.set_field_targetviewrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+			OutUpdate.set_field_targetviewrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 19: // field_spawnlocation
 		{
 			const FVector& Value = *(reinterpret_cast<FVector const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-				OutUpdate.set_field_spawnlocation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
+			OutUpdate.set_field_spawnlocation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 	default:
@@ -662,14 +660,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 		{
 			const FRepMovement& Value = *(reinterpret_cast<FRepMovement const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
-				OutUpdate.set_field_replicatedmovement(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRepMovement&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
+			OutUpdate.set_field_replicatedmovement(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 7: // field_attachmentreplication_attachparent
@@ -708,42 +704,36 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_attachmentreplication_locationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			OutUpdate.set_field_attachmentreplication_locationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 9: // field_attachmentreplication_relativescale3d
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-				OutUpdate.set_field_attachmentreplication_relativescale3d(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FVector_NetQuantize100&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
+			OutUpdate.set_field_attachmentreplication_relativescale3d(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 10: // field_attachmentreplication_rotationoffset
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			{
-				TArray<uint8> ValueData;
-				FMemoryWriter ValueDataWriter(ValueData);
-				bool bSuccess = true;
-				(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-				OutUpdate.set_field_attachmentreplication_rotationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
-			}
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+			bool bSuccess = true;
+			(const_cast<FRotator&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
+			OutUpdate.set_field_attachmentreplication_rotationoffset(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 		case 11: // field_attachmentreplication_attachsocket
@@ -950,15 +940,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_SingleClient(
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_targetviewrotation().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			}
+			auto& ValueDataStr = (*Update.field_targetviewrotation().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -980,15 +968,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_SingleClient(
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector Value = *(reinterpret_cast<FVector const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_spawnlocation().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			}
+			auto& ValueDataStr = (*Update.field_spawnlocation().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1147,15 +1133,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRepMovement Value = *(reinterpret_cast<FRepMovement const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_replicatedmovement().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
-			}
+			auto& ValueDataStr = (*Update.field_replicatedmovement().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1178,37 +1162,35 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachparent().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachparent().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<AActor>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<AActor>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1235,15 +1217,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_attachmentreplication_locationoffset().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_attachmentreplication_locationoffset().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1265,15 +1245,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_attachmentreplication_relativescale3d().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
-			}
+			auto& ValueDataStr = (*Update.field_attachmentreplication_relativescale3d().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1295,15 +1273,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
-			{
-				auto& ValueDataStr = (*Update.field_attachmentreplication_rotationoffset().data());
-				TArray<uint8> ValueData;
-				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
-				bool bSuccess = true;
-				Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
-				checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			}
+			auto& ValueDataStr = (*Update.field_attachmentreplication_rotationoffset().data());
+			TArray<uint8> ValueData;
+			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+			bool bSuccess = true;
+			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1348,37 +1324,35 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachcomponent().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachcomponent().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<USceneComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<USceneComponent>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<USceneComponent>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<USceneComponent>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1406,37 +1380,35 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<AActor>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<AActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<AActor>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1493,37 +1465,35 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<APawn>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<APawn>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<APawn>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<APawn>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1551,37 +1521,35 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			APlayerState* Value = *(reinterpret_cast<APlayerState* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_playerstate().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_playerstate().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<APlayerState>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<APlayerState>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<APlayerState>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<APlayerState>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1609,37 +1577,35 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
 
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_pawn().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_pawn().data());
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<APawn>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<APawn>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<APawn>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value = Cast<APawn>(Object_Raw);
-					}
-					else
-					{
-						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						// A legal static object reference should never be unresolved.
-						check(ObjectRef.path().empty());
-						bWriteObjectProperty = false;
-						Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
@@ -1688,7 +1654,9 @@ void USpatialTypeBinding_SampleGamePlayerController::OnServerStartedVisualLogger
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::OnServerStartedVisualLoggerRequest RPCPayload;
-		RPCPayload.set_field_bislogging(StructuredParams.bIsLogging);
+		{
+			RPCPayload.set_field_bislogging(StructuredParams.bIsLogging);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1719,7 +1687,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientWasKicked_SendRPC(wor
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientWasKickedRequest RPCPayload;
-		// UNSUPPORTED UTextProperty (unhandled) RPCPayload.set_field_kickreason(StructuredParams.KickReason)
+		{
+			// UNSUPPORTED UTextProperty (unhandled) RPCPayload.set_field_kickreason(StructuredParams.KickReason)
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1777,15 +1747,17 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientUpdateMultipleLevelsS
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientUpdateMultipleLevelsStreamingStatusRequest RPCPayload;
-		::worker::List<std::string> List;
-		for(int i = 0; i < StructuredParams.LevelStatuses.Num(); i++)
 		{
-			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
-			FUpdateLevelStreamingLevelStatus::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelStreamingLevelStatus*>(&StructuredParams.LevelStatuses[i])));
-			List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			::worker::List<std::string> List;
+			for(int i = 0; i < StructuredParams.LevelStatuses.Num(); i++)
+			{
+				TArray<uint8> ValueData;
+				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+				FUpdateLevelStreamingLevelStatus::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelStreamingLevelStatus*>(&StructuredParams.LevelStatuses[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			RPCPayload.set_field_levelstatuses(List);
 		}
-		RPCPayload.set_field_levelstatuses(List);
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1816,11 +1788,21 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientUpdateLevelStreamingS
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientUpdateLevelStreamingStatusRequest RPCPayload;
-		RPCPayload.set_field_packagename(TCHAR_TO_UTF8(*StructuredParams.PackageName.ToString()));
-		RPCPayload.set_field_bnewshouldbeloaded(StructuredParams.bNewShouldBeLoaded);
-		RPCPayload.set_field_bnewshouldbevisible(StructuredParams.bNewShouldBeVisible);
-		RPCPayload.set_field_bnewshouldblockonload(StructuredParams.bNewShouldBlockOnLoad);
-		RPCPayload.set_field_lodindex(int32_t(StructuredParams.LODIndex));
+		{
+			RPCPayload.set_field_packagename(TCHAR_TO_UTF8(*StructuredParams.PackageName.ToString()));
+		}
+		{
+			RPCPayload.set_field_bnewshouldbeloaded(StructuredParams.bNewShouldBeLoaded);
+		}
+		{
+			RPCPayload.set_field_bnewshouldbevisible(StructuredParams.bNewShouldBeVisible);
+		}
+		{
+			RPCPayload.set_field_bnewshouldblockonload(StructuredParams.bNewShouldBlockOnLoad);
+		}
+		{
+			RPCPayload.set_field_lodindex(int32_t(StructuredParams.LODIndex));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1853,7 +1835,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientUnmutePlayer_SendRPC(
 		improbable::unreal::generated::playercontroller::ClientUnmutePlayerRequest RPCPayload;
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
@@ -1889,13 +1871,27 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientTravelInternal_SendRP
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientTravelInternalRequest RPCPayload;
-		RPCPayload.set_field_url(TCHAR_TO_UTF8(*StructuredParams.URL));
-		RPCPayload.set_field_traveltype(uint32_t(StructuredParams.TravelType));
-		RPCPayload.set_field_bseamless(StructuredParams.bSeamless);
-		RPCPayload.set_field_mappackageguid_a(int32_t(StructuredParams.MapPackageGuid.A));
-		RPCPayload.set_field_mappackageguid_b(int32_t(StructuredParams.MapPackageGuid.B));
-		RPCPayload.set_field_mappackageguid_c(int32_t(StructuredParams.MapPackageGuid.C));
-		RPCPayload.set_field_mappackageguid_d(int32_t(StructuredParams.MapPackageGuid.D));
+		{
+			RPCPayload.set_field_url(TCHAR_TO_UTF8(*StructuredParams.URL));
+		}
+		{
+			RPCPayload.set_field_traveltype(uint32_t(StructuredParams.TravelType));
+		}
+		{
+			RPCPayload.set_field_bseamless(StructuredParams.bSeamless);
+		}
+		{
+			RPCPayload.set_field_mappackageguid_a(int32_t(StructuredParams.MapPackageGuid.A));
+		}
+		{
+			RPCPayload.set_field_mappackageguid_b(int32_t(StructuredParams.MapPackageGuid.B));
+		}
+		{
+			RPCPayload.set_field_mappackageguid_c(int32_t(StructuredParams.MapPackageGuid.C));
+		}
+		{
+			RPCPayload.set_field_mappackageguid_d(int32_t(StructuredParams.MapPackageGuid.D));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1926,34 +1922,42 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientTeamMessage_SendRPC(w
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientTeamMessageRequest RPCPayload;
-		if (StructuredParams.SenderPlayerState != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.SenderPlayerState);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.SenderPlayerState != nullptr)
 			{
-				if (StructuredParams.SenderPlayerState->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.SenderPlayerState);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.SenderPlayerState);
+					if (StructuredParams.SenderPlayerState->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.SenderPlayerState);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientTeamMessage queued. StructuredParams.SenderPlayerState is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.SenderPlayerState};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientTeamMessage queued. StructuredParams.SenderPlayerState is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.SenderPlayerState};
+				}
+				else
+				{
+					RPCPayload.set_field_senderplayerstate(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_senderplayerstate(ObjectRef);
+				RPCPayload.set_field_senderplayerstate(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_senderplayerstate(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_s(TCHAR_TO_UTF8(*StructuredParams.S));
 		}
-		RPCPayload.set_field_s(TCHAR_TO_UTF8(*StructuredParams.S));
-		RPCPayload.set_field_type(TCHAR_TO_UTF8(*StructuredParams.Type.ToString()));
-		RPCPayload.set_field_msglifetime(StructuredParams.MsgLifeTime);
+		{
+			RPCPayload.set_field_type(TCHAR_TO_UTF8(*StructuredParams.Type.ToString()));
+		}
+		{
+			RPCPayload.set_field_msglifetime(StructuredParams.MsgLifeTime);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -1984,32 +1988,36 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopForceFeedback_Sen
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientStopForceFeedbackRequest RPCPayload;
-		if (StructuredParams.ForceFeedbackEffect != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ForceFeedbackEffect);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.ForceFeedbackEffect != nullptr)
 			{
-				if (StructuredParams.ForceFeedbackEffect->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ForceFeedbackEffect);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ForceFeedbackEffect);
+					if (StructuredParams.ForceFeedbackEffect->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ForceFeedbackEffect);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientStopForceFeedback queued. StructuredParams.ForceFeedbackEffect is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ForceFeedbackEffect};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientStopForceFeedback queued. StructuredParams.ForceFeedbackEffect is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ForceFeedbackEffect};
+				}
+				else
+				{
+					RPCPayload.set_field_forcefeedbackeffect(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_forcefeedbackeffect(ObjectRef);
+				RPCPayload.set_field_forcefeedbackeffect(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_forcefeedbackeffect(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_tag(TCHAR_TO_UTF8(*StructuredParams.Tag.ToString()));
 		}
-		RPCPayload.set_field_tag(TCHAR_TO_UTF8(*StructuredParams.Tag.ToString()));
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2040,8 +2048,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopCameraShake_SendR
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientStopCameraShakeRequest RPCPayload;
-		RPCPayload.set_field_shake(PackageMap->GetHashFromStaticClass(StructuredParams.Shake));
-		RPCPayload.set_field_bimmediately(StructuredParams.bImmediately);
+		{
+			RPCPayload.set_field_shake(PackageMap->GetHashFromStaticClass(StructuredParams.Shake));
+		}
+		{
+			RPCPayload.set_field_bimmediately(StructuredParams.bImmediately);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2072,30 +2084,32 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopCameraAnim_SendRP
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientStopCameraAnimRequest RPCPayload;
-		if (StructuredParams.AnimToStop != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.AnimToStop);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.AnimToStop != nullptr)
 			{
-				if (StructuredParams.AnimToStop->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.AnimToStop);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.AnimToStop);
+					if (StructuredParams.AnimToStop->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.AnimToStop);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientStopCameraAnim queued. StructuredParams.AnimToStop is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.AnimToStop};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientStopCameraAnim queued. StructuredParams.AnimToStop is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.AnimToStop};
+				}
+				else
+				{
+					RPCPayload.set_field_animtostop(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_animtostop(ObjectRef);
+				RPCPayload.set_field_animtostop(SpatialConstants::NULL_OBJECT_REF);
 			}
-		}
-		else
-		{
-			RPCPayload.set_field_animtostop(SpatialConstants::NULL_OBJECT_REF);
 		}
 
 		// Send RPC
@@ -2154,7 +2168,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSpawnCameraLensEffect
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSpawnCameraLensEffectRequest RPCPayload;
-		RPCPayload.set_field_lenseffectemitterclass(PackageMap->GetHashFromStaticClass(StructuredParams.LensEffectEmitterClass));
+		{
+			RPCPayload.set_field_lenseffectemitterclass(PackageMap->GetHashFromStaticClass(StructuredParams.LensEffectEmitterClass));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2185,35 +2201,45 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetViewTarget_SendRPC
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetViewTargetRequest RPCPayload;
-		if (StructuredParams.A != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.A);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.A != nullptr)
 			{
-				if (StructuredParams.A->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.A);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.A);
+					if (StructuredParams.A->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.A);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientSetViewTarget queued. StructuredParams.A is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.A};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientSetViewTarget queued. StructuredParams.A is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.A};
+				}
+				else
+				{
+					RPCPayload.set_field_a(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_a(ObjectRef);
+				RPCPayload.set_field_a(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_a(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_transitionparams_blendtime(StructuredParams.TransitionParams.BlendTime);
 		}
-		RPCPayload.set_field_transitionparams_blendtime(StructuredParams.TransitionParams.BlendTime);
-		RPCPayload.set_field_transitionparams_blendfunction(uint32_t(StructuredParams.TransitionParams.BlendFunction));
-		RPCPayload.set_field_transitionparams_blendexp(StructuredParams.TransitionParams.BlendExp);
-		RPCPayload.set_field_transitionparams_blockoutgoing(StructuredParams.TransitionParams.bLockOutgoing);
+		{
+			RPCPayload.set_field_transitionparams_blendfunction(uint32_t(StructuredParams.TransitionParams.BlendFunction));
+		}
+		{
+			RPCPayload.set_field_transitionparams_blendexp(StructuredParams.TransitionParams.BlendExp);
+		}
+		{
+			RPCPayload.set_field_transitionparams_blockoutgoing(StructuredParams.TransitionParams.bLockOutgoing);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2244,7 +2270,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetSpectatorWaiting_S
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetSpectatorWaitingRequest RPCPayload;
-		RPCPayload.set_field_bwaiting(StructuredParams.bWaiting);
+		{
+			RPCPayload.set_field_bwaiting(StructuredParams.bWaiting);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2275,7 +2303,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetHUD_SendRPC(worker
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetHUDRequest RPCPayload;
-		RPCPayload.set_field_newhudclass(PackageMap->GetHashFromStaticClass(StructuredParams.NewHUDClass));
+		{
+			RPCPayload.set_field_newhudclass(PackageMap->GetHashFromStaticClass(StructuredParams.NewHUDClass));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2306,33 +2336,39 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetForceMipLevelsToBe
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetForceMipLevelsToBeResidentRequest RPCPayload;
-		if (StructuredParams.Material != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Material);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.Material != nullptr)
 			{
-				if (StructuredParams.Material->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Material);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Material);
+					if (StructuredParams.Material->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Material);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientSetForceMipLevelsToBeResident queued. StructuredParams.Material is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.Material};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientSetForceMipLevelsToBeResident queued. StructuredParams.Material is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.Material};
+				}
+				else
+				{
+					RPCPayload.set_field_material(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_material(ObjectRef);
+				RPCPayload.set_field_material(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_material(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_forceduration(StructuredParams.ForceDuration);
 		}
-		RPCPayload.set_field_forceduration(StructuredParams.ForceDuration);
-		RPCPayload.set_field_cinematictexturegroups(int32_t(StructuredParams.CinematicTextureGroups));
+		{
+			RPCPayload.set_field_cinematictexturegroups(int32_t(StructuredParams.CinematicTextureGroups));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2363,10 +2399,18 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCinematicMode_Send
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetCinematicModeRequest RPCPayload;
-		RPCPayload.set_field_bincinematicmode(StructuredParams.bInCinematicMode);
-		RPCPayload.set_field_baffectsmovement(StructuredParams.bAffectsMovement);
-		RPCPayload.set_field_baffectsturning(StructuredParams.bAffectsTurning);
-		RPCPayload.set_field_baffectshud(StructuredParams.bAffectsHUD);
+		{
+			RPCPayload.set_field_bincinematicmode(StructuredParams.bInCinematicMode);
+		}
+		{
+			RPCPayload.set_field_baffectsmovement(StructuredParams.bAffectsMovement);
+		}
+		{
+			RPCPayload.set_field_baffectsturning(StructuredParams.bAffectsTurning);
+		}
+		{
+			RPCPayload.set_field_baffectshud(StructuredParams.bAffectsHUD);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2397,7 +2441,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCameraMode_SendRPC
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetCameraModeRequest RPCPayload;
-		RPCPayload.set_field_newcammode(TCHAR_TO_UTF8(*StructuredParams.NewCamMode.ToString()));
+		{
+			RPCPayload.set_field_newcammode(TCHAR_TO_UTF8(*StructuredParams.NewCamMode.ToString()));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2428,21 +2474,35 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCameraFade_SendRPC
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetCameraFadeRequest RPCPayload;
-		RPCPayload.set_field_benablefading(StructuredParams.bEnableFading);
-		RPCPayload.set_field_fadecolor_b(uint32_t(StructuredParams.FadeColor.B));
-		RPCPayload.set_field_fadecolor_g(uint32_t(StructuredParams.FadeColor.G));
-		RPCPayload.set_field_fadecolor_r(uint32_t(StructuredParams.FadeColor.R));
-		RPCPayload.set_field_fadecolor_a(uint32_t(StructuredParams.FadeColor.A));
+		{
+			RPCPayload.set_field_benablefading(StructuredParams.bEnableFading);
+		}
+		{
+			RPCPayload.set_field_fadecolor_b(uint32_t(StructuredParams.FadeColor.B));
+		}
+		{
+			RPCPayload.set_field_fadecolor_g(uint32_t(StructuredParams.FadeColor.G));
+		}
+		{
+			RPCPayload.set_field_fadecolor_r(uint32_t(StructuredParams.FadeColor.R));
+		}
+		{
+			RPCPayload.set_field_fadecolor_a(uint32_t(StructuredParams.FadeColor.A));
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector2D&>(StructuredParams.FadeAlpha)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector2D failed."));
 			RPCPayload.set_field_fadealpha(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_fadetime(StructuredParams.FadeTime);
-		RPCPayload.set_field_bfadeaudio(StructuredParams.bFadeAudio);
+		{
+			RPCPayload.set_field_fadetime(StructuredParams.FadeTime);
+		}
+		{
+			RPCPayload.set_field_bfadeaudio(StructuredParams.bFadeAudio);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2500,7 +2560,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReturnToMainMenuWithT
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientReturnToMainMenuWithTextReasonRequest RPCPayload;
-		// UNSUPPORTED UTextProperty (unhandled) RPCPayload.set_field_returnreason(StructuredParams.ReturnReason)
+		{
+			// UNSUPPORTED UTextProperty (unhandled) RPCPayload.set_field_returnreason(StructuredParams.ReturnReason)
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2531,7 +2593,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReturnToMainMenu_Send
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientReturnToMainMenuRequest RPCPayload;
-		RPCPayload.set_field_returnreason(TCHAR_TO_UTF8(*StructuredParams.ReturnReason));
+		{
+			RPCPayload.set_field_returnreason(TCHAR_TO_UTF8(*StructuredParams.ReturnReason));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2562,30 +2626,32 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientRetryClientRestart_Se
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientRetryClientRestartRequest RPCPayload;
-		if (StructuredParams.NewPawn != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewPawn);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.NewPawn != nullptr)
 			{
-				if (StructuredParams.NewPawn->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewPawn);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewPawn);
+					if (StructuredParams.NewPawn->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewPawn);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientRetryClientRestart queued. StructuredParams.NewPawn is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.NewPawn};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientRetryClientRestart queued. StructuredParams.NewPawn is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.NewPawn};
+				}
+				else
+				{
+					RPCPayload.set_field_newpawn(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_newpawn(ObjectRef);
+				RPCPayload.set_field_newpawn(SpatialConstants::NULL_OBJECT_REF);
 			}
-		}
-		else
-		{
-			RPCPayload.set_field_newpawn(SpatialConstants::NULL_OBJECT_REF);
 		}
 
 		// Send RPC
@@ -2617,30 +2683,32 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientRestart_SendRPC(worke
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientRestartRequest RPCPayload;
-		if (StructuredParams.NewPawn != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewPawn);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.NewPawn != nullptr)
 			{
-				if (StructuredParams.NewPawn->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewPawn);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewPawn);
+					if (StructuredParams.NewPawn->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewPawn);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientRestart queued. StructuredParams.NewPawn is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.NewPawn};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientRestart queued. StructuredParams.NewPawn is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.NewPawn};
+				}
+				else
+				{
+					RPCPayload.set_field_newpawn(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_newpawn(ObjectRef);
+				RPCPayload.set_field_newpawn(SpatialConstants::NULL_OBJECT_REF);
 			}
-		}
-		else
-		{
-			RPCPayload.set_field_newpawn(SpatialConstants::NULL_OBJECT_REF);
 		}
 
 		// Send RPC
@@ -2699,30 +2767,32 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientRepObjRef_SendRPC(wor
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientRepObjRefRequest RPCPayload;
-		if (StructuredParams.Object != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Object);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.Object != nullptr)
 			{
-				if (StructuredParams.Object->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Object);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Object);
+					if (StructuredParams.Object->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Object);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientRepObjRef queued. StructuredParams.Object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.Object};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientRepObjRef queued. StructuredParams.Object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.Object};
+				}
+				else
+				{
+					RPCPayload.set_field_object(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_object(ObjectRef);
+				RPCPayload.set_field_object(SpatialConstants::NULL_OBJECT_REF);
 			}
-		}
-		else
-		{
-			RPCPayload.set_field_object(SpatialConstants::NULL_OBJECT_REF);
 		}
 
 		// Send RPC
@@ -2754,82 +2824,92 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientReceiveLocalizedMessageRequest RPCPayload;
-		RPCPayload.set_field_message(PackageMap->GetHashFromStaticClass(StructuredParams.Message));
-		RPCPayload.set_field_switch(int32_t(StructuredParams.Switch));
-		if (StructuredParams.RelatedPlayerState_1 != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.RelatedPlayerState_1);
-			if (!NetGUID.IsValid())
+			RPCPayload.set_field_message(PackageMap->GetHashFromStaticClass(StructuredParams.Message));
+		}
+		{
+			RPCPayload.set_field_switch(int32_t(StructuredParams.Switch));
+		}
+		{
+			if (StructuredParams.RelatedPlayerState_1 != nullptr)
 			{
-				if (StructuredParams.RelatedPlayerState_1->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.RelatedPlayerState_1);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RelatedPlayerState_1);
+					if (StructuredParams.RelatedPlayerState_1->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RelatedPlayerState_1);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.RelatedPlayerState_1 is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.RelatedPlayerState_1};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.RelatedPlayerState_1 is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.RelatedPlayerState_1};
+				}
+				else
+				{
+					RPCPayload.set_field_relatedplayerstate1(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_relatedplayerstate1(ObjectRef);
+				RPCPayload.set_field_relatedplayerstate1(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_relatedplayerstate1(SpatialConstants::NULL_OBJECT_REF);
-		}
-		if (StructuredParams.RelatedPlayerState_2 != nullptr)
-		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.RelatedPlayerState_2);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.RelatedPlayerState_2 != nullptr)
 			{
-				if (StructuredParams.RelatedPlayerState_2->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.RelatedPlayerState_2);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RelatedPlayerState_2);
+					if (StructuredParams.RelatedPlayerState_2->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RelatedPlayerState_2);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.RelatedPlayerState_2 is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.RelatedPlayerState_2};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.RelatedPlayerState_2 is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.RelatedPlayerState_2};
+				}
+				else
+				{
+					RPCPayload.set_field_relatedplayerstate2(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_relatedplayerstate2(ObjectRef);
+				RPCPayload.set_field_relatedplayerstate2(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_relatedplayerstate2(SpatialConstants::NULL_OBJECT_REF);
-		}
-		if (StructuredParams.OptionalObject != nullptr)
-		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.OptionalObject);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.OptionalObject != nullptr)
 			{
-				if (StructuredParams.OptionalObject->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.OptionalObject);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.OptionalObject);
+					if (StructuredParams.OptionalObject->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.OptionalObject);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.OptionalObject is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.OptionalObject};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.OptionalObject is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.OptionalObject};
+				}
+				else
+				{
+					RPCPayload.set_field_optionalobject(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_optionalobject(ObjectRef);
+				RPCPayload.set_field_optionalobject(SpatialConstants::NULL_OBJECT_REF);
 			}
-		}
-		else
-		{
-			RPCPayload.set_field_optionalobject(SpatialConstants::NULL_OBJECT_REF);
 		}
 
 		// Send RPC
@@ -2861,34 +2941,42 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPrestreamTextures_Sen
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientPrestreamTexturesRequest RPCPayload;
-		if (StructuredParams.ForcedActor != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ForcedActor);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.ForcedActor != nullptr)
 			{
-				if (StructuredParams.ForcedActor->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ForcedActor);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ForcedActor);
+					if (StructuredParams.ForcedActor->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ForcedActor);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPrestreamTextures queued. StructuredParams.ForcedActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ForcedActor};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPrestreamTextures queued. StructuredParams.ForcedActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ForcedActor};
+				}
+				else
+				{
+					RPCPayload.set_field_forcedactor(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_forcedactor(ObjectRef);
+				RPCPayload.set_field_forcedactor(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_forcedactor(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_forceduration(StructuredParams.ForceDuration);
 		}
-		RPCPayload.set_field_forceduration(StructuredParams.ForceDuration);
-		RPCPayload.set_field_benablestreaming(StructuredParams.bEnableStreaming);
-		RPCPayload.set_field_cinematictexturegroups(int32_t(StructuredParams.CinematicTextureGroups));
+		{
+			RPCPayload.set_field_benablestreaming(StructuredParams.bEnableStreaming);
+		}
+		{
+			RPCPayload.set_field_cinematictexturegroups(int32_t(StructuredParams.CinematicTextureGroups));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2919,9 +3007,15 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPrepareMapChange_Send
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientPrepareMapChangeRequest RPCPayload;
-		RPCPayload.set_field_levelname(TCHAR_TO_UTF8(*StructuredParams.LevelName.ToString()));
-		RPCPayload.set_field_bfirst(StructuredParams.bFirst);
-		RPCPayload.set_field_blast(StructuredParams.bLast);
+		{
+			RPCPayload.set_field_levelname(TCHAR_TO_UTF8(*StructuredParams.LevelName.ToString()));
+		}
+		{
+			RPCPayload.set_field_bfirst(StructuredParams.bFirst);
+		}
+		{
+			RPCPayload.set_field_blast(StructuredParams.bLast);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -2952,41 +3046,47 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySoundAtLocation_S
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientPlaySoundAtLocationRequest RPCPayload;
-		if (StructuredParams.Sound != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Sound);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.Sound != nullptr)
 			{
-				if (StructuredParams.Sound->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Sound);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Sound);
+					if (StructuredParams.Sound->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Sound);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlaySoundAtLocation queued. StructuredParams.Sound is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.Sound};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlaySoundAtLocation queued. StructuredParams.Sound is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.Sound};
+				}
+				else
+				{
+					RPCPayload.set_field_sound(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_sound(ObjectRef);
+				RPCPayload.set_field_sound(SpatialConstants::NULL_OBJECT_REF);
 			}
-		}
-		else
-		{
-			RPCPayload.set_field_sound(SpatialConstants::NULL_OBJECT_REF);
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.Location)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 			RPCPayload.set_field_location(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_volumemultiplier(StructuredParams.VolumeMultiplier);
-		RPCPayload.set_field_pitchmultiplier(StructuredParams.PitchMultiplier);
+		{
+			RPCPayload.set_field_volumemultiplier(StructuredParams.VolumeMultiplier);
+		}
+		{
+			RPCPayload.set_field_pitchmultiplier(StructuredParams.PitchMultiplier);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3017,33 +3117,39 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySound_SendRPC(wor
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientPlaySoundRequest RPCPayload;
-		if (StructuredParams.Sound != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Sound);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.Sound != nullptr)
 			{
-				if (StructuredParams.Sound->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Sound);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Sound);
+					if (StructuredParams.Sound->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Sound);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlaySound queued. StructuredParams.Sound is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.Sound};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlaySound queued. StructuredParams.Sound is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.Sound};
+				}
+				else
+				{
+					RPCPayload.set_field_sound(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_sound(ObjectRef);
+				RPCPayload.set_field_sound(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_sound(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_volumemultiplier(StructuredParams.VolumeMultiplier);
 		}
-		RPCPayload.set_field_volumemultiplier(StructuredParams.VolumeMultiplier);
-		RPCPayload.set_field_pitchmultiplier(StructuredParams.PitchMultiplier);
+		{
+			RPCPayload.set_field_pitchmultiplier(StructuredParams.PitchMultiplier);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3074,34 +3180,42 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayForceFeedback_Sen
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientPlayForceFeedbackRequest RPCPayload;
-		if (StructuredParams.ForceFeedbackEffect != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ForceFeedbackEffect);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.ForceFeedbackEffect != nullptr)
 			{
-				if (StructuredParams.ForceFeedbackEffect->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.ForceFeedbackEffect);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ForceFeedbackEffect);
+					if (StructuredParams.ForceFeedbackEffect->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ForceFeedbackEffect);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlayForceFeedback queued. StructuredParams.ForceFeedbackEffect is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.ForceFeedbackEffect};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlayForceFeedback queued. StructuredParams.ForceFeedbackEffect is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.ForceFeedbackEffect};
+				}
+				else
+				{
+					RPCPayload.set_field_forcefeedbackeffect(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_forcefeedbackeffect(ObjectRef);
+				RPCPayload.set_field_forcefeedbackeffect(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_forcefeedbackeffect(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_blooping(StructuredParams.bLooping);
 		}
-		RPCPayload.set_field_blooping(StructuredParams.bLooping);
-		RPCPayload.set_field_bignoretimedilation(StructuredParams.bIgnoreTimeDilation);
-		RPCPayload.set_field_tag(TCHAR_TO_UTF8(*StructuredParams.Tag.ToString()));
+		{
+			RPCPayload.set_field_bignoretimedilation(StructuredParams.bIgnoreTimeDilation);
+		}
+		{
+			RPCPayload.set_field_tag(TCHAR_TO_UTF8(*StructuredParams.Tag.ToString()));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3132,12 +3246,18 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraShake_SendR
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientPlayCameraShakeRequest RPCPayload;
-		RPCPayload.set_field_shake(PackageMap->GetHashFromStaticClass(StructuredParams.Shake));
-		RPCPayload.set_field_scale(StructuredParams.Scale);
-		RPCPayload.set_field_playspace(uint32_t(StructuredParams.PlaySpace));
+		{
+			RPCPayload.set_field_shake(PackageMap->GetHashFromStaticClass(StructuredParams.Shake));
+		}
+		{
+			RPCPayload.set_field_scale(StructuredParams.Scale);
+		}
+		{
+			RPCPayload.set_field_playspace(uint32_t(StructuredParams.PlaySpace));
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FRotator&>(StructuredParams.UserPlaySpaceRot)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
@@ -3173,41 +3293,57 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraAnim_SendRP
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientPlayCameraAnimRequest RPCPayload;
-		if (StructuredParams.AnimToPlay != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.AnimToPlay);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.AnimToPlay != nullptr)
 			{
-				if (StructuredParams.AnimToPlay->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.AnimToPlay);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.AnimToPlay);
+					if (StructuredParams.AnimToPlay->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.AnimToPlay);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlayCameraAnim queued. StructuredParams.AnimToPlay is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.AnimToPlay};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlayCameraAnim queued. StructuredParams.AnimToPlay is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.AnimToPlay};
+				}
+				else
+				{
+					RPCPayload.set_field_animtoplay(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_animtoplay(ObjectRef);
+				RPCPayload.set_field_animtoplay(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_animtoplay(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_scale(StructuredParams.Scale);
 		}
-		RPCPayload.set_field_scale(StructuredParams.Scale);
-		RPCPayload.set_field_rate(StructuredParams.Rate);
-		RPCPayload.set_field_blendintime(StructuredParams.BlendInTime);
-		RPCPayload.set_field_blendouttime(StructuredParams.BlendOutTime);
-		RPCPayload.set_field_bloop(StructuredParams.bLoop);
-		RPCPayload.set_field_brandomstarttime(StructuredParams.bRandomStartTime);
-		RPCPayload.set_field_space(uint32_t(StructuredParams.Space));
+		{
+			RPCPayload.set_field_rate(StructuredParams.Rate);
+		}
+		{
+			RPCPayload.set_field_blendintime(StructuredParams.BlendInTime);
+		}
+		{
+			RPCPayload.set_field_blendouttime(StructuredParams.BlendOutTime);
+		}
+		{
+			RPCPayload.set_field_bloop(StructuredParams.bLoop);
+		}
+		{
+			RPCPayload.set_field_brandomstarttime(StructuredParams.bRandomStartTime);
+		}
+		{
+			RPCPayload.set_field_space(uint32_t(StructuredParams.Space));
+		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FRotator&>(StructuredParams.CustomPlaySpace)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
@@ -3245,7 +3381,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientMutePlayer_SendRPC(wo
 		improbable::unreal::generated::playercontroller::ClientMutePlayerRequest RPCPayload;
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
@@ -3281,9 +3417,15 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientMessage_SendRPC(worke
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientMessageRequest RPCPayload;
-		RPCPayload.set_field_s(TCHAR_TO_UTF8(*StructuredParams.S));
-		RPCPayload.set_field_type(TCHAR_TO_UTF8(*StructuredParams.Type.ToString()));
-		RPCPayload.set_field_msglifetime(StructuredParams.MsgLifeTime);
+		{
+			RPCPayload.set_field_s(TCHAR_TO_UTF8(*StructuredParams.S));
+		}
+		{
+			RPCPayload.set_field_type(TCHAR_TO_UTF8(*StructuredParams.Type.ToString()));
+		}
+		{
+			RPCPayload.set_field_msglifetime(StructuredParams.MsgLifeTime);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3314,7 +3456,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientIgnoreMoveInput_SendR
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientIgnoreMoveInputRequest RPCPayload;
-		RPCPayload.set_field_bignore(StructuredParams.bIgnore);
+		{
+			RPCPayload.set_field_bignore(StructuredParams.bIgnore);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3345,7 +3489,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientIgnoreLookInput_SendR
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientIgnoreLookInputRequest RPCPayload;
-		RPCPayload.set_field_bignore(StructuredParams.bIgnore);
+		{
+			RPCPayload.set_field_bignore(StructuredParams.bIgnore);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3376,7 +3522,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientGotoState_SendRPC(wor
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientGotoStateRequest RPCPayload;
-		RPCPayload.set_field_newstate(TCHAR_TO_UTF8(*StructuredParams.NewState.ToString()));
+		{
+			RPCPayload.set_field_newstate(TCHAR_TO_UTF8(*StructuredParams.NewState.ToString()));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3407,32 +3555,36 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientGameEnded_SendRPC(wor
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientGameEndedRequest RPCPayload;
-		if (StructuredParams.EndGameFocus != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.EndGameFocus);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.EndGameFocus != nullptr)
 			{
-				if (StructuredParams.EndGameFocus->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.EndGameFocus);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.EndGameFocus);
+					if (StructuredParams.EndGameFocus->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.EndGameFocus);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientGameEnded queued. StructuredParams.EndGameFocus is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.EndGameFocus};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientGameEnded queued. StructuredParams.EndGameFocus is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.EndGameFocus};
+				}
+				else
+				{
+					RPCPayload.set_field_endgamefocus(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_endgamefocus(ObjectRef);
+				RPCPayload.set_field_endgamefocus(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
-		else
 		{
-			RPCPayload.set_field_endgamefocus(SpatialConstants::NULL_OBJECT_REF);
+			RPCPayload.set_field_biswinner(StructuredParams.bIsWinner);
 		}
-		RPCPayload.set_field_biswinner(StructuredParams.bIsWinner);
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3544,7 +3696,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientEnableNetworkVoice_Se
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientEnableNetworkVoiceRequest RPCPayload;
-		RPCPayload.set_field_benable(StructuredParams.bEnable);
+		{
+			RPCPayload.set_field_benable(StructuredParams.bEnable);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3629,7 +3783,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientCapBandwidth_SendRPC(
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientCapBandwidthRequest RPCPayload;
-		RPCPayload.set_field_cap(int32_t(StructuredParams.Cap));
+		{
+			RPCPayload.set_field_cap(int32_t(StructuredParams.Cap));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3689,14 +3845,18 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientAddTextureStreamingLo
 		improbable::unreal::generated::playercontroller::ClientAddTextureStreamingLocRequest RPCPayload;
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.InLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 			RPCPayload.set_field_inloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_duration(StructuredParams.Duration);
-		RPCPayload.set_field_boverridelocation(StructuredParams.bOverrideLocation);
+		{
+			RPCPayload.set_field_duration(StructuredParams.Duration);
+		}
+		{
+			RPCPayload.set_field_boverridelocation(StructuredParams.bOverrideLocation);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3729,13 +3889,15 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetRotation_SendRPC(w
 		improbable::unreal::generated::controller::ClientSetRotationRequest RPCPayload;
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FRotator&>(StructuredParams.NewRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 			RPCPayload.set_field_newrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_bresetcamera(StructuredParams.bResetCamera);
+		{
+			RPCPayload.set_field_bresetcamera(StructuredParams.bResetCamera);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3768,7 +3930,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetLocation_SendRPC(w
 		improbable::unreal::generated::controller::ClientSetLocationRequest RPCPayload;
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewLocation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
@@ -3776,7 +3938,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetLocation_SendRPC(w
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FRotator&>(StructuredParams.NewRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
@@ -3839,10 +4001,18 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerViewSelf_SendRPC(work
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerViewSelfRequest RPCPayload;
-		RPCPayload.set_field_transitionparams_blendtime(StructuredParams.TransitionParams.BlendTime);
-		RPCPayload.set_field_transitionparams_blendfunction(uint32_t(StructuredParams.TransitionParams.BlendFunction));
-		RPCPayload.set_field_transitionparams_blendexp(StructuredParams.TransitionParams.BlendExp);
-		RPCPayload.set_field_transitionparams_blockoutgoing(StructuredParams.TransitionParams.bLockOutgoing);
+		{
+			RPCPayload.set_field_transitionparams_blendtime(StructuredParams.TransitionParams.BlendTime);
+		}
+		{
+			RPCPayload.set_field_transitionparams_blendfunction(uint32_t(StructuredParams.TransitionParams.BlendFunction));
+		}
+		{
+			RPCPayload.set_field_transitionparams_blendexp(StructuredParams.TransitionParams.BlendExp);
+		}
+		{
+			RPCPayload.set_field_transitionparams_blockoutgoing(StructuredParams.TransitionParams.bLockOutgoing);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3954,15 +4124,17 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateMultipleLevelsV
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerUpdateMultipleLevelsVisibilityRequest RPCPayload;
-		::worker::List<std::string> List;
-		for(int i = 0; i < StructuredParams.LevelVisibilities.Num(); i++)
 		{
-			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
-			FUpdateLevelVisibilityLevelInfo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelVisibilityLevelInfo*>(&StructuredParams.LevelVisibilities[i])));
-			List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			::worker::List<std::string> List;
+			for(int i = 0; i < StructuredParams.LevelVisibilities.Num(); i++)
+			{
+				TArray<uint8> ValueData;
+				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
+				FUpdateLevelVisibilityLevelInfo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelVisibilityLevelInfo*>(&StructuredParams.LevelVisibilities[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			RPCPayload.set_field_levelvisibilities(List);
 		}
-		RPCPayload.set_field_levelvisibilities(List);
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -3993,8 +4165,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateLevelVisibility
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerUpdateLevelVisibilityRequest RPCPayload;
-		RPCPayload.set_field_packagename(TCHAR_TO_UTF8(*StructuredParams.PackageName.ToString()));
-		RPCPayload.set_field_bisvisible(StructuredParams.bIsVisible);
+		{
+			RPCPayload.set_field_packagename(TCHAR_TO_UTF8(*StructuredParams.PackageName.ToString()));
+		}
+		{
+			RPCPayload.set_field_bisvisible(StructuredParams.bIsVisible);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4027,13 +4203,15 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateCamera_SendRPC(
 		improbable::unreal::generated::playercontroller::ServerUpdateCameraRequest RPCPayload;
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize&>(StructuredParams.CamLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize failed."));
 			RPCPayload.set_field_camloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
-		RPCPayload.set_field_campitchandyaw(int32_t(StructuredParams.CamPitchAndYaw));
+		{
+			RPCPayload.set_field_campitchandyaw(int32_t(StructuredParams.CamPitchAndYaw));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4066,7 +4244,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUnmutePlayer_SendRPC(
 		improbable::unreal::generated::playercontroller::ServerUnmutePlayerRequest RPCPayload;
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
@@ -4156,7 +4334,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSetSpectatorWaiting_S
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerSetSpectatorWaitingRequest RPCPayload;
-		RPCPayload.set_field_bwaiting(StructuredParams.bWaiting);
+		{
+			RPCPayload.set_field_bwaiting(StructuredParams.bWaiting);
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4189,7 +4369,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSetSpectatorLocation_
 		improbable::unreal::generated::playercontroller::ServerSetSpectatorLocationRequest RPCPayload;
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
@@ -4197,7 +4377,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSetSpectatorLocation_
 		}
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FRotator&>(StructuredParams.NewRot)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
@@ -4287,7 +4467,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerNotifyLoadedWorld_Sen
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerNotifyLoadedWorldRequest RPCPayload;
-		RPCPayload.set_field_worldpackagename(TCHAR_TO_UTF8(*StructuredParams.WorldPackageName.ToString()));
+		{
+			RPCPayload.set_field_worldpackagename(TCHAR_TO_UTF8(*StructuredParams.WorldPackageName.ToString()));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4320,7 +4502,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerMutePlayer_SendRPC(wo
 		improbable::unreal::generated::playercontroller::ServerMutePlayerRequest RPCPayload;
 		{
 			TArray<uint8> ValueData;
-			FMemoryWriter ValueDataWriter(ValueData);
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap);
 			bool bSuccess = true;
 			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
@@ -4410,7 +4592,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerChangeName_SendRPC(wo
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerChangeNameRequest RPCPayload;
-		RPCPayload.set_field_s(TCHAR_TO_UTF8(*StructuredParams.S));
+		{
+			RPCPayload.set_field_s(TCHAR_TO_UTF8(*StructuredParams.S));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4441,7 +4625,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerCamera_SendRPC(worker
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerCameraRequest RPCPayload;
-		RPCPayload.set_field_newmode(TCHAR_TO_UTF8(*StructuredParams.NewMode.ToString()));
+		{
+			RPCPayload.set_field_newmode(TCHAR_TO_UTF8(*StructuredParams.NewMode.ToString()));
+		}
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
@@ -4472,30 +4658,32 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerAcknowledgePossession
 
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerAcknowledgePossessionRequest RPCPayload;
-		if (StructuredParams.P != nullptr)
 		{
-			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.P);
-			if (!NetGUID.IsValid())
+			if (StructuredParams.P != nullptr)
 			{
-				if (StructuredParams.P->IsFullNameStableForNetworking())
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.P);
+				if (!NetGUID.IsValid())
 				{
-					NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.P);
+					if (StructuredParams.P->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.P);
+					}
 				}
-			}
-			improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-			if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-			{
-				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerAcknowledgePossession queued. StructuredParams.P is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-				return {StructuredParams.P};
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerAcknowledgePossession queued. StructuredParams.P is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {StructuredParams.P};
+				}
+				else
+				{
+					RPCPayload.set_field_p(ObjectRef);
+				}
 			}
 			else
 			{
-				RPCPayload.set_field_p(ObjectRef);
+				RPCPayload.set_field_p(SpatialConstants::NULL_OBJECT_REF);
 			}
-		}
-		else
-		{
-			RPCPayload.set_field_p(SpatialConstants::NULL_OBJECT_REF);
 		}
 
 		// Send RPC
@@ -4566,7 +4754,9 @@ void USpatialTypeBinding_SampleGamePlayerController::OnServerStartedVisualLogger
 		PlayerController_eventOnServerStartedVisualLogger_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.bIsLogging = Op.Request.field_bislogging();
+		{
+			Parameters.bIsLogging = Op.Request.field_bislogging();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: OnServerStartedVisualLogger, target: %s %s"),
@@ -4618,7 +4808,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientWasKicked_OnRPCPayloa
 		PlayerController_eventClientWasKicked_Parms Parameters;
 
 		// Extract from request data.
-		// UNSUPPORTED UTextProperty (unhandled) Parameters.KickReason Op.Request.field_kickreason()
+		{
+			// UNSUPPORTED UTextProperty (unhandled) Parameters.KickReason Op.Request.field_kickreason()
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientWasKicked, target: %s %s"),
@@ -4723,7 +4915,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientUpdateMultipleLevelsS
 				auto& ValueDataStr = List[i];
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
+				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 				FUpdateLevelStreamingLevelStatus::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Parameters.LevelStatuses[i]));
 			}
 		}
@@ -4778,11 +4970,21 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientUpdateLevelStreamingS
 		PlayerController_eventClientUpdateLevelStreamingStatus_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.PackageName = FName((Op.Request.field_packagename()).data());
-		Parameters.bNewShouldBeLoaded = Op.Request.field_bnewshouldbeloaded();
-		Parameters.bNewShouldBeVisible = Op.Request.field_bnewshouldbevisible();
-		Parameters.bNewShouldBlockOnLoad = Op.Request.field_bnewshouldblockonload();
-		Parameters.LODIndex = Op.Request.field_lodindex();
+		{
+			Parameters.PackageName = FName((Op.Request.field_packagename()).data());
+		}
+		{
+			Parameters.bNewShouldBeLoaded = Op.Request.field_bnewshouldbeloaded();
+		}
+		{
+			Parameters.bNewShouldBeVisible = Op.Request.field_bnewshouldbevisible();
+		}
+		{
+			Parameters.bNewShouldBlockOnLoad = Op.Request.field_bnewshouldblockonload();
+		}
+		{
+			Parameters.LODIndex = Op.Request.field_lodindex();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientUpdateLevelStreamingStatus, target: %s %s"),
@@ -4838,7 +5040,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientUnmutePlayer_OnRPCPay
 			auto& ValueDataStr = Op.Request.field_playerid();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.PlayerId.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
@@ -4894,13 +5096,27 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientTravelInternal_OnRPCP
 		PlayerController_eventClientTravelInternal_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.URL = FString(UTF8_TO_TCHAR(Op.Request.field_url().c_str()));
-		Parameters.TravelType = TEnumAsByte<ETravelType>(uint8(Op.Request.field_traveltype()));
-		Parameters.bSeamless = Op.Request.field_bseamless();
-		Parameters.MapPackageGuid.A = Op.Request.field_mappackageguid_a();
-		Parameters.MapPackageGuid.B = Op.Request.field_mappackageguid_b();
-		Parameters.MapPackageGuid.C = Op.Request.field_mappackageguid_c();
-		Parameters.MapPackageGuid.D = Op.Request.field_mappackageguid_d();
+		{
+			Parameters.URL = FString(UTF8_TO_TCHAR(Op.Request.field_url().c_str()));
+		}
+		{
+			Parameters.TravelType = TEnumAsByte<ETravelType>(uint8(Op.Request.field_traveltype()));
+		}
+		{
+			Parameters.bSeamless = Op.Request.field_bseamless();
+		}
+		{
+			Parameters.MapPackageGuid.A = Op.Request.field_mappackageguid_a();
+		}
+		{
+			Parameters.MapPackageGuid.B = Op.Request.field_mappackageguid_b();
+		}
+		{
+			Parameters.MapPackageGuid.C = Op.Request.field_mappackageguid_c();
+		}
+		{
+			Parameters.MapPackageGuid.D = Op.Request.field_mappackageguid_d();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientTravelInternal, target: %s %s"),
@@ -4980,9 +5196,15 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientTeamMessage_OnRPCPayl
 				}
 			}
 		}
-		Parameters.S = FString(UTF8_TO_TCHAR(Op.Request.field_s().c_str()));
-		Parameters.Type = FName((Op.Request.field_type()).data());
-		Parameters.MsgLifeTime = Op.Request.field_msglifetime();
+		{
+			Parameters.S = FString(UTF8_TO_TCHAR(Op.Request.field_s().c_str()));
+		}
+		{
+			Parameters.Type = FName((Op.Request.field_type()).data());
+		}
+		{
+			Parameters.MsgLifeTime = Op.Request.field_msglifetime();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientTeamMessage, target: %s %s"),
@@ -5062,7 +5284,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopForceFeedback_OnR
 				}
 			}
 		}
-		Parameters.Tag = FName((Op.Request.field_tag()).data());
+		{
+			Parameters.Tag = FName((Op.Request.field_tag()).data());
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientStopForceFeedback, target: %s %s"),
@@ -5114,8 +5338,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopCameraShake_OnRPC
 		PlayerController_eventClientStopCameraShake_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.Shake = PackageMap->GetStaticClassFromHash(Op.Request.field_shake());
-		Parameters.bImmediately = Op.Request.field_bimmediately();
+		{
+			Parameters.Shake = PackageMap->GetStaticClassFromHash(Op.Request.field_shake());
+		}
+		{
+			Parameters.bImmediately = Op.Request.field_bimmediately();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientStopCameraShake, target: %s %s"),
@@ -5291,7 +5519,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSpawnCameraLensEffect
 		PlayerController_eventClientSpawnCameraLensEffect_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.LensEffectEmitterClass = PackageMap->GetStaticClassFromHash(Op.Request.field_lenseffectemitterclass());
+		{
+			Parameters.LensEffectEmitterClass = PackageMap->GetStaticClassFromHash(Op.Request.field_lenseffectemitterclass());
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientSpawnCameraLensEffect, target: %s %s"),
@@ -5371,10 +5601,18 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetViewTarget_OnRPCPa
 				}
 			}
 		}
-		Parameters.TransitionParams.BlendTime = Op.Request.field_transitionparams_blendtime();
-		Parameters.TransitionParams.BlendFunction = TEnumAsByte<EViewTargetBlendFunction>(uint8(Op.Request.field_transitionparams_blendfunction()));
-		Parameters.TransitionParams.BlendExp = Op.Request.field_transitionparams_blendexp();
-		Parameters.TransitionParams.bLockOutgoing = Op.Request.field_transitionparams_blockoutgoing();
+		{
+			Parameters.TransitionParams.BlendTime = Op.Request.field_transitionparams_blendtime();
+		}
+		{
+			Parameters.TransitionParams.BlendFunction = TEnumAsByte<EViewTargetBlendFunction>(uint8(Op.Request.field_transitionparams_blendfunction()));
+		}
+		{
+			Parameters.TransitionParams.BlendExp = Op.Request.field_transitionparams_blendexp();
+		}
+		{
+			Parameters.TransitionParams.bLockOutgoing = Op.Request.field_transitionparams_blockoutgoing();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientSetViewTarget, target: %s %s"),
@@ -5426,7 +5664,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetSpectatorWaiting_O
 		PlayerController_eventClientSetSpectatorWaiting_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.bWaiting = Op.Request.field_bwaiting();
+		{
+			Parameters.bWaiting = Op.Request.field_bwaiting();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientSetSpectatorWaiting, target: %s %s"),
@@ -5478,7 +5718,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetHUD_OnRPCPayload(c
 		PlayerController_eventClientSetHUD_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.NewHUDClass = PackageMap->GetStaticClassFromHash(Op.Request.field_newhudclass());
+		{
+			Parameters.NewHUDClass = PackageMap->GetStaticClassFromHash(Op.Request.field_newhudclass());
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientSetHUD, target: %s %s"),
@@ -5558,8 +5800,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetForceMipLevelsToBe
 				}
 			}
 		}
-		Parameters.ForceDuration = Op.Request.field_forceduration();
-		Parameters.CinematicTextureGroups = Op.Request.field_cinematictexturegroups();
+		{
+			Parameters.ForceDuration = Op.Request.field_forceduration();
+		}
+		{
+			Parameters.CinematicTextureGroups = Op.Request.field_cinematictexturegroups();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientSetForceMipLevelsToBeResident, target: %s %s"),
@@ -5611,10 +5857,18 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCinematicMode_OnRP
 		PlayerController_eventClientSetCinematicMode_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.bInCinematicMode = Op.Request.field_bincinematicmode();
-		Parameters.bAffectsMovement = Op.Request.field_baffectsmovement();
-		Parameters.bAffectsTurning = Op.Request.field_baffectsturning();
-		Parameters.bAffectsHUD = Op.Request.field_baffectshud();
+		{
+			Parameters.bInCinematicMode = Op.Request.field_bincinematicmode();
+		}
+		{
+			Parameters.bAffectsMovement = Op.Request.field_baffectsmovement();
+		}
+		{
+			Parameters.bAffectsTurning = Op.Request.field_baffectsturning();
+		}
+		{
+			Parameters.bAffectsHUD = Op.Request.field_baffectshud();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientSetCinematicMode, target: %s %s"),
@@ -5666,7 +5920,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCameraMode_OnRPCPa
 		PlayerController_eventClientSetCameraMode_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.NewCamMode = FName((Op.Request.field_newcammode()).data());
+		{
+			Parameters.NewCamMode = FName((Op.Request.field_newcammode()).data());
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientSetCameraMode, target: %s %s"),
@@ -5718,22 +5974,36 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCameraFade_OnRPCPa
 		PlayerController_eventClientSetCameraFade_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.bEnableFading = Op.Request.field_benablefading();
-		Parameters.FadeColor.B = uint8(uint8(Op.Request.field_fadecolor_b()));
-		Parameters.FadeColor.G = uint8(uint8(Op.Request.field_fadecolor_g()));
-		Parameters.FadeColor.R = uint8(uint8(Op.Request.field_fadecolor_r()));
-		Parameters.FadeColor.A = uint8(uint8(Op.Request.field_fadecolor_a()));
+		{
+			Parameters.bEnableFading = Op.Request.field_benablefading();
+		}
+		{
+			Parameters.FadeColor.B = uint8(uint8(Op.Request.field_fadecolor_b()));
+		}
+		{
+			Parameters.FadeColor.G = uint8(uint8(Op.Request.field_fadecolor_g()));
+		}
+		{
+			Parameters.FadeColor.R = uint8(uint8(Op.Request.field_fadecolor_r()));
+		}
+		{
+			Parameters.FadeColor.A = uint8(uint8(Op.Request.field_fadecolor_a()));
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_fadealpha();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.FadeAlpha.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector2D failed."));
 		}
-		Parameters.FadeTime = Op.Request.field_fadetime();
-		Parameters.bFadeAudio = Op.Request.field_bfadeaudio();
+		{
+			Parameters.FadeTime = Op.Request.field_fadetime();
+		}
+		{
+			Parameters.bFadeAudio = Op.Request.field_bfadeaudio();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientSetCameraFade, target: %s %s"),
@@ -5830,7 +6100,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReturnToMainMenuWithT
 		PlayerController_eventClientReturnToMainMenuWithTextReason_Parms Parameters;
 
 		// Extract from request data.
-		// UNSUPPORTED UTextProperty (unhandled) Parameters.ReturnReason Op.Request.field_returnreason()
+		{
+			// UNSUPPORTED UTextProperty (unhandled) Parameters.ReturnReason Op.Request.field_returnreason()
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientReturnToMainMenuWithTextReason, target: %s %s"),
@@ -5882,7 +6154,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReturnToMainMenu_OnRP
 		PlayerController_eventClientReturnToMainMenu_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.ReturnReason = FString(UTF8_TO_TCHAR(Op.Request.field_returnreason().c_str()));
+		{
+			Parameters.ReturnReason = FString(UTF8_TO_TCHAR(Op.Request.field_returnreason().c_str()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientReturnToMainMenu, target: %s %s"),
@@ -6216,8 +6490,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 		PlayerController_eventClientReceiveLocalizedMessage_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.Message = PackageMap->GetStaticClassFromHash(Op.Request.field_message());
-		Parameters.Switch = Op.Request.field_switch();
+		{
+			Parameters.Message = PackageMap->GetStaticClassFromHash(Op.Request.field_message());
+		}
+		{
+			Parameters.Switch = Op.Request.field_switch();
+		}
 		{
 			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_relatedplayerstate1();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
@@ -6381,9 +6659,15 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPrestreamTextures_OnR
 				}
 			}
 		}
-		Parameters.ForceDuration = Op.Request.field_forceduration();
-		Parameters.bEnableStreaming = Op.Request.field_benablestreaming();
-		Parameters.CinematicTextureGroups = Op.Request.field_cinematictexturegroups();
+		{
+			Parameters.ForceDuration = Op.Request.field_forceduration();
+		}
+		{
+			Parameters.bEnableStreaming = Op.Request.field_benablestreaming();
+		}
+		{
+			Parameters.CinematicTextureGroups = Op.Request.field_cinematictexturegroups();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientPrestreamTextures, target: %s %s"),
@@ -6435,9 +6719,15 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPrepareMapChange_OnRP
 		PlayerController_eventClientPrepareMapChange_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.LevelName = FName((Op.Request.field_levelname()).data());
-		Parameters.bFirst = Op.Request.field_bfirst();
-		Parameters.bLast = Op.Request.field_blast();
+		{
+			Parameters.LevelName = FName((Op.Request.field_levelname()).data());
+		}
+		{
+			Parameters.bFirst = Op.Request.field_bfirst();
+		}
+		{
+			Parameters.bLast = Op.Request.field_blast();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientPrepareMapChange, target: %s %s"),
@@ -6521,13 +6811,17 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySoundAtLocation_O
 			auto& ValueDataStr = Op.Request.field_location();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.Location.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
-		Parameters.VolumeMultiplier = Op.Request.field_volumemultiplier();
-		Parameters.PitchMultiplier = Op.Request.field_pitchmultiplier();
+		{
+			Parameters.VolumeMultiplier = Op.Request.field_volumemultiplier();
+		}
+		{
+			Parameters.PitchMultiplier = Op.Request.field_pitchmultiplier();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientPlaySoundAtLocation, target: %s %s"),
@@ -6607,8 +6901,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySound_OnRPCPayloa
 				}
 			}
 		}
-		Parameters.VolumeMultiplier = Op.Request.field_volumemultiplier();
-		Parameters.PitchMultiplier = Op.Request.field_pitchmultiplier();
+		{
+			Parameters.VolumeMultiplier = Op.Request.field_volumemultiplier();
+		}
+		{
+			Parameters.PitchMultiplier = Op.Request.field_pitchmultiplier();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientPlaySound, target: %s %s"),
@@ -6688,9 +6986,15 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayForceFeedback_OnR
 				}
 			}
 		}
-		Parameters.bLooping = Op.Request.field_blooping();
-		Parameters.bIgnoreTimeDilation = Op.Request.field_bignoretimedilation();
-		Parameters.Tag = FName((Op.Request.field_tag()).data());
+		{
+			Parameters.bLooping = Op.Request.field_blooping();
+		}
+		{
+			Parameters.bIgnoreTimeDilation = Op.Request.field_bignoretimedilation();
+		}
+		{
+			Parameters.Tag = FName((Op.Request.field_tag()).data());
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientPlayForceFeedback, target: %s %s"),
@@ -6742,14 +7046,20 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraShake_OnRPC
 		PlayerController_eventClientPlayCameraShake_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.Shake = PackageMap->GetStaticClassFromHash(Op.Request.field_shake());
-		Parameters.Scale = Op.Request.field_scale();
-		Parameters.PlaySpace = TEnumAsByte<ECameraAnimPlaySpace::Type>(uint8(Op.Request.field_playspace()));
+		{
+			Parameters.Shake = PackageMap->GetStaticClassFromHash(Op.Request.field_shake());
+		}
+		{
+			Parameters.Scale = Op.Request.field_scale();
+		}
+		{
+			Parameters.PlaySpace = TEnumAsByte<ECameraAnimPlaySpace::Type>(uint8(Op.Request.field_playspace()));
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_userplayspacerot();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.UserPlaySpaceRot.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
@@ -6833,18 +7143,32 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraAnim_OnRPCP
 				}
 			}
 		}
-		Parameters.Scale = Op.Request.field_scale();
-		Parameters.Rate = Op.Request.field_rate();
-		Parameters.BlendInTime = Op.Request.field_blendintime();
-		Parameters.BlendOutTime = Op.Request.field_blendouttime();
-		Parameters.bLoop = Op.Request.field_bloop();
-		Parameters.bRandomStartTime = Op.Request.field_brandomstarttime();
-		Parameters.Space = TEnumAsByte<ECameraAnimPlaySpace::Type>(uint8(Op.Request.field_space()));
+		{
+			Parameters.Scale = Op.Request.field_scale();
+		}
+		{
+			Parameters.Rate = Op.Request.field_rate();
+		}
+		{
+			Parameters.BlendInTime = Op.Request.field_blendintime();
+		}
+		{
+			Parameters.BlendOutTime = Op.Request.field_blendouttime();
+		}
+		{
+			Parameters.bLoop = Op.Request.field_bloop();
+		}
+		{
+			Parameters.bRandomStartTime = Op.Request.field_brandomstarttime();
+		}
+		{
+			Parameters.Space = TEnumAsByte<ECameraAnimPlaySpace::Type>(uint8(Op.Request.field_space()));
+		}
 		{
 			auto& ValueDataStr = Op.Request.field_customplayspace();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.CustomPlaySpace.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
@@ -6904,7 +7228,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientMutePlayer_OnRPCPaylo
 			auto& ValueDataStr = Op.Request.field_playerid();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.PlayerId.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
@@ -6960,9 +7284,15 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientMessage_OnRPCPayload(
 		PlayerController_eventClientMessage_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.S = FString(UTF8_TO_TCHAR(Op.Request.field_s().c_str()));
-		Parameters.Type = FName((Op.Request.field_type()).data());
-		Parameters.MsgLifeTime = Op.Request.field_msglifetime();
+		{
+			Parameters.S = FString(UTF8_TO_TCHAR(Op.Request.field_s().c_str()));
+		}
+		{
+			Parameters.Type = FName((Op.Request.field_type()).data());
+		}
+		{
+			Parameters.MsgLifeTime = Op.Request.field_msglifetime();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientMessage, target: %s %s"),
@@ -7014,7 +7344,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientIgnoreMoveInput_OnRPC
 		PlayerController_eventClientIgnoreMoveInput_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.bIgnore = Op.Request.field_bignore();
+		{
+			Parameters.bIgnore = Op.Request.field_bignore();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientIgnoreMoveInput, target: %s %s"),
@@ -7066,7 +7398,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientIgnoreLookInput_OnRPC
 		PlayerController_eventClientIgnoreLookInput_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.bIgnore = Op.Request.field_bignore();
+		{
+			Parameters.bIgnore = Op.Request.field_bignore();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientIgnoreLookInput, target: %s %s"),
@@ -7118,7 +7452,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientGotoState_OnRPCPayloa
 		PlayerController_eventClientGotoState_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.NewState = FName((Op.Request.field_newstate()).data());
+		{
+			Parameters.NewState = FName((Op.Request.field_newstate()).data());
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientGotoState, target: %s %s"),
@@ -7198,7 +7534,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientGameEnded_OnRPCPayloa
 				}
 			}
 		}
-		Parameters.bIsWinner = Op.Request.field_biswinner();
+		{
+			Parameters.bIsWinner = Op.Request.field_biswinner();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientGameEnded, target: %s %s"),
@@ -7385,7 +7723,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientEnableNetworkVoice_On
 		PlayerController_eventClientEnableNetworkVoice_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.bEnable = Op.Request.field_benable();
+		{
+			Parameters.bEnable = Op.Request.field_benable();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientEnableNetworkVoice, target: %s %s"),
@@ -7527,7 +7867,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientCapBandwidth_OnRPCPay
 		PlayerController_eventClientCapBandwidth_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.Cap = Op.Request.field_cap();
+		{
+			Parameters.Cap = Op.Request.field_cap();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientCapBandwidth, target: %s %s"),
@@ -7628,13 +7970,17 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientAddTextureStreamingLo
 			auto& ValueDataStr = Op.Request.field_inloc();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.InLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
-		Parameters.Duration = Op.Request.field_duration();
-		Parameters.bOverrideLocation = Op.Request.field_boverridelocation();
+		{
+			Parameters.Duration = Op.Request.field_duration();
+		}
+		{
+			Parameters.bOverrideLocation = Op.Request.field_boverridelocation();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientAddTextureStreamingLoc, target: %s %s"),
@@ -7690,12 +8036,14 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetRotation_OnRPCPayl
 			auto& ValueDataStr = Op.Request.field_newrotation();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.NewRotation.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 		}
-		Parameters.bResetCamera = Op.Request.field_bresetcamera();
+		{
+			Parameters.bResetCamera = Op.Request.field_bresetcamera();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ClientSetRotation, target: %s %s"),
@@ -7751,7 +8099,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetLocation_OnRPCPayl
 			auto& ValueDataStr = Op.Request.field_newlocation();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.NewLocation.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
@@ -7760,7 +8108,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetLocation_OnRPCPayl
 			auto& ValueDataStr = Op.Request.field_newrotation();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.NewRotation.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
@@ -7861,10 +8209,18 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerViewSelf_OnRPCPayload
 		PlayerController_eventServerViewSelf_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.TransitionParams.BlendTime = Op.Request.field_transitionparams_blendtime();
-		Parameters.TransitionParams.BlendFunction = TEnumAsByte<EViewTargetBlendFunction>(uint8(Op.Request.field_transitionparams_blendfunction()));
-		Parameters.TransitionParams.BlendExp = Op.Request.field_transitionparams_blendexp();
-		Parameters.TransitionParams.bLockOutgoing = Op.Request.field_transitionparams_blockoutgoing();
+		{
+			Parameters.TransitionParams.BlendTime = Op.Request.field_transitionparams_blendtime();
+		}
+		{
+			Parameters.TransitionParams.BlendFunction = TEnumAsByte<EViewTargetBlendFunction>(uint8(Op.Request.field_transitionparams_blendfunction()));
+		}
+		{
+			Parameters.TransitionParams.BlendExp = Op.Request.field_transitionparams_blendexp();
+		}
+		{
+			Parameters.TransitionParams.bLockOutgoing = Op.Request.field_transitionparams_blockoutgoing();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerViewSelf, target: %s %s"),
@@ -8059,7 +8415,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateMultipleLevelsV
 				auto& ValueDataStr = List[i];
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-				FMemoryReader ValueDataReader(ValueData);
+				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 				FUpdateLevelVisibilityLevelInfo::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Parameters.LevelVisibilities[i]));
 			}
 		}
@@ -8114,8 +8470,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateLevelVisibility
 		PlayerController_eventServerUpdateLevelVisibility_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.PackageName = FName((Op.Request.field_packagename()).data());
-		Parameters.bIsVisible = Op.Request.field_bisvisible();
+		{
+			Parameters.PackageName = FName((Op.Request.field_packagename()).data());
+		}
+		{
+			Parameters.bIsVisible = Op.Request.field_bisvisible();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerUpdateLevelVisibility, target: %s %s"),
@@ -8171,12 +8531,14 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateCamera_OnRPCPay
 			auto& ValueDataStr = Op.Request.field_camloc();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.CamLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize failed."));
 		}
-		Parameters.CamPitchAndYaw = Op.Request.field_campitchandyaw();
+		{
+			Parameters.CamPitchAndYaw = Op.Request.field_campitchandyaw();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerUpdateCamera, target: %s %s"),
@@ -8232,7 +8594,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUnmutePlayer_OnRPCPay
 			auto& ValueDataStr = Op.Request.field_playerid();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.PlayerId.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
@@ -8378,7 +8740,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSetSpectatorWaiting_O
 		PlayerController_eventServerSetSpectatorWaiting_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.bWaiting = Op.Request.field_bwaiting();
+		{
+			Parameters.bWaiting = Op.Request.field_bwaiting();
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerSetSpectatorWaiting, target: %s %s"),
@@ -8434,7 +8798,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSetSpectatorLocation_
 			auto& ValueDataStr = Op.Request.field_newloc();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.NewLoc.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
@@ -8443,7 +8807,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSetSpectatorLocation_
 			auto& ValueDataStr = Op.Request.field_newrot();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.NewRot.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
@@ -8589,7 +8953,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerNotifyLoadedWorld_OnR
 		PlayerController_eventServerNotifyLoadedWorld_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.WorldPackageName = FName((Op.Request.field_worldpackagename()).data());
+		{
+			Parameters.WorldPackageName = FName((Op.Request.field_worldpackagename()).data());
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerNotifyLoadedWorld, target: %s %s"),
@@ -8645,7 +9011,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerMutePlayer_OnRPCPaylo
 			auto& ValueDataStr = Op.Request.field_playerid();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
-			FMemoryReader ValueDataReader(ValueData);
+			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
 			bool bSuccess = true;
 			Parameters.PlayerId.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
@@ -8791,7 +9157,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerChangeName_OnRPCPaylo
 		PlayerController_eventServerChangeName_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.S = FString(UTF8_TO_TCHAR(Op.Request.field_s().c_str()));
+		{
+			Parameters.S = FString(UTF8_TO_TCHAR(Op.Request.field_s().c_str()));
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerChangeName, target: %s %s"),
@@ -8843,7 +9211,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerCamera_OnRPCPayload(c
 		PlayerController_eventServerCamera_Parms Parameters;
 
 		// Extract from request data.
-		Parameters.NewMode = FName((Op.Request.field_newmode()).data());
+		{
+			Parameters.NewMode = FName((Op.Request.field_newmode()).data());
+		}
 
 		// Call implementation.
 		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: ServerCamera, target: %s %s"),
