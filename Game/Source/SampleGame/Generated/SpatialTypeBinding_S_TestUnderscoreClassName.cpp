@@ -42,6 +42,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::Init(USpatialInterop* InInte
 	Super::Init(InInterop, InPackageMap);
 
 	RPCToSenderMap.Emplace("ClientUnderscoreRPC", &USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_SendRPC);
+	RPCToSenderMap.Emplace("Client_Bar_RPC", &USpatialTypeBinding_S_TestUnderscoreClassName::Client_Bar_RPC_SendRPC);
 
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("S_TestUnderscoreClassName"));
 
@@ -61,6 +62,7 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::Init(USpatialInterop* InInte
 	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, COND_None, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"foo_bar_car"}, COND_None, REPNOTIFY_OnChanged, 0));
 }
 
 void USpatialTypeBinding_S_TestUnderscoreClassName::BindToView(bool bIsClient)
@@ -123,7 +125,9 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::BindToView(bool bIsClient)
 
 	using ClientRPCCommandTypes = improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs::Commands;
 	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Clientunderscorerpc>(std::bind(&USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ClientRPCCommandTypes::Clientbarrpc>(std::bind(&USpatialTypeBinding_S_TestUnderscoreClassName::Client_Bar_RPC_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Clientunderscorerpc>(std::bind(&USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Clientbarrpc>(std::bind(&USpatialTypeBinding_S_TestUnderscoreClassName::Client_Bar_RPC_OnCommandResponse, this, std::placeholders::_1)));
 }
 
 void USpatialTypeBinding_S_TestUnderscoreClassName::UnbindFromView()
@@ -589,6 +593,13 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ServerSendUpdate_MultiClient
 			{
 				OutUpdate.set_field_instigator(SpatialConstants::NULL_OBJECT_REF);
 			}
+			break;
+		}
+		case 16: // field_foobarcar
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foobarcar(int32_t(Value));
 			break;
 		}
 	default:
@@ -1145,6 +1156,28 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ReceiveUpdate_MultiClient(US
 			}
 		}
 	}
+	if (!Update.field_foobarcar().empty())
+	{
+		// field_foobarcar
+		uint16 Handle = 16;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foobarcar().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
 }
 
@@ -1178,6 +1211,33 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_SendRPC(
 			*ObjectRefToString(TargetObjectRef));
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_S_TestUnderscoreClassName::Client_Bar_RPC_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+{
+	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
+	{
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+		{
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Client_Bar_RPC queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
+		}
+
+		// Build RPC Payload.
+		improbable::unreal::generated::stestunderscoreclassname::ClientBarRPCRequest RPCPayload;
+
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Client_Bar_RPC, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs::Commands::Clientbarrpc>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
@@ -1227,8 +1287,58 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnRPCPay
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+void USpatialTypeBinding_S_TestUnderscoreClassName::Client_Bar_RPC_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs::Commands::Clientbarrpc>& Op)
+{
+	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), {}, {}};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			// A legal static object reference should never be unresolved.
+			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Client_Bar_RPC_OnRPCPayload: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: Client_Bar_RPC_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Call implementation.
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: Client_Bar_RPC, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Client_Bar_RPC"))))
+		{
+			TargetObject->ProcessEvent(Function, nullptr);
+		}
+		else
+		{
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Client_Bar_RPC_OnRPCPayload: Function not found. Object: %s, Function: Client_Bar_RPC."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		// Send command response.
+		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
+		Connection->SendCommandResponse<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs::Commands::Clientbarrpc>(Op.RequestId, {});
+		return {};
+	};
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+}
 
 void USpatialTypeBinding_S_TestUnderscoreClassName::ClientUnderscoreRPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs::Commands::Clientunderscorerpc>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientUnderscoreRPC"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
+}
+
+void USpatialTypeBinding_S_TestUnderscoreClassName::Client_Bar_RPC_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs::Commands::Clientbarrpc>& Op)
+{
+	Interop->HandleCommandResponse_Internal(TEXT("Client_Bar_RPC"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }

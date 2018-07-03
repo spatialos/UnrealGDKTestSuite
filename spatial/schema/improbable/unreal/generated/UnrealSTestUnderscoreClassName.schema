@@ -24,6 +24,7 @@ component STestUnderscoreClassNameMultiClientRepData {
 	UnrealObjectRef field_owner = 13; // COND_None // ::Actor
 	uint32 field_role = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
+	int32 field_foobarcar = 16; // COND_None // ::S_TestUnderscoreClassName
 }
 component STestUnderscoreClassNameMigratableData {
 	id = 100030;
@@ -33,6 +34,7 @@ import "improbable/unreal/generated/UnrealSTestUnderscoreClassNameTypes.schema";
 component STestUnderscoreClassNameClientRPCs {
 	id = 100031;
 	command UnrealRPCCommandResponse clientunderscorerpc(stestunderscoreclassname.ClientUnderscoreRPCRequest);
+	command UnrealRPCCommandResponse clientbarrpc(stestunderscoreclassname.ClientBarRPCRequest);
 }
 component STestUnderscoreClassNameServerRPCs {
 	id = 100032;
