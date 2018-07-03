@@ -255,6 +255,24 @@ void ASampleGameCharacter::Server_TestFunc_Implementation()
 	TestBookend += 1;
 
 	TestCArrayReplication[4] += 1;
+
+	// Test C array nested structs
+	int32 Count = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			for (int k = 0; k < 3; k++)
+			{
+				FooStructArray[i].BarStructArray[j].FloatArray[k] = Count++;
+			}
+			FooStructArray[i].BarStructArray[j].IntOne = 27;
+			FooStructArray[i].BarStructArray[j].IntTwo = 88;
+		}
+		FooStructArray[i].IntOne = 69;
+		FooStructArray[i].IntTwo = 1337;
+	}
+
 	Client_TestFunc();
 
 	//UE_LOG(LogTemp, Warning, TEXT("RPC successfully called with an array of %d elements"), StructArg.Num());
@@ -303,6 +321,20 @@ void ASampleGameCharacter::OnRep_TestBookend()
 	check(TestDouble == 42.0);
 	// POD property checks end
 
+	// Static array testing.
+	int32 Count = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			for (int k = 0; k < 3; k++)
+			{
+				check(FooStructArray[i].BarStructArray[j].FloatArray[k] == Count++);
+			}
+		}
+	}
+	// Static array testing end.
+
 	check(TestEnumTArray.Num() > 0);
 	check(TestUEnumTArray.Num() > 0);
 
@@ -337,10 +369,12 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, StablyNamedObj, COND_None);
 
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestObjectArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestObjectArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, SkeletalMeshes, COND_SimulatedOnly);
+
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayReplication, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayStructReplication, COND_SimulatedOnly);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayStructReplication, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test8Enum, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test16Enum, COND_None);
@@ -351,6 +385,7 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestUEnum, COND_None);
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestUEnumCArray, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestUEnumTArray, COND_None);
+
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test8Int, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test16Int, COND_None);
@@ -365,6 +400,7 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, BarArray, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBar, COND_None);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, FooStructArray, COND_None);
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_None);
 }

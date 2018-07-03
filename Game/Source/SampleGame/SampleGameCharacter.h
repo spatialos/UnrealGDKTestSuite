@@ -73,13 +73,13 @@ struct FTestPODStruct
 	GENERATED_BODY();
 
 	UPROPERTY()
-		float FVar;
+	float FVar;
 
 	UPROPERTY()
-		int IVar;
+	int IVar;
 
 	UPROPERTY()
-		double DVar;
+	double DVar;
 
 	void Modify()
 	{
@@ -95,20 +95,53 @@ struct FConstStruct
 	GENERATED_BODY();
 
 	UPROPERTY()
-		const UObject* ConstObj;
+	const UObject* ConstObj;
 };
 
+// Static array testing start.
 USTRUCT()
 struct FCArrayStruct
 {
 	GENERATED_BODY();
 
 	UPROPERTY()
-		int CIntArray[8];
+	int CIntArray[3];
 
 	UPROPERTY()
-		float CFloatArray[8];
+	float CFloatArray[3];
 };
+
+USTRUCT(BlueprintType)
+struct FBarStruct
+{
+	GENERATED_BODY();
+
+	UPROPERTY()
+	int IntOne;
+
+	UPROPERTY()
+	int IntTwo;
+
+	UPROPERTY()
+	float FloatArray[3];
+};
+
+USTRUCT(BlueprintType)
+struct FFooStruct
+{
+	GENERATED_BODY();
+
+	UPROPERTY()
+	int IntOne;
+
+	UPROPERTY()
+	int IntTwo;
+
+	UPROPERTY()
+	FBarStruct BarStructArray[3];
+};
+// Static array testing end.
+
 
 // Enum tests start
 UENUM()
@@ -177,7 +210,7 @@ struct FBar
 	TArray<FFoo> CantReplicateThisMember;
 
 	UPROPERTY()
-		FTestStructWithNetSerialize MyStruct;
+	FTestStructWithNetSerialize MyStruct;
 
 	UPROPERTY()
 	FRepMovement NetSerializeStruct;
@@ -213,6 +246,9 @@ public:
 	TArray<float> TestPODArray;
 
 	UPROPERTY(Replicated)
+	FFooStruct FooStructArray[3];
+
+	UPROPERTY(Replicated)
 	TArray<FTestMixedStruct> TestMixedStructArray;
 
 	UPROPERTY(Replicated)
@@ -230,17 +266,17 @@ public:
 	UPROPERTY(Replicated)
 	USkeletalMesh* StablyNamedObj;
 
-	//UPROPERTY(Replicated)
-	//TArray<UObject*> TestObjectArray;
+	UPROPERTY(Replicated)
+	TArray<UObject*> TestObjectArray;
 
 	UPROPERTY(Replicated)
 	int TestCArrayReplication[8];
 
-	//UPROPERTY(Replicated)
-	//FCArrayStruct TestCArrayStructReplication;
+	UPROPERTY(Replicated)
+	FCArrayStruct TestCArrayStructReplication;
 
-	//UPROPERTY(Replicated)
-	//FTestMixedStruct TestMixedStructCArrayReplication[8];
+	UPROPERTY(Replicated)
+	FTestMixedStruct TestMixedStructCArrayReplication[8];
 
 	// Enum properties begin
 	UPROPERTY(Replicated)
@@ -308,6 +344,10 @@ public:
 
 	UPROPERTY(replicated)
 	FBar TestBar;
+
+	// Test Object pointer static array
+	UPROPERTY(Replicated)
+	class USkeletalMesh* SkeletalMeshes[3];
 
 	UPROPERTY(ReplicatedUsing = OnRep_TestBookend)
 	int TestBookend;
