@@ -19,8 +19,8 @@ bool ATestFloatReplication::Server_ReportReplication_Validate(float RepFloat, do
 
 void ATestFloatReplication::Server_ReportReplication_Implementation(float RepFloat, double RepDouble)
 {
-	check(FMath::IsNearlyEqual(RepFloat, 25.0f));
-	check(FMath::IsNearlyEqual(RepDouble, 50.0));
+	check(FMath::IsNearlyEqual(RepFloat, FloatComparisonValue));
+	check(FMath::IsNearlyEqual(RepDouble, DoubleComparisonValue));
 
 	SignalResponseRecieved();
 }
@@ -28,16 +28,16 @@ void ATestFloatReplication::Server_ReportReplication_Implementation(float RepFlo
 
 void ATestFloatReplication::StartTestImpl()
 {
-	TestFloat = 25.0f;
-	TestDouble = 50.0;
+	TestFloat = FloatComparisonValue;
+	TestDouble = DoubleComparisonValue;
 
 	SignalReplicationSetup();
 }
 
 void ATestFloatReplication::ValidateClientReplicationImpl()
 {
-	check(FMath::IsNearlyEqual(TestFloat, 25.0f));
-	check(FMath::IsNearlyEqual(TestDouble, 50.0));
+	check(FMath::IsNearlyEqual(TestFloat, FloatComparisonValue));
+	check(FMath::IsNearlyEqual(TestDouble, DoubleComparisonValue));
 }
 
 void ATestFloatReplication::SendTestResponseRPCImpl()

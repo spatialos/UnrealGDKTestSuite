@@ -16,7 +16,7 @@ public:
 	ATestBoolReplication() 
 		: TestBool(false)
 	{ 
-		TestName = "Bool types"; 
+		TestName = TEXT("Bool types"); 
 	}
 
 	UFUNCTION(Server, Reliable, WithValidation)

@@ -11,7 +11,8 @@
 #include "Tests/TestFloatReplication.h"
 #include "Tests/TestBoolReplication.h"
 #include "Tests/TestCharReplication.h"
-#include "Tests/TestFStringReplication.h"	
+#include "Tests/TestFStringReplication.h"
+#include "Tests/TestCArrayReplication.h"
 #include "SampleGameCharacter.generated.h"
 
 USTRUCT(BlueprintType)
@@ -317,20 +318,23 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_TestBookend)
 	int TestBookend;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_IntRepTest)
 	ATestIntReplication* IntRepTest;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_FloatRepTest)
 	ATestFloatReplication* FloatRepTest;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_BoolRepTest)
 	ATestBoolReplication* BoolRepTest;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_CharRepTest)
 	ATestCharReplication* CharRepTest;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_FStringRepTest)
 	ATestFStringReplication* FStringRepTest;
+
+	UPROPERTY(ReplicatedUsing = OnRep_CArrayRepTest)
+	ATestCArrayReplication* CArrayRepTest;
 
 	UFUNCTION(Client, Reliable)
 	void Client_TestConstArgs(FConstStruct ConstStruct);
@@ -347,6 +351,24 @@ public:
 
 	UFUNCTION()
 	void OnRep_TestBookend();
+
+	UFUNCTION()
+	void OnRep_IntRepTest();
+
+	UFUNCTION()
+	void OnRep_FloatRepTest();
+
+	UFUNCTION()
+	void OnRep_BoolRepTest();
+
+	UFUNCTION()
+	void OnRep_CharRepTest();
+
+	UFUNCTION()
+	void OnRep_FStringRepTest();
+
+	UFUNCTION()
+	void OnRep_CArrayRepTest();
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -390,6 +412,13 @@ protected:
 
 	UFUNCTION(NetMulticast, Unreliable, WithValidation)
 	void TestMulticast();
+
+	bool IntRepTestCreated;
+	bool FloatRepTestCreated;
+	bool BoolRepTestCreated;
+	bool CharRepTestCreated;
+	bool FStringRepTestCreated;
+	bool CArrayRepTestCreated;
 
 public:
 	/** Returns CameraBoom subobject **/

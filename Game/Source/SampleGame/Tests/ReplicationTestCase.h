@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "ReplicationTestCase.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(LogSpatialGDKTests, Log, All);
+
 UCLASS(Abstract)
 class SAMPLEGAME_API AReplicationTestCase : public AActor
 {
@@ -19,7 +21,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void StartTest();
+	void Server_StartTest();
 
 	UFUNCTION()
 	void OnRep_TestBookend();

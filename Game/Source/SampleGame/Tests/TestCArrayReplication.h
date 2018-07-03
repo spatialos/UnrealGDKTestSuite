@@ -5,23 +5,26 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ReplicationTestCase.h"
-#include "TestFStringReplication.generated.h"
+#include "TestCArrayReplication.generated.h"
 
 UCLASS()
-class SAMPLEGAME_API ATestFStringReplication : public AReplicationTestCase
+class SAMPLEGAME_API ATestCArrayReplication : public AReplicationTestCase
 {
 	GENERATED_BODY()
 public:	
 
-	ATestFStringReplication() 
-		: TestFString(TEXT(""))
-		, ComparisonValue(TEXT("Here's Johnny!"))
+	ATestCArrayReplication()
+		: FirstComparisonValue(42)
+		, SecondComparisonValue(56)
 	{ 
-		TestName = TEXT("FString types"); 
+		TestPOD[0] = 0;
+		TestPOD[1] = 0;
+		TestName = TEXT("C-Style Array types"); 
 	}
 
+	// Replicated C-style arrays are not supported in Unreal.
 	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_ReportReplication(const FString& RepFString);
+	void Server_ReportReplication(/*int RepCArray[2]*/);
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -35,7 +38,8 @@ public:
 	virtual void SendTestResponseRPCImpl() override;
 
 	UPROPERTY(Replicated)
-	FString TestFString;
+	int TestPOD[2];
 
-	const FString ComparisonValue;
+	int FirstComparisonValue;
+	int SecondComparisonValue;
 };

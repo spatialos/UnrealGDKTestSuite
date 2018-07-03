@@ -43,7 +43,7 @@ void USpatialTypeBinding_TestCharReplication::Init(USpatialInterop* InInterop, U
 	Super::Init(InInterop, InPackageMap);
 
 	RPCToSenderMap.Emplace("Server_ReportReplication", &USpatialTypeBinding_TestCharReplication::Server_ReportReplication_SendRPC);
-	RPCToSenderMap.Emplace("StartTest", &USpatialTypeBinding_TestCharReplication::StartTest_SendRPC);
+	RPCToSenderMap.Emplace("Server_StartTest", &USpatialTypeBinding_TestCharReplication::Server_StartTest_SendRPC);
 
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("TestCharReplication"));
 
@@ -128,9 +128,9 @@ void USpatialTypeBinding_TestCharReplication::BindToView(bool bIsClient)
 
 	using ServerRPCCommandTypes = improbable::unreal::generated::testcharreplication::TestCharReplicationServerRPCs::Commands;
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverreportreplication>(std::bind(&USpatialTypeBinding_TestCharReplication::Server_ReportReplication_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Starttest>(std::bind(&USpatialTypeBinding_TestCharReplication::StartTest_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverstarttest>(std::bind(&USpatialTypeBinding_TestCharReplication::Server_StartTest_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverreportreplication>(std::bind(&USpatialTypeBinding_TestCharReplication::Server_ReportReplication_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Starttest>(std::bind(&USpatialTypeBinding_TestCharReplication::StartTest_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverstarttest>(std::bind(&USpatialTypeBinding_TestCharReplication::Server_StartTest_OnCommandResponse, this, std::placeholders::_1)));
 }
 
 void USpatialTypeBinding_TestCharReplication::UnbindFromView()
@@ -1276,7 +1276,7 @@ void USpatialTypeBinding_TestCharReplication::Server_ReportReplication_SendRPC(w
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
-void USpatialTypeBinding_TestCharReplication::StartTest_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+void USpatialTypeBinding_TestCharReplication::Server_StartTest_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -1284,21 +1284,21 @@ void USpatialTypeBinding_TestCharReplication::StartTest_SendRPC(worker::Connecti
 		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC StartTest queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_StartTest queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 			return {TargetObject};
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::replicationtestcase::StartTestRequest RPCPayload;
+		improbable::unreal::generated::replicationtestcase::ServerStartTestRequest RPCPayload;
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
-		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: StartTest, target: %s %s"),
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Server_StartTest, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::testcharreplication::TestCharReplicationServerRPCs::Commands::Starttest>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::testcharreplication::TestCharReplicationServerRPCs::Commands::Serverstarttest>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
@@ -1348,7 +1348,7 @@ void USpatialTypeBinding_TestCharReplication::Server_ReportReplication_OnRPCPayl
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_TestCharReplication::StartTest_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testcharreplication::TestCharReplicationServerRPCs::Commands::Starttest>& Op)
+void USpatialTypeBinding_TestCharReplication::Server_StartTest_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testcharreplication::TestCharReplicationServerRPCs::Commands::Serverstarttest>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -1358,37 +1358,37 @@ void USpatialTypeBinding_TestCharReplication::StartTest_OnRPCPayload(const worke
 		{
 			// A legal static object reference should never be unresolved.
 			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: StartTest_OnRPCPayload: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_StartTest_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: StartTest_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: Server_StartTest_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
 
 		// Call implementation.
-		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: StartTest, target: %s %s"),
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: Server_StartTest, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("StartTest"))))
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Server_StartTest"))))
 		{
 			TargetObject->ProcessEvent(Function, nullptr);
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: StartTest_OnRPCPayload: Function not found. Object: %s, Function: StartTest."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_StartTest_OnRPCPayload: Function not found. Object: %s, Function: Server_StartTest."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::testcharreplication::TestCharReplicationServerRPCs::Commands::Starttest>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::testcharreplication::TestCharReplicationServerRPCs::Commands::Serverstarttest>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
@@ -1399,7 +1399,7 @@ void USpatialTypeBinding_TestCharReplication::Server_ReportReplication_OnCommand
 	Interop->HandleCommandResponse_Internal(TEXT("Server_ReportReplication"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_TestCharReplication::StartTest_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testcharreplication::TestCharReplicationServerRPCs::Commands::Starttest>& Op)
+void USpatialTypeBinding_TestCharReplication::Server_StartTest_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testcharreplication::TestCharReplicationServerRPCs::Commands::Serverstarttest>& Op)
 {
-	Interop->HandleCommandResponse_Internal(TEXT("StartTest"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
+	Interop->HandleCommandResponse_Internal(TEXT("Server_StartTest"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }

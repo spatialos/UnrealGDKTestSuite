@@ -41,7 +41,7 @@ component TestBoolReplicationClientRPCs {
 component TestBoolReplicationServerRPCs {
 	id = 100062;
 	command UnrealRPCCommandResponse serverreportreplication(testboolreplication.ServerReportReplicationRequest);
-	command UnrealRPCCommandResponse starttest(replicationtestcase.StartTestRequest);
+	command UnrealRPCCommandResponse serverstarttest(replicationtestcase.ServerStartTestRequest);
 }
 component TestBoolReplicationNetMulticastRPCs {
 	id = 100063;

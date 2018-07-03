@@ -14,7 +14,7 @@ class SAMPLEGAME_API ATestCharReplication : public AReplicationTestCase
 	GENERATED_BODY()
 public:	
 
-	ATestCharReplication() { TestName = "Char types"; }
+	ATestCharReplication() { TestName = TEXT("Char types"); }
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReportReplication();

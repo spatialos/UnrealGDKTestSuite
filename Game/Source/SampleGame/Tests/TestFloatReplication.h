@@ -13,7 +13,12 @@ class SAMPLEGAME_API ATestFloatReplication : public AReplicationTestCase
 	GENERATED_BODY()
 public:	
 
-	ATestFloatReplication() { TestName = "Float types"; }
+	ATestFloatReplication() 
+		: FloatComparisonValue(25.0f)
+		, DoubleComparisonValue(50.0)
+	{ 
+		TestName = TEXT("Float types"); 
+	}
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReportReplication(float RepFloat, double RepDouble);
@@ -34,4 +39,7 @@ public:
 
 	UPROPERTY(Replicated)
 	double TestDouble;
+
+	float FloatComparisonValue;
+	double DoubleComparisonValue;
 };

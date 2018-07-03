@@ -13,7 +13,7 @@ class SAMPLEGAME_API ATestIntReplication : public AReplicationTestCase
 	GENERATED_BODY()
 public:	
 
-	ATestIntReplication() { TestName = "Int types"; }
+	ATestIntReplication() { TestName = TEXT("Int types"); }
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReportReplication(int8 Rep8Int, int16 Rep16Int, int32 Rep32Int, int64 Rep64Int, uint8 Rep8UInt, uint16 Rep16UInt, uint32 Rep32UInt, uint64 Rep64UInt);

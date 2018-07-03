@@ -48,7 +48,7 @@ component TestIntReplicationClientRPCs {
 component TestIntReplicationServerRPCs {
 	id = 100050;
 	command UnrealRPCCommandResponse serverreportreplication(testintreplication.ServerReportReplicationRequest);
-	command UnrealRPCCommandResponse starttest(replicationtestcase.StartTestRequest);
+	command UnrealRPCCommandResponse serverstarttest(replicationtestcase.ServerStartTestRequest);
 }
 component TestIntReplicationNetMulticastRPCs {
 	id = 100051;

@@ -41,7 +41,7 @@ component TestFStringReplicationClientRPCs {
 component TestFStringReplicationServerRPCs {
 	id = 100074;
 	command UnrealRPCCommandResponse serverreportreplication(testfstringreplication.ServerReportReplicationRequest);
-	command UnrealRPCCommandResponse starttest(replicationtestcase.StartTestRequest);
+	command UnrealRPCCommandResponse serverstarttest(replicationtestcase.ServerStartTestRequest);
 }
 component TestFStringReplicationNetMulticastRPCs {
 	id = 100075;

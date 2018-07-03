@@ -42,7 +42,7 @@ component TestFloatReplicationClientRPCs {
 component TestFloatReplicationServerRPCs {
 	id = 100056;
 	command UnrealRPCCommandResponse serverreportreplication(testfloatreplication.ServerReportReplicationRequest);
-	command UnrealRPCCommandResponse starttest(replicationtestcase.StartTestRequest);
+	command UnrealRPCCommandResponse serverstarttest(replicationtestcase.ServerStartTestRequest);
 }
 component TestFloatReplicationNetMulticastRPCs {
 	id = 100057;

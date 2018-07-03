@@ -18,21 +18,21 @@ bool ATestFStringReplication::Server_ReportReplication_Validate(const FString& R
 
 void ATestFStringReplication::Server_ReportReplication_Implementation(const FString& RepFString)
 {
-	check(RepFString == TEXT("Here's Johnny!"));
+	check(RepFString == ComparisonValue);
 
 	SignalResponseRecieved();
 }
 
 void ATestFStringReplication::StartTestImpl()
 {
-	TestFString = TEXT("Here's Johnny!");
+	TestFString = ComparisonValue;
 
 	SignalReplicationSetup();
 }
 
 void ATestFStringReplication::ValidateClientReplicationImpl()
 {
-	check(TestFString == TEXT("Here's Johnny!"));
+	check(TestFString == ComparisonValue);
 }
 
 void ATestFStringReplication::SendTestResponseRPCImpl()
