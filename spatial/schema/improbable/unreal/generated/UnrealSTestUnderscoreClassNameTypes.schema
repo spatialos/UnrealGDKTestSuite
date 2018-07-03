@@ -7,3 +7,6 @@ import "improbable/unreal/gdk/core_types.schema";
 type ClientUnderscoreRPCRequest {
 	uint32 target_subobject_offset = 1;
 }
+type ClientBarRPCRequest {
+	uint32 target_subobject_offset = 1;
+}

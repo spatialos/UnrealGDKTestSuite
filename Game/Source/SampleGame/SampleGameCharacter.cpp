@@ -450,14 +450,3 @@ bool ASampleGameCharacter::TestMulticast_Validate()
 void ASampleGameCharacter::TestMulticast_Implementation()
 {
 }
-
-
-bool ASampleGameCharacter::TestRPC_Validate()
-{
-	return true;
-}
-
-void ASampleGameCharacter::TestRPC_Implementation()
-{
-
-}

@@ -52,7 +52,15 @@ class AS_TestUnderscoreClassName : public AActor
 public:
 	AS_TestUnderscoreClassName();
 
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UPROPERTY(replicated)
+	int foo_bar_car;
+
 	UFUNCTION(Client, Reliable)
 	void ClientUnderscoreRPC();
+
+	UFUNCTION(Client, Reliable)
+	void Client_Bar_RPC();
 };
 

@@ -122,7 +122,6 @@ component SampleGameCharacterClientRPCs {
 }
 component SampleGameCharacterServerRPCs {
 	id = 100026;
-	command UnrealRPCCommandResponse testrpc(samplegamecharacter.TestRPCRequest);
 	command UnrealRPCCommandResponse servertestfunc(samplegamecharacter.ServerTestFuncRequest);
 	command UnrealRPCCommandResponse servermoveold(character.ServerMoveOldRequest);
 	command UnrealRPCCommandResponse servermovenobase(character.ServerMoveNoBaseRequest);
