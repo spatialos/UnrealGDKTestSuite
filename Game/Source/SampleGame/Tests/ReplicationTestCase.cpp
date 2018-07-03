@@ -81,6 +81,4 @@ void AReplicationTestCase::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION(AReplicationTestCase, TestBookend, COND_None);
-	DOREPLIFETIME_CONDITION(AReplicationTestCase, bRunning, COND_None);
-	DOREPLIFETIME_CONDITION(AReplicationTestCase, bSuccess, COND_None);
 }

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #pragma once
 
@@ -14,7 +14,7 @@ class SAMPLEGAME_API ATestCArrayReplication : public AReplicationTestCase
 public:	
 
 	ATestCArrayReplication()
-		: FirstComparisonValue(42)
+		: FirstComparisonValue(-42)
 		, SecondComparisonValue(56)
 	{ 
 		TestPOD[0] = 0;

@@ -25,16 +25,14 @@ component TestIntReplicationMultiClientRepData {
 	uint32 field_role = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
 	int32 field_testbookend = 16; // COND_None // ::ReplicationTestCase
-	bool field_brunning = 17; // COND_None // ::ReplicationTestCase
-	bool field_bsuccess = 18; // COND_None // ::ReplicationTestCase
-	int32 field_test8int = 19; // COND_None // ::TestIntReplication
-	int32 field_test16int = 20; // COND_None // ::TestIntReplication
-	int32 field_test32int = 21; // COND_None // ::TestIntReplication
-	int64 field_test64int = 22; // COND_None // ::TestIntReplication
-	uint32 field_test8uint = 23; // COND_None // ::TestIntReplication
-	uint32 field_test16uint = 24; // COND_None // ::TestIntReplication
-	uint32 field_test32uint = 25; // COND_None // ::TestIntReplication
-	uint64 field_test64uint = 26; // COND_None // ::TestIntReplication
+	int32 field_test8int = 17; // COND_None // ::TestIntReplication
+	int32 field_test16int = 18; // COND_None // ::TestIntReplication
+	int32 field_test32int = 19; // COND_None // ::TestIntReplication
+	int64 field_test64int = 20; // COND_None // ::TestIntReplication
+	uint32 field_test8uint = 21; // COND_None // ::TestIntReplication
+	uint32 field_test16uint = 22; // COND_None // ::TestIntReplication
+	uint32 field_test32uint = 23; // COND_None // ::TestIntReplication
+	uint64 field_test64uint = 24; // COND_None // ::TestIntReplication
 }
 component TestIntReplicationMigratableData {
 	id = 100048;

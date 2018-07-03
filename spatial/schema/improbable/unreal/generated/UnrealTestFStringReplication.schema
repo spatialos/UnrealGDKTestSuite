@@ -25,9 +25,7 @@ component TestFStringReplicationMultiClientRepData {
 	uint32 field_role = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
 	int32 field_testbookend = 16; // COND_None // ::ReplicationTestCase
-	bool field_brunning = 17; // COND_None // ::ReplicationTestCase
-	bool field_bsuccess = 18; // COND_None // ::ReplicationTestCase
-	string field_testfstring = 19; // COND_None // ::TestFStringReplication
+	string field_testfstring = 17; // COND_None // ::TestFStringReplication
 }
 component TestFStringReplicationMigratableData {
 	id = 100072;
