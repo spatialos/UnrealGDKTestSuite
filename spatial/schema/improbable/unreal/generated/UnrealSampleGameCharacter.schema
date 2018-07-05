@@ -55,6 +55,9 @@ component SampleGameCharacterMultiClientRepData {
 }
 component SampleGameCharacterMigratableData {
 	id = 100024;
+	uint32 field_charactermovement_movementmode = 1;
+	uint32 field_charactermovement_custommovementmode = 2;
+	uint32 field_charactermovement_groundmovementmode = 3;
 }
 import "improbable/unreal/generated/UnrealSampleGameCharacterTypes.schema";
 import "improbable/unreal/generated/UnrealCharacterTypes.schema";

@@ -146,6 +146,9 @@ void USpatialTypeBinding_SampleGamePlayerController::Init(USpatialInterop* InInt
 	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"Pawn"}, COND_None, REPNOTIFY_Always, 0));
 	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"TargetViewRotation"}, COND_OwnerOnly, REPNOTIFY_OnChanged, 0));
 	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"SpawnLocation"}, COND_OwnerOnly, REPNOTIFY_OnChanged, 0));
+
+	// Populate MigratableHandleToPropertyMap.
+	MigratableHandleToPropertyMap.Add(1, FMigratableHandleData(Class, {"AcknowledgedPawn"}));
 }
 
 void USpatialTypeBinding_SampleGamePlayerController::BindToView(bool bIsClient)
@@ -978,6 +981,42 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 
 void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData::Update& OutUpdate) const
 {
+	switch (Handle)
+	{
+		case 1: // field_acknowledgedpawn
+		{
+			APawn* Value = *(reinterpret_cast<APawn* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					Interop->QueueOutgoingObjectMigUpdate_Internal(Value, Channel, 1);
+				}
+				else
+				{
+					OutUpdate.set_field_acknowledgedpawn(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_acknowledgedpawn(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+	default:
+		checkf(false, TEXT("Unknown migration property handle %d encountered when creating a SpatialOS update."));
+		break;
+	}
 }
 
 void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerSingleClientRepData::Update& Update) const
@@ -1687,6 +1726,59 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 
 void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData::Update& Update) const
 {
+	const FMigratableHandlePropertyMap& HandleToPropertyMap = GetMigratableHandlePropertyMap();
+
+	if (!Update.field_acknowledgedpawn().empty())
+	{
+		// field_acknowledgedpawn
+		uint16 Handle = 1;
+		const FMigratableHandleData* MigratableData = &HandleToPropertyMap[Handle];
+		bool bWriteObjectProperty = true;
+		uint8* PropertyData = MigratableData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+		APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
+
+		improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_acknowledgedpawn().data());
+		check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+		if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+		{
+			Value = nullptr;
+		}
+		else
+		{
+			FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+			if (NetGUID.IsValid())
+			{
+				UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+				checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+				checkf(Cast<APawn>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+				Value = Cast<APawn>(Object_Raw);
+			}
+			else
+			{
+				UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ObjectRefToString(ObjectRef),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*MigratableData->Property->GetName(),
+					Handle);
+				bWriteObjectProperty = false;
+				Interop->QueueIncomingObjectMigUpdate_Internal(ObjectRef, ActorChannel, MigratableData);
+			}
+		}
+
+		if (bWriteObjectProperty)
+		{
+			ApplyIncomingMigratablePropertyUpdate(*MigratableData, ActorChannel->Actor, static_cast<const void*>(&Value));
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received migratable property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*MigratableData->Property->GetName(),
+				Handle);
+		}
+	}
 }
 
 void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerNetMulticastRPCs::Update& Update)
