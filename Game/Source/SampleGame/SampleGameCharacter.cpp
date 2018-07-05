@@ -291,6 +291,24 @@ void ASampleGameCharacter::Server_TestFunc_Implementation()
 	TestBookend += 1;
 
 	TestCArrayReplication[4] += 1;
+
+	// Test C array nested structs
+	int32 Count = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			for (int k = 0; k < 3; k++)
+			{
+				FooStructArray[i].BarStructArray[j].FloatArray[k] = Count++;
+			}
+			FooStructArray[i].BarStructArray[j].IntOne = 27;
+			FooStructArray[i].BarStructArray[j].IntTwo = 88;
+		}
+		FooStructArray[i].IntOne = 69;
+		FooStructArray[i].IntTwo = 1337;
+	}
+
 	Client_TestFunc();
 
 	//UE_LOG(LogTemp, Warning, TEXT("RPC successfully called with an array of %d elements"), StructArg.Num());
@@ -358,6 +376,20 @@ void ASampleGameCharacter::OnRep_TestBookend()
 		check(Test64Enum == ETest64Enum::Enum_1);
 		check(TestUEnum == EnumNamespace::Enum_1);
 	}
+
+	// Static array testing.
+	int32 Count = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			for (int k = 0; k < 3; k++)
+			{
+				check(FooStructArray[i].BarStructArray[j].FloatArray[k] == Count++);
+			}
+		}
+	}
+	// Static array testing end.
 }
 
 void ASampleGameCharacter::OnRep_IntRepTest()
@@ -407,6 +439,8 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayReplication, COND_None);
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayStructReplication, COND_SimulatedOnly);
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, FooStructArray, COND_None);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, SkeletalMeshes, COND_None);
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test8Enum, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test16Enum, COND_None);

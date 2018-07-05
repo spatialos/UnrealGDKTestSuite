@@ -116,6 +116,50 @@ struct FCArrayStruct
 		float CFloatArray[8];
 };
 
+// Static array testing start.
+USTRUCT()
+struct FCArrayStruct
+{
+	GENERATED_BODY();
+
+	UPROPERTY()
+	int CIntArray[3];
+
+	UPROPERTY()
+	float CFloatArray[3];
+};
+
+USTRUCT(BlueprintType)
+struct FBarStruct
+{
+	GENERATED_BODY();
+
+	UPROPERTY()
+	int IntOne;
+
+	UPROPERTY()
+	int IntTwo;
+
+	UPROPERTY()
+	float FloatArray[3];
+};
+
+USTRUCT(BlueprintType)
+struct FFooStruct
+{
+	GENERATED_BODY();
+
+	UPROPERTY()
+	int IntOne;
+
+	UPROPERTY()
+	int IntTwo;
+
+	UPROPERTY()
+	FBarStruct BarStructArray[3];
+};
+// Static array testing end.
+
 // Enum tests start
 UENUM()
 enum class ETest8Enum : uint8
@@ -247,6 +291,14 @@ public:
 
 	//UPROPERTY(Replicated)
 	//FTestMixedStruct TestMixedStructCArrayReplication[8];
+
+	// Test Object pointer static array
+	UPROPERTY(Replicated)
+	class USkeletalMesh* SkeletalMeshes[3];
+
+	// Test static arrays of structs
+	UPROPERTY(Replicated)
+	FFooStruct FooStructArray[3];
 
 	// Enum properties begin
 	UPROPERTY(Replicated)
