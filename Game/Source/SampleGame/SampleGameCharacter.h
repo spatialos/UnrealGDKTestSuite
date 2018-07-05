@@ -13,6 +13,7 @@
 #include "Tests/TestCharReplication.h"
 #include "Tests/TestFStringReplication.h"
 #include "Tests/TestCArrayReplication.h"
+#include "Tests/TestTArrayStablyNamedUObjectsReplication.h"
 #include "SampleGameCharacter.generated.h"
 
 USTRUCT(BlueprintType)
@@ -336,6 +337,9 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_CArrayRepTest)
 	ATestCArrayReplication* CArrayRepTest;
 
+	UPROPERTY(ReplicatedUsing = OnRep_TArrayUObjectsRepTest)
+	ATestTArrayStablyNamedUObjectsReplication* TArrayUObjectsRepTest;
+
 	UFUNCTION(Client, Reliable)
 	void Client_TestConstArgs(FConstStruct ConstStruct);
 
@@ -369,6 +373,9 @@ public:
 
 	UFUNCTION()
 	void OnRep_CArrayRepTest();
+
+	UFUNCTION()
+	void OnRep_TArrayUObjectsRepTest();
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -416,6 +423,7 @@ protected:
 	bool CharRepTestCreated;
 	bool FStringRepTestCreated;
 	bool CArrayRepTestCreated;
+	bool TArrayUObjectsRepTestCreated;
 
 public:
 	/** Returns CameraBoom subobject **/

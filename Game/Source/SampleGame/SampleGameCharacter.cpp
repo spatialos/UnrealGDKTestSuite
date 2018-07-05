@@ -73,6 +73,7 @@ ASampleGameCharacter::ASampleGameCharacter()
 	CharRepTestCreated = false;
 	FStringRepTestCreated = false;
 	CArrayRepTestCreated = false;
+	TArrayUObjectsRepTest = false;
 }
 
 void ASampleGameCharacter::BeginPlay()
@@ -94,6 +95,8 @@ void ASampleGameCharacter::BeginPlay()
 		check(FStringRepTest);
 		CArrayRepTest = World->SpawnActor<ATestCArrayReplication>();
 		check(CArrayRepTest);
+		TArrayUObjectsRepTest = World->SpawnActor<ATestTArrayStablyNamedUObjectsReplication>();
+		check(TArrayUObjectsRepTest);
 	}
 }
 
@@ -143,7 +146,7 @@ void ASampleGameCharacter::DebugCmd()
 
 	Server_TestFunc();
 
-	if (IntRepTestCreated && FloatRepTestCreated && BoolRepTestCreated && CharRepTestCreated && FStringRepTestCreated && CArrayRepTestCreated)
+	if (IntRepTestCreated && FloatRepTestCreated && BoolRepTestCreated && CharRepTestCreated && FStringRepTestCreated && CArrayRepTestCreated && TArrayUObjectsRepTestCreated)
 	{
 		IntRepTest->Server_StartTest();
 		FloatRepTest->Server_StartTest();
@@ -151,6 +154,7 @@ void ASampleGameCharacter::DebugCmd()
 		CharRepTest->Server_StartTest();
 		FStringRepTest->Server_StartTest();
 		CArrayRepTest->Server_StartTest();
+		TArrayUObjectsRepTest->Server_StartTest();
 	}
 	else
 	{
@@ -161,6 +165,7 @@ void ASampleGameCharacter::DebugCmd()
 		UE_LOG(LogTemp, Error, TEXT("CharRepTestCreated: %s"), CharRepTestCreated ? TEXT("TRUE") : TEXT("FALSE"));
 		UE_LOG(LogTemp, Error, TEXT("FStringRepTestCreated: %s"), FStringRepTestCreated ? TEXT("TRUE") : TEXT("FALSE"));
 		UE_LOG(LogTemp, Error, TEXT("CArrayRepTestCreated: %s"), CArrayRepTestCreated ? TEXT("TRUE") : TEXT("FALSE"));
+		UE_LOG(LogTemp, Error, TEXT("TArrayUObjectsRepTest: %s"), TArrayUObjectsRepTest ? TEXT("TRUE") : TEXT("FALSE"));
 	}
 	//Server_TestFunc(TempArray);
 }
@@ -390,6 +395,11 @@ void ASampleGameCharacter::OnRep_CArrayRepTest()
 	CArrayRepTestCreated = true;
 }
 
+void ASampleGameCharacter::OnRep_TArrayUObjectsRepTest()
+{
+	TArrayUObjectsRepTestCreated = true;
+}
+
 void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -440,6 +450,7 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, CharRepTest, COND_InitialOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, FStringRepTest, COND_InitialOnly);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, CArrayRepTest, COND_InitialOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TArrayUObjectsRepTest, COND_InitialOnly);
 }
 
 bool ASampleGameCharacter::TestMulticast_Validate()
