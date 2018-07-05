@@ -50,24 +50,78 @@ void USpatialTypeBinding_TestCArrayReplication::Init(USpatialInterop* InInterop,
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("TestCArrayReplication"));
 
 	// Populate RepHandleToPropertyMap.
-	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(2, FRepHandleData(Class, {"bReplicateMovement"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(4, FRepHandleData(Class, {"bCanBeDamaged"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(5, FRepHandleData(Class, {"RemoteRole"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(6, FRepHandleData(Class, {"ReplicatedMovement"}, COND_SimulatedOrPhysics, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(7, FRepHandleData(Class, {"AttachmentReplication", "AttachParent"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(8, FRepHandleData(Class, {"AttachmentReplication", "LocationOffset"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(9, FRepHandleData(Class, {"AttachmentReplication", "RelativeScale3D"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(10, FRepHandleData(Class, {"AttachmentReplication", "RotationOffset"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(11, FRepHandleData(Class, {"AttachmentReplication", "AttachSocket"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(12, FRepHandleData(Class, {"AttachmentReplication", "AttachComponent"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestBookend"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"TestPOD"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"TestPOD"}, COND_None, REPNOTIFY_OnChanged, 4));
+	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(2, FRepHandleData(Class, {"bReplicateMovement"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(4, FRepHandleData(Class, {"bCanBeDamaged"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(5, FRepHandleData(Class, {"RemoteRole"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(6, FRepHandleData(Class, {"ReplicatedMovement"}, {0}, COND_SimulatedOrPhysics, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(7, FRepHandleData(Class, {"AttachmentReplication", "AttachParent"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(8, FRepHandleData(Class, {"AttachmentReplication", "LocationOffset"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(9, FRepHandleData(Class, {"AttachmentReplication", "RelativeScale3D"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(10, FRepHandleData(Class, {"AttachmentReplication", "RotationOffset"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(11, FRepHandleData(Class, {"AttachmentReplication", "AttachSocket"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(12, FRepHandleData(Class, {"AttachmentReplication", "AttachComponent"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestBookend"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"TestPOD"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"TestPOD"}, {1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"SkeletalMeshes"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"SkeletalMeshes"}, {1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"SkeletalMeshes"}, {2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"FooStructArray", "IntOne"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(23, FRepHandleData(Class, {"FooStructArray", "IntTwo"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(24, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {0, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(25, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {0, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(27, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 0, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(28, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 0, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(29, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {0, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(30, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {0, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(31, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(32, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 1, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(33, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 1, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(34, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {0, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(35, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {0, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(36, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(37, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 2, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(38, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {0, 2, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(39, FRepHandleData(Class, {"FooStructArray", "IntOne"}, {1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(40, FRepHandleData(Class, {"FooStructArray", "IntTwo"}, {1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(41, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {1, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(42, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {1, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(43, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 0, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(45, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 0, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(46, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {1, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(47, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {1, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(48, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(49, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 1, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(50, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 1, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(51, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {1, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(52, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {1, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(53, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(54, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 2, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(55, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {1, 2, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(56, FRepHandleData(Class, {"FooStructArray", "IntOne"}, {2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(57, FRepHandleData(Class, {"FooStructArray", "IntTwo"}, {2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(58, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {2, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(59, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {2, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(60, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(61, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 0, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(62, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 0, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(63, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {2, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(64, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {2, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(65, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 1, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(66, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 1, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(67, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 1, 2}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(68, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntOne"}, {2, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(69, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "IntTwo"}, {2, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(70, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 2, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(71, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 2, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(72, FRepHandleData(Class, {"FooStructArray", "BarStructArray", "FloatArray"}, {2, 2, 2}, COND_None, REPNOTIFY_OnChanged));
 }
 
 void USpatialTypeBinding_TestCArrayReplication::BindToView(bool bIsClient)
@@ -367,42 +421,42 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 {
 	switch (Handle)
 	{
-		case 1: // field_bhidden
+		case 1: // field_bhidden0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_bhidden(Value);
+			OutUpdate.set_field_bhidden0(Value);
 			break;
 		}
-		case 2: // field_breplicatemovement
+		case 2: // field_breplicatemovement0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_breplicatemovement(Value);
+			OutUpdate.set_field_breplicatemovement0(Value);
 			break;
 		}
-		case 3: // field_btearoff
+		case 3: // field_btearoff0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_btearoff(Value);
+			OutUpdate.set_field_btearoff0(Value);
 			break;
 		}
-		case 4: // field_bcanbedamaged
+		case 4: // field_bcanbedamaged0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_bcanbedamaged(Value);
+			OutUpdate.set_field_bcanbedamaged0(Value);
 			break;
 		}
-		case 5: // field_remoterole
+		case 5: // field_remoterole0
 		{
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(Data));
 
-			OutUpdate.set_field_remoterole(uint32_t(Value));
+			OutUpdate.set_field_remoterole0(uint32_t(Value));
 			break;
 		}
-		case 6: // field_replicatedmovement
+		case 6: // field_replicatedmovement0
 		{
 			const FRepMovement& Value = *(reinterpret_cast<FRepMovement const*>(Data));
 
@@ -416,7 +470,7 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 			const std::string& Result = (std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			if (UnresolvedObjects.Num() == 0)
 			{
-				OutUpdate.set_field_replicatedmovement(Result);
+				OutUpdate.set_field_replicatedmovement0(Result);
 			}
 			else
 			{
@@ -424,7 +478,7 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 			}
 			break;
 		}
-		case 7: // field_attachmentreplication_attachparent
+		case 7: // field_attachmentreplication0_attachparent0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
 
@@ -447,16 +501,16 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication_attachparent(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachparent0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_attachmentreplication_attachparent(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_attachmentreplication0_attachparent0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 8: // field_attachmentreplication_locationoffset
+		case 8: // field_attachmentreplication0_locationoffset0
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
@@ -470,7 +524,7 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 			const std::string& Result = (std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			if (UnresolvedObjects.Num() == 0)
 			{
-				OutUpdate.set_field_attachmentreplication_locationoffset(Result);
+				OutUpdate.set_field_attachmentreplication0_locationoffset0(Result);
 			}
 			else
 			{
@@ -478,7 +532,7 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 			}
 			break;
 		}
-		case 9: // field_attachmentreplication_relativescale3d
+		case 9: // field_attachmentreplication0_relativescale3d0
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
@@ -492,7 +546,7 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 			const std::string& Result = (std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			if (UnresolvedObjects.Num() == 0)
 			{
-				OutUpdate.set_field_attachmentreplication_relativescale3d(Result);
+				OutUpdate.set_field_attachmentreplication0_relativescale3d0(Result);
 			}
 			else
 			{
@@ -500,7 +554,7 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 			}
 			break;
 		}
-		case 10: // field_attachmentreplication_rotationoffset
+		case 10: // field_attachmentreplication0_rotationoffset0
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
@@ -514,7 +568,7 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 			const std::string& Result = (std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			if (UnresolvedObjects.Num() == 0)
 			{
-				OutUpdate.set_field_attachmentreplication_rotationoffset(Result);
+				OutUpdate.set_field_attachmentreplication0_rotationoffset0(Result);
 			}
 			else
 			{
@@ -522,14 +576,14 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 			}
 			break;
 		}
-		case 11: // field_attachmentreplication_attachsocket
+		case 11: // field_attachmentreplication0_attachsocket0
 		{
 			FName Value = *(reinterpret_cast<FName const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_attachsocket(TCHAR_TO_UTF8(*Value.ToString()));
+			OutUpdate.set_field_attachmentreplication0_attachsocket0(TCHAR_TO_UTF8(*Value.ToString()));
 			break;
 		}
-		case 12: // field_attachmentreplication_attachcomponent
+		case 12: // field_attachmentreplication0_attachcomponent0
 		{
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(Data));
 
@@ -552,16 +606,16 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication_attachcomponent(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachcomponent0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_attachmentreplication_attachcomponent(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_attachmentreplication0_attachcomponent0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 13: // field_owner
+		case 13: // field_owner0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
 
@@ -584,23 +638,23 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 				}
 				else
 				{
-					OutUpdate.set_field_owner(ObjectRef);
+					OutUpdate.set_field_owner0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_owner(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_owner0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 14: // field_role
+		case 14: // field_role0
 		{
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(Data));
 
-			OutUpdate.set_field_role(uint32_t(Value));
+			OutUpdate.set_field_role0(uint32_t(Value));
 			break;
 		}
-		case 15: // field_instigator
+		case 15: // field_instigator0
 		{
 			APawn* Value = *(reinterpret_cast<APawn* const*>(Data));
 
@@ -623,20 +677,20 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 				}
 				else
 				{
-					OutUpdate.set_field_instigator(ObjectRef);
+					OutUpdate.set_field_instigator0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_instigator(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_instigator0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 16: // field_testbookend
+		case 16: // field_testbookend0
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
-			OutUpdate.set_field_testbookend(int32_t(Value));
+			OutUpdate.set_field_testbookend0(int32_t(Value));
 			break;
 		}
 		case 17: // field_testpod0
@@ -651,6 +705,459 @@ void USpatialTypeBinding_TestCArrayReplication::ServerSendUpdate_MultiClient(con
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
 			OutUpdate.set_field_testpod1(int32_t(Value));
+			break;
+		}
+		case 19: // field_skeletalmeshes0
+		{
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 19);
+				}
+				else
+				{
+					OutUpdate.set_field_skeletalmeshes0(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_skeletalmeshes0(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 20: // field_skeletalmeshes1
+		{
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 20);
+				}
+				else
+				{
+					OutUpdate.set_field_skeletalmeshes1(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_skeletalmeshes1(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 21: // field_skeletalmeshes2
+		{
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 21);
+				}
+				else
+				{
+					OutUpdate.set_field_skeletalmeshes2(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_skeletalmeshes2(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 22: // field_foostructarray0_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_intone0(int32_t(Value));
+			break;
+		}
+		case 23: // field_foostructarray0_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_inttwo0(int32_t(Value));
+			break;
+		}
+		case 24: // field_foostructarray0_barstructarray0_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray0_intone0(int32_t(Value));
+			break;
+		}
+		case 25: // field_foostructarray0_barstructarray0_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray0_inttwo0(int32_t(Value));
+			break;
+		}
+		case 26: // field_foostructarray0_barstructarray0_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray0_floatarray0(Value);
+			break;
+		}
+		case 27: // field_foostructarray0_barstructarray0_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray0_floatarray1(Value);
+			break;
+		}
+		case 28: // field_foostructarray0_barstructarray0_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray0_floatarray2(Value);
+			break;
+		}
+		case 29: // field_foostructarray0_barstructarray1_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray1_intone0(int32_t(Value));
+			break;
+		}
+		case 30: // field_foostructarray0_barstructarray1_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray1_inttwo0(int32_t(Value));
+			break;
+		}
+		case 31: // field_foostructarray0_barstructarray1_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray1_floatarray0(Value);
+			break;
+		}
+		case 32: // field_foostructarray0_barstructarray1_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray1_floatarray1(Value);
+			break;
+		}
+		case 33: // field_foostructarray0_barstructarray1_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray1_floatarray2(Value);
+			break;
+		}
+		case 34: // field_foostructarray0_barstructarray2_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray2_intone0(int32_t(Value));
+			break;
+		}
+		case 35: // field_foostructarray0_barstructarray2_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray2_inttwo0(int32_t(Value));
+			break;
+		}
+		case 36: // field_foostructarray0_barstructarray2_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray2_floatarray0(Value);
+			break;
+		}
+		case 37: // field_foostructarray0_barstructarray2_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray2_floatarray1(Value);
+			break;
+		}
+		case 38: // field_foostructarray0_barstructarray2_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray0_barstructarray2_floatarray2(Value);
+			break;
+		}
+		case 39: // field_foostructarray1_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_intone0(int32_t(Value));
+			break;
+		}
+		case 40: // field_foostructarray1_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_inttwo0(int32_t(Value));
+			break;
+		}
+		case 41: // field_foostructarray1_barstructarray0_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray0_intone0(int32_t(Value));
+			break;
+		}
+		case 42: // field_foostructarray1_barstructarray0_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray0_inttwo0(int32_t(Value));
+			break;
+		}
+		case 43: // field_foostructarray1_barstructarray0_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray0_floatarray0(Value);
+			break;
+		}
+		case 44: // field_foostructarray1_barstructarray0_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray0_floatarray1(Value);
+			break;
+		}
+		case 45: // field_foostructarray1_barstructarray0_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray0_floatarray2(Value);
+			break;
+		}
+		case 46: // field_foostructarray1_barstructarray1_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray1_intone0(int32_t(Value));
+			break;
+		}
+		case 47: // field_foostructarray1_barstructarray1_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray1_inttwo0(int32_t(Value));
+			break;
+		}
+		case 48: // field_foostructarray1_barstructarray1_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray1_floatarray0(Value);
+			break;
+		}
+		case 49: // field_foostructarray1_barstructarray1_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray1_floatarray1(Value);
+			break;
+		}
+		case 50: // field_foostructarray1_barstructarray1_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray1_floatarray2(Value);
+			break;
+		}
+		case 51: // field_foostructarray1_barstructarray2_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray2_intone0(int32_t(Value));
+			break;
+		}
+		case 52: // field_foostructarray1_barstructarray2_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray2_inttwo0(int32_t(Value));
+			break;
+		}
+		case 53: // field_foostructarray1_barstructarray2_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray2_floatarray0(Value);
+			break;
+		}
+		case 54: // field_foostructarray1_barstructarray2_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray2_floatarray1(Value);
+			break;
+		}
+		case 55: // field_foostructarray1_barstructarray2_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray1_barstructarray2_floatarray2(Value);
+			break;
+		}
+		case 56: // field_foostructarray2_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_intone0(int32_t(Value));
+			break;
+		}
+		case 57: // field_foostructarray2_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_inttwo0(int32_t(Value));
+			break;
+		}
+		case 58: // field_foostructarray2_barstructarray0_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray0_intone0(int32_t(Value));
+			break;
+		}
+		case 59: // field_foostructarray2_barstructarray0_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray0_inttwo0(int32_t(Value));
+			break;
+		}
+		case 60: // field_foostructarray2_barstructarray0_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray0_floatarray0(Value);
+			break;
+		}
+		case 61: // field_foostructarray2_barstructarray0_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray0_floatarray1(Value);
+			break;
+		}
+		case 62: // field_foostructarray2_barstructarray0_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray0_floatarray2(Value);
+			break;
+		}
+		case 63: // field_foostructarray2_barstructarray1_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray1_intone0(int32_t(Value));
+			break;
+		}
+		case 64: // field_foostructarray2_barstructarray1_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray1_inttwo0(int32_t(Value));
+			break;
+		}
+		case 65: // field_foostructarray2_barstructarray1_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray1_floatarray0(Value);
+			break;
+		}
+		case 66: // field_foostructarray2_barstructarray1_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray1_floatarray1(Value);
+			break;
+		}
+		case 67: // field_foostructarray2_barstructarray1_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray1_floatarray2(Value);
+			break;
+		}
+		case 68: // field_foostructarray2_barstructarray2_intone0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray2_intone0(int32_t(Value));
+			break;
+		}
+		case 69: // field_foostructarray2_barstructarray2_inttwo0
+		{
+			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray2_inttwo0(int32_t(Value));
+			break;
+		}
+		case 70: // field_foostructarray2_barstructarray2_floatarray0
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray2_floatarray0(Value);
+			break;
+		}
+		case 71: // field_foostructarray2_barstructarray2_floatarray1
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray2_floatarray1(Value);
+			break;
+		}
+		case 72: // field_foostructarray2_barstructarray2_floatarray2
+		{
+			float Value = *(reinterpret_cast<float const*>(Data));
+
+			OutUpdate.set_field_foostructarray2_barstructarray2_floatarray2(Value);
 			break;
 		}
 	default:
@@ -680,9 +1187,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
-	if (!Update.field_bhidden().empty())
+	if (!Update.field_bhidden0().empty())
 	{
-		// field_bhidden
+		// field_bhidden0
 		uint16 Handle = 1;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -690,7 +1197,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_bhidden().data());
+			Value = (*Update.field_bhidden0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -702,9 +1209,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
-	if (!Update.field_breplicatemovement().empty())
+	if (!Update.field_breplicatemovement0().empty())
 	{
-		// field_breplicatemovement
+		// field_breplicatemovement0
 		uint16 Handle = 2;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -712,7 +1219,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_breplicatemovement().data());
+			Value = (*Update.field_breplicatemovement0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -724,9 +1231,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
-	if (!Update.field_btearoff().empty())
+	if (!Update.field_btearoff0().empty())
 	{
-		// field_btearoff
+		// field_btearoff0
 		uint16 Handle = 3;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -734,7 +1241,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_btearoff().data());
+			Value = (*Update.field_btearoff0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -746,9 +1253,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
-	if (!Update.field_bcanbedamaged().empty())
+	if (!Update.field_bcanbedamaged0().empty())
 	{
-		// field_bcanbedamaged
+		// field_bcanbedamaged0
 		uint16 Handle = 4;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -756,7 +1263,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_bcanbedamaged().data());
+			Value = (*Update.field_bcanbedamaged0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -768,9 +1275,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
-	if (!Update.field_remoterole().empty())
+	if (!Update.field_remoterole0().empty())
 	{
-		// field_remoterole
+		// field_remoterole0
 		uint16 Handle = 5;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -785,7 +1292,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(PropertyData));
 
-			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_remoterole().data())));
+			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_remoterole0().data())));
 
 			// Downgrade role from AutonomousProxy to SimulatedProxy if we aren't authoritative over
 			// the server RPCs component.
@@ -804,9 +1311,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedmovement().empty())
+	if (!Update.field_replicatedmovement0().empty())
 	{
-		// field_replicatedmovement
+		// field_replicatedmovement0
 		uint16 Handle = 6;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -814,7 +1321,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRepMovement Value = *(reinterpret_cast<FRepMovement const*>(PropertyData));
 
-			auto& ValueDataStr = (*Update.field_replicatedmovement().data());
+			auto& ValueDataStr = (*Update.field_replicatedmovement0().data());
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -832,9 +1339,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_attachparent().empty())
+	if (!Update.field_attachmentreplication0_attachparent0().empty())
 	{
-		// field_attachmentreplication_attachparent
+		// field_attachmentreplication0_attachparent0
 		uint16 Handle = 7;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -843,7 +1350,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachparent().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachparent0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -888,9 +1395,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			}
 		}
 	}
-	if (!Update.field_attachmentreplication_locationoffset().empty())
+	if (!Update.field_attachmentreplication0_locationoffset0().empty())
 	{
-		// field_attachmentreplication_locationoffset
+		// field_attachmentreplication0_locationoffset0
 		uint16 Handle = 8;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -898,7 +1405,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			auto& ValueDataStr = (*Update.field_attachmentreplication_locationoffset().data());
+			auto& ValueDataStr = (*Update.field_attachmentreplication0_locationoffset0().data());
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -916,9 +1423,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_relativescale3d().empty())
+	if (!Update.field_attachmentreplication0_relativescale3d0().empty())
 	{
-		// field_attachmentreplication_relativescale3d
+		// field_attachmentreplication0_relativescale3d0
 		uint16 Handle = 9;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -926,7 +1433,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			auto& ValueDataStr = (*Update.field_attachmentreplication_relativescale3d().data());
+			auto& ValueDataStr = (*Update.field_attachmentreplication0_relativescale3d0().data());
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -944,9 +1451,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_rotationoffset().empty())
+	if (!Update.field_attachmentreplication0_rotationoffset0().empty())
 	{
-		// field_attachmentreplication_rotationoffset
+		// field_attachmentreplication0_rotationoffset0
 		uint16 Handle = 10;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -954,7 +1461,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
-			auto& ValueDataStr = (*Update.field_attachmentreplication_rotationoffset().data());
+			auto& ValueDataStr = (*Update.field_attachmentreplication0_rotationoffset0().data());
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -972,9 +1479,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_attachsocket().empty())
+	if (!Update.field_attachmentreplication0_attachsocket0().empty())
 	{
-		// field_attachmentreplication_attachsocket
+		// field_attachmentreplication0_attachsocket0
 		uint16 Handle = 11;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -982,7 +1489,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FName Value = *(reinterpret_cast<FName const*>(PropertyData));
 
-			Value = FName(((*Update.field_attachmentreplication_attachsocket().data())).data());
+			Value = FName(((*Update.field_attachmentreplication0_attachsocket0().data())).data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -994,9 +1501,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_attachcomponent().empty())
+	if (!Update.field_attachmentreplication0_attachcomponent0().empty())
 	{
-		// field_attachmentreplication_attachcomponent
+		// field_attachmentreplication0_attachcomponent0
 		uint16 Handle = 12;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1005,7 +1512,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(PropertyData));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachcomponent().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachcomponent0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -1050,9 +1557,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			}
 		}
 	}
-	if (!Update.field_owner().empty())
+	if (!Update.field_owner0().empty())
 	{
-		// field_owner
+		// field_owner0
 		uint16 Handle = 13;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1061,7 +1568,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -1106,9 +1613,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			}
 		}
 	}
-	if (!Update.field_role().empty())
+	if (!Update.field_role0().empty())
 	{
-		// field_role
+		// field_role0
 		uint16 Handle = 14;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1123,7 +1630,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(PropertyData));
 
-			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_role().data())));
+			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_role0().data())));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1135,9 +1642,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
-	if (!Update.field_instigator().empty())
+	if (!Update.field_instigator0().empty())
 	{
-		// field_instigator
+		// field_instigator0
 		uint16 Handle = 15;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1146,7 +1653,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -1191,9 +1698,9 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			}
 		}
 	}
-	if (!Update.field_testbookend().empty())
+	if (!Update.field_testbookend0().empty())
 	{
-		// field_testbookend
+		// field_testbookend0
 		uint16 Handle = 16;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1201,7 +1708,7 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
-			Value = (*Update.field_testbookend().data());
+			Value = (*Update.field_testbookend0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1246,6 +1753,1296 @@ void USpatialTypeBinding_TestCArrayReplication::ReceiveUpdate_MultiClient(USpati
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
 			Value = (*Update.field_testpod1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_skeletalmeshes0().empty())
+	{
+		// field_skeletalmeshes0
+		uint16 Handle = 19;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(PropertyData));
+
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_skeletalmeshes0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<USkeletalMesh>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<USkeletalMesh>(Object_Raw);
+				}
+				else
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
+		}
+	}
+	if (!Update.field_skeletalmeshes1().empty())
+	{
+		// field_skeletalmeshes1
+		uint16 Handle = 20;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(PropertyData));
+
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_skeletalmeshes1().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<USkeletalMesh>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<USkeletalMesh>(Object_Raw);
+				}
+				else
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
+		}
+	}
+	if (!Update.field_skeletalmeshes2().empty())
+	{
+		// field_skeletalmeshes2
+		uint16 Handle = 21;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			USkeletalMesh* Value = *(reinterpret_cast<USkeletalMesh* const*>(PropertyData));
+
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_skeletalmeshes2().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<USkeletalMesh>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<USkeletalMesh>(Object_Raw);
+				}
+				else
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
+		}
+	}
+	if (!Update.field_foostructarray0_intone0().empty())
+	{
+		// field_foostructarray0_intone0
+		uint16 Handle = 22;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_inttwo0().empty())
+	{
+		// field_foostructarray0_inttwo0
+		uint16 Handle = 23;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray0_intone0().empty())
+	{
+		// field_foostructarray0_barstructarray0_intone0
+		uint16 Handle = 24;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray0_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray0_inttwo0().empty())
+	{
+		// field_foostructarray0_barstructarray0_inttwo0
+		uint16 Handle = 25;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray0_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray0_floatarray0().empty())
+	{
+		// field_foostructarray0_barstructarray0_floatarray0
+		uint16 Handle = 26;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray0_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray0_floatarray1().empty())
+	{
+		// field_foostructarray0_barstructarray0_floatarray1
+		uint16 Handle = 27;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray0_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray0_floatarray2().empty())
+	{
+		// field_foostructarray0_barstructarray0_floatarray2
+		uint16 Handle = 28;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray0_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray1_intone0().empty())
+	{
+		// field_foostructarray0_barstructarray1_intone0
+		uint16 Handle = 29;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray1_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray1_inttwo0().empty())
+	{
+		// field_foostructarray0_barstructarray1_inttwo0
+		uint16 Handle = 30;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray1_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray1_floatarray0().empty())
+	{
+		// field_foostructarray0_barstructarray1_floatarray0
+		uint16 Handle = 31;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray1_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray1_floatarray1().empty())
+	{
+		// field_foostructarray0_barstructarray1_floatarray1
+		uint16 Handle = 32;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray1_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray1_floatarray2().empty())
+	{
+		// field_foostructarray0_barstructarray1_floatarray2
+		uint16 Handle = 33;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray1_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray2_intone0().empty())
+	{
+		// field_foostructarray0_barstructarray2_intone0
+		uint16 Handle = 34;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray2_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray2_inttwo0().empty())
+	{
+		// field_foostructarray0_barstructarray2_inttwo0
+		uint16 Handle = 35;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray2_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray2_floatarray0().empty())
+	{
+		// field_foostructarray0_barstructarray2_floatarray0
+		uint16 Handle = 36;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray2_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray2_floatarray1().empty())
+	{
+		// field_foostructarray0_barstructarray2_floatarray1
+		uint16 Handle = 37;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray2_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray0_barstructarray2_floatarray2().empty())
+	{
+		// field_foostructarray0_barstructarray2_floatarray2
+		uint16 Handle = 38;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray0_barstructarray2_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_intone0().empty())
+	{
+		// field_foostructarray1_intone0
+		uint16 Handle = 39;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_inttwo0().empty())
+	{
+		// field_foostructarray1_inttwo0
+		uint16 Handle = 40;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray0_intone0().empty())
+	{
+		// field_foostructarray1_barstructarray0_intone0
+		uint16 Handle = 41;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray0_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray0_inttwo0().empty())
+	{
+		// field_foostructarray1_barstructarray0_inttwo0
+		uint16 Handle = 42;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray0_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray0_floatarray0().empty())
+	{
+		// field_foostructarray1_barstructarray0_floatarray0
+		uint16 Handle = 43;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray0_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray0_floatarray1().empty())
+	{
+		// field_foostructarray1_barstructarray0_floatarray1
+		uint16 Handle = 44;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray0_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray0_floatarray2().empty())
+	{
+		// field_foostructarray1_barstructarray0_floatarray2
+		uint16 Handle = 45;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray0_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray1_intone0().empty())
+	{
+		// field_foostructarray1_barstructarray1_intone0
+		uint16 Handle = 46;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray1_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray1_inttwo0().empty())
+	{
+		// field_foostructarray1_barstructarray1_inttwo0
+		uint16 Handle = 47;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray1_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray1_floatarray0().empty())
+	{
+		// field_foostructarray1_barstructarray1_floatarray0
+		uint16 Handle = 48;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray1_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray1_floatarray1().empty())
+	{
+		// field_foostructarray1_barstructarray1_floatarray1
+		uint16 Handle = 49;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray1_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray1_floatarray2().empty())
+	{
+		// field_foostructarray1_barstructarray1_floatarray2
+		uint16 Handle = 50;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray1_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray2_intone0().empty())
+	{
+		// field_foostructarray1_barstructarray2_intone0
+		uint16 Handle = 51;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray2_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray2_inttwo0().empty())
+	{
+		// field_foostructarray1_barstructarray2_inttwo0
+		uint16 Handle = 52;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray2_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray2_floatarray0().empty())
+	{
+		// field_foostructarray1_barstructarray2_floatarray0
+		uint16 Handle = 53;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray2_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray2_floatarray1().empty())
+	{
+		// field_foostructarray1_barstructarray2_floatarray1
+		uint16 Handle = 54;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray2_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray1_barstructarray2_floatarray2().empty())
+	{
+		// field_foostructarray1_barstructarray2_floatarray2
+		uint16 Handle = 55;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray1_barstructarray2_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_intone0().empty())
+	{
+		// field_foostructarray2_intone0
+		uint16 Handle = 56;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_inttwo0().empty())
+	{
+		// field_foostructarray2_inttwo0
+		uint16 Handle = 57;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray0_intone0().empty())
+	{
+		// field_foostructarray2_barstructarray0_intone0
+		uint16 Handle = 58;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray0_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray0_inttwo0().empty())
+	{
+		// field_foostructarray2_barstructarray0_inttwo0
+		uint16 Handle = 59;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray0_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray0_floatarray0().empty())
+	{
+		// field_foostructarray2_barstructarray0_floatarray0
+		uint16 Handle = 60;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray0_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray0_floatarray1().empty())
+	{
+		// field_foostructarray2_barstructarray0_floatarray1
+		uint16 Handle = 61;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray0_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray0_floatarray2().empty())
+	{
+		// field_foostructarray2_barstructarray0_floatarray2
+		uint16 Handle = 62;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray0_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray1_intone0().empty())
+	{
+		// field_foostructarray2_barstructarray1_intone0
+		uint16 Handle = 63;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray1_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray1_inttwo0().empty())
+	{
+		// field_foostructarray2_barstructarray1_inttwo0
+		uint16 Handle = 64;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray1_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray1_floatarray0().empty())
+	{
+		// field_foostructarray2_barstructarray1_floatarray0
+		uint16 Handle = 65;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray1_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray1_floatarray1().empty())
+	{
+		// field_foostructarray2_barstructarray1_floatarray1
+		uint16 Handle = 66;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray1_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray1_floatarray2().empty())
+	{
+		// field_foostructarray2_barstructarray1_floatarray2
+		uint16 Handle = 67;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray1_floatarray2().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray2_intone0().empty())
+	{
+		// field_foostructarray2_barstructarray2_intone0
+		uint16 Handle = 68;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray2_intone0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray2_inttwo0().empty())
+	{
+		// field_foostructarray2_barstructarray2_inttwo0
+		uint16 Handle = 69;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray2_inttwo0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray2_floatarray0().empty())
+	{
+		// field_foostructarray2_barstructarray2_floatarray0
+		uint16 Handle = 70;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray2_floatarray0().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray2_floatarray1().empty())
+	{
+		// field_foostructarray2_barstructarray2_floatarray1
+		uint16 Handle = 71;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray2_floatarray1().data());
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
+	if (!Update.field_foostructarray2_barstructarray2_floatarray2().empty())
+	{
+		// field_foostructarray2_barstructarray2_floatarray2
+		uint16 Handle = 72;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			float Value = *(reinterpret_cast<float const*>(PropertyData));
+
+			Value = (*Update.field_foostructarray2_barstructarray2_floatarray2().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 

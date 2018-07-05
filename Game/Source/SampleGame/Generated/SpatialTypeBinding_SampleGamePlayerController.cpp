@@ -125,25 +125,25 @@ void USpatialTypeBinding_SampleGamePlayerController::Init(USpatialInterop* InInt
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("SampleGamePlayerController"));
 
 	// Populate RepHandleToPropertyMap.
-	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(2, FRepHandleData(Class, {"bReplicateMovement"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(4, FRepHandleData(Class, {"bCanBeDamaged"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(5, FRepHandleData(Class, {"RemoteRole"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(6, FRepHandleData(Class, {"ReplicatedMovement"}, COND_SimulatedOrPhysics, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(7, FRepHandleData(Class, {"AttachmentReplication", "AttachParent"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(8, FRepHandleData(Class, {"AttachmentReplication", "LocationOffset"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(9, FRepHandleData(Class, {"AttachmentReplication", "RelativeScale3D"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(10, FRepHandleData(Class, {"AttachmentReplication", "RotationOffset"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(11, FRepHandleData(Class, {"AttachmentReplication", "AttachSocket"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(12, FRepHandleData(Class, {"AttachmentReplication", "AttachComponent"}, COND_Custom, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"PlayerState"}, COND_None, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"Pawn"}, COND_None, REPNOTIFY_Always, 0));
-	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"TargetViewRotation"}, COND_OwnerOnly, REPNOTIFY_OnChanged, 0));
-	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"SpawnLocation"}, COND_OwnerOnly, REPNOTIFY_OnChanged, 0));
+	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(2, FRepHandleData(Class, {"bReplicateMovement"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(4, FRepHandleData(Class, {"bCanBeDamaged"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(5, FRepHandleData(Class, {"RemoteRole"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(6, FRepHandleData(Class, {"ReplicatedMovement"}, {0}, COND_SimulatedOrPhysics, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(7, FRepHandleData(Class, {"AttachmentReplication", "AttachParent"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(8, FRepHandleData(Class, {"AttachmentReplication", "LocationOffset"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(9, FRepHandleData(Class, {"AttachmentReplication", "RelativeScale3D"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(10, FRepHandleData(Class, {"AttachmentReplication", "RotationOffset"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(11, FRepHandleData(Class, {"AttachmentReplication", "AttachSocket"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(12, FRepHandleData(Class, {"AttachmentReplication", "AttachComponent"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"PlayerState"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"Pawn"}, {0}, COND_None, REPNOTIFY_Always));
+	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"TargetViewRotation"}, {0}, COND_OwnerOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"SpawnLocation"}, {0}, COND_OwnerOnly, REPNOTIFY_OnChanged));
 }
 
 void USpatialTypeBinding_SampleGamePlayerController::BindToView(bool bIsClient)
@@ -583,7 +583,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_SingleClie
 {
 	switch (Handle)
 	{
-		case 18: // field_targetviewrotation
+		case 18: // field_targetviewrotation0
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
@@ -597,7 +597,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_SingleClie
 			const std::string& Result = (std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			if (UnresolvedObjects.Num() == 0)
 			{
-				OutUpdate.set_field_targetviewrotation(Result);
+				OutUpdate.set_field_targetviewrotation0(Result);
 			}
 			else
 			{
@@ -605,7 +605,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_SingleClie
 			}
 			break;
 		}
-		case 19: // field_spawnlocation
+		case 19: // field_spawnlocation0
 		{
 			const FVector& Value = *(reinterpret_cast<FVector const*>(Data));
 
@@ -619,7 +619,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_SingleClie
 			const std::string& Result = (std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			if (UnresolvedObjects.Num() == 0)
 			{
-				OutUpdate.set_field_spawnlocation(Result);
+				OutUpdate.set_field_spawnlocation0(Result);
 			}
 			else
 			{
@@ -637,42 +637,42 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 {
 	switch (Handle)
 	{
-		case 1: // field_bhidden
+		case 1: // field_bhidden0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_bhidden(Value);
+			OutUpdate.set_field_bhidden0(Value);
 			break;
 		}
-		case 2: // field_breplicatemovement
+		case 2: // field_breplicatemovement0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_breplicatemovement(Value);
+			OutUpdate.set_field_breplicatemovement0(Value);
 			break;
 		}
-		case 3: // field_btearoff
+		case 3: // field_btearoff0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_btearoff(Value);
+			OutUpdate.set_field_btearoff0(Value);
 			break;
 		}
-		case 4: // field_bcanbedamaged
+		case 4: // field_bcanbedamaged0
 		{
 			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_bcanbedamaged(Value);
+			OutUpdate.set_field_bcanbedamaged0(Value);
 			break;
 		}
-		case 5: // field_remoterole
+		case 5: // field_remoterole0
 		{
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(Data));
 
-			OutUpdate.set_field_remoterole(uint32_t(Value));
+			OutUpdate.set_field_remoterole0(uint32_t(Value));
 			break;
 		}
-		case 6: // field_replicatedmovement
+		case 6: // field_replicatedmovement0
 		{
 			const FRepMovement& Value = *(reinterpret_cast<FRepMovement const*>(Data));
 
@@ -686,7 +686,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 			const std::string& Result = (std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			if (UnresolvedObjects.Num() == 0)
 			{
-				OutUpdate.set_field_replicatedmovement(Result);
+				OutUpdate.set_field_replicatedmovement0(Result);
 			}
 			else
 			{
@@ -694,7 +694,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 			}
 			break;
 		}
-		case 7: // field_attachmentreplication_attachparent
+		case 7: // field_attachmentreplication0_attachparent0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
 
@@ -717,16 +717,16 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication_attachparent(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachparent0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_attachmentreplication_attachparent(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_attachmentreplication0_attachparent0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 8: // field_attachmentreplication_locationoffset
+		case 8: // field_attachmentreplication0_locationoffset0
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
@@ -740,7 +740,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 			const std::string& Result = (std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			if (UnresolvedObjects.Num() == 0)
 			{
-				OutUpdate.set_field_attachmentreplication_locationoffset(Result);
+				OutUpdate.set_field_attachmentreplication0_locationoffset0(Result);
 			}
 			else
 			{
@@ -748,7 +748,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 			}
 			break;
 		}
-		case 9: // field_attachmentreplication_relativescale3d
+		case 9: // field_attachmentreplication0_relativescale3d0
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
@@ -762,7 +762,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 			const std::string& Result = (std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			if (UnresolvedObjects.Num() == 0)
 			{
-				OutUpdate.set_field_attachmentreplication_relativescale3d(Result);
+				OutUpdate.set_field_attachmentreplication0_relativescale3d0(Result);
 			}
 			else
 			{
@@ -770,7 +770,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 			}
 			break;
 		}
-		case 10: // field_attachmentreplication_rotationoffset
+		case 10: // field_attachmentreplication0_rotationoffset0
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
@@ -784,7 +784,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 			const std::string& Result = (std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			if (UnresolvedObjects.Num() == 0)
 			{
-				OutUpdate.set_field_attachmentreplication_rotationoffset(Result);
+				OutUpdate.set_field_attachmentreplication0_rotationoffset0(Result);
 			}
 			else
 			{
@@ -792,14 +792,14 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 			}
 			break;
 		}
-		case 11: // field_attachmentreplication_attachsocket
+		case 11: // field_attachmentreplication0_attachsocket0
 		{
 			FName Value = *(reinterpret_cast<FName const*>(Data));
 
-			OutUpdate.set_field_attachmentreplication_attachsocket(TCHAR_TO_UTF8(*Value.ToString()));
+			OutUpdate.set_field_attachmentreplication0_attachsocket0(TCHAR_TO_UTF8(*Value.ToString()));
 			break;
 		}
-		case 12: // field_attachmentreplication_attachcomponent
+		case 12: // field_attachmentreplication0_attachcomponent0
 		{
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(Data));
 
@@ -822,16 +822,16 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication_attachcomponent(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachcomponent0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_attachmentreplication_attachcomponent(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_attachmentreplication0_attachcomponent0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 13: // field_owner
+		case 13: // field_owner0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
 
@@ -854,23 +854,23 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 				}
 				else
 				{
-					OutUpdate.set_field_owner(ObjectRef);
+					OutUpdate.set_field_owner0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_owner(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_owner0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 14: // field_role
+		case 14: // field_role0
 		{
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(Data));
 
-			OutUpdate.set_field_role(uint32_t(Value));
+			OutUpdate.set_field_role0(uint32_t(Value));
 			break;
 		}
-		case 15: // field_instigator
+		case 15: // field_instigator0
 		{
 			APawn* Value = *(reinterpret_cast<APawn* const*>(Data));
 
@@ -893,16 +893,16 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 				}
 				else
 				{
-					OutUpdate.set_field_instigator(ObjectRef);
+					OutUpdate.set_field_instigator0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_instigator(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_instigator0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 16: // field_playerstate
+		case 16: // field_playerstate0
 		{
 			APlayerState* Value = *(reinterpret_cast<APlayerState* const*>(Data));
 
@@ -925,16 +925,16 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 				}
 				else
 				{
-					OutUpdate.set_field_playerstate(ObjectRef);
+					OutUpdate.set_field_playerstate0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_playerstate(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_playerstate0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
-		case 17: // field_pawn
+		case 17: // field_pawn0
 		{
 			APawn* Value = *(reinterpret_cast<APawn* const*>(Data));
 
@@ -957,12 +957,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_MultiClien
 				}
 				else
 				{
-					OutUpdate.set_field_pawn(ObjectRef);
+					OutUpdate.set_field_pawn0(ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_pawn(SpatialConstants::NULL_OBJECT_REF);
+				OutUpdate.set_field_pawn0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
@@ -986,9 +986,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_SingleClient(
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
-	if (!Update.field_targetviewrotation().empty())
+	if (!Update.field_targetviewrotation0().empty())
 	{
-		// field_targetviewrotation
+		// field_targetviewrotation0
 		uint16 Handle = 18;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -996,7 +996,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_SingleClient(
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
-			auto& ValueDataStr = (*Update.field_targetviewrotation().data());
+			auto& ValueDataStr = (*Update.field_targetviewrotation0().data());
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -1014,9 +1014,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_SingleClient(
 				Handle);
 		}
 	}
-	if (!Update.field_spawnlocation().empty())
+	if (!Update.field_spawnlocation0().empty())
 	{
-		// field_spawnlocation
+		// field_spawnlocation0
 		uint16 Handle = 19;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1024,7 +1024,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_SingleClient(
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector Value = *(reinterpret_cast<FVector const*>(PropertyData));
 
-			auto& ValueDataStr = (*Update.field_spawnlocation().data());
+			auto& ValueDataStr = (*Update.field_spawnlocation0().data());
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -1055,9 +1055,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
-	if (!Update.field_bhidden().empty())
+	if (!Update.field_bhidden0().empty())
 	{
-		// field_bhidden
+		// field_bhidden0
 		uint16 Handle = 1;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1065,7 +1065,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_bhidden().data());
+			Value = (*Update.field_bhidden0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1077,9 +1077,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 				Handle);
 		}
 	}
-	if (!Update.field_breplicatemovement().empty())
+	if (!Update.field_breplicatemovement0().empty())
 	{
-		// field_breplicatemovement
+		// field_breplicatemovement0
 		uint16 Handle = 2;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1087,7 +1087,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_breplicatemovement().data());
+			Value = (*Update.field_breplicatemovement0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1099,9 +1099,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 				Handle);
 		}
 	}
-	if (!Update.field_btearoff().empty())
+	if (!Update.field_btearoff0().empty())
 	{
-		// field_btearoff
+		// field_btearoff0
 		uint16 Handle = 3;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1109,7 +1109,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_btearoff().data());
+			Value = (*Update.field_btearoff0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1121,9 +1121,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 				Handle);
 		}
 	}
-	if (!Update.field_bcanbedamaged().empty())
+	if (!Update.field_bcanbedamaged0().empty())
 	{
-		// field_bcanbedamaged
+		// field_bcanbedamaged0
 		uint16 Handle = 4;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1131,7 +1131,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = (*Update.field_bcanbedamaged().data());
+			Value = (*Update.field_bcanbedamaged0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1143,9 +1143,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 				Handle);
 		}
 	}
-	if (!Update.field_remoterole().empty())
+	if (!Update.field_remoterole0().empty())
 	{
-		// field_remoterole
+		// field_remoterole0
 		uint16 Handle = 5;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1160,7 +1160,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(PropertyData));
 
-			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_remoterole().data())));
+			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_remoterole0().data())));
 
 			// Downgrade role from AutonomousProxy to SimulatedProxy if we aren't authoritative over
 			// the server RPCs component.
@@ -1179,9 +1179,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 				Handle);
 		}
 	}
-	if (!Update.field_replicatedmovement().empty())
+	if (!Update.field_replicatedmovement0().empty())
 	{
-		// field_replicatedmovement
+		// field_replicatedmovement0
 		uint16 Handle = 6;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1189,7 +1189,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRepMovement Value = *(reinterpret_cast<FRepMovement const*>(PropertyData));
 
-			auto& ValueDataStr = (*Update.field_replicatedmovement().data());
+			auto& ValueDataStr = (*Update.field_replicatedmovement0().data());
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -1207,9 +1207,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_attachparent().empty())
+	if (!Update.field_attachmentreplication0_attachparent0().empty())
 	{
-		// field_attachmentreplication_attachparent
+		// field_attachmentreplication0_attachparent0
 		uint16 Handle = 7;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1218,7 +1218,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachparent().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachparent0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -1263,9 +1263,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			}
 		}
 	}
-	if (!Update.field_attachmentreplication_locationoffset().empty())
+	if (!Update.field_attachmentreplication0_locationoffset0().empty())
 	{
-		// field_attachmentreplication_locationoffset
+		// field_attachmentreplication0_locationoffset0
 		uint16 Handle = 8;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1273,7 +1273,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			auto& ValueDataStr = (*Update.field_attachmentreplication_locationoffset().data());
+			auto& ValueDataStr = (*Update.field_attachmentreplication0_locationoffset0().data());
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -1291,9 +1291,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_relativescale3d().empty())
+	if (!Update.field_attachmentreplication0_relativescale3d0().empty())
 	{
-		// field_attachmentreplication_relativescale3d
+		// field_attachmentreplication0_relativescale3d0
 		uint16 Handle = 9;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1301,7 +1301,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
-			auto& ValueDataStr = (*Update.field_attachmentreplication_relativescale3d().data());
+			auto& ValueDataStr = (*Update.field_attachmentreplication0_relativescale3d0().data());
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -1319,9 +1319,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_rotationoffset().empty())
+	if (!Update.field_attachmentreplication0_rotationoffset0().empty())
 	{
-		// field_attachmentreplication_rotationoffset
+		// field_attachmentreplication0_rotationoffset0
 		uint16 Handle = 10;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1329,7 +1329,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
-			auto& ValueDataStr = (*Update.field_attachmentreplication_rotationoffset().data());
+			auto& ValueDataStr = (*Update.field_attachmentreplication0_rotationoffset0().data());
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -1347,9 +1347,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_attachsocket().empty())
+	if (!Update.field_attachmentreplication0_attachsocket0().empty())
 	{
-		// field_attachmentreplication_attachsocket
+		// field_attachmentreplication0_attachsocket0
 		uint16 Handle = 11;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1357,7 +1357,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FName Value = *(reinterpret_cast<FName const*>(PropertyData));
 
-			Value = FName(((*Update.field_attachmentreplication_attachsocket().data())).data());
+			Value = FName(((*Update.field_attachmentreplication0_attachsocket0().data())).data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1369,9 +1369,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 				Handle);
 		}
 	}
-	if (!Update.field_attachmentreplication_attachcomponent().empty())
+	if (!Update.field_attachmentreplication0_attachcomponent0().empty())
 	{
-		// field_attachmentreplication_attachcomponent
+		// field_attachmentreplication0_attachcomponent0
 		uint16 Handle = 12;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1380,7 +1380,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(PropertyData));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication_attachcomponent().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachcomponent0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -1425,9 +1425,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			}
 		}
 	}
-	if (!Update.field_owner().empty())
+	if (!Update.field_owner0().empty())
 	{
-		// field_owner
+		// field_owner0
 		uint16 Handle = 13;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1436,7 +1436,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -1481,9 +1481,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			}
 		}
 	}
-	if (!Update.field_role().empty())
+	if (!Update.field_role0().empty())
 	{
-		// field_role
+		// field_role0
 		uint16 Handle = 14;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1498,7 +1498,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(PropertyData));
 
-			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_role().data())));
+			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_role0().data())));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1510,9 +1510,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 				Handle);
 		}
 	}
-	if (!Update.field_instigator().empty())
+	if (!Update.field_instigator0().empty())
 	{
-		// field_instigator
+		// field_instigator0
 		uint16 Handle = 15;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1521,7 +1521,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -1566,9 +1566,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			}
 		}
 	}
-	if (!Update.field_playerstate().empty())
+	if (!Update.field_playerstate0().empty())
 	{
-		// field_playerstate
+		// field_playerstate0
 		uint16 Handle = 16;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1577,7 +1577,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			APlayerState* Value = *(reinterpret_cast<APlayerState* const*>(PropertyData));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_playerstate().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_playerstate0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -1622,9 +1622,9 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			}
 		}
 	}
-	if (!Update.field_pawn().empty())
+	if (!Update.field_pawn0().empty())
 	{
-		// field_pawn
+		// field_pawn0
 		uint16 Handle = 17;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1633,7 +1633,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_MultiClient(U
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_pawn().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_pawn0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -1706,7 +1706,7 @@ void USpatialTypeBinding_SampleGamePlayerController::OnServerStartedVisualLogger
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::OnServerStartedVisualLoggerRequest RPCPayload;
 		{
-			RPCPayload.set_field_bislogging(StructuredParams.bIsLogging);
+			RPCPayload.set_field_bislogging0(StructuredParams.bIsLogging);
 		}
 
 		// Send RPC
@@ -1739,7 +1739,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientWasKicked_SendRPC(wor
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientWasKickedRequest RPCPayload;
 		{
-			// UNSUPPORTED UTextProperty (unhandled) RPCPayload.set_field_kickreason(StructuredParams.KickReason)
+			// UNSUPPORTED UTextProperty (unhandled) RPCPayload.set_field_kickreason0(StructuredParams.KickReason)
 		}
 
 		// Send RPC
@@ -1808,7 +1808,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientUpdateMultipleLevelsS
 				FUpdateLevelStreamingLevelStatus::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelStreamingLevelStatus*>(&StructuredParams.LevelStatuses[i])));
 				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
-			RPCPayload.set_field_levelstatuses(List);
+			RPCPayload.set_field_levelstatuses0(List);
 		}
 
 		// Send RPC
@@ -1841,19 +1841,19 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientUpdateLevelStreamingS
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientUpdateLevelStreamingStatusRequest RPCPayload;
 		{
-			RPCPayload.set_field_packagename(TCHAR_TO_UTF8(*StructuredParams.PackageName.ToString()));
+			RPCPayload.set_field_packagename0(TCHAR_TO_UTF8(*StructuredParams.PackageName.ToString()));
 		}
 		{
-			RPCPayload.set_field_bnewshouldbeloaded(StructuredParams.bNewShouldBeLoaded);
+			RPCPayload.set_field_bnewshouldbeloaded0(StructuredParams.bNewShouldBeLoaded);
 		}
 		{
-			RPCPayload.set_field_bnewshouldbevisible(StructuredParams.bNewShouldBeVisible);
+			RPCPayload.set_field_bnewshouldbevisible0(StructuredParams.bNewShouldBeVisible);
 		}
 		{
-			RPCPayload.set_field_bnewshouldblockonload(StructuredParams.bNewShouldBlockOnLoad);
+			RPCPayload.set_field_bnewshouldblockonload0(StructuredParams.bNewShouldBlockOnLoad);
 		}
 		{
-			RPCPayload.set_field_lodindex(int32_t(StructuredParams.LODIndex));
+			RPCPayload.set_field_lodindex0(int32_t(StructuredParams.LODIndex));
 		}
 
 		// Send RPC
@@ -1892,7 +1892,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientUnmutePlayer_SendRPC(
 			bool bSuccess = true;
 			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
-			RPCPayload.set_field_playerid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_playerid0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
 		// Send RPC
@@ -1925,25 +1925,25 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientTravelInternal_SendRP
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientTravelInternalRequest RPCPayload;
 		{
-			RPCPayload.set_field_url(TCHAR_TO_UTF8(*StructuredParams.URL));
+			RPCPayload.set_field_url0(TCHAR_TO_UTF8(*StructuredParams.URL));
 		}
 		{
-			RPCPayload.set_field_traveltype(uint32_t(StructuredParams.TravelType));
+			RPCPayload.set_field_traveltype0(uint32_t(StructuredParams.TravelType));
 		}
 		{
-			RPCPayload.set_field_bseamless(StructuredParams.bSeamless);
+			RPCPayload.set_field_bseamless0(StructuredParams.bSeamless);
 		}
 		{
-			RPCPayload.set_field_mappackageguid_a(int32_t(StructuredParams.MapPackageGuid.A));
+			RPCPayload.set_field_mappackageguid0_a0(int32_t(StructuredParams.MapPackageGuid.A));
 		}
 		{
-			RPCPayload.set_field_mappackageguid_b(int32_t(StructuredParams.MapPackageGuid.B));
+			RPCPayload.set_field_mappackageguid0_b0(int32_t(StructuredParams.MapPackageGuid.B));
 		}
 		{
-			RPCPayload.set_field_mappackageguid_c(int32_t(StructuredParams.MapPackageGuid.C));
+			RPCPayload.set_field_mappackageguid0_c0(int32_t(StructuredParams.MapPackageGuid.C));
 		}
 		{
-			RPCPayload.set_field_mappackageguid_d(int32_t(StructuredParams.MapPackageGuid.D));
+			RPCPayload.set_field_mappackageguid0_d0(int32_t(StructuredParams.MapPackageGuid.D));
 		}
 
 		// Send RPC
@@ -1994,22 +1994,22 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientTeamMessage_SendRPC(w
 				}
 				else
 				{
-					RPCPayload.set_field_senderplayerstate(ObjectRef);
+					RPCPayload.set_field_senderplayerstate0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_senderplayerstate(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_senderplayerstate0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
-			RPCPayload.set_field_s(TCHAR_TO_UTF8(*StructuredParams.S));
+			RPCPayload.set_field_s0(TCHAR_TO_UTF8(*StructuredParams.S));
 		}
 		{
-			RPCPayload.set_field_type(TCHAR_TO_UTF8(*StructuredParams.Type.ToString()));
+			RPCPayload.set_field_type0(TCHAR_TO_UTF8(*StructuredParams.Type.ToString()));
 		}
 		{
-			RPCPayload.set_field_msglifetime(StructuredParams.MsgLifeTime);
+			RPCPayload.set_field_msglifetime0(StructuredParams.MsgLifeTime);
 		}
 
 		// Send RPC
@@ -2060,16 +2060,16 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopForceFeedback_Sen
 				}
 				else
 				{
-					RPCPayload.set_field_forcefeedbackeffect(ObjectRef);
+					RPCPayload.set_field_forcefeedbackeffect0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_forcefeedbackeffect(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_forcefeedbackeffect0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
-			RPCPayload.set_field_tag(TCHAR_TO_UTF8(*StructuredParams.Tag.ToString()));
+			RPCPayload.set_field_tag0(TCHAR_TO_UTF8(*StructuredParams.Tag.ToString()));
 		}
 
 		// Send RPC
@@ -2102,10 +2102,10 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopCameraShake_SendR
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientStopCameraShakeRequest RPCPayload;
 		{
-			RPCPayload.set_field_shake(PackageMap->GetHashFromStaticClass(StructuredParams.Shake));
+			RPCPayload.set_field_shake0(PackageMap->GetHashFromStaticClass(StructuredParams.Shake));
 		}
 		{
-			RPCPayload.set_field_bimmediately(StructuredParams.bImmediately);
+			RPCPayload.set_field_bimmediately0(StructuredParams.bImmediately);
 		}
 
 		// Send RPC
@@ -2156,12 +2156,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopCameraAnim_SendRP
 				}
 				else
 				{
-					RPCPayload.set_field_animtostop(ObjectRef);
+					RPCPayload.set_field_animtostop0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_animtostop(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_animtostop0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 
@@ -2222,7 +2222,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSpawnCameraLensEffect
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSpawnCameraLensEffectRequest RPCPayload;
 		{
-			RPCPayload.set_field_lenseffectemitterclass(PackageMap->GetHashFromStaticClass(StructuredParams.LensEffectEmitterClass));
+			RPCPayload.set_field_lenseffectemitterclass0(PackageMap->GetHashFromStaticClass(StructuredParams.LensEffectEmitterClass));
 		}
 
 		// Send RPC
@@ -2273,25 +2273,25 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetViewTarget_SendRPC
 				}
 				else
 				{
-					RPCPayload.set_field_a(ObjectRef);
+					RPCPayload.set_field_a0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_a(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_a0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
-			RPCPayload.set_field_transitionparams_blendtime(StructuredParams.TransitionParams.BlendTime);
+			RPCPayload.set_field_transitionparams0_blendtime0(StructuredParams.TransitionParams.BlendTime);
 		}
 		{
-			RPCPayload.set_field_transitionparams_blendfunction(uint32_t(StructuredParams.TransitionParams.BlendFunction));
+			RPCPayload.set_field_transitionparams0_blendfunction0(uint32_t(StructuredParams.TransitionParams.BlendFunction));
 		}
 		{
-			RPCPayload.set_field_transitionparams_blendexp(StructuredParams.TransitionParams.BlendExp);
+			RPCPayload.set_field_transitionparams0_blendexp0(StructuredParams.TransitionParams.BlendExp);
 		}
 		{
-			RPCPayload.set_field_transitionparams_blockoutgoing(StructuredParams.TransitionParams.bLockOutgoing);
+			RPCPayload.set_field_transitionparams0_blockoutgoing0(StructuredParams.TransitionParams.bLockOutgoing);
 		}
 
 		// Send RPC
@@ -2324,7 +2324,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetSpectatorWaiting_S
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetSpectatorWaitingRequest RPCPayload;
 		{
-			RPCPayload.set_field_bwaiting(StructuredParams.bWaiting);
+			RPCPayload.set_field_bwaiting0(StructuredParams.bWaiting);
 		}
 
 		// Send RPC
@@ -2357,7 +2357,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetHUD_SendRPC(worker
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetHUDRequest RPCPayload;
 		{
-			RPCPayload.set_field_newhudclass(PackageMap->GetHashFromStaticClass(StructuredParams.NewHUDClass));
+			RPCPayload.set_field_newhudclass0(PackageMap->GetHashFromStaticClass(StructuredParams.NewHUDClass));
 		}
 
 		// Send RPC
@@ -2408,19 +2408,19 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetForceMipLevelsToBe
 				}
 				else
 				{
-					RPCPayload.set_field_material(ObjectRef);
+					RPCPayload.set_field_material0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_material(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_material0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
-			RPCPayload.set_field_forceduration(StructuredParams.ForceDuration);
+			RPCPayload.set_field_forceduration0(StructuredParams.ForceDuration);
 		}
 		{
-			RPCPayload.set_field_cinematictexturegroups(int32_t(StructuredParams.CinematicTextureGroups));
+			RPCPayload.set_field_cinematictexturegroups0(int32_t(StructuredParams.CinematicTextureGroups));
 		}
 
 		// Send RPC
@@ -2453,16 +2453,16 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCinematicMode_Send
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetCinematicModeRequest RPCPayload;
 		{
-			RPCPayload.set_field_bincinematicmode(StructuredParams.bInCinematicMode);
+			RPCPayload.set_field_bincinematicmode0(StructuredParams.bInCinematicMode);
 		}
 		{
-			RPCPayload.set_field_baffectsmovement(StructuredParams.bAffectsMovement);
+			RPCPayload.set_field_baffectsmovement0(StructuredParams.bAffectsMovement);
 		}
 		{
-			RPCPayload.set_field_baffectsturning(StructuredParams.bAffectsTurning);
+			RPCPayload.set_field_baffectsturning0(StructuredParams.bAffectsTurning);
 		}
 		{
-			RPCPayload.set_field_baffectshud(StructuredParams.bAffectsHUD);
+			RPCPayload.set_field_baffectshud0(StructuredParams.bAffectsHUD);
 		}
 
 		// Send RPC
@@ -2495,7 +2495,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCameraMode_SendRPC
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetCameraModeRequest RPCPayload;
 		{
-			RPCPayload.set_field_newcammode(TCHAR_TO_UTF8(*StructuredParams.NewCamMode.ToString()));
+			RPCPayload.set_field_newcammode0(TCHAR_TO_UTF8(*StructuredParams.NewCamMode.ToString()));
 		}
 
 		// Send RPC
@@ -2528,19 +2528,19 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCameraFade_SendRPC
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetCameraFadeRequest RPCPayload;
 		{
-			RPCPayload.set_field_benablefading(StructuredParams.bEnableFading);
+			RPCPayload.set_field_benablefading0(StructuredParams.bEnableFading);
 		}
 		{
-			RPCPayload.set_field_fadecolor_b(uint32_t(StructuredParams.FadeColor.B));
+			RPCPayload.set_field_fadecolor0_b0(uint32_t(StructuredParams.FadeColor.B));
 		}
 		{
-			RPCPayload.set_field_fadecolor_g(uint32_t(StructuredParams.FadeColor.G));
+			RPCPayload.set_field_fadecolor0_g0(uint32_t(StructuredParams.FadeColor.G));
 		}
 		{
-			RPCPayload.set_field_fadecolor_r(uint32_t(StructuredParams.FadeColor.R));
+			RPCPayload.set_field_fadecolor0_r0(uint32_t(StructuredParams.FadeColor.R));
 		}
 		{
-			RPCPayload.set_field_fadecolor_a(uint32_t(StructuredParams.FadeColor.A));
+			RPCPayload.set_field_fadecolor0_a0(uint32_t(StructuredParams.FadeColor.A));
 		}
 		{
 			TSet<const UObject*> UnresolvedObjects;
@@ -2549,13 +2549,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCameraFade_SendRPC
 			bool bSuccess = true;
 			(const_cast<FVector2D&>(StructuredParams.FadeAlpha)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector2D failed."));
-			RPCPayload.set_field_fadealpha(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_fadealpha0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
-			RPCPayload.set_field_fadetime(StructuredParams.FadeTime);
+			RPCPayload.set_field_fadetime0(StructuredParams.FadeTime);
 		}
 		{
-			RPCPayload.set_field_bfadeaudio(StructuredParams.bFadeAudio);
+			RPCPayload.set_field_bfadeaudio0(StructuredParams.bFadeAudio);
 		}
 
 		// Send RPC
@@ -2615,7 +2615,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReturnToMainMenuWithT
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientReturnToMainMenuWithTextReasonRequest RPCPayload;
 		{
-			// UNSUPPORTED UTextProperty (unhandled) RPCPayload.set_field_returnreason(StructuredParams.ReturnReason)
+			// UNSUPPORTED UTextProperty (unhandled) RPCPayload.set_field_returnreason0(StructuredParams.ReturnReason)
 		}
 
 		// Send RPC
@@ -2648,7 +2648,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReturnToMainMenu_Send
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientReturnToMainMenuRequest RPCPayload;
 		{
-			RPCPayload.set_field_returnreason(TCHAR_TO_UTF8(*StructuredParams.ReturnReason));
+			RPCPayload.set_field_returnreason0(TCHAR_TO_UTF8(*StructuredParams.ReturnReason));
 		}
 
 		// Send RPC
@@ -2699,12 +2699,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientRetryClientRestart_Se
 				}
 				else
 				{
-					RPCPayload.set_field_newpawn(ObjectRef);
+					RPCPayload.set_field_newpawn0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_newpawn(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_newpawn0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 
@@ -2756,12 +2756,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientRestart_SendRPC(worke
 				}
 				else
 				{
-					RPCPayload.set_field_newpawn(ObjectRef);
+					RPCPayload.set_field_newpawn0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_newpawn(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_newpawn0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 
@@ -2840,12 +2840,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientRepObjRef_SendRPC(wor
 				}
 				else
 				{
-					RPCPayload.set_field_object(ObjectRef);
+					RPCPayload.set_field_object0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_object(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_object0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 
@@ -2879,10 +2879,10 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientReceiveLocalizedMessageRequest RPCPayload;
 		{
-			RPCPayload.set_field_message(PackageMap->GetHashFromStaticClass(StructuredParams.Message));
+			RPCPayload.set_field_message0(PackageMap->GetHashFromStaticClass(StructuredParams.Message));
 		}
 		{
-			RPCPayload.set_field_switch(int32_t(StructuredParams.Switch));
+			RPCPayload.set_field_switch0(int32_t(StructuredParams.Switch));
 		}
 		{
 			if (StructuredParams.RelatedPlayerState_1 != nullptr)
@@ -2903,12 +2903,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 				}
 				else
 				{
-					RPCPayload.set_field_relatedplayerstate1(ObjectRef);
+					RPCPayload.set_field_relatedplayerstate10(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_relatedplayerstate1(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_relatedplayerstate10(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
@@ -2930,12 +2930,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 				}
 				else
 				{
-					RPCPayload.set_field_relatedplayerstate2(ObjectRef);
+					RPCPayload.set_field_relatedplayerstate20(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_relatedplayerstate2(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_relatedplayerstate20(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
@@ -2957,12 +2957,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 				}
 				else
 				{
-					RPCPayload.set_field_optionalobject(ObjectRef);
+					RPCPayload.set_field_optionalobject0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_optionalobject(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_optionalobject0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 
@@ -3014,22 +3014,22 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPrestreamTextures_Sen
 				}
 				else
 				{
-					RPCPayload.set_field_forcedactor(ObjectRef);
+					RPCPayload.set_field_forcedactor0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_forcedactor(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_forcedactor0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
-			RPCPayload.set_field_forceduration(StructuredParams.ForceDuration);
+			RPCPayload.set_field_forceduration0(StructuredParams.ForceDuration);
 		}
 		{
-			RPCPayload.set_field_benablestreaming(StructuredParams.bEnableStreaming);
+			RPCPayload.set_field_benablestreaming0(StructuredParams.bEnableStreaming);
 		}
 		{
-			RPCPayload.set_field_cinematictexturegroups(int32_t(StructuredParams.CinematicTextureGroups));
+			RPCPayload.set_field_cinematictexturegroups0(int32_t(StructuredParams.CinematicTextureGroups));
 		}
 
 		// Send RPC
@@ -3062,13 +3062,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPrepareMapChange_Send
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientPrepareMapChangeRequest RPCPayload;
 		{
-			RPCPayload.set_field_levelname(TCHAR_TO_UTF8(*StructuredParams.LevelName.ToString()));
+			RPCPayload.set_field_levelname0(TCHAR_TO_UTF8(*StructuredParams.LevelName.ToString()));
 		}
 		{
-			RPCPayload.set_field_bfirst(StructuredParams.bFirst);
+			RPCPayload.set_field_bfirst0(StructuredParams.bFirst);
 		}
 		{
-			RPCPayload.set_field_blast(StructuredParams.bLast);
+			RPCPayload.set_field_blast0(StructuredParams.bLast);
 		}
 
 		// Send RPC
@@ -3119,12 +3119,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySoundAtLocation_S
 				}
 				else
 				{
-					RPCPayload.set_field_sound(ObjectRef);
+					RPCPayload.set_field_sound0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_sound(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_sound0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
@@ -3134,13 +3134,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySoundAtLocation_S
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.Location)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_location(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_location0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
-			RPCPayload.set_field_volumemultiplier(StructuredParams.VolumeMultiplier);
+			RPCPayload.set_field_volumemultiplier0(StructuredParams.VolumeMultiplier);
 		}
 		{
-			RPCPayload.set_field_pitchmultiplier(StructuredParams.PitchMultiplier);
+			RPCPayload.set_field_pitchmultiplier0(StructuredParams.PitchMultiplier);
 		}
 
 		// Send RPC
@@ -3191,19 +3191,19 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySound_SendRPC(wor
 				}
 				else
 				{
-					RPCPayload.set_field_sound(ObjectRef);
+					RPCPayload.set_field_sound0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_sound(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_sound0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
-			RPCPayload.set_field_volumemultiplier(StructuredParams.VolumeMultiplier);
+			RPCPayload.set_field_volumemultiplier0(StructuredParams.VolumeMultiplier);
 		}
 		{
-			RPCPayload.set_field_pitchmultiplier(StructuredParams.PitchMultiplier);
+			RPCPayload.set_field_pitchmultiplier0(StructuredParams.PitchMultiplier);
 		}
 
 		// Send RPC
@@ -3254,22 +3254,22 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayForceFeedback_Sen
 				}
 				else
 				{
-					RPCPayload.set_field_forcefeedbackeffect(ObjectRef);
+					RPCPayload.set_field_forcefeedbackeffect0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_forcefeedbackeffect(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_forcefeedbackeffect0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
-			RPCPayload.set_field_blooping(StructuredParams.bLooping);
+			RPCPayload.set_field_blooping0(StructuredParams.bLooping);
 		}
 		{
-			RPCPayload.set_field_bignoretimedilation(StructuredParams.bIgnoreTimeDilation);
+			RPCPayload.set_field_bignoretimedilation0(StructuredParams.bIgnoreTimeDilation);
 		}
 		{
-			RPCPayload.set_field_tag(TCHAR_TO_UTF8(*StructuredParams.Tag.ToString()));
+			RPCPayload.set_field_tag0(TCHAR_TO_UTF8(*StructuredParams.Tag.ToString()));
 		}
 
 		// Send RPC
@@ -3302,13 +3302,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraShake_SendR
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientPlayCameraShakeRequest RPCPayload;
 		{
-			RPCPayload.set_field_shake(PackageMap->GetHashFromStaticClass(StructuredParams.Shake));
+			RPCPayload.set_field_shake0(PackageMap->GetHashFromStaticClass(StructuredParams.Shake));
 		}
 		{
-			RPCPayload.set_field_scale(StructuredParams.Scale);
+			RPCPayload.set_field_scale0(StructuredParams.Scale);
 		}
 		{
-			RPCPayload.set_field_playspace(uint32_t(StructuredParams.PlaySpace));
+			RPCPayload.set_field_playspace0(uint32_t(StructuredParams.PlaySpace));
 		}
 		{
 			TSet<const UObject*> UnresolvedObjects;
@@ -3317,7 +3317,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraShake_SendR
 			bool bSuccess = true;
 			(const_cast<FRotator&>(StructuredParams.UserPlaySpaceRot)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			RPCPayload.set_field_userplayspacerot(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_userplayspacerot0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
 		// Send RPC
@@ -3368,34 +3368,34 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraAnim_SendRP
 				}
 				else
 				{
-					RPCPayload.set_field_animtoplay(ObjectRef);
+					RPCPayload.set_field_animtoplay0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_animtoplay(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_animtoplay0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
-			RPCPayload.set_field_scale(StructuredParams.Scale);
+			RPCPayload.set_field_scale0(StructuredParams.Scale);
 		}
 		{
-			RPCPayload.set_field_rate(StructuredParams.Rate);
+			RPCPayload.set_field_rate0(StructuredParams.Rate);
 		}
 		{
-			RPCPayload.set_field_blendintime(StructuredParams.BlendInTime);
+			RPCPayload.set_field_blendintime0(StructuredParams.BlendInTime);
 		}
 		{
-			RPCPayload.set_field_blendouttime(StructuredParams.BlendOutTime);
+			RPCPayload.set_field_blendouttime0(StructuredParams.BlendOutTime);
 		}
 		{
-			RPCPayload.set_field_bloop(StructuredParams.bLoop);
+			RPCPayload.set_field_bloop0(StructuredParams.bLoop);
 		}
 		{
-			RPCPayload.set_field_brandomstarttime(StructuredParams.bRandomStartTime);
+			RPCPayload.set_field_brandomstarttime0(StructuredParams.bRandomStartTime);
 		}
 		{
-			RPCPayload.set_field_space(uint32_t(StructuredParams.Space));
+			RPCPayload.set_field_space0(uint32_t(StructuredParams.Space));
 		}
 		{
 			TSet<const UObject*> UnresolvedObjects;
@@ -3404,7 +3404,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraAnim_SendRP
 			bool bSuccess = true;
 			(const_cast<FRotator&>(StructuredParams.CustomPlaySpace)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			RPCPayload.set_field_customplayspace(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_customplayspace0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
 		// Send RPC
@@ -3443,7 +3443,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientMutePlayer_SendRPC(wo
 			bool bSuccess = true;
 			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
-			RPCPayload.set_field_playerid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_playerid0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
 		// Send RPC
@@ -3476,13 +3476,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientMessage_SendRPC(worke
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientMessageRequest RPCPayload;
 		{
-			RPCPayload.set_field_s(TCHAR_TO_UTF8(*StructuredParams.S));
+			RPCPayload.set_field_s0(TCHAR_TO_UTF8(*StructuredParams.S));
 		}
 		{
-			RPCPayload.set_field_type(TCHAR_TO_UTF8(*StructuredParams.Type.ToString()));
+			RPCPayload.set_field_type0(TCHAR_TO_UTF8(*StructuredParams.Type.ToString()));
 		}
 		{
-			RPCPayload.set_field_msglifetime(StructuredParams.MsgLifeTime);
+			RPCPayload.set_field_msglifetime0(StructuredParams.MsgLifeTime);
 		}
 
 		// Send RPC
@@ -3515,7 +3515,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientIgnoreMoveInput_SendR
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientIgnoreMoveInputRequest RPCPayload;
 		{
-			RPCPayload.set_field_bignore(StructuredParams.bIgnore);
+			RPCPayload.set_field_bignore0(StructuredParams.bIgnore);
 		}
 
 		// Send RPC
@@ -3548,7 +3548,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientIgnoreLookInput_SendR
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientIgnoreLookInputRequest RPCPayload;
 		{
-			RPCPayload.set_field_bignore(StructuredParams.bIgnore);
+			RPCPayload.set_field_bignore0(StructuredParams.bIgnore);
 		}
 
 		// Send RPC
@@ -3581,7 +3581,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientGotoState_SendRPC(wor
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientGotoStateRequest RPCPayload;
 		{
-			RPCPayload.set_field_newstate(TCHAR_TO_UTF8(*StructuredParams.NewState.ToString()));
+			RPCPayload.set_field_newstate0(TCHAR_TO_UTF8(*StructuredParams.NewState.ToString()));
 		}
 
 		// Send RPC
@@ -3632,16 +3632,16 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientGameEnded_SendRPC(wor
 				}
 				else
 				{
-					RPCPayload.set_field_endgamefocus(ObjectRef);
+					RPCPayload.set_field_endgamefocus0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_endgamefocus(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_endgamefocus0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
-			RPCPayload.set_field_biswinner(StructuredParams.bIsWinner);
+			RPCPayload.set_field_biswinner0(StructuredParams.bIsWinner);
 		}
 
 		// Send RPC
@@ -3755,7 +3755,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientEnableNetworkVoice_Se
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientEnableNetworkVoiceRequest RPCPayload;
 		{
-			RPCPayload.set_field_benable(StructuredParams.bEnable);
+			RPCPayload.set_field_benable0(StructuredParams.bEnable);
 		}
 
 		// Send RPC
@@ -3842,7 +3842,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientCapBandwidth_SendRPC(
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientCapBandwidthRequest RPCPayload;
 		{
-			RPCPayload.set_field_cap(int32_t(StructuredParams.Cap));
+			RPCPayload.set_field_cap0(int32_t(StructuredParams.Cap));
 		}
 
 		// Send RPC
@@ -3908,13 +3908,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientAddTextureStreamingLo
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.InLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_inloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_inloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
-			RPCPayload.set_field_duration(StructuredParams.Duration);
+			RPCPayload.set_field_duration0(StructuredParams.Duration);
 		}
 		{
-			RPCPayload.set_field_boverridelocation(StructuredParams.bOverrideLocation);
+			RPCPayload.set_field_boverridelocation0(StructuredParams.bOverrideLocation);
 		}
 
 		// Send RPC
@@ -3953,10 +3953,10 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetRotation_SendRPC(w
 			bool bSuccess = true;
 			(const_cast<FRotator&>(StructuredParams.NewRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			RPCPayload.set_field_newrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newrotation0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
-			RPCPayload.set_field_bresetcamera(StructuredParams.bResetCamera);
+			RPCPayload.set_field_bresetcamera0(StructuredParams.bResetCamera);
 		}
 
 		// Send RPC
@@ -3995,7 +3995,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetLocation_SendRPC(w
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewLocation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_newlocation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newlocation0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TSet<const UObject*> UnresolvedObjects;
@@ -4004,7 +4004,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetLocation_SendRPC(w
 			bool bSuccess = true;
 			(const_cast<FRotator&>(StructuredParams.NewRotation)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			RPCPayload.set_field_newrotation(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newrotation0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
 		// Send RPC
@@ -4037,16 +4037,16 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerViewSelf_SendRPC(work
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerViewSelfRequest RPCPayload;
 		{
-			RPCPayload.set_field_transitionparams_blendtime(StructuredParams.TransitionParams.BlendTime);
+			RPCPayload.set_field_transitionparams0_blendtime0(StructuredParams.TransitionParams.BlendTime);
 		}
 		{
-			RPCPayload.set_field_transitionparams_blendfunction(uint32_t(StructuredParams.TransitionParams.BlendFunction));
+			RPCPayload.set_field_transitionparams0_blendfunction0(uint32_t(StructuredParams.TransitionParams.BlendFunction));
 		}
 		{
-			RPCPayload.set_field_transitionparams_blendexp(StructuredParams.TransitionParams.BlendExp);
+			RPCPayload.set_field_transitionparams0_blendexp0(StructuredParams.TransitionParams.BlendExp);
 		}
 		{
-			RPCPayload.set_field_transitionparams_blockoutgoing(StructuredParams.TransitionParams.bLockOutgoing);
+			RPCPayload.set_field_transitionparams0_blockoutgoing0(StructuredParams.TransitionParams.bLockOutgoing);
 		}
 
 		// Send RPC
@@ -4169,7 +4169,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateMultipleLevelsV
 				FUpdateLevelVisibilityLevelInfo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelVisibilityLevelInfo*>(&StructuredParams.LevelVisibilities[i])));
 				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
-			RPCPayload.set_field_levelvisibilities(List);
+			RPCPayload.set_field_levelvisibilities0(List);
 		}
 
 		// Send RPC
@@ -4202,10 +4202,10 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateLevelVisibility
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerUpdateLevelVisibilityRequest RPCPayload;
 		{
-			RPCPayload.set_field_packagename(TCHAR_TO_UTF8(*StructuredParams.PackageName.ToString()));
+			RPCPayload.set_field_packagename0(TCHAR_TO_UTF8(*StructuredParams.PackageName.ToString()));
 		}
 		{
-			RPCPayload.set_field_bisvisible(StructuredParams.bIsVisible);
+			RPCPayload.set_field_bisvisible0(StructuredParams.bIsVisible);
 		}
 
 		// Send RPC
@@ -4244,10 +4244,10 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateCamera_SendRPC(
 			bool bSuccess = true;
 			(const_cast<FVector_NetQuantize&>(StructuredParams.CamLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize failed."));
-			RPCPayload.set_field_camloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_camloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
-			RPCPayload.set_field_campitchandyaw(int32_t(StructuredParams.CamPitchAndYaw));
+			RPCPayload.set_field_campitchandyaw0(int32_t(StructuredParams.CamPitchAndYaw));
 		}
 
 		// Send RPC
@@ -4286,7 +4286,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUnmutePlayer_SendRPC(
 			bool bSuccess = true;
 			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
-			RPCPayload.set_field_playerid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_playerid0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
 		// Send RPC
@@ -4373,7 +4373,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSetSpectatorWaiting_S
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerSetSpectatorWaitingRequest RPCPayload;
 		{
-			RPCPayload.set_field_bwaiting(StructuredParams.bWaiting);
+			RPCPayload.set_field_bwaiting0(StructuredParams.bWaiting);
 		}
 
 		// Send RPC
@@ -4412,7 +4412,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSetSpectatorLocation_
 			bool bSuccess = true;
 			(const_cast<FVector&>(StructuredParams.NewLoc)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
-			RPCPayload.set_field_newloc(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newloc0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 		{
 			TSet<const UObject*> UnresolvedObjects;
@@ -4421,7 +4421,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSetSpectatorLocation_
 			bool bSuccess = true;
 			(const_cast<FRotator&>(StructuredParams.NewRot)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
-			RPCPayload.set_field_newrot(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_newrot0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
 		// Send RPC
@@ -4508,7 +4508,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerNotifyLoadedWorld_Sen
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerNotifyLoadedWorldRequest RPCPayload;
 		{
-			RPCPayload.set_field_worldpackagename(TCHAR_TO_UTF8(*StructuredParams.WorldPackageName.ToString()));
+			RPCPayload.set_field_worldpackagename0(TCHAR_TO_UTF8(*StructuredParams.WorldPackageName.ToString()));
 		}
 
 		// Send RPC
@@ -4547,7 +4547,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerMutePlayer_SendRPC(wo
 			bool bSuccess = true;
 			(const_cast<FUniqueNetIdRepl&>(StructuredParams.PlayerId)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FUniqueNetIdRepl failed."));
-			RPCPayload.set_field_playerid(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			RPCPayload.set_field_playerid0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 		}
 
 		// Send RPC
@@ -4634,7 +4634,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerChangeName_SendRPC(wo
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerChangeNameRequest RPCPayload;
 		{
-			RPCPayload.set_field_s(TCHAR_TO_UTF8(*StructuredParams.S));
+			RPCPayload.set_field_s0(TCHAR_TO_UTF8(*StructuredParams.S));
 		}
 
 		// Send RPC
@@ -4667,7 +4667,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerCamera_SendRPC(worker
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ServerCameraRequest RPCPayload;
 		{
-			RPCPayload.set_field_newmode(TCHAR_TO_UTF8(*StructuredParams.NewMode.ToString()));
+			RPCPayload.set_field_newmode0(TCHAR_TO_UTF8(*StructuredParams.NewMode.ToString()));
 		}
 
 		// Send RPC
@@ -4718,12 +4718,12 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerAcknowledgePossession
 				}
 				else
 				{
-					RPCPayload.set_field_p(ObjectRef);
+					RPCPayload.set_field_p0(ObjectRef);
 				}
 			}
 			else
 			{
-				RPCPayload.set_field_p(SpatialConstants::NULL_OBJECT_REF);
+				RPCPayload.set_field_p0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 
@@ -4766,7 +4766,7 @@ void USpatialTypeBinding_SampleGamePlayerController::OnServerStartedVisualLogger
 
 		// Extract from request data.
 		{
-			Parameters.bIsLogging = Op.Request.field_bislogging();
+			Parameters.bIsLogging = Op.Request.field_bislogging0();
 		}
 
 		// Call implementation.
@@ -4820,7 +4820,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientWasKicked_OnRPCPayloa
 
 		// Extract from request data.
 		{
-			// UNSUPPORTED UTextProperty (unhandled) Parameters.KickReason Op.Request.field_kickreason()
+			// UNSUPPORTED UTextProperty (unhandled) Parameters.KickReason Op.Request.field_kickreason0()
 		}
 
 		// Call implementation.
@@ -4919,7 +4919,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientUpdateMultipleLevelsS
 
 		// Extract from request data.
 		{
-			auto& List = Op.Request.field_levelstatuses();
+			auto& List = Op.Request.field_levelstatuses0();
 			Parameters.LevelStatuses.SetNum(List.size());
 			for(int i = 0; i < List.size(); i++)
 			{
@@ -4982,19 +4982,19 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientUpdateLevelStreamingS
 
 		// Extract from request data.
 		{
-			Parameters.PackageName = FName((Op.Request.field_packagename()).data());
+			Parameters.PackageName = FName((Op.Request.field_packagename0()).data());
 		}
 		{
-			Parameters.bNewShouldBeLoaded = Op.Request.field_bnewshouldbeloaded();
+			Parameters.bNewShouldBeLoaded = Op.Request.field_bnewshouldbeloaded0();
 		}
 		{
-			Parameters.bNewShouldBeVisible = Op.Request.field_bnewshouldbevisible();
+			Parameters.bNewShouldBeVisible = Op.Request.field_bnewshouldbevisible0();
 		}
 		{
-			Parameters.bNewShouldBlockOnLoad = Op.Request.field_bnewshouldblockonload();
+			Parameters.bNewShouldBlockOnLoad = Op.Request.field_bnewshouldblockonload0();
 		}
 		{
-			Parameters.LODIndex = Op.Request.field_lodindex();
+			Parameters.LODIndex = Op.Request.field_lodindex0();
 		}
 
 		// Call implementation.
@@ -5048,7 +5048,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientUnmutePlayer_OnRPCPay
 
 		// Extract from request data.
 		{
-			auto& ValueDataStr = Op.Request.field_playerid();
+			auto& ValueDataStr = Op.Request.field_playerid0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -5108,25 +5108,25 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientTravelInternal_OnRPCP
 
 		// Extract from request data.
 		{
-			Parameters.URL = FString(UTF8_TO_TCHAR(Op.Request.field_url().c_str()));
+			Parameters.URL = FString(UTF8_TO_TCHAR(Op.Request.field_url0().c_str()));
 		}
 		{
-			Parameters.TravelType = TEnumAsByte<ETravelType>(uint8(Op.Request.field_traveltype()));
+			Parameters.TravelType = TEnumAsByte<ETravelType>(uint8(Op.Request.field_traveltype0()));
 		}
 		{
-			Parameters.bSeamless = Op.Request.field_bseamless();
+			Parameters.bSeamless = Op.Request.field_bseamless0();
 		}
 		{
-			Parameters.MapPackageGuid.A = Op.Request.field_mappackageguid_a();
+			Parameters.MapPackageGuid.A = Op.Request.field_mappackageguid0_a0();
 		}
 		{
-			Parameters.MapPackageGuid.B = Op.Request.field_mappackageguid_b();
+			Parameters.MapPackageGuid.B = Op.Request.field_mappackageguid0_b0();
 		}
 		{
-			Parameters.MapPackageGuid.C = Op.Request.field_mappackageguid_c();
+			Parameters.MapPackageGuid.C = Op.Request.field_mappackageguid0_c0();
 		}
 		{
-			Parameters.MapPackageGuid.D = Op.Request.field_mappackageguid_d();
+			Parameters.MapPackageGuid.D = Op.Request.field_mappackageguid0_d0();
 		}
 
 		// Call implementation.
@@ -5180,7 +5180,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientTeamMessage_OnRPCPayl
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_senderplayerstate();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_senderplayerstate0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -5208,13 +5208,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientTeamMessage_OnRPCPayl
 			}
 		}
 		{
-			Parameters.S = FString(UTF8_TO_TCHAR(Op.Request.field_s().c_str()));
+			Parameters.S = FString(UTF8_TO_TCHAR(Op.Request.field_s0().c_str()));
 		}
 		{
-			Parameters.Type = FName((Op.Request.field_type()).data());
+			Parameters.Type = FName((Op.Request.field_type0()).data());
 		}
 		{
-			Parameters.MsgLifeTime = Op.Request.field_msglifetime();
+			Parameters.MsgLifeTime = Op.Request.field_msglifetime0();
 		}
 
 		// Call implementation.
@@ -5268,7 +5268,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopForceFeedback_OnR
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_forcefeedbackeffect();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_forcefeedbackeffect0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -5296,7 +5296,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopForceFeedback_OnR
 			}
 		}
 		{
-			Parameters.Tag = FName((Op.Request.field_tag()).data());
+			Parameters.Tag = FName((Op.Request.field_tag0()).data());
 		}
 
 		// Call implementation.
@@ -5350,10 +5350,10 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopCameraShake_OnRPC
 
 		// Extract from request data.
 		{
-			Parameters.Shake = PackageMap->GetStaticClassFromHash(Op.Request.field_shake());
+			Parameters.Shake = PackageMap->GetStaticClassFromHash(Op.Request.field_shake0());
 		}
 		{
-			Parameters.bImmediately = Op.Request.field_bimmediately();
+			Parameters.bImmediately = Op.Request.field_bimmediately0();
 		}
 
 		// Call implementation.
@@ -5407,7 +5407,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopCameraAnim_OnRPCP
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_animtostop();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_animtostop0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -5531,7 +5531,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSpawnCameraLensEffect
 
 		// Extract from request data.
 		{
-			Parameters.LensEffectEmitterClass = PackageMap->GetStaticClassFromHash(Op.Request.field_lenseffectemitterclass());
+			Parameters.LensEffectEmitterClass = PackageMap->GetStaticClassFromHash(Op.Request.field_lenseffectemitterclass0());
 		}
 
 		// Call implementation.
@@ -5585,7 +5585,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetViewTarget_OnRPCPa
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_a();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_a0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -5613,16 +5613,16 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetViewTarget_OnRPCPa
 			}
 		}
 		{
-			Parameters.TransitionParams.BlendTime = Op.Request.field_transitionparams_blendtime();
+			Parameters.TransitionParams.BlendTime = Op.Request.field_transitionparams0_blendtime0();
 		}
 		{
-			Parameters.TransitionParams.BlendFunction = TEnumAsByte<EViewTargetBlendFunction>(uint8(Op.Request.field_transitionparams_blendfunction()));
+			Parameters.TransitionParams.BlendFunction = TEnumAsByte<EViewTargetBlendFunction>(uint8(Op.Request.field_transitionparams0_blendfunction0()));
 		}
 		{
-			Parameters.TransitionParams.BlendExp = Op.Request.field_transitionparams_blendexp();
+			Parameters.TransitionParams.BlendExp = Op.Request.field_transitionparams0_blendexp0();
 		}
 		{
-			Parameters.TransitionParams.bLockOutgoing = Op.Request.field_transitionparams_blockoutgoing();
+			Parameters.TransitionParams.bLockOutgoing = Op.Request.field_transitionparams0_blockoutgoing0();
 		}
 
 		// Call implementation.
@@ -5676,7 +5676,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetSpectatorWaiting_O
 
 		// Extract from request data.
 		{
-			Parameters.bWaiting = Op.Request.field_bwaiting();
+			Parameters.bWaiting = Op.Request.field_bwaiting0();
 		}
 
 		// Call implementation.
@@ -5730,7 +5730,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetHUD_OnRPCPayload(c
 
 		// Extract from request data.
 		{
-			Parameters.NewHUDClass = PackageMap->GetStaticClassFromHash(Op.Request.field_newhudclass());
+			Parameters.NewHUDClass = PackageMap->GetStaticClassFromHash(Op.Request.field_newhudclass0());
 		}
 
 		// Call implementation.
@@ -5784,7 +5784,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetForceMipLevelsToBe
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_material();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_material0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -5812,10 +5812,10 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetForceMipLevelsToBe
 			}
 		}
 		{
-			Parameters.ForceDuration = Op.Request.field_forceduration();
+			Parameters.ForceDuration = Op.Request.field_forceduration0();
 		}
 		{
-			Parameters.CinematicTextureGroups = Op.Request.field_cinematictexturegroups();
+			Parameters.CinematicTextureGroups = Op.Request.field_cinematictexturegroups0();
 		}
 
 		// Call implementation.
@@ -5869,16 +5869,16 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCinematicMode_OnRP
 
 		// Extract from request data.
 		{
-			Parameters.bInCinematicMode = Op.Request.field_bincinematicmode();
+			Parameters.bInCinematicMode = Op.Request.field_bincinematicmode0();
 		}
 		{
-			Parameters.bAffectsMovement = Op.Request.field_baffectsmovement();
+			Parameters.bAffectsMovement = Op.Request.field_baffectsmovement0();
 		}
 		{
-			Parameters.bAffectsTurning = Op.Request.field_baffectsturning();
+			Parameters.bAffectsTurning = Op.Request.field_baffectsturning0();
 		}
 		{
-			Parameters.bAffectsHUD = Op.Request.field_baffectshud();
+			Parameters.bAffectsHUD = Op.Request.field_baffectshud0();
 		}
 
 		// Call implementation.
@@ -5932,7 +5932,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCameraMode_OnRPCPa
 
 		// Extract from request data.
 		{
-			Parameters.NewCamMode = FName((Op.Request.field_newcammode()).data());
+			Parameters.NewCamMode = FName((Op.Request.field_newcammode0()).data());
 		}
 
 		// Call implementation.
@@ -5986,22 +5986,22 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCameraFade_OnRPCPa
 
 		// Extract from request data.
 		{
-			Parameters.bEnableFading = Op.Request.field_benablefading();
+			Parameters.bEnableFading = Op.Request.field_benablefading0();
 		}
 		{
-			Parameters.FadeColor.B = uint8(uint8(Op.Request.field_fadecolor_b()));
+			Parameters.FadeColor.B = uint8(uint8(Op.Request.field_fadecolor0_b0()));
 		}
 		{
-			Parameters.FadeColor.G = uint8(uint8(Op.Request.field_fadecolor_g()));
+			Parameters.FadeColor.G = uint8(uint8(Op.Request.field_fadecolor0_g0()));
 		}
 		{
-			Parameters.FadeColor.R = uint8(uint8(Op.Request.field_fadecolor_r()));
+			Parameters.FadeColor.R = uint8(uint8(Op.Request.field_fadecolor0_r0()));
 		}
 		{
-			Parameters.FadeColor.A = uint8(uint8(Op.Request.field_fadecolor_a()));
+			Parameters.FadeColor.A = uint8(uint8(Op.Request.field_fadecolor0_a0()));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_fadealpha();
+			auto& ValueDataStr = Op.Request.field_fadealpha0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -6010,10 +6010,10 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetCameraFade_OnRPCPa
 			checkf(bSuccess, TEXT("NetSerialize on FVector2D failed."));
 		}
 		{
-			Parameters.FadeTime = Op.Request.field_fadetime();
+			Parameters.FadeTime = Op.Request.field_fadetime0();
 		}
 		{
-			Parameters.bFadeAudio = Op.Request.field_bfadeaudio();
+			Parameters.bFadeAudio = Op.Request.field_bfadeaudio0();
 		}
 
 		// Call implementation.
@@ -6112,7 +6112,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReturnToMainMenuWithT
 
 		// Extract from request data.
 		{
-			// UNSUPPORTED UTextProperty (unhandled) Parameters.ReturnReason Op.Request.field_returnreason()
+			// UNSUPPORTED UTextProperty (unhandled) Parameters.ReturnReason Op.Request.field_returnreason0()
 		}
 
 		// Call implementation.
@@ -6166,7 +6166,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReturnToMainMenu_OnRP
 
 		// Extract from request data.
 		{
-			Parameters.ReturnReason = FString(UTF8_TO_TCHAR(Op.Request.field_returnreason().c_str()));
+			Parameters.ReturnReason = FString(UTF8_TO_TCHAR(Op.Request.field_returnreason0().c_str()));
 		}
 
 		// Call implementation.
@@ -6220,7 +6220,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientRetryClientRestart_On
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newpawn();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newpawn0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6299,7 +6299,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientRestart_OnRPCPayload(
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newpawn();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newpawn0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6423,7 +6423,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientRepObjRef_OnRPCPayloa
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_object();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_object0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6502,13 +6502,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 
 		// Extract from request data.
 		{
-			Parameters.Message = PackageMap->GetStaticClassFromHash(Op.Request.field_message());
+			Parameters.Message = PackageMap->GetStaticClassFromHash(Op.Request.field_message0());
 		}
 		{
-			Parameters.Switch = Op.Request.field_switch();
+			Parameters.Switch = Op.Request.field_switch0();
 		}
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_relatedplayerstate1();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_relatedplayerstate10();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6536,7 +6536,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 			}
 		}
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_relatedplayerstate2();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_relatedplayerstate20();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6564,7 +6564,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 			}
 		}
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_optionalobject();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_optionalobject0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6643,7 +6643,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPrestreamTextures_OnR
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_forcedactor();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_forcedactor0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6671,13 +6671,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPrestreamTextures_OnR
 			}
 		}
 		{
-			Parameters.ForceDuration = Op.Request.field_forceduration();
+			Parameters.ForceDuration = Op.Request.field_forceduration0();
 		}
 		{
-			Parameters.bEnableStreaming = Op.Request.field_benablestreaming();
+			Parameters.bEnableStreaming = Op.Request.field_benablestreaming0();
 		}
 		{
-			Parameters.CinematicTextureGroups = Op.Request.field_cinematictexturegroups();
+			Parameters.CinematicTextureGroups = Op.Request.field_cinematictexturegroups0();
 		}
 
 		// Call implementation.
@@ -6731,13 +6731,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPrepareMapChange_OnRP
 
 		// Extract from request data.
 		{
-			Parameters.LevelName = FName((Op.Request.field_levelname()).data());
+			Parameters.LevelName = FName((Op.Request.field_levelname0()).data());
 		}
 		{
-			Parameters.bFirst = Op.Request.field_bfirst();
+			Parameters.bFirst = Op.Request.field_bfirst0();
 		}
 		{
-			Parameters.bLast = Op.Request.field_blast();
+			Parameters.bLast = Op.Request.field_blast0();
 		}
 
 		// Call implementation.
@@ -6791,7 +6791,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySoundAtLocation_O
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_sound();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_sound0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6819,7 +6819,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySoundAtLocation_O
 			}
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_location();
+			auto& ValueDataStr = Op.Request.field_location0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -6828,10 +6828,10 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySoundAtLocation_O
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			Parameters.VolumeMultiplier = Op.Request.field_volumemultiplier();
+			Parameters.VolumeMultiplier = Op.Request.field_volumemultiplier0();
 		}
 		{
-			Parameters.PitchMultiplier = Op.Request.field_pitchmultiplier();
+			Parameters.PitchMultiplier = Op.Request.field_pitchmultiplier0();
 		}
 
 		// Call implementation.
@@ -6885,7 +6885,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySound_OnRPCPayloa
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_sound();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_sound0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6913,10 +6913,10 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySound_OnRPCPayloa
 			}
 		}
 		{
-			Parameters.VolumeMultiplier = Op.Request.field_volumemultiplier();
+			Parameters.VolumeMultiplier = Op.Request.field_volumemultiplier0();
 		}
 		{
-			Parameters.PitchMultiplier = Op.Request.field_pitchmultiplier();
+			Parameters.PitchMultiplier = Op.Request.field_pitchmultiplier0();
 		}
 
 		// Call implementation.
@@ -6970,7 +6970,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayForceFeedback_OnR
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_forcefeedbackeffect();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_forcefeedbackeffect0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -6998,13 +6998,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayForceFeedback_OnR
 			}
 		}
 		{
-			Parameters.bLooping = Op.Request.field_blooping();
+			Parameters.bLooping = Op.Request.field_blooping0();
 		}
 		{
-			Parameters.bIgnoreTimeDilation = Op.Request.field_bignoretimedilation();
+			Parameters.bIgnoreTimeDilation = Op.Request.field_bignoretimedilation0();
 		}
 		{
-			Parameters.Tag = FName((Op.Request.field_tag()).data());
+			Parameters.Tag = FName((Op.Request.field_tag0()).data());
 		}
 
 		// Call implementation.
@@ -7058,16 +7058,16 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraShake_OnRPC
 
 		// Extract from request data.
 		{
-			Parameters.Shake = PackageMap->GetStaticClassFromHash(Op.Request.field_shake());
+			Parameters.Shake = PackageMap->GetStaticClassFromHash(Op.Request.field_shake0());
 		}
 		{
-			Parameters.Scale = Op.Request.field_scale();
+			Parameters.Scale = Op.Request.field_scale0();
 		}
 		{
-			Parameters.PlaySpace = TEnumAsByte<ECameraAnimPlaySpace::Type>(uint8(Op.Request.field_playspace()));
+			Parameters.PlaySpace = TEnumAsByte<ECameraAnimPlaySpace::Type>(uint8(Op.Request.field_playspace0()));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_userplayspacerot();
+			auto& ValueDataStr = Op.Request.field_userplayspacerot0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -7127,7 +7127,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraAnim_OnRPCP
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_animtoplay();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_animtoplay0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -7155,28 +7155,28 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraAnim_OnRPCP
 			}
 		}
 		{
-			Parameters.Scale = Op.Request.field_scale();
+			Parameters.Scale = Op.Request.field_scale0();
 		}
 		{
-			Parameters.Rate = Op.Request.field_rate();
+			Parameters.Rate = Op.Request.field_rate0();
 		}
 		{
-			Parameters.BlendInTime = Op.Request.field_blendintime();
+			Parameters.BlendInTime = Op.Request.field_blendintime0();
 		}
 		{
-			Parameters.BlendOutTime = Op.Request.field_blendouttime();
+			Parameters.BlendOutTime = Op.Request.field_blendouttime0();
 		}
 		{
-			Parameters.bLoop = Op.Request.field_bloop();
+			Parameters.bLoop = Op.Request.field_bloop0();
 		}
 		{
-			Parameters.bRandomStartTime = Op.Request.field_brandomstarttime();
+			Parameters.bRandomStartTime = Op.Request.field_brandomstarttime0();
 		}
 		{
-			Parameters.Space = TEnumAsByte<ECameraAnimPlaySpace::Type>(uint8(Op.Request.field_space()));
+			Parameters.Space = TEnumAsByte<ECameraAnimPlaySpace::Type>(uint8(Op.Request.field_space0()));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_customplayspace();
+			auto& ValueDataStr = Op.Request.field_customplayspace0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -7236,7 +7236,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientMutePlayer_OnRPCPaylo
 
 		// Extract from request data.
 		{
-			auto& ValueDataStr = Op.Request.field_playerid();
+			auto& ValueDataStr = Op.Request.field_playerid0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -7296,13 +7296,13 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientMessage_OnRPCPayload(
 
 		// Extract from request data.
 		{
-			Parameters.S = FString(UTF8_TO_TCHAR(Op.Request.field_s().c_str()));
+			Parameters.S = FString(UTF8_TO_TCHAR(Op.Request.field_s0().c_str()));
 		}
 		{
-			Parameters.Type = FName((Op.Request.field_type()).data());
+			Parameters.Type = FName((Op.Request.field_type0()).data());
 		}
 		{
-			Parameters.MsgLifeTime = Op.Request.field_msglifetime();
+			Parameters.MsgLifeTime = Op.Request.field_msglifetime0();
 		}
 
 		// Call implementation.
@@ -7356,7 +7356,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientIgnoreMoveInput_OnRPC
 
 		// Extract from request data.
 		{
-			Parameters.bIgnore = Op.Request.field_bignore();
+			Parameters.bIgnore = Op.Request.field_bignore0();
 		}
 
 		// Call implementation.
@@ -7410,7 +7410,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientIgnoreLookInput_OnRPC
 
 		// Extract from request data.
 		{
-			Parameters.bIgnore = Op.Request.field_bignore();
+			Parameters.bIgnore = Op.Request.field_bignore0();
 		}
 
 		// Call implementation.
@@ -7464,7 +7464,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientGotoState_OnRPCPayloa
 
 		// Extract from request data.
 		{
-			Parameters.NewState = FName((Op.Request.field_newstate()).data());
+			Parameters.NewState = FName((Op.Request.field_newstate0()).data());
 		}
 
 		// Call implementation.
@@ -7518,7 +7518,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientGameEnded_OnRPCPayloa
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_endgamefocus();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_endgamefocus0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
@@ -7546,7 +7546,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientGameEnded_OnRPCPayloa
 			}
 		}
 		{
-			Parameters.bIsWinner = Op.Request.field_biswinner();
+			Parameters.bIsWinner = Op.Request.field_biswinner0();
 		}
 
 		// Call implementation.
@@ -7735,7 +7735,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientEnableNetworkVoice_On
 
 		// Extract from request data.
 		{
-			Parameters.bEnable = Op.Request.field_benable();
+			Parameters.bEnable = Op.Request.field_benable0();
 		}
 
 		// Call implementation.
@@ -7879,7 +7879,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientCapBandwidth_OnRPCPay
 
 		// Extract from request data.
 		{
-			Parameters.Cap = Op.Request.field_cap();
+			Parameters.Cap = Op.Request.field_cap0();
 		}
 
 		// Call implementation.
@@ -7978,7 +7978,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientAddTextureStreamingLo
 
 		// Extract from request data.
 		{
-			auto& ValueDataStr = Op.Request.field_inloc();
+			auto& ValueDataStr = Op.Request.field_inloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -7987,10 +7987,10 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientAddTextureStreamingLo
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			Parameters.Duration = Op.Request.field_duration();
+			Parameters.Duration = Op.Request.field_duration0();
 		}
 		{
-			Parameters.bOverrideLocation = Op.Request.field_boverridelocation();
+			Parameters.bOverrideLocation = Op.Request.field_boverridelocation0();
 		}
 
 		// Call implementation.
@@ -8044,7 +8044,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetRotation_OnRPCPayl
 
 		// Extract from request data.
 		{
-			auto& ValueDataStr = Op.Request.field_newrotation();
+			auto& ValueDataStr = Op.Request.field_newrotation0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -8053,7 +8053,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetRotation_OnRPCPayl
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 		}
 		{
-			Parameters.bResetCamera = Op.Request.field_bresetcamera();
+			Parameters.bResetCamera = Op.Request.field_bresetcamera0();
 		}
 
 		// Call implementation.
@@ -8107,7 +8107,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetLocation_OnRPCPayl
 
 		// Extract from request data.
 		{
-			auto& ValueDataStr = Op.Request.field_newlocation();
+			auto& ValueDataStr = Op.Request.field_newlocation0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -8116,7 +8116,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetLocation_OnRPCPayl
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_newrotation();
+			auto& ValueDataStr = Op.Request.field_newrotation0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -8176,16 +8176,16 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerViewSelf_OnRPCPayload
 
 		// Extract from request data.
 		{
-			Parameters.TransitionParams.BlendTime = Op.Request.field_transitionparams_blendtime();
+			Parameters.TransitionParams.BlendTime = Op.Request.field_transitionparams0_blendtime0();
 		}
 		{
-			Parameters.TransitionParams.BlendFunction = TEnumAsByte<EViewTargetBlendFunction>(uint8(Op.Request.field_transitionparams_blendfunction()));
+			Parameters.TransitionParams.BlendFunction = TEnumAsByte<EViewTargetBlendFunction>(uint8(Op.Request.field_transitionparams0_blendfunction0()));
 		}
 		{
-			Parameters.TransitionParams.BlendExp = Op.Request.field_transitionparams_blendexp();
+			Parameters.TransitionParams.BlendExp = Op.Request.field_transitionparams0_blendexp0();
 		}
 		{
-			Parameters.TransitionParams.bLockOutgoing = Op.Request.field_transitionparams_blockoutgoing();
+			Parameters.TransitionParams.bLockOutgoing = Op.Request.field_transitionparams0_blockoutgoing0();
 		}
 
 		// Call implementation.
@@ -8374,7 +8374,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateMultipleLevelsV
 
 		// Extract from request data.
 		{
-			auto& List = Op.Request.field_levelvisibilities();
+			auto& List = Op.Request.field_levelvisibilities0();
 			Parameters.LevelVisibilities.SetNum(List.size());
 			for(int i = 0; i < List.size(); i++)
 			{
@@ -8437,10 +8437,10 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateLevelVisibility
 
 		// Extract from request data.
 		{
-			Parameters.PackageName = FName((Op.Request.field_packagename()).data());
+			Parameters.PackageName = FName((Op.Request.field_packagename0()).data());
 		}
 		{
-			Parameters.bIsVisible = Op.Request.field_bisvisible();
+			Parameters.bIsVisible = Op.Request.field_bisvisible0();
 		}
 
 		// Call implementation.
@@ -8494,7 +8494,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateCamera_OnRPCPay
 
 		// Extract from request data.
 		{
-			auto& ValueDataStr = Op.Request.field_camloc();
+			auto& ValueDataStr = Op.Request.field_camloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -8503,7 +8503,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUpdateCamera_OnRPCPay
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize failed."));
 		}
 		{
-			Parameters.CamPitchAndYaw = Op.Request.field_campitchandyaw();
+			Parameters.CamPitchAndYaw = Op.Request.field_campitchandyaw0();
 		}
 
 		// Call implementation.
@@ -8557,7 +8557,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerUnmutePlayer_OnRPCPay
 
 		// Extract from request data.
 		{
-			auto& ValueDataStr = Op.Request.field_playerid();
+			auto& ValueDataStr = Op.Request.field_playerid0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -8707,7 +8707,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSetSpectatorWaiting_O
 
 		// Extract from request data.
 		{
-			Parameters.bWaiting = Op.Request.field_bwaiting();
+			Parameters.bWaiting = Op.Request.field_bwaiting0();
 		}
 
 		// Call implementation.
@@ -8761,7 +8761,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSetSpectatorLocation_
 
 		// Extract from request data.
 		{
-			auto& ValueDataStr = Op.Request.field_newloc();
+			auto& ValueDataStr = Op.Request.field_newloc0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -8770,7 +8770,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerSetSpectatorLocation_
 			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 		}
 		{
-			auto& ValueDataStr = Op.Request.field_newrot();
+			auto& ValueDataStr = Op.Request.field_newrot0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -8920,7 +8920,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerNotifyLoadedWorld_OnR
 
 		// Extract from request data.
 		{
-			Parameters.WorldPackageName = FName((Op.Request.field_worldpackagename()).data());
+			Parameters.WorldPackageName = FName((Op.Request.field_worldpackagename0()).data());
 		}
 
 		// Call implementation.
@@ -8974,7 +8974,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerMutePlayer_OnRPCPaylo
 
 		// Extract from request data.
 		{
-			auto& ValueDataStr = Op.Request.field_playerid();
+			auto& ValueDataStr = Op.Request.field_playerid0();
 			TArray<uint8> ValueData;
 			ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 			FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
@@ -9124,7 +9124,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerChangeName_OnRPCPaylo
 
 		// Extract from request data.
 		{
-			Parameters.S = FString(UTF8_TO_TCHAR(Op.Request.field_s().c_str()));
+			Parameters.S = FString(UTF8_TO_TCHAR(Op.Request.field_s0().c_str()));
 		}
 
 		// Call implementation.
@@ -9178,7 +9178,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerCamera_OnRPCPayload(c
 
 		// Extract from request data.
 		{
-			Parameters.NewMode = FName((Op.Request.field_newmode()).data());
+			Parameters.NewMode = FName((Op.Request.field_newmode0()).data());
 		}
 
 		// Call implementation.
@@ -9232,7 +9232,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerAcknowledgePossession
 
 		// Extract from request data.
 		{
-			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_p();
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_p0();
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
