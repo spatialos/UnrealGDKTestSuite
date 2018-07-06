@@ -95,7 +95,7 @@ void ASampleGameCharacter::BeginPlay()
 		check(FStringRepTest);
 		CArrayRepTest = World->SpawnActor<ATestCArrayReplication>();
 		check(CArrayRepTest);
-		TArrayUObjectsRepTest = World->SpawnActor<ATestTArrayStablyNamedUObjectsReplication>();
+		TArrayUObjectsRepTest = World->SpawnActor<ATestTArrayReplication>();
 		check(TArrayUObjectsRepTest);
 	}
 }

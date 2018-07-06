@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TestTArrayStablyNamedUObjectsReplication.h"
+#include "TestTArrayReplication.h"
 
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
@@ -20,7 +20,7 @@ void ATestActor::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLif
 	DOREPLIFETIME_CONDITION(ATestActor, EntityPath, COND_None);
 }
 
-void ATestTArrayStablyNamedUObjectsReplication::Tick(float DeltaTime)
+void ATestTArrayReplication::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -35,26 +35,26 @@ void ATestTArrayStablyNamedUObjectsReplication::Tick(float DeltaTime)
 	}
 }
 
-void ATestTArrayStablyNamedUObjectsReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+void ATestTArrayReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME_CONDITION(ATestTArrayStablyNamedUObjectsReplication, StablyNamedArray, COND_None);
-	DOREPLIFETIME_CONDITION(ATestTArrayStablyNamedUObjectsReplication, DynamicallyCreatedArray, COND_None);
+	DOREPLIFETIME_CONDITION(ATestTArrayReplication, StablyNamedArray, COND_None);
+	DOREPLIFETIME_CONDITION(ATestTArrayReplication, DynamicallyCreatedArray, COND_None);
 }
 
-bool ATestTArrayStablyNamedUObjectsReplication::Server_ReportReplication_Validate(const TArray<UTestUObject*>& RepStablyNamedArray, const TArray<ATestActor*>& RepDynamicallyCreatedActors)
+bool ATestTArrayReplication::Server_ReportReplication_Validate(const TArray<UTestUObject*>& RepStablyNamedArray, const TArray<ATestActor*>& RepDynamicallyCreatedActors)
 {
 	return true;
 }
 
-void ATestTArrayStablyNamedUObjectsReplication::Server_ReportReplication_Implementation(const TArray<UTestUObject*>& RepStablyNamedArray, const TArray<ATestActor*>& RepDynamicallyCreatedActors)
+void ATestTArrayReplication::Server_ReportReplication_Implementation(const TArray<UTestUObject*>& RepStablyNamedArray, const TArray<ATestActor*>& RepDynamicallyCreatedActors)
 {
 	ValidateRPC_Server(RepStablyNamedArray, RepDynamicallyCreatedActors);
 
 	SignalResponseRecieved();
 }
 
-void ATestTArrayStablyNamedUObjectsReplication::StartTestImpl()
+void ATestTArrayReplication::StartTestImpl()
 {
 	// Setup stably named UObjects
 	UTestUObject* Testing = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
@@ -72,22 +72,22 @@ void ATestTArrayStablyNamedUObjectsReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
-void ATestTArrayStablyNamedUObjectsReplication::ValidateClientReplicationImpl()
+void ATestTArrayReplication::ValidateClientReplicationImpl()
 {
 	bReplicationRecievedOnClient = true;
 }
 
-void ATestTArrayStablyNamedUObjectsReplication::SendTestResponseRPCImpl()
+void ATestTArrayReplication::SendTestResponseRPCImpl()
 {
 	// Empty due to the deferred execution
 }
 
-void ATestTArrayStablyNamedUObjectsReplication::OnRep_DynamicallyCreatedArray()
+void ATestTArrayReplication::OnRep_DynamicallyCreatedArray()
 {
 	bDynamicallyCreatedActorReplicated = true;
 }
 
-void ATestTArrayStablyNamedUObjectsReplication::ValidateReplication_Client(const TArray<UTestUObject*>& TestStablyNamedArray, const TArray<ATestActor*>& TestDynamicallyCreatedActors)
+void ATestTArrayReplication::ValidateReplication_Client(const TArray<UTestUObject*>& TestStablyNamedArray, const TArray<ATestActor*>& TestDynamicallyCreatedActors)
 {
 	// Validate the stably named object
 	int num = TestStablyNamedArray.Num();
@@ -111,7 +111,7 @@ void ATestTArrayStablyNamedUObjectsReplication::ValidateReplication_Client(const
 
 }
 
-void ATestTArrayStablyNamedUObjectsReplication::ValidateRPC_Server(const TArray<UTestUObject*>& TestStablyNamedArray, const TArray<ATestActor*>& TestDynamicallyCreatedActors)
+void ATestTArrayReplication::ValidateRPC_Server(const TArray<UTestUObject*>& TestStablyNamedArray, const TArray<ATestActor*>& TestDynamicallyCreatedActors)
 {
 	// Validate the stably named object
 	int num = TestStablyNamedArray.Num();

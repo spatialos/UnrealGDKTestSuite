@@ -1,14 +1,14 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.testcarrayreplication;
+package improbable.unreal.generated.testtarrayreplication;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component TestCArrayReplicationSingleClientRepData {
-	id = 100076;
+component TestTArrayReplicationSingleClientRepData {
+	id = 100082;
 }
-component TestCArrayReplicationMultiClientRepData {
-	id = 100077;
+component TestTArrayReplicationMultiClientRepData {
+	id = 100083;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -25,23 +25,23 @@ component TestCArrayReplicationMultiClientRepData {
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
 	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
-	int32 field_testpod0 = 17; // COND_None // ::TestCArrayReplication
-	int32 field_testpod1 = 18; // COND_None // ::TestCArrayReplication
+	list<UnrealObjectRef> field_stablynamedarray0 = 17; // COND_None // ::TestTArrayReplication
+	list<UnrealObjectRef> field_dynamicallycreatedarray0 = 18; // COND_None // ::TestTArrayReplication
 }
-component TestCArrayReplicationMigratableData {
-	id = 100078;
+component TestTArrayReplicationMigratableData {
+	id = 100084;
 }
-import "improbable/unreal/generated/UnrealTestCArrayReplicationTypes.schema";
+import "improbable/unreal/generated/UnrealTestTArrayReplicationTypes.schema";
 import "improbable/unreal/generated/UnrealReplicationTestCaseTypes.schema";
 
-component TestCArrayReplicationClientRPCs {
-	id = 100079;
+component TestTArrayReplicationClientRPCs {
+	id = 100085;
 }
-component TestCArrayReplicationServerRPCs {
-	id = 100080;
-	command UnrealRPCCommandResponse serverreportreplication(testcarrayreplication.ServerReportReplicationRequest);
+component TestTArrayReplicationServerRPCs {
+	id = 100086;
+	command UnrealRPCCommandResponse serverreportreplication(testtarrayreplication.ServerReportReplicationRequest);
 	command UnrealRPCCommandResponse serverstarttest(replicationtestcase.ServerStartTestRequest);
 }
-component TestCArrayReplicationNetMulticastRPCs {
-	id = 100081;
+component TestTArrayReplicationNetMulticastRPCs {
+	id = 100087;
 }

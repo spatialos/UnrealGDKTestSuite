@@ -13,7 +13,7 @@
 #include "Tests/TestCharReplication.h"
 #include "Tests/TestFStringReplication.h"
 #include "Tests/TestCArrayReplication.h"
-#include "Tests/TestTArrayStablyNamedUObjectsReplication.h"
+#include "Tests/TestTArrayReplication.h"
 #include "SampleGameCharacter.generated.h"
 
 USTRUCT(BlueprintType)
@@ -184,7 +184,7 @@ struct FBar
 	TArray<FFoo> CantReplicateThisMember;
 
 	UPROPERTY()
-		FTestStructWithNetSerialize MyStruct;
+	FTestStructWithNetSerialize MyStruct;
 
 	UPROPERTY()
 	FRepMovement NetSerializeStruct;
@@ -338,7 +338,7 @@ public:
 	ATestCArrayReplication* CArrayRepTest;
 
 	UPROPERTY(ReplicatedUsing = OnRep_TArrayUObjectsRepTest)
-	ATestTArrayStablyNamedUObjectsReplication* TArrayUObjectsRepTest;
+	ATestTArrayReplication* TArrayUObjectsRepTest;
 
 	UFUNCTION(Client, Reliable)
 	void Client_TestConstArgs(FConstStruct ConstStruct);

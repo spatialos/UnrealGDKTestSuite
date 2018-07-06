@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ReplicationTestCase.h"
-#include "TestTArrayStablyNamedUObjectsReplication.generated.h"
+#include "TestTArrayReplication.generated.h"
 
 UCLASS(BlueprintType, Blueprintable)
 class UTestUObject : public UObject
@@ -38,12 +38,12 @@ public:
 };
 
 UCLASS()
-class SAMPLEGAME_API ATestTArrayStablyNamedUObjectsReplication : public AReplicationTestCase
+class SAMPLEGAME_API ATestTArrayReplication : public AReplicationTestCase
 {
 	GENERATED_BODY()
 public:	
 
-	ATestTArrayStablyNamedUObjectsReplication()
+	ATestTArrayReplication()
 		: bDynamicallyCreatedActorReplicated(false)
 	{ 
 		TestName = TEXT("TArray with UObjects types"); 
