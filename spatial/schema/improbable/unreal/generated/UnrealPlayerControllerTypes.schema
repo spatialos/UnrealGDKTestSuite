@@ -55,7 +55,7 @@ type ClientStopForceFeedbackRequest {
 }
 type ClientStopCameraShakeRequest {
 	uint32 target_subobject_offset = 1;
-	uint32 field_shake0 = 2;
+	UnrealObjectRef field_shake0 = 2;
 	bool field_bimmediately0 = 3;
 }
 type ClientStopCameraAnimRequest {
@@ -67,7 +67,7 @@ type ClientStartOnlineSessionRequest {
 }
 type ClientSpawnCameraLensEffectRequest {
 	uint32 target_subobject_offset = 1;
-	uint32 field_lenseffectemitterclass0 = 2;
+	UnrealObjectRef field_lenseffectemitterclass0 = 2;
 }
 type ClientSetViewTargetRequest {
 	uint32 target_subobject_offset = 1;
@@ -83,7 +83,7 @@ type ClientSetSpectatorWaitingRequest {
 }
 type ClientSetHUDRequest {
 	uint32 target_subobject_offset = 1;
-	uint32 field_newhudclass0 = 2;
+	UnrealObjectRef field_newhudclass0 = 2;
 }
 type ClientSetForceMipLevelsToBeResidentRequest {
 	uint32 target_subobject_offset = 1;
@@ -141,7 +141,7 @@ type ClientRepObjRefRequest {
 }
 type ClientReceiveLocalizedMessageRequest {
 	uint32 target_subobject_offset = 1;
-	uint32 field_message0 = 2;
+	UnrealObjectRef field_message0 = 2;
 	int32 field_switch0 = 3;
 	UnrealObjectRef field_relatedplayerstate10 = 4;
 	UnrealObjectRef field_relatedplayerstate20 = 5;
@@ -182,7 +182,7 @@ type ClientPlayForceFeedbackRequest {
 }
 type ClientPlayCameraShakeRequest {
 	uint32 target_subobject_offset = 1;
-	uint32 field_shake0 = 2;
+	UnrealObjectRef field_shake0 = 2;
 	float field_scale0 = 3;
 	uint32 field_playspace0 = 4;
 	bytes field_userplayspacerot0 = 5;

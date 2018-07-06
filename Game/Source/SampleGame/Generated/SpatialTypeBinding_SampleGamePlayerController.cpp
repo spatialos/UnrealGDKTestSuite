@@ -2091,7 +2091,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientTeamMessage_SendRPC(w
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientTeamMessage queued. StructuredParams.SenderPlayerState is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.SenderPlayerState};
+					return {Cast<UObject>(StructuredParams.SenderPlayerState)};
 				}
 				else
 				{
@@ -2157,7 +2157,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopForceFeedback_Sen
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientStopForceFeedback queued. StructuredParams.ForceFeedbackEffect is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.ForceFeedbackEffect};
+					return {Cast<UObject>(StructuredParams.ForceFeedbackEffect)};
 				}
 				else
 				{
@@ -2203,7 +2203,31 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopCameraShake_SendR
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientStopCameraShakeRequest RPCPayload;
 		{
-			RPCPayload.set_field_shake0(PackageMap->GetHashFromStaticClass(StructuredParams.Shake));
+			if (StructuredParams.Shake != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Shake);
+				if (!NetGUID.IsValid())
+				{
+					if (StructuredParams.Shake->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Shake);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientStopCameraShake queued. StructuredParams.Shake is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {Cast<UObject>(StructuredParams.Shake)};
+				}
+				else
+				{
+					RPCPayload.set_field_shake0(ObjectRef);
+				}
+			}
+			else
+			{
+				RPCPayload.set_field_shake0(SpatialConstants::NULL_OBJECT_REF);
+			}
 		}
 		{
 			RPCPayload.set_field_bimmediately0(StructuredParams.bImmediately);
@@ -2253,7 +2277,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopCameraAnim_SendRP
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientStopCameraAnim queued. StructuredParams.AnimToStop is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.AnimToStop};
+					return {Cast<UObject>(StructuredParams.AnimToStop)};
 				}
 				else
 				{
@@ -2323,7 +2347,31 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSpawnCameraLensEffect
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSpawnCameraLensEffectRequest RPCPayload;
 		{
-			RPCPayload.set_field_lenseffectemitterclass0(PackageMap->GetHashFromStaticClass(StructuredParams.LensEffectEmitterClass));
+			if (StructuredParams.LensEffectEmitterClass != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.LensEffectEmitterClass);
+				if (!NetGUID.IsValid())
+				{
+					if (StructuredParams.LensEffectEmitterClass->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.LensEffectEmitterClass);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientSpawnCameraLensEffect queued. StructuredParams.LensEffectEmitterClass is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {Cast<UObject>(StructuredParams.LensEffectEmitterClass)};
+				}
+				else
+				{
+					RPCPayload.set_field_lenseffectemitterclass0(ObjectRef);
+				}
+			}
+			else
+			{
+				RPCPayload.set_field_lenseffectemitterclass0(SpatialConstants::NULL_OBJECT_REF);
+			}
 		}
 
 		// Send RPC
@@ -2370,7 +2418,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetViewTarget_SendRPC
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientSetViewTarget queued. StructuredParams.A is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.A};
+					return {Cast<UObject>(StructuredParams.A)};
 				}
 				else
 				{
@@ -2458,7 +2506,31 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetHUD_SendRPC(worker
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientSetHUDRequest RPCPayload;
 		{
-			RPCPayload.set_field_newhudclass0(PackageMap->GetHashFromStaticClass(StructuredParams.NewHUDClass));
+			if (StructuredParams.NewHUDClass != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.NewHUDClass);
+				if (!NetGUID.IsValid())
+				{
+					if (StructuredParams.NewHUDClass->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewHUDClass);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientSetHUD queued. StructuredParams.NewHUDClass is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {Cast<UObject>(StructuredParams.NewHUDClass)};
+				}
+				else
+				{
+					RPCPayload.set_field_newhudclass0(ObjectRef);
+				}
+			}
+			else
+			{
+				RPCPayload.set_field_newhudclass0(SpatialConstants::NULL_OBJECT_REF);
+			}
 		}
 
 		// Send RPC
@@ -2505,7 +2577,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetForceMipLevelsToBe
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientSetForceMipLevelsToBeResident queued. StructuredParams.Material is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.Material};
+					return {Cast<UObject>(StructuredParams.Material)};
 				}
 				else
 				{
@@ -2796,7 +2868,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientRetryClientRestart_Se
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientRetryClientRestart queued. StructuredParams.NewPawn is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.NewPawn};
+					return {Cast<UObject>(StructuredParams.NewPawn)};
 				}
 				else
 				{
@@ -2853,7 +2925,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientRestart_SendRPC(worke
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientRestart queued. StructuredParams.NewPawn is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.NewPawn};
+					return {Cast<UObject>(StructuredParams.NewPawn)};
 				}
 				else
 				{
@@ -2937,7 +3009,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientRepObjRef_SendRPC(wor
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientRepObjRef queued. StructuredParams.Object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.Object};
+					return {Cast<UObject>(StructuredParams.Object)};
 				}
 				else
 				{
@@ -2980,7 +3052,31 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientReceiveLocalizedMessageRequest RPCPayload;
 		{
-			RPCPayload.set_field_message0(PackageMap->GetHashFromStaticClass(StructuredParams.Message));
+			if (StructuredParams.Message != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Message);
+				if (!NetGUID.IsValid())
+				{
+					if (StructuredParams.Message->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Message);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.Message is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {Cast<UObject>(StructuredParams.Message)};
+				}
+				else
+				{
+					RPCPayload.set_field_message0(ObjectRef);
+				}
+			}
+			else
+			{
+				RPCPayload.set_field_message0(SpatialConstants::NULL_OBJECT_REF);
+			}
 		}
 		{
 			RPCPayload.set_field_switch0(int32_t(StructuredParams.Switch));
@@ -3000,7 +3096,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.RelatedPlayerState_1 is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.RelatedPlayerState_1};
+					return {Cast<UObject>(StructuredParams.RelatedPlayerState_1)};
 				}
 				else
 				{
@@ -3027,7 +3123,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.RelatedPlayerState_2 is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.RelatedPlayerState_2};
+					return {Cast<UObject>(StructuredParams.RelatedPlayerState_2)};
 				}
 				else
 				{
@@ -3054,7 +3150,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.OptionalObject is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.OptionalObject};
+					return {Cast<UObject>(StructuredParams.OptionalObject)};
 				}
 				else
 				{
@@ -3111,7 +3207,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPrestreamTextures_Sen
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPrestreamTextures queued. StructuredParams.ForcedActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.ForcedActor};
+					return {Cast<UObject>(StructuredParams.ForcedActor)};
 				}
 				else
 				{
@@ -3216,7 +3312,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySoundAtLocation_S
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlaySoundAtLocation queued. StructuredParams.Sound is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.Sound};
+					return {Cast<UObject>(StructuredParams.Sound)};
 				}
 				else
 				{
@@ -3288,7 +3384,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlaySound_SendRPC(wor
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlaySound queued. StructuredParams.Sound is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.Sound};
+					return {Cast<UObject>(StructuredParams.Sound)};
 				}
 				else
 				{
@@ -3351,7 +3447,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayForceFeedback_Sen
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlayForceFeedback queued. StructuredParams.ForceFeedbackEffect is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.ForceFeedbackEffect};
+					return {Cast<UObject>(StructuredParams.ForceFeedbackEffect)};
 				}
 				else
 				{
@@ -3403,7 +3499,31 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraShake_SendR
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientPlayCameraShakeRequest RPCPayload;
 		{
-			RPCPayload.set_field_shake0(PackageMap->GetHashFromStaticClass(StructuredParams.Shake));
+			if (StructuredParams.Shake != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.Shake);
+				if (!NetGUID.IsValid())
+				{
+					if (StructuredParams.Shake->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Shake);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlayCameraShake queued. StructuredParams.Shake is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {Cast<UObject>(StructuredParams.Shake)};
+				}
+				else
+				{
+					RPCPayload.set_field_shake0(ObjectRef);
+				}
+			}
+			else
+			{
+				RPCPayload.set_field_shake0(SpatialConstants::NULL_OBJECT_REF);
+			}
 		}
 		{
 			RPCPayload.set_field_scale0(StructuredParams.Scale);
@@ -3465,7 +3585,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraAnim_SendRP
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientPlayCameraAnim queued. StructuredParams.AnimToPlay is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.AnimToPlay};
+					return {Cast<UObject>(StructuredParams.AnimToPlay)};
 				}
 				else
 				{
@@ -3729,7 +3849,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientGameEnded_SendRPC(wor
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ClientGameEnded queued. StructuredParams.EndGameFocus is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.EndGameFocus};
+					return {Cast<UObject>(StructuredParams.EndGameFocus)};
 				}
 				else
 				{
@@ -4842,7 +4962,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ServerAcknowledgePossession
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC ServerAcknowledgePossession queued. StructuredParams.P is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-					return {StructuredParams.P};
+					return {Cast<UObject>(StructuredParams.P)};
 				}
 				else
 				{
@@ -5508,7 +5628,32 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientStopCameraShake_OnRPC
 
 		// Extract from request data.
 		{
-			Parameters.Shake = PackageMap->GetStaticClassFromHash(Op.Request.field_shake0());
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_shake0();
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Parameters.Shake = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UClass>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Parameters.Shake = Cast<UClass>(Object_Raw);
+				}
+				else
+				{
+					// A legal static object reference should never be unresolved.
+					checkf(ObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientStopCameraShake_OnRPCPayload: Parameters.Shake %s is not resolved on this worker."),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef));
+					return {ObjectRef};
+				}
+			}
 		}
 		{
 			Parameters.bImmediately = Op.Request.field_bimmediately0();
@@ -5689,7 +5834,32 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSpawnCameraLensEffect
 
 		// Extract from request data.
 		{
-			Parameters.LensEffectEmitterClass = PackageMap->GetStaticClassFromHash(Op.Request.field_lenseffectemitterclass0());
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_lenseffectemitterclass0();
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Parameters.LensEffectEmitterClass = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UClass>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Parameters.LensEffectEmitterClass = Cast<UClass>(Object_Raw);
+				}
+				else
+				{
+					// A legal static object reference should never be unresolved.
+					checkf(ObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSpawnCameraLensEffect_OnRPCPayload: Parameters.LensEffectEmitterClass %s is not resolved on this worker."),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef));
+					return {ObjectRef};
+				}
+			}
 		}
 
 		// Call implementation.
@@ -5888,7 +6058,32 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientSetHUD_OnRPCPayload(c
 
 		// Extract from request data.
 		{
-			Parameters.NewHUDClass = PackageMap->GetStaticClassFromHash(Op.Request.field_newhudclass0());
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_newhudclass0();
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Parameters.NewHUDClass = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UClass>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Parameters.NewHUDClass = Cast<UClass>(Object_Raw);
+				}
+				else
+				{
+					// A legal static object reference should never be unresolved.
+					checkf(ObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientSetHUD_OnRPCPayload: Parameters.NewHUDClass %s is not resolved on this worker."),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef));
+					return {ObjectRef};
+				}
+			}
 		}
 
 		// Call implementation.
@@ -6660,7 +6855,32 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReceiveLocalizedMessa
 
 		// Extract from request data.
 		{
-			Parameters.Message = PackageMap->GetStaticClassFromHash(Op.Request.field_message0());
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_message0();
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Parameters.Message = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UClass>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Parameters.Message = Cast<UClass>(Object_Raw);
+				}
+				else
+				{
+					// A legal static object reference should never be unresolved.
+					checkf(ObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientReceiveLocalizedMessage_OnRPCPayload: Parameters.Message %s is not resolved on this worker."),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef));
+					return {ObjectRef};
+				}
+			}
 		}
 		{
 			Parameters.Switch = Op.Request.field_switch0();
@@ -7216,7 +7436,32 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientPlayCameraShake_OnRPC
 
 		// Extract from request data.
 		{
-			Parameters.Shake = PackageMap->GetStaticClassFromHash(Op.Request.field_shake0());
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_shake0();
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Parameters.Shake = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UClass>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Parameters.Shake = Cast<UClass>(Object_Raw);
+				}
+				else
+				{
+					// A legal static object reference should never be unresolved.
+					checkf(ObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: ClientPlayCameraShake_OnRPCPayload: Parameters.Shake %s is not resolved on this worker."),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef));
+					return {ObjectRef};
+				}
+			}
 		}
 		{
 			Parameters.Scale = Op.Request.field_scale0();
