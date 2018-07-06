@@ -20,3 +20,18 @@ bool ASampleGamePlayerController::TestMulticast_Validate()
 void ASampleGamePlayerController::TestMulticast_Implementation()
 {
 }
+
+void ASampleGamePlayerController::InitPlayerState()
+{
+	UE_LOG(LogTemp, Warning, TEXT("ASampleGamePlayerController::InitPlayerState"));
+	if (GetNetMode() != NM_Client)
+	{
+		if (PlayerState != nullptr)
+		{
+			return;
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("ASampleGamePlayerController::InitPlayerState - initial called"));
+	Super::InitPlayerState();
+}
