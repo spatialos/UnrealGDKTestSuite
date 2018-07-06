@@ -68,6 +68,7 @@ void USpatialTypeBinding_TestTArrayReplication::Init(USpatialInterop* InInterop,
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestBookend"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"StablyNamedArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"DynamicallyCreatedArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"ArrayOfStructs"}, {0}, COND_None, REPNOTIFY_OnChanged));
 }
 
 void USpatialTypeBinding_TestTArrayReplication::BindToView(bool bIsClient)
@@ -726,6 +727,31 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 			else
 			{
 				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 18);
+			}
+			break;
+		}
+		case 19: // field_arrayofstructs0
+		{
+			const TArray<FTArrayTestStruct>& Value = *(reinterpret_cast<TArray<FTArrayTestStruct> const*>(Data));
+
+			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 19);
+			TSet<const UObject*> UnresolvedObjects;
+			::worker::List<std::string> List;
+			for(int i = 0; i < Value.Num(); i++)
+			{
+				TArray<uint8> ValueData;
+				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
+				FTArrayTestStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FTArrayTestStruct*>(&Value[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			const ::worker::List<std::string>& Result = (List);
+			if (UnresolvedObjects.Num() == 0)
+			{
+				OutUpdate.set_field_arrayofstructs0(Result);
+			}
+			else
+			{
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 19);
 			}
 			break;
 		}
@@ -1401,6 +1427,37 @@ void USpatialTypeBinding_TestTArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
+	if (!Update.field_arrayofstructs0().empty())
+	{
+		// field_arrayofstructs0
+		uint16 Handle = 19;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			TArray<FTArrayTestStruct> Value = *(reinterpret_cast<TArray<FTArrayTestStruct> *>(PropertyData));
+
+			auto& List = (*Update.field_arrayofstructs0().data());
+			Value.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
+			{
+				auto& ValueDataStr = List[i];
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+				FTArrayTestStruct::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Value[i]));
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
 }
 
@@ -1491,6 +1548,18 @@ void USpatialTypeBinding_TestTArrayReplication::Server_ReportReplication_SendRPC
 				}
 			}
 			RPCPayload.set_field_repdynamicallycreatedactors0(List);
+		}
+		{
+			::worker::List<std::string> List;
+			for(int i = 0; i < StructuredParams.RepArrayOfStructs.Num(); i++)
+			{
+				TSet<const UObject*> UnresolvedObjects;
+				TArray<uint8> ValueData;
+				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
+				FTArrayTestStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FTArrayTestStruct*>(&StructuredParams.RepArrayOfStructs[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			RPCPayload.set_field_reparrayofstructs0(List);
 		}
 
 		// Send RPC
@@ -1622,6 +1691,18 @@ void USpatialTypeBinding_TestTArrayReplication::Server_ReportReplication_OnRPCPa
 						return {ObjectRef};
 					}
 				}
+			}
+		}
+		{
+			auto& List = Op.Request.field_reparrayofstructs0();
+			Parameters.RepArrayOfStructs.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
+			{
+				auto& ValueDataStr = List[i];
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+				FTArrayTestStruct::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Parameters.RepArrayOfStructs[i]));
 			}
 		}
 

@@ -24,7 +24,7 @@ component TestActorMultiClientRepData {
 	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
-	string field_entitypath0 = 16; // COND_None // ::TestActor
+	string field_actorname0 = 16; // COND_None // ::TestActor
 }
 component TestActorMigratableData {
 	id = 100090;

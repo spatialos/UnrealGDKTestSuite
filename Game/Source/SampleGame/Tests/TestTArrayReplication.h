@@ -33,8 +33,17 @@ public:
 	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const;
 
 	UPROPERTY(Replicated)
-	FString EntityPath;
+	FString ActorName;
 
+};
+
+USTRUCT()
+struct FTArrayTestStruct
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	int RootProp;
 };
 
 UCLASS()
@@ -54,7 +63,7 @@ public:
 
 	// Replicated C-style arrays are not supported in Unreal.
 	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_ReportReplication(const TArray<UTestUObject*>& RepStablyNamedArray, const TArray<ATestActor*>& RepDynamicallyCreatedActors);
+	void Server_ReportReplication(const TArray<UTestUObject*>& RepStablyNamedArray, const TArray<ATestActor*>& RepDynamicallyCreatedActors, const TArray<FTArrayTestStruct>& RepArrayOfStructs);
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -75,13 +84,16 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_DynamicallyCreatedArray)
 	TArray<ATestActor*> DynamicallyCreatedArray;
 
+	UPROPERTY(Replicated)
+	TArray<FTArrayTestStruct> ArrayOfStructs;
+
 private: 
 
 	UFUNCTION()
 	void OnRep_DynamicallyCreatedArray();
 
-	void ValidateReplication_Client(const TArray<UTestUObject*>& TestStablyNamedArray, const TArray<ATestActor*>& TestDynamicallyCreatedActors);
-	void ValidateRPC_Server(const TArray<UTestUObject*>& TestStablyNamedArray, const TArray<ATestActor*>& TestDynamicallyCreatedActors);
+	void ValidateReplication_Client(const TArray<UTestUObject*>& TestStablyNamedArray, const TArray<ATestActor*>& TestDynamicallyCreatedActors, const TArray<FTArrayTestStruct>& TestArrayOfStructs);
+	void ValidateRPC_Server(const TArray<UTestUObject*>& TestStablyNamedArray, const TArray<ATestActor*>& TestDynamicallyCreatedActors, const TArray<FTArrayTestStruct>& TestArrayOfStructs);
 
 	bool bDynamicallyCreatedActorReplicated;
 	bool bReplicationRecievedOnClient;

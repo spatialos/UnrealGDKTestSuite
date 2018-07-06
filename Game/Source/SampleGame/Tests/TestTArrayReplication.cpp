@@ -17,7 +17,7 @@ ATestActor::ATestActor()
 void ATestActor::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME_CONDITION(ATestActor, EntityPath, COND_None);
+	DOREPLIFETIME_CONDITION(ATestActor, ActorName, COND_None);
 }
 
 void ATestTArrayReplication::Tick(float DeltaTime)
@@ -29,9 +29,9 @@ void ATestTArrayReplication::Tick(float DeltaTime)
 		bDynamicallyCreatedActorReplicated = false;
 		bReplicationRecievedOnClient = false;
 
-		ValidateReplication_Client(StablyNamedArray, DynamicallyCreatedArray);
+		ValidateReplication_Client(StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs);
 
-		Server_ReportReplication(StablyNamedArray, DynamicallyCreatedArray);
+		Server_ReportReplication(StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs);
 	}
 }
 
@@ -40,16 +40,17 @@ void ATestTArrayReplication::GetLifetimeReplicatedProps(TArray< FLifetimePropert
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION(ATestTArrayReplication, StablyNamedArray, COND_None);
 	DOREPLIFETIME_CONDITION(ATestTArrayReplication, DynamicallyCreatedArray, COND_None);
+	DOREPLIFETIME_CONDITION(ATestTArrayReplication, ArrayOfStructs, COND_None);
 }
 
-bool ATestTArrayReplication::Server_ReportReplication_Validate(const TArray<UTestUObject*>& RepStablyNamedArray, const TArray<ATestActor*>& RepDynamicallyCreatedActors)
+bool ATestTArrayReplication::Server_ReportReplication_Validate(const TArray<UTestUObject*>& RepStablyNamedArray, const TArray<ATestActor*>& RepDynamicallyCreatedActors, const TArray<FTArrayTestStruct>& RepArrayOfStructs)
 {
 	return true;
 }
 
-void ATestTArrayReplication::Server_ReportReplication_Implementation(const TArray<UTestUObject*>& RepStablyNamedArray, const TArray<ATestActor*>& RepDynamicallyCreatedActors)
+void ATestTArrayReplication::Server_ReportReplication_Implementation(const TArray<UTestUObject*>& RepStablyNamedArray, const TArray<ATestActor*>& RepDynamicallyCreatedActors, const TArray<FTArrayTestStruct>& RepArrayOfStructs)
 {
-	ValidateRPC_Server(RepStablyNamedArray, RepDynamicallyCreatedActors);
+	ValidateRPC_Server(RepStablyNamedArray, RepDynamicallyCreatedActors, RepArrayOfStructs);
 
 	SignalResponseRecieved();
 }
@@ -64,10 +65,15 @@ void ATestTArrayReplication::StartTestImpl()
 
 	// Setup dynamically generated actors
 	ATestActor* NewActor = GetWorld()->SpawnActor<ATestActor>();
-	FString test = NewActor->GetPathName();
-	UE_LOG(LogTemp, Error, TEXT("%s"), *test);
-
+	NewActor->ActorName = NewActor->GetName();
 	DynamicallyCreatedArray.Add(NewActor);
+
+	// Setup array of structs
+	FTArrayTestStruct Entry;
+	Entry.RootProp = 42;
+	ArrayOfStructs.Add(Entry);
+	Entry.RootProp = 37;
+	ArrayOfStructs.Add(Entry);
 
 	SignalReplicationSetup();
 }
@@ -87,7 +93,7 @@ void ATestTArrayReplication::OnRep_DynamicallyCreatedArray()
 	bDynamicallyCreatedActorReplicated = true;
 }
 
-void ATestTArrayReplication::ValidateReplication_Client(const TArray<UTestUObject*>& TestStablyNamedArray, const TArray<ATestActor*>& TestDynamicallyCreatedActors)
+void ATestTArrayReplication::ValidateReplication_Client(const TArray<UTestUObject*>& TestStablyNamedArray, const TArray<ATestActor*>& TestDynamicallyCreatedActors, const TArray<FTArrayTestStruct>& TestArrayOfStructs)
 {
 	// Validate the stably named object
 	int num = TestStablyNamedArray.Num();
@@ -102,16 +108,17 @@ void ATestTArrayReplication::ValidateReplication_Client(const TArray<UTestUObjec
 	check(TestStablyNamedArray[1]->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
 
 	// Validate Dynamically created UObjects in the array
-	check(DynamicallyCreatedArray.Num() == 1);
-	//Get the net driver
-	//USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());
-	//check(NetDriver);
-	//worker::EntityId EntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(DynamicallyCreatedArray[0]).ToSpatialEntityId();
-	//check(EntityId == DynamicallyCreatedArray[0]->EntityId);
+	check(TestDynamicallyCreatedActors.Num() == 1);
+	// Assert on name rather than path name as the path name is different for each PIE instance.
+	check(TestDynamicallyCreatedActors[0]->ActorName == TestDynamicallyCreatedActors[0]->GetName());
 
+	// Validate TArray with structs
+	check(TestArrayOfStructs.Num() == 2);
+	check(TestArrayOfStructs[0].RootProp == 42);
+	check(TestArrayOfStructs[1].RootProp == 37);
 }
 
-void ATestTArrayReplication::ValidateRPC_Server(const TArray<UTestUObject*>& TestStablyNamedArray, const TArray<ATestActor*>& TestDynamicallyCreatedActors)
+void ATestTArrayReplication::ValidateRPC_Server(const TArray<UTestUObject*>& TestStablyNamedArray, const TArray<ATestActor*>& TestDynamicallyCreatedActors, const TArray<FTArrayTestStruct>& TestArrayOfStructs)
 {
 	// Validate the stably named object
 	int num = TestStablyNamedArray.Num();
@@ -134,6 +141,11 @@ void ATestTArrayReplication::ValidateRPC_Server(const TArray<UTestUObject*>& Tes
 	worker::EntityId RPCEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(TestDynamicallyCreatedActors[0]).ToSpatialEntityId();
 	worker::EntityId ServerEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(DynamicallyCreatedArray[0]).ToSpatialEntityId();
 	check(RPCEntityId == ServerEntityId);
+
+	// Validate TArray with structs
+	check(TestArrayOfStructs.Num() == 2);
+	check(TestArrayOfStructs[0].RootProp == 42);
+	check(TestArrayOfStructs[1].RootProp == 37);
 }
 
 

@@ -27,6 +27,7 @@ component TestTArrayReplicationMultiClientRepData {
 	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
 	list<UnrealObjectRef> field_stablynamedarray0 = 17; // COND_None // ::TestTArrayReplication
 	list<UnrealObjectRef> field_dynamicallycreatedarray0 = 18; // COND_None // ::TestTArrayReplication
+	list<bytes> field_arrayofstructs0 = 19; // COND_None // ::TestTArrayReplication
 }
 component TestTArrayReplicationMigratableData {
 	id = 100084;

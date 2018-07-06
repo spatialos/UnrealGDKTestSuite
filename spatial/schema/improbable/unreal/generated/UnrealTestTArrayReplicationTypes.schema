@@ -8,4 +8,5 @@ type ServerReportReplicationRequest {
 	uint32 target_subobject_offset = 1;
 	list<UnrealObjectRef> field_repstablynamedarray0 = 2;
 	list<UnrealObjectRef> field_repdynamicallycreatedactors0 = 3;
+	list<bytes> field_reparrayofstructs0 = 4;
 }

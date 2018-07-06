@@ -62,7 +62,7 @@ void USpatialTypeBinding_TestActor::Init(USpatialInterop* InInterop, USpatialPac
 	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"EntityPath"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"ActorName"}, {0}, COND_None, REPNOTIFY_OnChanged));
 }
 
 void USpatialTypeBinding_TestActor::BindToView(bool bIsClient)
@@ -621,11 +621,11 @@ void USpatialTypeBinding_TestActor::ServerSendUpdate_MultiClient(const uint8* RE
 			}
 			break;
 		}
-		case 16: // field_entitypath0
+		case 16: // field_actorname0
 		{
 			FString Value = *(reinterpret_cast<FString const*>(Data));
 
-			OutUpdate.set_field_entitypath0(TCHAR_TO_UTF8(*Value));
+			OutUpdate.set_field_actorname0(TCHAR_TO_UTF8(*Value));
 			break;
 		}
 	default:
@@ -1166,9 +1166,9 @@ void USpatialTypeBinding_TestActor::ReceiveUpdate_MultiClient(USpatialActorChann
 			}
 		}
 	}
-	if (!Update.field_entitypath0().empty())
+	if (!Update.field_actorname0().empty())
 	{
-		// field_entitypath0
+		// field_actorname0
 		uint16 Handle = 16;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
@@ -1176,7 +1176,7 @@ void USpatialTypeBinding_TestActor::ReceiveUpdate_MultiClient(USpatialActorChann
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 			FString Value = *(reinterpret_cast<FString const*>(PropertyData));
 
-			Value = FString(UTF8_TO_TCHAR((*Update.field_entitypath0().data()).c_str()));
+			Value = FString(UTF8_TO_TCHAR((*Update.field_actorname0().data()).c_str()));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
