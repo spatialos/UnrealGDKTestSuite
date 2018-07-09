@@ -1644,7 +1644,7 @@ void USpatialTypeBinding_TestTArrayReplication::Server_ReportReplication_SendRPC
 					if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 					{
 						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepStablyNamedArray[i] is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-						return {StructuredParams.RepStablyNamedArray[i]};
+						return {Cast<UObject>(StructuredParams.RepStablyNamedArray[i])};
 					}
 					else
 					{
@@ -1676,7 +1676,7 @@ void USpatialTypeBinding_TestTArrayReplication::Server_ReportReplication_SendRPC
 					if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 					{
 						UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepDynamicallyCreatedActors[i] is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-						return {StructuredParams.RepDynamicallyCreatedActors[i]};
+						return {Cast<UObject>(StructuredParams.RepDynamicallyCreatedActors[i])};
 					}
 					else
 					{

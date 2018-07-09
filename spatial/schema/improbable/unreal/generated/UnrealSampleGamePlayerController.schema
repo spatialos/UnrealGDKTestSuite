@@ -31,6 +31,7 @@ component SampleGamePlayerControllerMultiClientRepData {
 }
 component SampleGamePlayerControllerMigratableData {
 	id = 100012;
+	UnrealObjectRef field_acknowledgedpawn0 = 1;
 }
 import "improbable/unreal/generated/UnrealPlayerControllerTypes.schema";
 import "improbable/unreal/generated/UnrealControllerTypes.schema";

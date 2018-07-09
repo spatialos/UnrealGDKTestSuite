@@ -8,8 +8,6 @@
 #include "TestEnumReplication.h"
 #include "TestCArrayReplication.generated.h"
 
-
-
 UCLASS()
 class SAMPLEGAME_API ATestCArrayReplication : public AReplicationTestCase
 {
