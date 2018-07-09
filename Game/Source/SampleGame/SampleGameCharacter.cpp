@@ -250,21 +250,10 @@ void ASampleGameCharacter::Server_TestFunc_Implementation()
 	TestPODStruct = _TestPODStruct;
 	_TestPODStruct.Modify();
 
-	//// Enum property changes begin
-	//Test8Enum = (Test8Enum == ETest8Enum::Enum_0) ? ETest8Enum::Enum_1 : ETest8Enum::Enum_0;
-	//Test16Enum = (Test16Enum == ETest16Enum::Enum_0) ? ETest16Enum::Enum_1 : ETest16Enum::Enum_0;
-	//Test32Enum = (Test32Enum == ETest32Enum::Enum_0) ? ETest32Enum::Enum_1 : ETest32Enum::Enum_0;
-	//Test64Enum = (Test64Enum == ETest64Enum::Enum_0) ? ETest64Enum::Enum_1 : ETest64Enum::Enum_0;
-	//TestUEnum = (TestUEnum == EnumNamespace::Enum_0) ? EnumNamespace::Enum_1 : EnumNamespace::Enum_0;
-
 	//static int TestEnumArrayIdx = 0;
 	//TestEnumCArray[TestEnumArrayIdx] = ETest8Enum::Enum_0;
 	//TestUEnumCArray[TestEnumArrayIdx] = EnumNamespace::Enum_0;
 	//TestEnumArrayIdx++;
-
-	//TestEnumTArray.Push(ETest8Enum::Enum_0);
-	//TestUEnumTArray.Push(EnumNamespace::Enum_0);
-	// Enum property changes end
 
 	StablyNamedObj = GetMesh()->SkeletalMesh;
 
@@ -330,38 +319,6 @@ void ASampleGameCharacter::OnRep_TestPODArray()
 
 void ASampleGameCharacter::OnRep_TestBookend()
 {
-	//// POD property checks begin
-	//check(Test8Int == (1 << 6));
-	//check(Test16Int == (1 << 14));
-	//check(Test32Int == 0xDEADBEEF);
-	//check(Test64Int == 0xDEADBEEFDEADBEEF);
-	//check(Test8UInt == 0xDE);
-	//check(Test16UInt == 0xDEAD);
-	//check(Test32UInt == 0xDEADBEEF);
-	//check(Test64UInt == 0xDEADBEEFDEADBEEF);
-	//check(TestFloat == 42.f);
-	//check(TestDouble == 42.0);
-	//// POD property checks end
-
-	//check(TestEnumTArray.Num() > 0);
-	//check(TestUEnumTArray.Num() > 0);
-
-	//if (Test8Enum == ETest8Enum::Enum_0)
-	//{
-	//	check(Test8Enum == ETest8Enum::Enum_0);
-	//	check(Test16Enum == ETest16Enum::Enum_0);
-	//	check(Test32Enum == ETest32Enum::Enum_0);
-	//	check(Test64Enum == ETest64Enum::Enum_0);
-	//	check(TestUEnum == EnumNamespace::Enum_0);
-	//}
-	//else
-	//{
-	//	check(Test8Enum == ETest8Enum::Enum_1);
-	//	check(Test16Enum == ETest16Enum::Enum_1);
-	//	check(Test32Enum == ETest32Enum::Enum_1);
-	//	check(Test64Enum == ETest64Enum::Enum_1);
-	//	check(TestUEnum == EnumNamespace::Enum_1);
-	//}
 }
 
 void ASampleGameCharacter::OnRep_IntRepTest()
@@ -422,27 +379,8 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayStructReplication, COND_SimulatedOnly);
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
 
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test8Enum, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test16Enum, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test32Enum, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test64Enum, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestEnumTArray, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestUEnum, COND_None);
-	/*DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestUEnumTArray, COND_None);*/
-
 
 	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestEnumCArray, COND_None);
-
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test8Int, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test16Int, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test32Int, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test64Int, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test8UInt, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test16UInt, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test32UInt, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, Test64UInt, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestFloat, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestDouble, COND_None);
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, BarArray, COND_None);
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBar, COND_None);

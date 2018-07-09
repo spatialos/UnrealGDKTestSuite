@@ -40,11 +40,15 @@ public:
 	UFUNCTION()
 	virtual void SendTestResponseRPCImpl() override;
 
+	// Test C-style array with POD
 	UPROPERTY(Replicated)
 	int TestPOD[2];
 
+	// Test C-style array with unreal style enums
 	UPROPERTY(Replicated)
 	TEnumAsByte<EnumNamespace::EUnrealTestEnum> TestUEnumCArray[16];
+
+	// Test C-style array with C++ 11 style enums
 
 	int FirstComparisonValue;
 	int SecondComparisonValue;
