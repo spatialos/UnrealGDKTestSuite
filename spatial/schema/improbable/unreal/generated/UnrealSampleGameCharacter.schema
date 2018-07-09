@@ -93,6 +93,12 @@ component SampleGameCharacterMultiClientRepData {
 	bytes field_testbar_mystruct = 82; // COND_None // Bar::TestBar::SampleGameCharacter
 	bytes field_testbar_netserializestruct = 83; // COND_None // Bar::TestBar::SampleGameCharacter
 	int32 field_testbookend = 84; // COND_None // ::SampleGameCharacter
+	UnrealObjectRef field_intreptest = 85; // COND_InitialOnly // ::SampleGameCharacter
+	UnrealObjectRef field_floatreptest = 86; // COND_InitialOnly // ::SampleGameCharacter
+	UnrealObjectRef field_boolreptest = 87; // COND_InitialOnly // ::SampleGameCharacter
+	UnrealObjectRef field_charreptest = 88; // COND_InitialOnly // ::SampleGameCharacter
+	UnrealObjectRef field_fstringreptest = 89; // COND_InitialOnly // ::SampleGameCharacter
+	UnrealObjectRef field_carrayreptest = 90; // COND_InitialOnly // ::SampleGameCharacter
 }
 component SampleGameCharacterMigratableData {
 	id = 100024;
