@@ -29,15 +29,16 @@ void ATestTArrayReplication::Tick(float DeltaTime)
 		bDynamicallyCreatedActorReplicated = false;
 		bReplicationRecievedOnClient = false;
 
-		ValidateReplication_Client(StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
+		ValidateReplication_Client(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
 
-		Server_ReportReplication(StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
+		Server_ReportReplication(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
 	}
 }
 
 void ATestTArrayReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME_CONDITION(ATestTArrayReplication, PODArray, COND_None);
 	DOREPLIFETIME_CONDITION(ATestTArrayReplication, StablyNamedArray, COND_None);
 	DOREPLIFETIME_CONDITION(ATestTArrayReplication, DynamicallyCreatedArray, COND_None);
 	DOREPLIFETIME_CONDITION(ATestTArrayReplication, ArrayOfStructs, COND_None);
@@ -46,7 +47,8 @@ void ATestTArrayReplication::GetLifetimeReplicatedProps(TArray< FLifetimePropert
 	DOREPLIFETIME_CONDITION(ATestTArrayReplication, UEnumTArray, COND_None);
 }
 
-bool ATestTArrayReplication::Server_ReportReplication_Validate(const TArray<UTestUObject*>& RepStablyNamedArray, 
+bool ATestTArrayReplication::Server_ReportReplication_Validate(const TArray<int>& RepPODArray,
+															   const TArray<UTestUObject*>& RepStablyNamedArray, 
 															   const TArray<ATestActor*>& RepDynamicallyCreatedActors, 
 															   const TArray<FTArrayTestStruct>& RepArrayOfStructs,
 															   const TArray<FTestStructWithNetSerialize>& RepArrayOfStructNetSerialize,
@@ -56,25 +58,30 @@ bool ATestTArrayReplication::Server_ReportReplication_Validate(const TArray<UTes
 	return true;
 }
 
-void ATestTArrayReplication::Server_ReportReplication_Implementation(const TArray<UTestUObject*>& RepStablyNamedArray, 
+void ATestTArrayReplication::Server_ReportReplication_Implementation(const TArray<int>& RepPODArray,
+																	 const TArray<UTestUObject*>& RepStablyNamedArray, 
 																	 const TArray<ATestActor*>& RepDynamicallyCreatedActors, 
 																	 const TArray<FTArrayTestStruct>& RepArrayOfStructs,
 																	 const TArray<FTestStructWithNetSerialize>& RepArrayOfStructNetSerialize,
 																	 const TArray<ETest8Enum>& RepEnumTArray,
 																	 const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& RepUEnumTArray)
 {
-	ValidateRPC_Server(RepStablyNamedArray, RepDynamicallyCreatedActors, RepArrayOfStructs, RepArrayOfStructNetSerialize, RepEnumTArray, RepUEnumTArray);
+	ValidateRPC_Server(RepPODArray, RepStablyNamedArray, RepDynamicallyCreatedActors, RepArrayOfStructs, RepArrayOfStructNetSerialize, RepEnumTArray, RepUEnumTArray);
 
 	SignalResponseRecieved();
 }
 
 void ATestTArrayReplication::StartTestImpl()
 {
-	// Setup stably named UObjects
-	UTestUObject* Testing = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	// Setup PODs
+	PODArray.Add(42);
+	PODArray.Add(37);
 
-	StablyNamedArray.Add(Testing);
-	StablyNamedArray.Add(Testing);
+	// Setup stably named UObjects
+	UTestUObject* StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+
+	StablyNamedArray.Add(StablyNamedObject);
+	StablyNamedArray.Add(StablyNamedObject);
 
 	// Setup dynamically generated actors
 	ATestActor* NewActor = GetWorld()->SpawnActor<ATestActor>();
@@ -120,16 +127,21 @@ void ATestTArrayReplication::OnRep_DynamicallyCreatedArray()
 	bDynamicallyCreatedActorReplicated = true;
 }
 
-void ATestTArrayReplication::ValidateReplication_Client(const TArray<UTestUObject*>& TestStablyNamedArray, 
+void ATestTArrayReplication::ValidateReplication_Client(const TArray<int>& TestPODArray,
+														const TArray<UTestUObject*>& TestStablyNamedArray, 
 														const TArray<ATestActor*>& TestDynamicallyCreatedActors, 
 														const TArray<FTArrayTestStruct>& TestArrayOfStructs,
 														const TArray<FTestStructWithNetSerialize>& TestArrayOfStructNetSerialize,
 														const TArray<ETest8Enum>& TestEnumTArray,
 														const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& TestUEnumTArray)
 {
+	// Validate PODs
+	check(TestPODArray.Num() == 2);
+	check(TestPODArray[0] == 42);
+	check(TestPODArray[1] == 37);
+
 	// Validate the stably named object
-	int num = TestStablyNamedArray.Num();
-	check(num == 2);
+	check(TestStablyNamedArray.Num() == 2);
 
 	check(TestStablyNamedArray[0]->IsA(UTestUObject::StaticClass()));
 	check(TestStablyNamedArray[0] == UTestUObject::StaticClass()->GetDefaultObject());
@@ -165,13 +177,19 @@ void ATestTArrayReplication::ValidateReplication_Client(const TArray<UTestUObjec
 	check(TestUEnumTArray[1] == EnumNamespace::Enum_0);
 }
 
-void ATestTArrayReplication::ValidateRPC_Server(const TArray<UTestUObject*>& TestStablyNamedArray, 
+void ATestTArrayReplication::ValidateRPC_Server(const TArray<int>& TestPODArray,
+												const TArray<UTestUObject*>& TestStablyNamedArray, 
 												const TArray<ATestActor*>& TestDynamicallyCreatedActors, 
 												const TArray<FTArrayTestStruct>& TestArrayOfStructs,
 												const TArray<FTestStructWithNetSerialize>& TestArrayOfStructNetSerialize,
 												const TArray<ETest8Enum>& TestEnumTArray,
 												const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& TestUEnumTArray)
 {
+	// Validate PODs
+	check(TestPODArray.Num() == 2);
+	check(TestPODArray[0] == 42);
+	check(TestPODArray[1] == 37);
+
 	// Validate the stably named object
 	int num = TestStablyNamedArray.Num();
 	check(num == 2);

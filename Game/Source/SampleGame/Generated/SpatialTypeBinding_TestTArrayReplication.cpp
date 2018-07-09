@@ -66,12 +66,13 @@ void USpatialTypeBinding_TestTArrayReplication::Init(USpatialInterop* InInterop,
 	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestBookend"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"StablyNamedArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"DynamicallyCreatedArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"ArrayOfStructs"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"ArrayOfStructNetSerialize"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"EnumTArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"UEnumTArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"PODArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"StablyNamedArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"DynamicallyCreatedArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"ArrayOfStructs"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"ArrayOfStructNetSerialize"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"EnumTArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(23, FRepHandleData(Class, {"UEnumTArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
 }
 
 void USpatialTypeBinding_TestTArrayReplication::BindToView(bool bIsClient)
@@ -643,11 +644,23 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 			OutUpdate.set_field_testbookend0(int32_t(Value));
 			break;
 		}
-		case 17: // field_stablynamedarray0
+		case 17: // field_podarray0
+		{
+			const TArray<int32>& Value = *(reinterpret_cast<TArray<int32> const*>(Data));
+
+			::worker::List<std::int32_t> List;
+			for(int i = 0; i < Value.Num(); i++)
+			{
+				List.emplace_back(int32_t(Value[i]));
+			}
+			OutUpdate.set_field_podarray0(List);
+			break;
+		}
+		case 18: // field_stablynamedarray0
 		{
 			const TArray<UTestUObject*>& Value = *(reinterpret_cast<TArray<UTestUObject*> const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 17);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 18);
 			TSet<const UObject*> UnresolvedObjects;
 			::worker::List<improbable::unreal::UnrealObjectRef> List;
 			for(int i = 0; i < Value.Num(); i++)
@@ -684,15 +697,15 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 17);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 18);
 			}
 			break;
 		}
-		case 18: // field_dynamicallycreatedarray0
+		case 19: // field_dynamicallycreatedarray0
 		{
 			const TArray<ATestActor*>& Value = *(reinterpret_cast<TArray<ATestActor*> const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 18);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 19);
 			TSet<const UObject*> UnresolvedObjects;
 			::worker::List<improbable::unreal::UnrealObjectRef> List;
 			for(int i = 0; i < Value.Num(); i++)
@@ -729,15 +742,15 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 18);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 19);
 			}
 			break;
 		}
-		case 19: // field_arrayofstructs0
+		case 20: // field_arrayofstructs0
 		{
 			const TArray<FTArrayTestStruct>& Value = *(reinterpret_cast<TArray<FTArrayTestStruct> const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 19);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 20);
 			TSet<const UObject*> UnresolvedObjects;
 			::worker::List<std::string> List;
 			for(int i = 0; i < Value.Num(); i++)
@@ -754,15 +767,15 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 19);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 20);
 			}
 			break;
 		}
-		case 20: // field_arrayofstructnetserialize0
+		case 21: // field_arrayofstructnetserialize0
 		{
 			const TArray<FTestStructWithNetSerialize>& Value = *(reinterpret_cast<TArray<FTestStructWithNetSerialize> const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 20);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 21);
 			TSet<const UObject*> UnresolvedObjects;
 			::worker::List<std::string> List;
 			for(int i = 0; i < Value.Num(); i++)
@@ -781,11 +794,11 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 20);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 21);
 			}
 			break;
 		}
-		case 21: // field_enumtarray0
+		case 22: // field_enumtarray0
 		{
 			const TArray<ETest8Enum>& Value = *(reinterpret_cast<TArray<ETest8Enum> const*>(Data));
 
@@ -797,7 +810,7 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 			OutUpdate.set_field_enumtarray0(List);
 			break;
 		}
-		case 22: // field_uenumtarray0
+		case 23: // field_uenumtarray0
 		{
 			const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& Value = *(reinterpret_cast<TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>> const*>(Data));
 
@@ -1369,10 +1382,37 @@ void USpatialTypeBinding_TestTArrayReplication::ReceiveUpdate_MultiClient(USpati
 				Handle);
 		}
 	}
+	if (!Update.field_podarray0().empty())
+	{
+		// field_podarray0
+		uint16 Handle = 17;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			TArray<int32> Value = *(reinterpret_cast<TArray<int32> *>(PropertyData));
+
+			auto& List = (*Update.field_podarray0().data());
+			Value.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
+			{
+				Value[i] = List[i];
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
+		}
+	}
 	if (!Update.field_stablynamedarray0().empty())
 	{
 		// field_stablynamedarray0
-		uint16 Handle = 17;
+		uint16 Handle = 18;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1428,7 +1468,7 @@ void USpatialTypeBinding_TestTArrayReplication::ReceiveUpdate_MultiClient(USpati
 	if (!Update.field_dynamicallycreatedarray0().empty())
 	{
 		// field_dynamicallycreatedarray0
-		uint16 Handle = 18;
+		uint16 Handle = 19;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1484,7 +1524,7 @@ void USpatialTypeBinding_TestTArrayReplication::ReceiveUpdate_MultiClient(USpati
 	if (!Update.field_arrayofstructs0().empty())
 	{
 		// field_arrayofstructs0
-		uint16 Handle = 19;
+		uint16 Handle = 20;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1515,7 +1555,7 @@ void USpatialTypeBinding_TestTArrayReplication::ReceiveUpdate_MultiClient(USpati
 	if (!Update.field_arrayofstructnetserialize0().empty())
 	{
 		// field_arrayofstructnetserialize0
-		uint16 Handle = 20;
+		uint16 Handle = 21;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1548,7 +1588,7 @@ void USpatialTypeBinding_TestTArrayReplication::ReceiveUpdate_MultiClient(USpati
 	if (!Update.field_enumtarray0().empty())
 	{
 		// field_enumtarray0
-		uint16 Handle = 21;
+		uint16 Handle = 22;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1575,7 +1615,7 @@ void USpatialTypeBinding_TestTArrayReplication::ReceiveUpdate_MultiClient(USpati
 	if (!Update.field_uenumtarray0().empty())
 	{
 		// field_uenumtarray0
-		uint16 Handle = 22;
+		uint16 Handle = 23;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1626,6 +1666,14 @@ void USpatialTypeBinding_TestTArrayReplication::Server_ReportReplication_SendRPC
 
 		// Build RPC Payload.
 		improbable::unreal::generated::testtarrayreplication::ServerReportReplicationRequest RPCPayload;
+		{
+			::worker::List<std::int32_t> List;
+			for(int i = 0; i < StructuredParams.RepPODArray.Num(); i++)
+			{
+				List.emplace_back(int32_t(StructuredParams.RepPODArray[i]));
+			}
+			RPCPayload.set_field_reppodarray0(List);
+		}
 		{
 			::worker::List<improbable::unreal::UnrealObjectRef> List;
 			for(int i = 0; i < StructuredParams.RepStablyNamedArray.Num(); i++)
@@ -1798,6 +1846,14 @@ void USpatialTypeBinding_TestTArrayReplication::Server_ReportReplication_OnRPCPa
 		TestTArrayReplication_eventServer_ReportReplication_Parms Parameters;
 
 		// Extract from request data.
+		{
+			auto& List = Op.Request.field_reppodarray0();
+			Parameters.RepPODArray.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
+			{
+				Parameters.RepPODArray[i] = List[i];
+			}
+		}
 		{
 			auto& List = Op.Request.field_repstablynamedarray0();
 			Parameters.RepStablyNamedArray.SetNum(List.size());

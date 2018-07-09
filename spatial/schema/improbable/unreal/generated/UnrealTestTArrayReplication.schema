@@ -25,12 +25,13 @@ component TestTArrayReplicationMultiClientRepData {
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
 	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
-	list<UnrealObjectRef> field_stablynamedarray0 = 17; // COND_None // ::TestTArrayReplication
-	list<UnrealObjectRef> field_dynamicallycreatedarray0 = 18; // COND_None // ::TestTArrayReplication
-	list<bytes> field_arrayofstructs0 = 19; // COND_None // ::TestTArrayReplication
-	list<bytes> field_arrayofstructnetserialize0 = 20; // COND_None // ::TestTArrayReplication
-	list<uint32> field_enumtarray0 = 21; // COND_None // ::TestTArrayReplication
-	list<uint32> field_uenumtarray0 = 22; // COND_None // ::TestTArrayReplication
+	list<int32> field_podarray0 = 17; // COND_None // ::TestTArrayReplication
+	list<UnrealObjectRef> field_stablynamedarray0 = 18; // COND_None // ::TestTArrayReplication
+	list<UnrealObjectRef> field_dynamicallycreatedarray0 = 19; // COND_None // ::TestTArrayReplication
+	list<bytes> field_arrayofstructs0 = 20; // COND_None // ::TestTArrayReplication
+	list<bytes> field_arrayofstructnetserialize0 = 21; // COND_None // ::TestTArrayReplication
+	list<uint32> field_enumtarray0 = 22; // COND_None // ::TestTArrayReplication
+	list<uint32> field_uenumtarray0 = 23; // COND_None // ::TestTArrayReplication
 }
 component TestTArrayReplicationMigratableData {
 	id = 100084;

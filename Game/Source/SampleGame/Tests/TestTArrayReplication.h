@@ -102,6 +102,7 @@ public:
 
 	ATestTArrayReplication()
 		: bDynamicallyCreatedActorReplicated(false)
+		, bReplicationRecievedOnClient(false)
 	{ 
 		TestName = TEXT("TArray with UObjects types"); 
 	}
@@ -111,7 +112,8 @@ public:
 
 	// Replicated C-style arrays are not supported in Unreal.
 	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_ReportReplication(const TArray<UTestUObject*>& RepStablyNamedArray, 
+	void Server_ReportReplication(const TArray<int>& RepPODArray,
+								  const TArray<UTestUObject*>& RepStablyNamedArray, 
 								  const TArray<ATestActor*>& RepDynamicallyCreatedActors, 
 								  const TArray<FTArrayTestStruct>& RepArrayOfStructs,
 								  const TArray<FTestStructWithNetSerialize>& RepArrayOfStructNetSerialize,
@@ -128,6 +130,10 @@ public:
 
 	UFUNCTION()
 	virtual void SendTestResponseRPCImpl() override;
+
+	// Test C-style array with POD
+	UPROPERTY(Replicated)
+	TArray<int> PODArray;
 
 	// Test array Stably name
 	UPROPERTY(Replicated)
@@ -158,14 +164,16 @@ private:
 	UFUNCTION()
 	void OnRep_DynamicallyCreatedArray();
 
-	void ValidateReplication_Client(const TArray<UTestUObject*>& TestStablyNamedArray, 
+	void ValidateReplication_Client(const TArray<int>& TestPODArray,
+									const TArray<UTestUObject*>& TestStablyNamedArray, 
 									const TArray<ATestActor*>& TestDynamicallyCreatedActors, 
 									const TArray<FTArrayTestStruct>& TestArrayOfStructs,
 									const TArray<FTestStructWithNetSerialize>& TestArrayOfStructNetSerialize,
 									const TArray<ETest8Enum>& TestEnumTArray,
 									const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& TestUEnumTArray);
 
-	void ValidateRPC_Server(const TArray<UTestUObject*>& TestStablyNamedArray, 
+	void ValidateRPC_Server(const TArray<int>& TestPODArray,
+							const TArray<UTestUObject*>& TestStablyNamedArray, 
 							const TArray<ATestActor*>& TestDynamicallyCreatedActors, 
 							const TArray<FTArrayTestStruct>& TestArrayOfStructs,
 							const TArray<FTestStructWithNetSerialize>& TestArrayOfStructNetSerialize,
