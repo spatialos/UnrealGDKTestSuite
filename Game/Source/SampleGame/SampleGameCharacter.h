@@ -14,6 +14,7 @@
 #include "Tests/TestFStringReplication.h"
 #include "Tests/TestCArrayReplication.h"
 #include "Tests/TestTArrayReplication.h"
+#include "Tests/TestEnumReplication.h"
 #include "SampleGameCharacter.generated.h"
 
 USTRUCT(BlueprintType)
@@ -37,42 +38,6 @@ struct FTestMixedStruct
 	}
 };
 
-USTRUCT()
-struct FTestStructWithNetSerialize
-{
-	GENERATED_BODY();
-
-	UPROPERTY()
-	int MyInt;
-
-	UPROPERTY()
-	float MyFloat;
-
-	bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
-	{
-		EStructFlags Flags = FTestStructWithNetSerialize::StaticStruct()->StructFlags;
-
-		if (Flags & STRUCT_NetSerializeNative)
-		{
-			UE_LOG( LogTemp, Warning, TEXT("native flag - %x0x"), Flags)
-		}
-
-		Ar << MyInt;
-
-		Ar << MyFloat;
-
-		return true;
-	}
-};
-
-template<>
-struct TStructOpsTypeTraits<FTestStructWithNetSerialize> : public TStructOpsTypeTraitsBase2<FTestStructWithNetSerialize>
-{
-	enum
-	{
-		WithNetSerializer = true
-	};
-};
 
 USTRUCT(BlueprintType)
 struct FTestPODStruct
@@ -116,55 +81,6 @@ struct FCArrayStruct
 	UPROPERTY()
 		float CFloatArray[8];
 };
-
-// Enum tests start
-UENUM()
-enum class ETest8Enum : uint8
-{
-	Enum_0,
-	Enum_1,
-
-	Enum_Count UMETA(Hidden),
-};
-
-UENUM()
-enum class ETest16Enum : uint16
-{
-	Enum_0,
-	Enum_1,
-
-	Enum_Count UMETA(Hidden),
-};
-
-UENUM()
-enum class ETest32Enum : uint32
-{
-	Enum_0,
-	Enum_1,
-
-	Enum_Count UMETA(Hidden),
-};
-
-UENUM()
-enum class ETest64Enum : int64
-{
-	Enum_0,
-	Enum_1,
-
-	Enum_Count UMETA(Hidden),
-};
-
-UENUM()
-namespace EnumNamespace
-{
-	enum EUnrealTestEnum
-	{
-		Enum_0,
-		Enum_1,
-	};
-}
-// Enum tests end
-
 
 USTRUCT(BlueprintType)
 struct FFoo
@@ -278,38 +194,6 @@ public:
 	TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>> TestUEnumTArray;
 	// Enum properties end
 
-	// POD properties begin
-	UPROPERTY(Replicated)
-	int8 Test8Int;
-
-	UPROPERTY(Replicated)
-	int16 Test16Int;
-
-	UPROPERTY(Replicated)
-	int32 Test32Int;
-
-	UPROPERTY(Replicated)
-	int64 Test64Int;
-
-	UPROPERTY(Replicated)
-	uint8 Test8UInt;
-
-	UPROPERTY(Replicated)
-	uint16 Test16UInt;
-
-	UPROPERTY(Replicated)
-	uint32 Test32UInt;
-
-	UPROPERTY(Replicated)
-	uint64 Test64UInt;
-
-	UPROPERTY(Replicated)
-	float TestFloat;
-
-	UPROPERTY(Replicated)
-	double TestDouble;
-	// POD properties end
-
 	UPROPERTY(Replicated)
 	TArray<FBar> BarArray;
 
@@ -339,6 +223,9 @@ public:
 
 	UPROPERTY(ReplicatedUsing = OnRep_TArrayUObjectsRepTest)
 	ATestTArrayReplication* TArrayUObjectsRepTest;
+
+	UPROPERTY(ReplicatedUsing = OnRep_EnumRepTest)
+	ATestEnumReplication* EnumRepTest;
 
 	UFUNCTION(Client, Reliable)
 	void Client_TestConstArgs(FConstStruct ConstStruct);
@@ -376,6 +263,9 @@ public:
 
 	UFUNCTION()
 	void OnRep_TArrayUObjectsRepTest();
+
+	UFUNCTION()
+	void OnRep_EnumRepTest();
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -424,6 +314,7 @@ protected:
 	bool FStringRepTestCreated;
 	bool CArrayRepTestCreated;
 	bool TArrayUObjectsRepTestCreated;
+	bool EnumRepTestCreated;
 
 public:
 	/** Returns CameraBoom subobject **/

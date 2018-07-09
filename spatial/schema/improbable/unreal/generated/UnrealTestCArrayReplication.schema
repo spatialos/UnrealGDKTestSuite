@@ -27,6 +27,22 @@ component TestCArrayReplicationMultiClientRepData {
 	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
 	int32 field_testpod0 = 17; // COND_None // ::TestCArrayReplication
 	int32 field_testpod1 = 18; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray0 = 19; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray1 = 20; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray2 = 21; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray3 = 22; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray4 = 23; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray5 = 24; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray6 = 25; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray7 = 26; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray8 = 27; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray9 = 28; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray10 = 29; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray11 = 30; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray12 = 31; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray13 = 32; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray14 = 33; // COND_None // ::TestCArrayReplication
+	uint32 field_testuenumcarray15 = 34; // COND_None // ::TestCArrayReplication
 }
 component TestCArrayReplicationMigratableData {
 	id = 100078;

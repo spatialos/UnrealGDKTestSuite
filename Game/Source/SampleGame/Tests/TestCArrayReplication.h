@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ReplicationTestCase.h"
+#include "TestEnumReplication.h"
 #include "TestCArrayReplication.generated.h"
 
 
@@ -41,6 +42,9 @@ public:
 
 	UPROPERTY(Replicated)
 	int TestPOD[2];
+
+	UPROPERTY(Replicated)
+	TEnumAsByte<EnumNamespace::EUnrealTestEnum> TestUEnumCArray[16];
 
 	int FirstComparisonValue;
 	int SecondComparisonValue;

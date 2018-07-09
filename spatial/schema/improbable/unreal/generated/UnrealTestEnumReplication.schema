@@ -1,14 +1,14 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.testtarrayreplication;
+package improbable.unreal.generated.testenumreplication;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component TestTArrayReplicationSingleClientRepData {
-	id = 100082;
+component TestEnumReplicationSingleClientRepData {
+	id = 100088;
 }
-component TestTArrayReplicationMultiClientRepData {
-	id = 100083;
+component TestEnumReplicationMultiClientRepData {
+	id = 100089;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -25,27 +25,26 @@ component TestTArrayReplicationMultiClientRepData {
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
 	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
-	list<UnrealObjectRef> field_stablynamedarray0 = 17; // COND_None // ::TestTArrayReplication
-	list<UnrealObjectRef> field_dynamicallycreatedarray0 = 18; // COND_None // ::TestTArrayReplication
-	list<bytes> field_arrayofstructs0 = 19; // COND_None // ::TestTArrayReplication
-	list<bytes> field_arrayofstructnetserialize0 = 20; // COND_None // ::TestTArrayReplication
-	list<uint32> field_enumtarray0 = 21; // COND_None // ::TestTArrayReplication
-	list<uint32> field_uenumtarray0 = 22; // COND_None // ::TestTArrayReplication
+	uint32 field_test8enum0 = 17; // COND_None // ::TestEnumReplication
+	uint32 field_test16enum0 = 18; // COND_None // ::TestEnumReplication
+	uint32 field_test32enum0 = 19; // COND_None // ::TestEnumReplication
+	int64 field_test64enum0 = 20; // COND_None // ::TestEnumReplication
+	uint32 field_testuenum0 = 21; // COND_None // ::TestEnumReplication
 }
-component TestTArrayReplicationMigratableData {
-	id = 100084;
+component TestEnumReplicationMigratableData {
+	id = 100090;
 }
-import "improbable/unreal/generated/UnrealTestTArrayReplicationTypes.schema";
+import "improbable/unreal/generated/UnrealTestEnumReplicationTypes.schema";
 import "improbable/unreal/generated/UnrealReplicationTestCaseTypes.schema";
 
-component TestTArrayReplicationClientRPCs {
-	id = 100085;
+component TestEnumReplicationClientRPCs {
+	id = 100091;
 }
-component TestTArrayReplicationServerRPCs {
-	id = 100086;
-	command UnrealRPCCommandResponse serverreportreplication(testtarrayreplication.ServerReportReplicationRequest);
+component TestEnumReplicationServerRPCs {
+	id = 100092;
+	command UnrealRPCCommandResponse serverreportreplication(testenumreplication.ServerReportReplicationRequest);
 	command UnrealRPCCommandResponse serverstarttest(replicationtestcase.ServerStartTestRequest);
 }
-component TestTArrayReplicationNetMulticastRPCs {
-	id = 100087;
+component TestEnumReplicationNetMulticastRPCs {
+	id = 100093;
 }
