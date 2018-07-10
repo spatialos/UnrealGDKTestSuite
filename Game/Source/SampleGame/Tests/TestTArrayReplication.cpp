@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "TestTArrayReplication.h"
 
@@ -6,19 +6,6 @@
 #include "UnrealNetwork.h"
 #include "SpatialNetDriver.h"
 #include "Legacy/EntityRegistry.h"
-
-ATestActor::ATestActor()
-{
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	bReplicates = true;
-}
-
-void ATestActor::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME_CONDITION(ATestActor, ActorName, COND_None);
-}
 
 void ATestTArrayReplication::Tick(float DeltaTime)
 {
@@ -50,7 +37,7 @@ void ATestTArrayReplication::GetLifetimeReplicatedProps(TArray< FLifetimePropert
 bool ATestTArrayReplication::Server_ReportReplication_Validate(const TArray<int>& RepPODArray,
 															   const TArray<UTestUObject*>& RepStablyNamedArray, 
 															   const TArray<ATestActor*>& RepDynamicallyCreatedActors, 
-															   const TArray<FTArrayTestStruct>& RepArrayOfStructs,
+															   const TArray<FSimpleTestStruct>& RepArrayOfStructs,
 															   const TArray<FTestStructWithNetSerialize>& RepArrayOfStructNetSerialize,
 															   const TArray<ETest8Enum>& RepEnumTArray,
 															   const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& RepUEnumTArray)
@@ -61,7 +48,7 @@ bool ATestTArrayReplication::Server_ReportReplication_Validate(const TArray<int>
 void ATestTArrayReplication::Server_ReportReplication_Implementation(const TArray<int>& RepPODArray,
 																	 const TArray<UTestUObject*>& RepStablyNamedArray, 
 																	 const TArray<ATestActor*>& RepDynamicallyCreatedActors, 
-																	 const TArray<FTArrayTestStruct>& RepArrayOfStructs,
+																	 const TArray<FSimpleTestStruct>& RepArrayOfStructs,
 																	 const TArray<FTestStructWithNetSerialize>& RepArrayOfStructNetSerialize,
 																	 const TArray<ETest8Enum>& RepEnumTArray,
 																	 const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& RepUEnumTArray)
@@ -89,7 +76,7 @@ void ATestTArrayReplication::StartTestImpl()
 	DynamicallyCreatedArray.Add(NewActor);
 
 	// Setup array of structs
-	FTArrayTestStruct Entry;
+	FSimpleTestStruct Entry;
 	Entry.RootProp = 42;
 	ArrayOfStructs.Add(Entry);
 	Entry.RootProp = 37;
@@ -130,7 +117,7 @@ void ATestTArrayReplication::OnRep_DynamicallyCreatedArray()
 void ATestTArrayReplication::ValidateReplication_Client(const TArray<int>& TestPODArray,
 														const TArray<UTestUObject*>& TestStablyNamedArray, 
 														const TArray<ATestActor*>& TestDynamicallyCreatedActors, 
-														const TArray<FTArrayTestStruct>& TestArrayOfStructs,
+														const TArray<FSimpleTestStruct>& TestArrayOfStructs,
 														const TArray<FTestStructWithNetSerialize>& TestArrayOfStructNetSerialize,
 														const TArray<ETest8Enum>& TestEnumTArray,
 														const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& TestUEnumTArray)
@@ -180,7 +167,7 @@ void ATestTArrayReplication::ValidateReplication_Client(const TArray<int>& TestP
 void ATestTArrayReplication::ValidateRPC_Server(const TArray<int>& TestPODArray,
 												const TArray<UTestUObject*>& TestStablyNamedArray, 
 												const TArray<ATestActor*>& TestDynamicallyCreatedActors, 
-												const TArray<FTArrayTestStruct>& TestArrayOfStructs,
+												const TArray<FSimpleTestStruct>& TestArrayOfStructs,
 												const TArray<FTestStructWithNetSerialize>& TestArrayOfStructNetSerialize,
 												const TArray<ETest8Enum>& TestEnumTArray,
 												const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& TestUEnumTArray)

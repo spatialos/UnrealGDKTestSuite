@@ -5,8 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ReplicationTestCase.h"
-#include "TestEnumReplication.h"
-#include "TestTArrayReplication.h"
+#include "ReplicationTestUtils.h"
 #include "TestCArrayReplication.generated.h"
 
 UCLASS()
@@ -64,7 +63,7 @@ public:
 
 	// Test C-style array with UStruct
 	UPROPERTY(Replicated)
-	FTArrayTestStruct ArrayOfStructs[2];
+	FSimpleTestStruct ArrayOfStructs[2];
 
 	// Test C-style array with UStruct and net serialize
 	UPROPERTY(Replicated)

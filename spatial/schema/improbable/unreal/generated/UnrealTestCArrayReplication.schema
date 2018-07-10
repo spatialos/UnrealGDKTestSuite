@@ -31,8 +31,8 @@ component TestCArrayReplicationMultiClientRepData {
 	UnrealObjectRef field_stablynamedarray1 = 20; // COND_None // ::TestCArrayReplication
 	UnrealObjectRef field_dynamicallycreatedarray0 = 21; // COND_None // ::TestCArrayReplication
 	UnrealObjectRef field_dynamicallycreatedarray1 = 22; // COND_None // ::TestCArrayReplication
-	int32 field_arrayofstructs0_rootprop0 = 23; // COND_None // TArrayTestStruct::ArrayOfStructs::TestCArrayReplication
-	int32 field_arrayofstructs1_rootprop0 = 24; // COND_None // TArrayTestStruct::ArrayOfStructs::TestCArrayReplication
+	int32 field_arrayofstructs0_rootprop0 = 23; // COND_None // SimpleTestStruct::ArrayOfStructs::TestCArrayReplication
+	int32 field_arrayofstructs1_rootprop0 = 24; // COND_None // SimpleTestStruct::ArrayOfStructs::TestCArrayReplication
 	bytes field_arrayofstructnetserialize0 = 25; // COND_None // ::TestCArrayReplication
 	bytes field_arrayofstructnetserialize1 = 26; // COND_None // ::TestCArrayReplication
 	uint32 field_enumcarray0 = 27; // COND_None // ::TestCArrayReplication

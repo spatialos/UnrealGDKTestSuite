@@ -1,14 +1,14 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.testactor;
+package improbable.unreal.generated.testuobjectreplication;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component TestActorSingleClientRepData {
-	id = 100118;
+component TestUObjectReplicationSingleClientRepData {
+	id = 100094;
 }
-component TestActorMultiClientRepData {
-	id = 100119;
+component TestUObjectReplicationMultiClientRepData {
+	id = 100095;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -24,18 +24,24 @@ component TestActorMultiClientRepData {
 	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
-	string field_actorname0 = 16; // COND_None // ::TestActor
+	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
+	UnrealObjectRef field_dynamicallycreatedactor0 = 17; // COND_None // ::TestUObjectReplication
+	UnrealObjectRef field_stablynameduobject0 = 18; // COND_None // ::TestUObjectReplication
 }
-component TestActorMigratableData {
-	id = 100120;
+component TestUObjectReplicationMigratableData {
+	id = 100096;
 }
+import "improbable/unreal/generated/UnrealTestUObjectReplicationTypes.schema";
+import "improbable/unreal/generated/UnrealReplicationTestCaseTypes.schema";
 
-component TestActorClientRPCs {
-	id = 100121;
+component TestUObjectReplicationClientRPCs {
+	id = 100097;
 }
-component TestActorServerRPCs {
-	id = 100122;
+component TestUObjectReplicationServerRPCs {
+	id = 100098;
+	command UnrealRPCCommandResponse serverreportreplication(testuobjectreplication.ServerReportReplicationRequest);
+	command UnrealRPCCommandResponse serverstarttest(replicationtestcase.ServerStartTestRequest);
 }
-component TestActorNetMulticastRPCs {
-	id = 100123;
+component TestUObjectReplicationNetMulticastRPCs {
+	id = 100099;
 }

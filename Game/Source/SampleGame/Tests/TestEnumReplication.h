@@ -5,53 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ReplicationTestCase.h"
+#include "ReplicationTestUtils.h"
 #include "TestEnumReplication.generated.h"
-
-UENUM()
-enum class ETest8Enum : uint8
-{
-	Enum_0,
-	Enum_1,
-
-	Enum_Count UMETA(Hidden),
-};
-
-UENUM()
-enum class ETest16Enum : uint16
-{
-	Enum_0,
-	Enum_1,
-
-	Enum_Count UMETA(Hidden),
-};
-
-UENUM()
-enum class ETest32Enum : uint32
-{
-	Enum_0,
-	Enum_1,
-
-	Enum_Count UMETA(Hidden),
-};
-
-UENUM()
-enum class ETest64Enum : int64
-{
-	Enum_0,
-	Enum_1,
-
-	Enum_Count UMETA(Hidden),
-};
-
-UENUM()
-namespace EnumNamespace
-{
-	enum EUnrealTestEnum
-	{
-		Enum_0,
-		Enum_1,
-	};
-}
 
 UCLASS()
 class SAMPLEGAME_API ATestEnumReplication : public AReplicationTestCase

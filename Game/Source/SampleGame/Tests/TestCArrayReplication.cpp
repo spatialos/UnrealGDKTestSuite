@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "TestCArrayReplication.h"
 
@@ -63,7 +63,7 @@ void ATestCArrayReplication::StartTestImpl()
 	DynamicallyCreatedArray[1] = NewActor;
 
 	// Setup array of structs
-	FTArrayTestStruct Entry;
+	FSimpleTestStruct Entry;
 	Entry.RootProp = 42;
 	ArrayOfStructs[0] = Entry;
 	Entry.RootProp = 37;
@@ -121,7 +121,8 @@ void ATestCArrayReplication::ValidateReplication_Client()
 
 	// Validate Dynamically created UObjects in the array
 	// Assert on name rather than path name as the path name is different for each PIE instance.
-	check(DynamicallyCreatedArray[0]->ActorName == DynamicallyCreatedArray[0]->GetName());
+	FString name = DynamicallyCreatedArray[0]->GetName();
+	check(DynamicallyCreatedArray[0]->ActorName == name);
 	check(DynamicallyCreatedArray[1]->ActorName == DynamicallyCreatedArray[1]->GetName());
 
 	// Validate TArray with structs

@@ -5,94 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ReplicationTestCase.h"
-#include "TestEnumReplication.h"
+#include "ReplicationTestUtils.h"
 #include "TestTArrayReplication.generated.h"
-
-UCLASS(BlueprintType, Blueprintable)
-class UTestUObject : public UObject
-{
-	GENERATED_BODY()
-public:
-
-	UTestUObject() 
-	{
-		RootProp = 42;
-	}
-
-	UPROPERTY()
-	int RootProp;
-};
-
-UCLASS()
-class ATestActor  : public AActor
-{
-	GENERATED_BODY()
-public:
-
-	ATestActor();
-
-	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const;
-
-	UPROPERTY(Replicated)
-	FString ActorName;
-
-};
-
-USTRUCT()
-struct FTArrayTestStruct
-{
-	GENERATED_BODY()
-
-	UPROPERTY()
-	int RootProp;
-};
-
-USTRUCT()
-struct FTestStructWithNetSerialize
-{
-	GENERATED_BODY();
-
-	UPROPERTY()
-	int MyInt;
-
-	UPROPERTY()
-	float MyFloat;
-
-	bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
-	{
-		EStructFlags Flags = FTestStructWithNetSerialize::StaticStruct()->StructFlags;
-
-		if (Flags & STRUCT_NetSerializeNative)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("native flag - %x0x"), Flags)
-		}
-
-		Ar << MyInt;
-
-		Ar << MyFloat;
-
-		return true;
-	}
-};
-
-template<>
-struct TStructOpsTypeTraits<FTestStructWithNetSerialize> : public TStructOpsTypeTraitsBase2<FTestStructWithNetSerialize>
-{
-	enum
-	{
-		WithNetSerializer = true
-	};
-};
-
-USTRUCT()
-struct FTArrayTestStructWithNestedArrays
-{
-	GENERATED_BODY()
-
-	UPROPERTY()
-	TArray<int> MyArray;
-};
-
 
 UCLASS()
 class SAMPLEGAME_API ATestTArrayReplication : public AReplicationTestCase
@@ -104,7 +18,7 @@ public:
 		: bDynamicallyCreatedActorReplicated(false)
 		, bReplicationRecievedOnClient(false)
 	{ 
-		TestName = TEXT("TArray with UObjects types"); 
+		TestName = TEXT("TArray types"); 
 	}
 
 	// Called every frame
@@ -115,7 +29,7 @@ public:
 	void Server_ReportReplication(const TArray<int>& RepPODArray,
 								  const TArray<UTestUObject*>& RepStablyNamedArray, 
 								  const TArray<ATestActor*>& RepDynamicallyCreatedActors, 
-								  const TArray<FTArrayTestStruct>& RepArrayOfStructs,
+								  const TArray<FSimpleTestStruct>& RepArrayOfStructs,
 								  const TArray<FTestStructWithNetSerialize>& RepArrayOfStructNetSerialize,
 								  const TArray<ETest8Enum>& RepEnumTArray,
 								  const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& RepUEnumTArray);
@@ -145,7 +59,7 @@ public:
 
 	// Test array of structs
 	UPROPERTY(Replicated)
-	TArray<FTArrayTestStruct> ArrayOfStructs;
+	TArray<FSimpleTestStruct> ArrayOfStructs;
 
 	// Test array of structs net serialize
 	UPROPERTY(Replicated)
@@ -167,7 +81,7 @@ private:
 	void ValidateReplication_Client(const TArray<int>& TestPODArray,
 									const TArray<UTestUObject*>& TestStablyNamedArray, 
 									const TArray<ATestActor*>& TestDynamicallyCreatedActors, 
-									const TArray<FTArrayTestStruct>& TestArrayOfStructs,
+									const TArray<FSimpleTestStruct>& TestArrayOfStructs,
 									const TArray<FTestStructWithNetSerialize>& TestArrayOfStructNetSerialize,
 									const TArray<ETest8Enum>& TestEnumTArray,
 									const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& TestUEnumTArray);
@@ -175,7 +89,7 @@ private:
 	void ValidateRPC_Server(const TArray<int>& TestPODArray,
 							const TArray<UTestUObject*>& TestStablyNamedArray, 
 							const TArray<ATestActor*>& TestDynamicallyCreatedActors, 
-							const TArray<FTArrayTestStruct>& TestArrayOfStructs,
+							const TArray<FSimpleTestStruct>& TestArrayOfStructs,
 							const TArray<FTestStructWithNetSerialize>& TestArrayOfStructNetSerialize,
 							const TArray<ETest8Enum>& TestEnumTArray,
 							const TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>>& TestUEnumTArray);
