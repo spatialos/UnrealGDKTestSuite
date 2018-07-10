@@ -54,45 +54,14 @@ void ATestUObjectReplication::Server_ReportReplication_Implementation(ATestActor
 
 void ATestUObjectReplication::StartTestImpl()
 {
-	// Setup UStruct with POD
-	// PODArray.Add(42);
-	// PODArray.Add(37);
+	// Setup dynamically generated actors
+	DynamicallyCreatedActor = GetWorld()->SpawnActor<ATestActor>();
+	DynamicallyCreatedActor->ActorName = DynamicallyCreatedActor->GetName();
 
-	// Setup UStruct with a nested UStruct
-	// UTestUObject* StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	// TODO: UNR-238 Add tests.
 
-	// StablyNamedArray.Add(StablyNamedObject);
-	// StablyNamedArray.Add(StablyNamedObject);
-
-	// Setup UStruct with Stably named UObject
-	// ATestActor* NewActor = GetWorld()->SpawnActor<ATestActor>();
-	// NewActor->ActorName = NewActor->GetName();
-	// DynamicallyCreatedArray.Add(NewActor);
-
-	// Setup UStruct with a dynamically created actor
-	// FTArrayTestStruct Entry;
-	// Entry.RootProp = 42;
-	// ArrayOfStructs.Add(Entry);
-	// Entry.RootProp = 37;
-	// ArrayOfStructs.Add(Entry);
-
-	// Setup UStruct with Netserialize
-	// FTestStructWithNetSerialize NetSerializeEntry;
-	// NetSerializeEntry.MyInt = 42;
-	// NetSerializeEntry.MyFloat = 25.0f;
-	// ArrayOfStructNetSerialize.Add(NetSerializeEntry);
-
-	// Setup UStruct with C-style array
-	// EnumTArray.Push(ETest8Enum::Enum_1);
-	// EnumTArray.Push(ETest8Enum::Enum_0);
-
-	// Setup UStruct with TArray
-	// UEnumTArray.Push(EnumNamespace::Enum_1);
-	// UEnumTArray.Push(EnumNamespace::Enum_0);
-
-	// Setup UStruct with Unreal style enum
-
-	// Setup UStruct with C++ 11 style enum
+	// Setup stably named UObject
+	StablyNamedUObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
 
 	SignalReplicationSetup();
 }
@@ -116,91 +85,34 @@ void ATestUObjectReplication::ValidateReplication_Client(ATestActor*  TestDynami
 														 /*const TArray<UTestUObject*>& TestUObjectWithReplicatedComponent,*/ 
 														 UTestUObject* TestStablyNamedUObject)
 {
-	// // Validate PODs
-	// check(TestPODArray.Num() == 2);
-	// check(TestPODArray[0] == 42);
-	// check(TestPODArray[1] == 37);
+	// Validate Dynamically created UObject
+	// Assert on name rather than path name as the path name is different for each PIE instance.
+	check(TestDynamicallyCreatedActor->ActorName == TestDynamicallyCreatedActor->GetName());
+
+	// TODO: UNR-238 Add tests.
 
 	// // Validate the stably named object
-	// check(TestStablyNamedArray.Num() == 2);
-
-	// check(TestStablyNamedArray[0]->IsA(UTestUObject::StaticClass()));
-	// check(TestStablyNamedArray[0] == UTestUObject::StaticClass()->GetDefaultObject());
-	// check(TestStablyNamedArray[0]->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
-
-	// check(TestStablyNamedArray[1]->IsA(UTestUObject::StaticClass()));
-	// check(TestStablyNamedArray[1] == UTestUObject::StaticClass()->GetDefaultObject());
-	// check(TestStablyNamedArray[1]->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
-
-	// // Validate Dynamically created UObjects in the array
-	// check(TestDynamicallyCreatedActors.Num() == 1);
-	// // Assert on name rather than path name as the path name is different for each PIE instance.
-	// check(TestDynamicallyCreatedActors[0]->ActorName == TestDynamicallyCreatedActors[0]->GetName());
-
-	// // Validate TArray with structs
-	// check(TestArrayOfStructs.Num() == 2);
-	// check(TestArrayOfStructs[0].RootProp == 42);
-	// check(TestArrayOfStructs[1].RootProp == 37);
-
-	// // Validate TArray with structs and net serialize
-	// check(TestArrayOfStructNetSerialize.Num() == 1);
-	// check(TestArrayOfStructNetSerialize[0].MyInt == 42);
-	// check(TestArrayOfStructNetSerialize[0].MyFloat == 25.0f);
-
-	// // Validate TArray of C++ 11 style enums
-	// check(TestEnumTArray.Num() == 2);
-	// check(TestEnumTArray[0] == ETest8Enum::Enum_1);
-	// check(TestEnumTArray[1] == ETest8Enum::Enum_0);
-
-	// // Setup of array of Unreal style enums
-	// check(TestUEnumTArray.Num() == 2);
-	// check(TestUEnumTArray[0] == EnumNamespace::Enum_1);
-	// check(TestUEnumTArray[1] == EnumNamespace::Enum_0);
+	check(TestStablyNamedArray->IsA(UTestUObject::StaticClass()));
+	check(TestStablyNamedArray == UTestUObject::StaticClass()->GetDefaultObject());
+	check(TestStablyNamedArray->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
 }
 
 void ATestUObjectReplication::ValidateRPC_Server(ATestActor*  TestDynamicallyCreatedActor,
 												 /*const TArray<UTestUObject*>& TestUObjectWithReplicatedComponent,*/
 												 UTestUObject* TestStablyNamedUObject)
 {
-	// // Validate PODs
-	// check(TestPODArray.Num() == 2);
-	// check(TestPODArray[0] == 42);
-	// check(TestPODArray[1] == 37);
+	// Validate Dynamically created UObject
+	//Get the net driver
+	USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());
+	check(NetDriver);
+	worker::EntityId RPCEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(TestDynamicallyCreatedActor).ToSpatialEntityId();
+	worker::EntityId ServerEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(DynamicallyCreatedActor).ToSpatialEntityId();
+	check(RPCEntityId == ServerEntityId);
+
+	// TODO: UNR-238 Add tests.
 
 	// // Validate the stably named object
-	// int num = TestStablyNamedArray.Num();
-	// check(num == 2);
-
-	// check(TestStablyNamedArray[0]->IsA(UTestUObject::StaticClass()));
-	// check(TestStablyNamedArray[0] == UTestUObject::StaticClass()->GetDefaultObject());
-	// check(TestStablyNamedArray[0]->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
-
-	// check(TestStablyNamedArray[1]->IsA(UTestUObject::StaticClass()));
-	// check(TestStablyNamedArray[1] == UTestUObject::StaticClass()->GetDefaultObject());
-	// check(TestStablyNamedArray[1]->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
-
-	// // Validate Dynamically created UObjects in the array
-	// check(TestDynamicallyCreatedActors.Num() == 1);
-
-	// //Get the net driver
-	// USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());
-	// check(NetDriver);
-	// worker::EntityId RPCEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(TestDynamicallyCreatedActors[0]).ToSpatialEntityId();
-	// worker::EntityId ServerEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(DynamicallyCreatedArray[0]).ToSpatialEntityId();
-	// check(RPCEntityId == ServerEntityId);
-
-	// // Validate TArray with structs
-	// check(TestArrayOfStructs.Num() == 2);
-	// check(TestArrayOfStructs[0].RootProp == 42);
-	// check(TestArrayOfStructs[1].RootProp == 37);
-
-	// // Validate TArray of C++ 11 style enums
-	// check(TestEnumTArray.Num() == 2);
-	// check(TestEnumTArray[0] == ETest8Enum::Enum_1);
-	// check(TestEnumTArray[1] == ETest8Enum::Enum_0);
-
-	// // Setup of array of Unreal style enums
-	// check(TestUEnumTArray.Num() == 2);
-	// check(TestUEnumTArray[0] == EnumNamespace::Enum_1);
-	// check(TestUEnumTArray[1] == EnumNamespace::Enum_0);
+	check(TestStablyNamedUObject->IsA(UTestUObject::StaticClass()));
+	check(TestStablyNamedUObject == UTestUObject::StaticClass()->GetDefaultObject());
+	check(TestStablyNamedUObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
 }
