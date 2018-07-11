@@ -72,22 +72,7 @@ ASampleGameCharacter::ASampleGameCharacter()
 
 												   // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 												   // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
-
-	TestPODStructArray.AddDefaulted(5);
-	for (int i = 0; i < 8; ++i)
-	{
-		TestCArrayReplication[i] = 0;
-	}
 	//TestEnumArray.AddDefaulted(5);
-
-	//IntRepTestCreated = false;
-	//FloatRepTestCreated = false;
-	//BoolRepTestCreated = false;
-	//CharRepTestCreated = false;
-	//FStringRepTestCreated = false;
-	//CArrayRepTestCreated = false;
-	//TArrayUObjectsRepTest = false;
-	//EnumRepTestCreated = false;
 }
 
 void ASampleGameCharacter::BeginPlay()
@@ -188,11 +173,6 @@ void ASampleGameCharacter::DebugCmd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s: DebugCmd"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
 
-	TArray<FTestMixedStruct> TempArray;
-	TempArray.AddZeroed(4);
-
-	Server_TestFunc();
-
 	if (bTestCasesReplicated)
 	{
 		for (AReplicationTestCase* TestCase : TestCases)
@@ -204,39 +184,6 @@ void ASampleGameCharacter::DebugCmd()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Test suite not ready yet!"));
 	}
-
-
-	/*if (IntRepTestCreated && 
-		FloatRepTestCreated && 
-		BoolRepTestCreated && 
-		CharRepTestCreated && 
-		FStringRepTestCreated && 
-		CArrayRepTestCreated && 
-		TArrayUObjectsRepTestCreated &&
-		EnumRepTestCreated)
-	{
-		IntRepTest->Server_StartTest();
-		FloatRepTest->Server_StartTest();
-		BoolRepTest->Server_StartTest();
-		CharRepTest->Server_StartTest();
-		FStringRepTest->Server_StartTest();
-		CArrayRepTest->Server_StartTest();
-		TArrayUObjectsRepTest->Server_StartTest();
-		EnumRepTest->Server_StartTest();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Test suite not ready yet!"));
-		UE_LOG(LogTemp, Error, TEXT("IntRepTestCreated: %s"), IntRepTestCreated ? TEXT("TRUE") : TEXT("FALSE"));
-		UE_LOG(LogTemp, Error, TEXT("FloatRepTestCreated: %s"), FloatRepTestCreated ? TEXT("TRUE") : TEXT("FALSE"));
-		UE_LOG(LogTemp, Error, TEXT("BoolRepTestCreated: %s"), BoolRepTestCreated ? TEXT("TRUE") : TEXT("FALSE"));
-		UE_LOG(LogTemp, Error, TEXT("CharRepTestCreated: %s"), CharRepTestCreated ? TEXT("TRUE") : TEXT("FALSE"));
-		UE_LOG(LogTemp, Error, TEXT("FStringRepTestCreated: %s"), FStringRepTestCreated ? TEXT("TRUE") : TEXT("FALSE"));
-		UE_LOG(LogTemp, Error, TEXT("CArrayRepTestCreated: %s"), CArrayRepTestCreated ? TEXT("TRUE") : TEXT("FALSE"));
-		UE_LOG(LogTemp, Error, TEXT("TArrayUObjectsRepTest: %s"), TArrayUObjectsRepTest ? TEXT("TRUE") : TEXT("FALSE"));
-		UE_LOG(LogTemp, Error, TEXT("EnumRepTestCreated: %s"), TArrayUObjectsRepTest ? TEXT("TRUE") : TEXT("FALSE"));
-	}*/
-	//Server_TestFunc(TempArray);
 }
 
 void ASampleGameCharacter::TurnAtRate(float Rate)
@@ -280,143 +227,10 @@ void ASampleGameCharacter::MoveRight(float Value)
 	}
 }
 
-//void ASampleGameCharacter::Server_TestFunc_Implementation(const TArray<FTestMixedStruct>& StructArg)
-void ASampleGameCharacter::Server_TestFunc_Implementation()
-{
-	UE_LOG(LogTemp, Warning, TEXT("%s: Server_TestFunc_Implementation"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
-
-	// modify replicated members to check network serialisation
-	static float Num = 101.f;
-	TestPODArray.Add(Num);
-	Num += 1.f;
-
-	static FTestMixedStruct _TestMixedStruct{ PlayerState, 42.f };
-	//TestMixedStructArray.Add(_TestMixedStruct); // commented out until we support UObject* serialization in nested structs
-	_TestMixedStruct.Modify();
-
-	static FTestPODStruct _TestPODStruct{ 5.f, 5, 5.0 };
-
-	//TestPODStructArray.Add(_TestPODStruct);
-	_TestPODStruct.Modify();
-
-	TestNetSerializeArray.Add(ReplicatedMovement);
-
-	TestMixedStruct = _TestMixedStruct;
-	_TestMixedStruct.Modify();
-
-	TestPODStruct = _TestPODStruct;
-	_TestPODStruct.Modify();
-
-	//static int TestEnumArrayIdx = 0;
-	//TestEnumCArray[TestEnumArrayIdx] = ETest8Enum::Enum_0;
-	//TestUEnumCArray[TestEnumArrayIdx] = EnumNamespace::Enum_0;
-	//TestEnumArrayIdx++;
-
-	StablyNamedObj = GetMesh()->SkeletalMesh;
-
-	// Nested struct replication begin
-	FBar MyBar;
-	FFoo MyFoo;
-	MyFoo.FooMember = 31;
-	MyBar.CantReplicateThisMember.Push(MyFoo);
-	MyFoo.FooMember++;
-	MyBar.CantReplicateThisMember.Push(MyFoo);
-	MyFoo.FooMember++;
-	MyBar.CantReplicateThisMember.Push(MyFoo);
-	MyFoo.FooMember++;
-	MyBar.CantReplicateThisMember.Push(MyFoo);
-
-	BarArray.Push(MyBar);
-	BarArray.Push(MyBar);
-
-	TestBar.MyStruct.MyInt++;
-	TestBar.MyStruct.MyFloat = 101.f;
-	TestBar.CantReplicateThisMember.Push(MyFoo);
-	MyFoo.FooMember++;
-	TestBar.CantReplicateThisMember.Push(MyFoo);
-	MyFoo.FooMember++;
-	TestBar.CantReplicateThisMember.Push(MyFoo);
-	// Nested struct replication end
-
-	TestBookend += 1;
-
-	TestCArrayReplication[4] += 1;
-	Client_TestFunc();
-
-	//UE_LOG(LogTemp, Warning, TEXT("RPC successfully called with an array of %d elements"), StructArg.Num());
-}
-
-//bool ASampleGameCharacter::Server_TestFunc_Validate(const TArray<FTestMixedStruct>& StructArg)
-bool ASampleGameCharacter::Server_TestFunc_Validate()
-{
-	return true;
-}
-
 void ASampleGameCharacter::Client_TestConstArgs_Implementation(FConstStruct ConstStruct)
 {
 
 }
-
-void ASampleGameCharacter::Client_TestFunc_Implementation()
-{
-	UE_LOG(LogTemp, Warning, TEXT("%s: Client_TestFunc_Implementation"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
-}
-
-void ASampleGameCharacter::OnRep_TestPODArray()
-{
-	FString TestString;
-	for (auto i : TestPODArray)
-	{
-		TestString.AppendInt(i);
-		TestString.AppendChar(' ');
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("TestPODArray updated - %s"), *TestString);
-}
-
-void ASampleGameCharacter::OnRep_TestBookend()
-{
-}
-
-//void ASampleGameCharacter::OnRep_IntRepTest()
-//{
-//	IntRepTestCreated = true;
-//}
-//
-//void ASampleGameCharacter::OnRep_FloatRepTest()
-//{
-//	FloatRepTestCreated = true;
-//}
-//
-//void ASampleGameCharacter::OnRep_BoolRepTest()
-//{
-//	BoolRepTestCreated = true;
-//}
-//
-//void ASampleGameCharacter::OnRep_CharRepTest()
-//{
-//	CharRepTestCreated = true;
-//}
-//
-//void ASampleGameCharacter::OnRep_FStringRepTest()
-//{
-//	FStringRepTestCreated = true;
-//}
-//
-//void ASampleGameCharacter::OnRep_CArrayRepTest()
-//{
-//	CArrayRepTestCreated = true;
-//}
-//
-//void ASampleGameCharacter::OnRep_TArrayUObjectsRepTest()
-//{
-//	TArrayUObjectsRepTestCreated = true;
-//}
-//
-//void ASampleGameCharacter::OnRep_EnumRepTest()
-//{
-//	EnumRepTestCreated = true;
-//}
 
 void ASampleGameCharacter::OnRep_TestCases()
 {
@@ -426,36 +240,6 @@ void ASampleGameCharacter::OnRep_TestCases()
 void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestPODArray, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructArray, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestPODStructArray, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestNetSerializeArray, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStruct, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestPODStruct, COND_SimulatedOnly);
-
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, StablyNamedObj, COND_None);
-
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestObjectArray, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayReplication, COND_None);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCArrayStructReplication, COND_SimulatedOnly);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestMixedStructCArrayReplication, COND_SimulatedOnly);
-
-
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestEnumCArray, COND_None);
-
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, BarArray, COND_None);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBar, COND_None);
-
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_None);
-
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, IntRepTest, COND_InitialOnly);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, FloatRepTest, COND_InitialOnly);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, BoolRepTest, COND_InitialOnly);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, CharRepTest, COND_InitialOnly);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, FStringRepTest, COND_InitialOnly);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, CArrayRepTest, COND_InitialOnly);
-	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TArrayUObjectsRepTest, COND_InitialOnly);
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCases, COND_InitialOnly);
 }

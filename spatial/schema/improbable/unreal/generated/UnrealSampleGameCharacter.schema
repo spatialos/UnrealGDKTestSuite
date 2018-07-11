@@ -52,38 +52,7 @@ component SampleGameCharacterMultiClientRepData {
 	bytes field_reprootmotion0_authoritativerootmotion0 = 41; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion0_acceleration0 = 42; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion0_linearvelocity0 = 43; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
-	list<float> field_testpodarray0 = 44; // COND_SimulatedOnly // ::SampleGameCharacter
-	list<bytes> field_testmixedstructarray0 = 45; // COND_SimulatedOnly // ::SampleGameCharacter
-	list<bytes> field_testpodstructarray0 = 46; // COND_SimulatedOnly // ::SampleGameCharacter
-	list<bytes> field_testnetserializearray0 = 47; // COND_SimulatedOnly // ::SampleGameCharacter
-	UnrealObjectRef field_testmixedstruct0_ps0 = 48; // COND_SimulatedOnly // TestMixedStruct::TestMixedStruct::SampleGameCharacter
-	float field_testmixedstruct0_fvar0 = 49; // COND_SimulatedOnly // TestMixedStruct::TestMixedStruct::SampleGameCharacter
-	float field_testmixedstruct0_ivar0 = 50; // COND_SimulatedOnly // TestMixedStruct::TestMixedStruct::SampleGameCharacter
-	float field_testpodstruct0_fvar0 = 51; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
-	int32 field_testpodstruct0_ivar0 = 52; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
-	double field_testpodstruct0_dvar0 = 53; // COND_SimulatedOnly // TestPODStruct::TestPODStruct::SampleGameCharacter
-	UnrealObjectRef field_stablynamedobj0 = 54; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication0 = 55; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication1 = 56; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication2 = 57; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication3 = 58; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication4 = 59; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication5 = 60; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication6 = 61; // COND_None // ::SampleGameCharacter
-	int32 field_testcarrayreplication7 = 62; // COND_None // ::SampleGameCharacter
-	uint32 field_test8enum0 = 63; // COND_None // ::SampleGameCharacter
-	uint32 field_test16enum0 = 64; // COND_None // ::SampleGameCharacter
-	uint32 field_test32enum0 = 65; // COND_None // ::SampleGameCharacter
-	int64 field_test64enum0 = 66; // COND_None // ::SampleGameCharacter
-	list<uint32> field_testenumtarray0 = 67; // COND_None // ::SampleGameCharacter
-	uint32 field_testuenum0 = 68; // COND_None // ::SampleGameCharacter
-	list<uint32> field_testuenumtarray0 = 69; // COND_None // ::SampleGameCharacter
-	list<bytes> field_bararray0 = 70; // COND_None // ::SampleGameCharacter
-	list<bytes> field_testbar0_cantreplicatethismember0 = 71; // COND_None // Bar::TestBar::SampleGameCharacter
-	bytes field_testbar0_mystruct0 = 72; // COND_None // Bar::TestBar::SampleGameCharacter
-	bytes field_testbar0_netserializestruct0 = 73; // COND_None // Bar::TestBar::SampleGameCharacter
-	int32 field_testbookend0 = 74; // COND_None // ::SampleGameCharacter
-	list<UnrealObjectRef> field_testcases0 = 75; // COND_InitialOnly // ::SampleGameCharacter
+	list<UnrealObjectRef> field_testcases0 = 44; // COND_InitialOnly // ::SampleGameCharacter
 }
 component SampleGameCharacterMigratableData {
 	id = 100024;
@@ -96,7 +65,6 @@ import "improbable/unreal/generated/UnrealCharacterTypes.schema";
 
 component SampleGameCharacterClientRPCs {
 	id = 100025;
-	command UnrealRPCCommandResponse clienttestfunc(samplegamecharacter.ClientTestFuncRequest);
 	command UnrealRPCCommandResponse clienttestconstargs(samplegamecharacter.ClientTestConstArgsRequest);
 	command UnrealRPCCommandResponse rootmotiondebugclientprintonscreen(character.RootMotionDebugClientPrintOnScreenRequest);
 	command UnrealRPCCommandResponse clientveryshortadjustposition(character.ClientVeryShortAdjustPositionRequest);
@@ -110,7 +78,6 @@ component SampleGameCharacterClientRPCs {
 }
 component SampleGameCharacterServerRPCs {
 	id = 100026;
-	command UnrealRPCCommandResponse servertestfunc(samplegamecharacter.ServerTestFuncRequest);
 	command UnrealRPCCommandResponse servermoveold(character.ServerMoveOldRequest);
 	command UnrealRPCCommandResponse servermovenobase(character.ServerMoveNoBaseRequest);
 	command UnrealRPCCommandResponse servermovedualnobase(character.ServerMoveDualNoBaseRequest);

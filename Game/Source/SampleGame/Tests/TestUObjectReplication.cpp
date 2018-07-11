@@ -86,9 +86,7 @@ void ATestUObjectReplication::ValidateReplication_Client(ATestActor*  TestDynami
 														 UTestUObject* TestStablyNamedUObject)
 {
 	// Validate Dynamically created UObject
-	// Assert on name rather than path name as the path name is different for each PIE instance.
-	// TODO: Daniel 
-	//check(TestDynamicallyCreatedActor->ActorName == TestDynamicallyCreatedActor->GetName());
+	check(TestDynamicallyCreatedActor->IsA(ATestActor::StaticClass()));
 
 	// TODO: UNR-238 Add tests.
 

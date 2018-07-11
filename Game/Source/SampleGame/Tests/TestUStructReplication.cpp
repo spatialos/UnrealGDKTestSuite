@@ -162,8 +162,7 @@ void ATestUStructReplication::ValidateReplication_Client(const FSimpleTestStruct
 	check(TestUStructWithStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
 
 	// Validate Dynamically created actors
-	// Assert on name rather than path name as the path name is different for each PIE instance.
-	check(TestUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->ActorName == TestUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->GetName());
+	check(TestUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->IsA(ATestActor::StaticClass()));
 
 	// Validate UStruct with Netserialize
 	check(TestUStructWithNetSerialize.MyInt == 42);
@@ -208,8 +207,7 @@ void ATestUStructReplication::ValidateRPC_Server(const FSimpleTestStruct& TestPO
 
 
 	// Validate Dynamically created actors
-	// Assert on name rather than path name as the path name is different for each PIE instance.
-	check(TestUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->ActorName == TestUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->GetName());
+	check(TestUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->IsA(ATestActor::StaticClass()));
 
 	//Get the net driver
 	USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());

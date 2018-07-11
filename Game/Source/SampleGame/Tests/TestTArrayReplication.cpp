@@ -139,11 +139,8 @@ void ATestTArrayReplication::ValidateReplication_Client(const TArray<int>& TestP
 	check(TestStablyNamedArray[1]->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
 
 	// Validate Dynamically created UObjects in the array
-	// TODO: Daniel Enable test
-	//check(TestDynamicallyCreatedActors.Num() == 1);
-	//// Assert on name rather than path name as the path name is different for each PIE instance.
-	//FString name = TestDynamicallyCreatedActors[0]->GetName();
-	//check(TestDynamicallyCreatedActors[0]->ActorName == name);
+	check(TestDynamicallyCreatedActors.Num() == 1);
+	check(TestDynamicallyCreatedActors[0]->IsA(ATestActor::StaticClass()));
 
 	// Validate TArray with structs
 	check(TestArrayOfStructs.Num() == 2);
