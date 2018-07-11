@@ -129,9 +129,9 @@ void ASampleGameCharacter::BeginPlay()
 		check(EnumTest);
 		TestCases.Add(EnumTest);
 
-	/*	ATestFTextReplication* FTextTest = World->SpawnActor<ATestFTextReplication>();
+		ATestFTextReplication* FTextTest = World->SpawnActor<ATestFTextReplication>();
 		check(FTextTest);
-		TestCases.Add(FTextTest);*/
+		TestCases.Add(FTextTest);
 
 		ATestFNameReplication* FNameTest = World->SpawnActor<ATestFNameReplication>();
 		check(FNameTest);

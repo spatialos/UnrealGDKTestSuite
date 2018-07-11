@@ -4,38 +4,38 @@
 
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
-//
-//void ATestFTextReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
-//{
-//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-//	DOREPLIFETIME_CONDITION(ATestFTextReplication, TestFText, COND_None);
-//}
-//
-//bool ATestFTextReplication::Server_ReportReplication_Validate(const FText& RepFText)
-//{
-//	return true;
-//}
-//
-//void ATestFTextReplication::Server_ReportReplication_Implementation(const FText& RepFText)
-//{
-//	check(RepFText.EqualTo(ValidationName));
-//
-//	SignalResponseRecieved();
-//}
-//
-//void ATestFTextReplication::StartTestImpl()
-//{
-//	TestFText = ValidationName;
-//
-//	SignalReplicationSetup();
-//}
-//
-//void ATestFTextReplication::ValidateClientReplicationImpl()
-//{
-//	check(TestFText.EqualTo(ValidationName));
-//}
-//
-//void ATestFTextReplication::SendTestResponseRPCImpl()
-//{
-//	Server_ReportReplication(TestFText);
-//}
+
+void ATestFTextReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME_CONDITION(ATestFTextReplication, TestFText, COND_None);
+}
+
+bool ATestFTextReplication::Server_ReportReplication_Validate(const FText& RepFText)
+{
+	return true;
+}
+
+void ATestFTextReplication::Server_ReportReplication_Implementation(const FText& RepFText)
+{
+	check(RepFText.EqualTo(ValidationText));
+
+	SignalResponseRecieved();
+}
+
+void ATestFTextReplication::StartTestImpl()
+{
+	TestFText = ValidationText;
+
+	SignalReplicationSetup();
+}
+
+void ATestFTextReplication::ValidateClientReplicationImpl()
+{
+	check(TestFText.EqualTo(ValidationText));
+}
+
+void ATestFTextReplication::SendTestResponseRPCImpl()
+{
+	Server_ReportReplication(TestFText);
+}
