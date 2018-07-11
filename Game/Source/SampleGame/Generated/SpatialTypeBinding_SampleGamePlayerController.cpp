@@ -1840,7 +1840,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientWasKicked_SendRPC(wor
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientWasKickedRequest RPCPayload;
 		{
-			// UNSUPPORTED UTextProperty (unhandled) RPCPayload.set_field_kickreason0(StructuredParams.KickReason)
+			RPCPayload.set_field_kickreason0(TCHAR_TO_UTF8(*StructuredParams.KickReason.ToString()));
 		}
 
 		// Send RPC
@@ -2788,7 +2788,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReturnToMainMenuWithT
 		// Build RPC Payload.
 		improbable::unreal::generated::playercontroller::ClientReturnToMainMenuWithTextReasonRequest RPCPayload;
 		{
-			// UNSUPPORTED UTextProperty (unhandled) RPCPayload.set_field_returnreason0(StructuredParams.ReturnReason)
+			RPCPayload.set_field_returnreason0(TCHAR_TO_UTF8(*StructuredParams.ReturnReason.ToString()));
 		}
 
 		// Send RPC
@@ -5098,7 +5098,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientWasKicked_OnRPCPayloa
 
 		// Extract from request data.
 		{
-			// UNSUPPORTED UTextProperty (unhandled) Parameters.KickReason Op.Request.field_kickreason0()
+			Parameters.KickReason = FText::FromString((Op.Request.field_kickreason0()).data());
 		}
 
 		// Call implementation.
@@ -6465,7 +6465,7 @@ void USpatialTypeBinding_SampleGamePlayerController::ClientReturnToMainMenuWithT
 
 		// Extract from request data.
 		{
-			// UNSUPPORTED UTextProperty (unhandled) Parameters.ReturnReason Op.Request.field_returnreason0()
+			Parameters.ReturnReason = FText::FromString((Op.Request.field_returnreason0()).data());
 		}
 
 		// Call implementation.
