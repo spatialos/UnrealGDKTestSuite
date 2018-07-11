@@ -92,6 +92,12 @@ struct FSimpleTestStruct
 {
 	GENERATED_BODY()
 
+	FSimpleTestStruct() 
+		: RootProp(-1)
+	{
+
+	}
+
 	UPROPERTY()
 	int RootProp;
 };
@@ -193,7 +199,7 @@ struct FUnrealStyleEnumTestStruct
 	GENERATED_BODY()
 
 	UPROPERTY()
-	TEnumAsByte<EnumNamespace::EUnrealTestEnum> UEnum;
+	ETest32Enum Test32Enum;
 };
 
 USTRUCT()
@@ -202,6 +208,6 @@ struct FCStyleEnumTestStruct
 	GENERATED_BODY()
 
 	UPROPERTY()
-	ETest32Enum Test32Enum;
+	TEnumAsByte<EnumNamespace::EUnrealTestEnum> UEnum;
 };
 // Struct test types end

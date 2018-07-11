@@ -69,11 +69,11 @@ public:
 	UPROPERTY(Replicated)
 	FTestStructWithNetSerialize ArrayOfStructNetSerialize[2];
 
-	// Test C-style array with C++ 11 style enums
+	// Test C-style array with unreal style enums
 	UPROPERTY(Replicated)
 	ETest8Enum EnumCArray[2];
 
-	// Test C-style array with unreal style enums
+	// Test C-style array with C++ 11 style enums
 	UPROPERTY(Replicated)
 	TEnumAsByte<EnumNamespace::EUnrealTestEnum> UEnumCArray[2];
 

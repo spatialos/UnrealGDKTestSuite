@@ -65,11 +65,11 @@ public:
 	UPROPERTY(Replicated)
 	TArray<FTestStructWithNetSerialize> ArrayOfStructNetSerialize;
 
-	// Test array of C++ 11 style enums
+	// Test array of Unreal style enums
 	UPROPERTY(Replicated)
 	TArray<ETest8Enum> EnumTArray;
 
-	// Test array of Unreal style enums
+	// Test array of C++ 11 style enums
 	UPROPERTY(Replicated)
 	TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>> UEnumTArray;
 

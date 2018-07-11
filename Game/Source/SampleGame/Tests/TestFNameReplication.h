@@ -14,6 +14,7 @@ class SAMPLEGAME_API ATestFNameReplication : public AReplicationTestCase
 public:	
 
 	ATestFNameReplication() 
+		: ValidationName(TEXT("Rosebud"))
 	{ 
 		TestName = TEXT("FName types"); 
 	}
@@ -34,4 +35,6 @@ public:
 
 	UPROPERTY(Replicated)
 	FName TestFName;
+
+	FName ValidationName;
 };

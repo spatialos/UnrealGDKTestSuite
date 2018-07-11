@@ -18,21 +18,21 @@ bool ATestFNameReplication::Server_ReportReplication_Validate(const FName& RepFN
 
 void ATestFNameReplication::Server_ReportReplication_Implementation(const FName& RepFName)
 {
-	// TODO: Add fname setup
+	check(RepFName.Compare(ValidationName) == 0);
 
 	SignalResponseRecieved();
 }
 
 void ATestFNameReplication::StartTestImpl()
 {
-	//TestFName = true;
+	TestFName = ValidationName;
 
 	SignalReplicationSetup();
 }
 
 void ATestFNameReplication::ValidateClientReplicationImpl()
 {
-	//check(TestFName == true);
+	check(TestFName.Compare(ValidationName) == 0);
 }
 
 void ATestFNameReplication::SendTestResponseRPCImpl()

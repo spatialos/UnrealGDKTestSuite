@@ -140,14 +140,7 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(72, FRepHandleData(Class, {"TestBar", "MyStruct"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(73, FRepHandleData(Class, {"TestBar", "NetSerializeStruct"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(74, FRepHandleData(Class, {"TestBookend"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(75, FRepHandleData(Class, {"IntRepTest"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(76, FRepHandleData(Class, {"FloatRepTest"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(77, FRepHandleData(Class, {"BoolRepTest"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(78, FRepHandleData(Class, {"CharRepTest"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(79, FRepHandleData(Class, {"FStringRepTest"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(80, FRepHandleData(Class, {"CArrayRepTest"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(81, FRepHandleData(Class, {"TArrayUObjectsRepTest"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(82, FRepHandleData(Class, {"EnumRepTest"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(75, FRepHandleData(Class, {"TestCases"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
 
 	// Populate MigratableHandleToPropertyMap.
 	MigratableHandleToPropertyMap.Add(1, FMigratableHandleData(Class, {"CharacterMovement", "MovementMode"}));
@@ -1581,259 +1574,48 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			OutUpdate.set_field_testbookend0(int32_t(Value));
 			break;
 		}
-		case 75: // field_intreptest0
+		case 75: // field_testcases0
 		{
-			ATestIntReplication* Value = *(reinterpret_cast<ATestIntReplication* const*>(Data));
+			const TArray<AReplicationTestCase*>& Value = *(reinterpret_cast<TArray<AReplicationTestCase*> const*>(Data));
 
-			if (Value != nullptr)
+			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 75);
+			TSet<const UObject*> UnresolvedObjects;
+			::worker::List<improbable::unreal::UnrealObjectRef> List;
+			for(int i = 0; i < Value.Num(); i++)
 			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
-				if (!NetGUID.IsValid())
+				if (Value[i] != nullptr)
 				{
-					if (Value->IsFullNameStableForNetworking())
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value[i]);
+					if (!NetGUID.IsValid())
 					{
-						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+						if (Value[i]->IsFullNameStableForNetworking())
+						{
+							NetGUID = PackageMap->ResolveStablyNamedObject(Value[i]);
+						}
 					}
-				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-				{
-					// A legal static object reference should never be unresolved.
-					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 75);
+					improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+					if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+					{
+						UnresolvedObjects.Add(Value[i]);
+					}
+					else
+					{
+						List.emplace_back(ObjectRef);
+					}
 				}
 				else
 				{
-					OutUpdate.set_field_intreptest0(ObjectRef);
+					List.emplace_back(SpatialConstants::NULL_OBJECT_REF);
 				}
+			}
+			const ::worker::List<improbable::unreal::UnrealObjectRef>& Result = (List);
+			if (UnresolvedObjects.Num() == 0)
+			{
+				OutUpdate.set_field_testcases0(Result);
 			}
 			else
 			{
-				OutUpdate.set_field_intreptest0(SpatialConstants::NULL_OBJECT_REF);
-			}
-			break;
-		}
-		case 76: // field_floatreptest0
-		{
-			ATestFloatReplication* Value = *(reinterpret_cast<ATestFloatReplication* const*>(Data));
-
-			if (Value != nullptr)
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
-				if (!NetGUID.IsValid())
-				{
-					if (Value->IsFullNameStableForNetworking())
-					{
-						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
-					}
-				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-				{
-					// A legal static object reference should never be unresolved.
-					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 76);
-				}
-				else
-				{
-					OutUpdate.set_field_floatreptest0(ObjectRef);
-				}
-			}
-			else
-			{
-				OutUpdate.set_field_floatreptest0(SpatialConstants::NULL_OBJECT_REF);
-			}
-			break;
-		}
-		case 77: // field_boolreptest0
-		{
-			ATestBoolReplication* Value = *(reinterpret_cast<ATestBoolReplication* const*>(Data));
-
-			if (Value != nullptr)
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
-				if (!NetGUID.IsValid())
-				{
-					if (Value->IsFullNameStableForNetworking())
-					{
-						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
-					}
-				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-				{
-					// A legal static object reference should never be unresolved.
-					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 77);
-				}
-				else
-				{
-					OutUpdate.set_field_boolreptest0(ObjectRef);
-				}
-			}
-			else
-			{
-				OutUpdate.set_field_boolreptest0(SpatialConstants::NULL_OBJECT_REF);
-			}
-			break;
-		}
-		case 78: // field_charreptest0
-		{
-			ATestCharReplication* Value = *(reinterpret_cast<ATestCharReplication* const*>(Data));
-
-			if (Value != nullptr)
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
-				if (!NetGUID.IsValid())
-				{
-					if (Value->IsFullNameStableForNetworking())
-					{
-						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
-					}
-				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-				{
-					// A legal static object reference should never be unresolved.
-					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 78);
-				}
-				else
-				{
-					OutUpdate.set_field_charreptest0(ObjectRef);
-				}
-			}
-			else
-			{
-				OutUpdate.set_field_charreptest0(SpatialConstants::NULL_OBJECT_REF);
-			}
-			break;
-		}
-		case 79: // field_fstringreptest0
-		{
-			ATestFStringReplication* Value = *(reinterpret_cast<ATestFStringReplication* const*>(Data));
-
-			if (Value != nullptr)
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
-				if (!NetGUID.IsValid())
-				{
-					if (Value->IsFullNameStableForNetworking())
-					{
-						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
-					}
-				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-				{
-					// A legal static object reference should never be unresolved.
-					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 79);
-				}
-				else
-				{
-					OutUpdate.set_field_fstringreptest0(ObjectRef);
-				}
-			}
-			else
-			{
-				OutUpdate.set_field_fstringreptest0(SpatialConstants::NULL_OBJECT_REF);
-			}
-			break;
-		}
-		case 80: // field_carrayreptest0
-		{
-			ATestCArrayReplication* Value = *(reinterpret_cast<ATestCArrayReplication* const*>(Data));
-
-			if (Value != nullptr)
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
-				if (!NetGUID.IsValid())
-				{
-					if (Value->IsFullNameStableForNetworking())
-					{
-						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
-					}
-				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-				{
-					// A legal static object reference should never be unresolved.
-					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 80);
-				}
-				else
-				{
-					OutUpdate.set_field_carrayreptest0(ObjectRef);
-				}
-			}
-			else
-			{
-				OutUpdate.set_field_carrayreptest0(SpatialConstants::NULL_OBJECT_REF);
-			}
-			break;
-		}
-		case 81: // field_tarrayuobjectsreptest0
-		{
-			ATestTArrayReplication* Value = *(reinterpret_cast<ATestTArrayReplication* const*>(Data));
-
-			if (Value != nullptr)
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
-				if (!NetGUID.IsValid())
-				{
-					if (Value->IsFullNameStableForNetworking())
-					{
-						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
-					}
-				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-				{
-					// A legal static object reference should never be unresolved.
-					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 81);
-				}
-				else
-				{
-					OutUpdate.set_field_tarrayuobjectsreptest0(ObjectRef);
-				}
-			}
-			else
-			{
-				OutUpdate.set_field_tarrayuobjectsreptest0(SpatialConstants::NULL_OBJECT_REF);
-			}
-			break;
-		}
-		case 82: // field_enumreptest0
-		{
-			ATestEnumReplication* Value = *(reinterpret_cast<ATestEnumReplication* const*>(Data));
-
-			if (Value != nullptr)
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
-				if (!NetGUID.IsValid())
-				{
-					if (Value->IsFullNameStableForNetworking())
-					{
-						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
-					}
-				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-				{
-					// A legal static object reference should never be unresolved.
-					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 82);
-				}
-				else
-				{
-					OutUpdate.set_field_enumreptest0(ObjectRef);
-				}
-			}
-			else
-			{
-				OutUpdate.set_field_enumreptest0(SpatialConstants::NULL_OBJECT_REF);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 75);
 			}
 			break;
 		}
@@ -4054,452 +3836,60 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_intreptest0().empty())
+	if (!Update.field_testcases0().empty())
 	{
-		// field_intreptest0
+		// field_testcases0
 		uint16 Handle = 75;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			ATestIntReplication* Value = *(reinterpret_cast<ATestIntReplication* const*>(PropertyData));
+			TArray<AReplicationTestCase*> Value = *(reinterpret_cast<TArray<AReplicationTestCase*> *>(PropertyData));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_intreptest0().data());
-			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			auto& List = (*Update.field_testcases0().data());
+			Value.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
 			{
-				Value = nullptr;
-			}
-			else
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-				if (NetGUID.IsValid())
+				improbable::unreal::UnrealObjectRef ObjectRef = List[i];
+				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 				{
-					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-					checkf(Cast<ATestIntReplication>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-					Value = Cast<ATestIntReplication>(Object_Raw);
+					Value[i] = nullptr;
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-						*Interop->GetSpatialOS()->GetWorkerId(),
-						*ObjectRefToString(ObjectRef),
-						*ActorChannel->Actor->GetName(),
-						ActorChannel->GetEntityId().ToSpatialEntityId(),
-						*RepData->Property->GetName(),
-						Handle);
-					// A legal static object reference should never be unresolved.
-					check(ObjectRef.path().empty());
-					bWriteObjectProperty = false;
-					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+					if (NetGUID.IsValid())
+					{
+						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<AReplicationTestCase>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+						Value[i] = Cast<AReplicationTestCase>(Object_Raw);
+					}
+					else
+					{
+						// Pre-alpha limitation: if a UObject* in an array property is unresolved, we currently don't have a way to update it once
+						// it is resolved. It will remain null and will only be updated when the server replicates this array again (when it changes).
+						UE_LOG(LogSpatialOSInterop, Warning, TEXT("%s: Ignoring unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+							*Interop->GetSpatialOS()->GetWorkerId(),
+							*ObjectRefToString(ObjectRef),
+							*ActorChannel->Actor->GetName(),
+							ActorChannel->GetEntityId().ToSpatialEntityId(),
+							*RepData->Property->GetName(),
+							Handle);
+						Value[i] = nullptr;
+					}
 				}
 			}
 
-			if (bWriteObjectProperty)
-			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-					*Interop->GetSpatialOS()->GetWorkerId(),
-					*ActorChannel->Actor->GetName(),
-					ActorChannel->GetEntityId().ToSpatialEntityId(),
-					*RepData->Property->GetName(),
-					Handle);
-			}
-		}
-	}
-	if (!Update.field_floatreptest0().empty())
-	{
-		// field_floatreptest0
-		uint16 Handle = 76;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			ATestFloatReplication* Value = *(reinterpret_cast<ATestFloatReplication* const*>(PropertyData));
-
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_floatreptest0().data());
-			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
-			{
-				Value = nullptr;
-			}
-			else
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-				if (NetGUID.IsValid())
-				{
-					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-					checkf(Cast<ATestFloatReplication>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-					Value = Cast<ATestFloatReplication>(Object_Raw);
-				}
-				else
-				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-						*Interop->GetSpatialOS()->GetWorkerId(),
-						*ObjectRefToString(ObjectRef),
-						*ActorChannel->Actor->GetName(),
-						ActorChannel->GetEntityId().ToSpatialEntityId(),
-						*RepData->Property->GetName(),
-						Handle);
-					// A legal static object reference should never be unresolved.
-					check(ObjectRef.path().empty());
-					bWriteObjectProperty = false;
-					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-				}
-			}
-
-			if (bWriteObjectProperty)
-			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-					*Interop->GetSpatialOS()->GetWorkerId(),
-					*ActorChannel->Actor->GetName(),
-					ActorChannel->GetEntityId().ToSpatialEntityId(),
-					*RepData->Property->GetName(),
-					Handle);
-			}
-		}
-	}
-	if (!Update.field_boolreptest0().empty())
-	{
-		// field_boolreptest0
-		uint16 Handle = 77;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			ATestBoolReplication* Value = *(reinterpret_cast<ATestBoolReplication* const*>(PropertyData));
-
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_boolreptest0().data());
-			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
-			{
-				Value = nullptr;
-			}
-			else
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-				if (NetGUID.IsValid())
-				{
-					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-					checkf(Cast<ATestBoolReplication>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-					Value = Cast<ATestBoolReplication>(Object_Raw);
-				}
-				else
-				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-						*Interop->GetSpatialOS()->GetWorkerId(),
-						*ObjectRefToString(ObjectRef),
-						*ActorChannel->Actor->GetName(),
-						ActorChannel->GetEntityId().ToSpatialEntityId(),
-						*RepData->Property->GetName(),
-						Handle);
-					// A legal static object reference should never be unresolved.
-					check(ObjectRef.path().empty());
-					bWriteObjectProperty = false;
-					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-				}
-			}
-
-			if (bWriteObjectProperty)
-			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-					*Interop->GetSpatialOS()->GetWorkerId(),
-					*ActorChannel->Actor->GetName(),
-					ActorChannel->GetEntityId().ToSpatialEntityId(),
-					*RepData->Property->GetName(),
-					Handle);
-			}
-		}
-	}
-	if (!Update.field_charreptest0().empty())
-	{
-		// field_charreptest0
-		uint16 Handle = 78;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			ATestCharReplication* Value = *(reinterpret_cast<ATestCharReplication* const*>(PropertyData));
-
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_charreptest0().data());
-			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
-			{
-				Value = nullptr;
-			}
-			else
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-				if (NetGUID.IsValid())
-				{
-					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-					checkf(Cast<ATestCharReplication>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-					Value = Cast<ATestCharReplication>(Object_Raw);
-				}
-				else
-				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-						*Interop->GetSpatialOS()->GetWorkerId(),
-						*ObjectRefToString(ObjectRef),
-						*ActorChannel->Actor->GetName(),
-						ActorChannel->GetEntityId().ToSpatialEntityId(),
-						*RepData->Property->GetName(),
-						Handle);
-					// A legal static object reference should never be unresolved.
-					check(ObjectRef.path().empty());
-					bWriteObjectProperty = false;
-					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-				}
-			}
-
-			if (bWriteObjectProperty)
-			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-					*Interop->GetSpatialOS()->GetWorkerId(),
-					*ActorChannel->Actor->GetName(),
-					ActorChannel->GetEntityId().ToSpatialEntityId(),
-					*RepData->Property->GetName(),
-					Handle);
-			}
-		}
-	}
-	if (!Update.field_fstringreptest0().empty())
-	{
-		// field_fstringreptest0
-		uint16 Handle = 79;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			ATestFStringReplication* Value = *(reinterpret_cast<ATestFStringReplication* const*>(PropertyData));
-
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_fstringreptest0().data());
-			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
-			{
-				Value = nullptr;
-			}
-			else
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-				if (NetGUID.IsValid())
-				{
-					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-					checkf(Cast<ATestFStringReplication>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-					Value = Cast<ATestFStringReplication>(Object_Raw);
-				}
-				else
-				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-						*Interop->GetSpatialOS()->GetWorkerId(),
-						*ObjectRefToString(ObjectRef),
-						*ActorChannel->Actor->GetName(),
-						ActorChannel->GetEntityId().ToSpatialEntityId(),
-						*RepData->Property->GetName(),
-						Handle);
-					// A legal static object reference should never be unresolved.
-					check(ObjectRef.path().empty());
-					bWriteObjectProperty = false;
-					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-				}
-			}
-
-			if (bWriteObjectProperty)
-			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-					*Interop->GetSpatialOS()->GetWorkerId(),
-					*ActorChannel->Actor->GetName(),
-					ActorChannel->GetEntityId().ToSpatialEntityId(),
-					*RepData->Property->GetName(),
-					Handle);
-			}
-		}
-	}
-	if (!Update.field_carrayreptest0().empty())
-	{
-		// field_carrayreptest0
-		uint16 Handle = 80;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			ATestCArrayReplication* Value = *(reinterpret_cast<ATestCArrayReplication* const*>(PropertyData));
-
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_carrayreptest0().data());
-			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
-			{
-				Value = nullptr;
-			}
-			else
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-				if (NetGUID.IsValid())
-				{
-					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-					checkf(Cast<ATestCArrayReplication>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-					Value = Cast<ATestCArrayReplication>(Object_Raw);
-				}
-				else
-				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-						*Interop->GetSpatialOS()->GetWorkerId(),
-						*ObjectRefToString(ObjectRef),
-						*ActorChannel->Actor->GetName(),
-						ActorChannel->GetEntityId().ToSpatialEntityId(),
-						*RepData->Property->GetName(),
-						Handle);
-					// A legal static object reference should never be unresolved.
-					check(ObjectRef.path().empty());
-					bWriteObjectProperty = false;
-					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-				}
-			}
-
-			if (bWriteObjectProperty)
-			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-					*Interop->GetSpatialOS()->GetWorkerId(),
-					*ActorChannel->Actor->GetName(),
-					ActorChannel->GetEntityId().ToSpatialEntityId(),
-					*RepData->Property->GetName(),
-					Handle);
-			}
-		}
-	}
-	if (!Update.field_tarrayuobjectsreptest0().empty())
-	{
-		// field_tarrayuobjectsreptest0
-		uint16 Handle = 81;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			ATestTArrayReplication* Value = *(reinterpret_cast<ATestTArrayReplication* const*>(PropertyData));
-
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_tarrayuobjectsreptest0().data());
-			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
-			{
-				Value = nullptr;
-			}
-			else
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-				if (NetGUID.IsValid())
-				{
-					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-					checkf(Cast<ATestTArrayReplication>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-					Value = Cast<ATestTArrayReplication>(Object_Raw);
-				}
-				else
-				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-						*Interop->GetSpatialOS()->GetWorkerId(),
-						*ObjectRefToString(ObjectRef),
-						*ActorChannel->Actor->GetName(),
-						ActorChannel->GetEntityId().ToSpatialEntityId(),
-						*RepData->Property->GetName(),
-						Handle);
-					// A legal static object reference should never be unresolved.
-					check(ObjectRef.path().empty());
-					bWriteObjectProperty = false;
-					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-				}
-			}
-
-			if (bWriteObjectProperty)
-			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-					*Interop->GetSpatialOS()->GetWorkerId(),
-					*ActorChannel->Actor->GetName(),
-					ActorChannel->GetEntityId().ToSpatialEntityId(),
-					*RepData->Property->GetName(),
-					Handle);
-			}
-		}
-	}
-	if (!Update.field_enumreptest0().empty())
-	{
-		// field_enumreptest0
-		uint16 Handle = 82;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			ATestEnumReplication* Value = *(reinterpret_cast<ATestEnumReplication* const*>(PropertyData));
-
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_enumreptest0().data());
-			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
-			{
-				Value = nullptr;
-			}
-			else
-			{
-				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-				if (NetGUID.IsValid())
-				{
-					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-					checkf(Cast<ATestEnumReplication>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-					Value = Cast<ATestEnumReplication>(Object_Raw);
-				}
-				else
-				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-						*Interop->GetSpatialOS()->GetWorkerId(),
-						*ObjectRefToString(ObjectRef),
-						*ActorChannel->Actor->GetName(),
-						ActorChannel->GetEntityId().ToSpatialEntityId(),
-						*RepData->Property->GetName(),
-						Handle);
-					// A legal static object reference should never be unresolved.
-					check(ObjectRef.path().empty());
-					bWriteObjectProperty = false;
-					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
-				}
-			}
-
-			if (bWriteObjectProperty)
-			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
-
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-					*Interop->GetSpatialOS()->GetWorkerId(),
-					*ActorChannel->Actor->GetName(),
-					ActorChannel->GetEntityId().ToSpatialEntityId(),
-					*RepData->Property->GetName(),
-					Handle);
-			}
+			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
 		}
 	}
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());

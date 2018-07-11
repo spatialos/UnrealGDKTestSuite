@@ -60,7 +60,7 @@ public:
 	FStablyNamedObjectTestStruct UStructWithStablyNamedObject;
 
 	// Test UStruct with a dynamically created actor
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing= OnRep_UStructWithDynamicallyCreatedActor)
 	FDynamicallyCreatedActorTestStruct UStructWithDynamicallyCreatedActor;
 
 	// Test UStruct with Netserialize
@@ -86,7 +86,7 @@ public:
 private: 
 
 	UFUNCTION()
-	void OnRep_DynamicallyCreatedArray();
+	void OnRep_UStructWithDynamicallyCreatedActor();
 
 	void ValidateReplication_Client(const FSimpleTestStruct& TestPODUStruct,
 									const FNestedTestStruct& TestNestedUStruct,

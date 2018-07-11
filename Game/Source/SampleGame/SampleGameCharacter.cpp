@@ -12,6 +12,19 @@
 #include "SampleGameGameStateBase.h"
 #include "SpatialNetDriver.h"
 
+#include "Tests/TestIntReplication.h"
+#include "Tests/TestFloatReplication.h"
+#include "Tests/TestBoolReplication.h"
+#include "Tests/TestCharReplication.h"
+#include "Tests/TestFStringReplication.h"
+#include "Tests/TestCArrayReplication.h"
+#include "Tests/TestTArrayReplication.h"
+#include "Tests/TestEnumReplication.h"
+#include "Tests/TestFTextReplication.h"
+#include "Tests/TestFNameReplication.h"
+#include "Tests/TestUStructReplication.h"
+#include "Tests/TestUObjectReplication.h"
+
 #include "UnrealNetwork.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,14 +80,14 @@ ASampleGameCharacter::ASampleGameCharacter()
 	}
 	//TestEnumArray.AddDefaulted(5);
 
-	IntRepTestCreated = false;
-	FloatRepTestCreated = false;
-	BoolRepTestCreated = false;
-	CharRepTestCreated = false;
-	FStringRepTestCreated = false;
-	CArrayRepTestCreated = false;
-	TArrayUObjectsRepTest = false;
-	EnumRepTestCreated = false;
+	//IntRepTestCreated = false;
+	//FloatRepTestCreated = false;
+	//BoolRepTestCreated = false;
+	//CharRepTestCreated = false;
+	//FStringRepTestCreated = false;
+	//CArrayRepTestCreated = false;
+	//TArrayUObjectsRepTest = false;
+	//EnumRepTestCreated = false;
 }
 
 void ASampleGameCharacter::BeginPlay()
@@ -84,22 +97,53 @@ void ASampleGameCharacter::BeginPlay()
 	UWorld* World = GetWorld();
 	if (World && GetNetMode() == NM_DedicatedServer)
 	{
-		IntRepTest = World->SpawnActor<ATestIntReplication>();
-		check(IntRepTest);
-		FloatRepTest = World->SpawnActor<ATestFloatReplication>();
-		check(FloatRepTest);
-		BoolRepTest = World->SpawnActor<ATestBoolReplication>();
-		check(BoolRepTest);
-		CharRepTest = World->SpawnActor<ATestCharReplication>();
-		check(CharRepTest);
-		FStringRepTest = World->SpawnActor<ATestFStringReplication>();
-		check(FStringRepTest);
-		CArrayRepTest = World->SpawnActor<ATestCArrayReplication>();
-		check(CArrayRepTest);
-		TArrayUObjectsRepTest = World->SpawnActor<ATestTArrayReplication>();
-		check(TArrayUObjectsRepTest);
-		EnumRepTest = World->SpawnActor<ATestEnumReplication>();
-		check(EnumRepTest);
+		ATestIntReplication* IntTest = World->SpawnActor<ATestIntReplication>();
+		check(IntTest);
+		TestCases.Add(IntTest);
+
+		ATestFloatReplication* FloatTest = World->SpawnActor<ATestFloatReplication>();
+		check(FloatTest);
+		TestCases.Add(FloatTest);
+
+		ATestBoolReplication* BoolTest = World->SpawnActor<ATestBoolReplication>();
+		check(BoolTest);
+		TestCases.Add(BoolTest);
+
+		ATestCharReplication* CharTest = World->SpawnActor<ATestCharReplication>();
+		check(CharTest);
+		TestCases.Add(CharTest);
+
+		ATestFStringReplication* FStringTest = World->SpawnActor<ATestFStringReplication>();
+		check(FStringTest);
+		TestCases.Add(FStringTest);
+
+		ATestCArrayReplication* CArrayTest = World->SpawnActor<ATestCArrayReplication>();
+		check(CArrayTest);
+		TestCases.Add(CArrayTest);
+
+		ATestTArrayReplication* TArrayTest = World->SpawnActor<ATestTArrayReplication>();
+		check(TArrayTest);
+		TestCases.Add(TArrayTest);
+
+		ATestEnumReplication* EnumTest = World->SpawnActor<ATestEnumReplication>();
+		check(EnumTest);
+		TestCases.Add(EnumTest);
+
+	/*	ATestFTextReplication* FTextTest = World->SpawnActor<ATestFTextReplication>();
+		check(FTextTest);
+		TestCases.Add(FTextTest);*/
+
+		ATestFNameReplication* FNameTest = World->SpawnActor<ATestFNameReplication>();
+		check(FNameTest);
+		TestCases.Add(FNameTest);
+
+		ATestUObjectReplication* UObjectTest = World->SpawnActor<ATestUObjectReplication>();
+		check(UObjectTest);
+		TestCases.Add(UObjectTest);
+
+		ATestUStructReplication* UStructTest = World->SpawnActor<ATestUStructReplication>();
+		check(UStructTest);
+		TestCases.Add(UStructTest);
 	}
 }
 
@@ -149,7 +193,20 @@ void ASampleGameCharacter::DebugCmd()
 
 	Server_TestFunc();
 
-	if (IntRepTestCreated && 
+	if (bTestCasesReplicated)
+	{
+		for (AReplicationTestCase* TestCase : TestCases)
+		{
+			TestCase->Server_StartTest();
+		}
+	}
+	else 
+	{
+		UE_LOG(LogTemp, Error, TEXT("Test suite not ready yet!"));
+	}
+
+
+	/*if (IntRepTestCreated && 
 		FloatRepTestCreated && 
 		BoolRepTestCreated && 
 		CharRepTestCreated && 
@@ -178,7 +235,7 @@ void ASampleGameCharacter::DebugCmd()
 		UE_LOG(LogTemp, Error, TEXT("CArrayRepTestCreated: %s"), CArrayRepTestCreated ? TEXT("TRUE") : TEXT("FALSE"));
 		UE_LOG(LogTemp, Error, TEXT("TArrayUObjectsRepTest: %s"), TArrayUObjectsRepTest ? TEXT("TRUE") : TEXT("FALSE"));
 		UE_LOG(LogTemp, Error, TEXT("EnumRepTestCreated: %s"), TArrayUObjectsRepTest ? TEXT("TRUE") : TEXT("FALSE"));
-	}
+	}*/
 	//Server_TestFunc(TempArray);
 }
 
@@ -321,44 +378,49 @@ void ASampleGameCharacter::OnRep_TestBookend()
 {
 }
 
-void ASampleGameCharacter::OnRep_IntRepTest()
-{
-	IntRepTestCreated = true;
-}
+//void ASampleGameCharacter::OnRep_IntRepTest()
+//{
+//	IntRepTestCreated = true;
+//}
+//
+//void ASampleGameCharacter::OnRep_FloatRepTest()
+//{
+//	FloatRepTestCreated = true;
+//}
+//
+//void ASampleGameCharacter::OnRep_BoolRepTest()
+//{
+//	BoolRepTestCreated = true;
+//}
+//
+//void ASampleGameCharacter::OnRep_CharRepTest()
+//{
+//	CharRepTestCreated = true;
+//}
+//
+//void ASampleGameCharacter::OnRep_FStringRepTest()
+//{
+//	FStringRepTestCreated = true;
+//}
+//
+//void ASampleGameCharacter::OnRep_CArrayRepTest()
+//{
+//	CArrayRepTestCreated = true;
+//}
+//
+//void ASampleGameCharacter::OnRep_TArrayUObjectsRepTest()
+//{
+//	TArrayUObjectsRepTestCreated = true;
+//}
+//
+//void ASampleGameCharacter::OnRep_EnumRepTest()
+//{
+//	EnumRepTestCreated = true;
+//}
 
-void ASampleGameCharacter::OnRep_FloatRepTest()
+void ASampleGameCharacter::OnRep_TestCases()
 {
-	FloatRepTestCreated = true;
-}
-
-void ASampleGameCharacter::OnRep_BoolRepTest()
-{
-	BoolRepTestCreated = true;
-}
-
-void ASampleGameCharacter::OnRep_CharRepTest()
-{
-	CharRepTestCreated = true;
-}
-
-void ASampleGameCharacter::OnRep_FStringRepTest()
-{
-	FStringRepTestCreated = true;
-}
-
-void ASampleGameCharacter::OnRep_CArrayRepTest()
-{
-	CArrayRepTestCreated = true;
-}
-
-void ASampleGameCharacter::OnRep_TArrayUObjectsRepTest()
-{
-	TArrayUObjectsRepTestCreated = true;
-}
-
-void ASampleGameCharacter::OnRep_EnumRepTest()
-{
-	EnumRepTestCreated = true;
+	bTestCasesReplicated = true;
 }
 
 void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
@@ -387,13 +449,15 @@ void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 
 	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestBookend, COND_None);
 
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, IntRepTest, COND_InitialOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, FloatRepTest, COND_InitialOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, BoolRepTest, COND_InitialOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, CharRepTest, COND_InitialOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, FStringRepTest, COND_InitialOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, CArrayRepTest, COND_InitialOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TArrayUObjectsRepTest, COND_InitialOnly);
+	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, IntRepTest, COND_InitialOnly);
+	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, FloatRepTest, COND_InitialOnly);
+	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, BoolRepTest, COND_InitialOnly);
+	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, CharRepTest, COND_InitialOnly);
+	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, FStringRepTest, COND_InitialOnly);
+	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, CArrayRepTest, COND_InitialOnly);
+	//DOREPLIFETIME_CONDITION(ASampleGameCharacter, TArrayUObjectsRepTest, COND_InitialOnly);
+
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCases, COND_InitialOnly);
 }
 
 bool ASampleGameCharacter::TestMulticast_Validate()

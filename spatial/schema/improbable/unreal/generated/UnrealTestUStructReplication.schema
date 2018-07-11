@@ -33,8 +33,8 @@ component TestUStructReplicationMultiClientRepData {
 	int32 field_ustructwithcstylearray0_array0 = 22; // COND_None // CArrayTestStruct::UStructWithCStyleArray::TestUStructReplication
 	int32 field_ustructwithcstylearray0_array1 = 23; // COND_None // CArrayTestStruct::UStructWithCStyleArray::TestUStructReplication
 	list<int32> field_ustructwithtarray0_array0 = 24; // COND_None // TArrayTestStruct::UStructWithTArray::TestUStructReplication
-	uint32 field_ustructwithunrealstyleenum0_uenum0 = 25; // COND_None // UnrealStyleEnumTestStruct::UStructWithUnrealStyleEnum::TestUStructReplication
-	uint32 field_ustructwithcppstyleenum0_test32enum0 = 26; // COND_None // CStyleEnumTestStruct::UStructWithCppStyleEnum::TestUStructReplication
+	uint32 field_ustructwithunrealstyleenum0_test32enum0 = 25; // COND_None // UnrealStyleEnumTestStruct::UStructWithUnrealStyleEnum::TestUStructReplication
+	uint32 field_ustructwithcppstyleenum0_uenum0 = 26; // COND_None // CStyleEnumTestStruct::UStructWithCppStyleEnum::TestUStructReplication
 }
 component TestUStructReplicationMigratableData {
 	id = 100102;

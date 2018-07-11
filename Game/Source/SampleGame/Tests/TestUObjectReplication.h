@@ -42,7 +42,7 @@ public:
 	virtual void SendTestResponseRPCImpl() override;
 
 	// Test Dynmaically created actor
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing= OnRep_DynamicallyCreatedActor)
 	ATestActor* DynamicallyCreatedActor;
 
 	// Test UObject with replicated component
@@ -55,7 +55,7 @@ public:
 private: 
 
 	UFUNCTION()
-	void OnRep_DynamicallyCreatedArray();
+	void OnRep_DynamicallyCreatedActor();
 
 	void ValidateReplication_Client(ATestActor* TestDynamicallyCreatedActor,
 									/*const TArray<UTestUObject*>& TestUObjectWithReplicatedComponent,*/

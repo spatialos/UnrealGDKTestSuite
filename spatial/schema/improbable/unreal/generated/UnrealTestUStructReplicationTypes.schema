@@ -13,6 +13,6 @@ type ServerReportReplicationRequest {
 	bytes field_repustructwithnetserialize0 = 6;
 	list<int32> field_repustructwithcstylearray0_array0 = 7;
 	list<int32> field_repustructwithtarray0_array0 = 8;
-	uint32 field_repustructwithunrealstyleenum0_uenum0 = 9;
-	uint32 field_repustructwithcppstyleenum0_test32enum0 = 10;
+	uint32 field_repustructwithunrealstyleenum0_test32enum0 = 9;
+	uint32 field_repustructwithcppstyleenum0_uenum0 = 10;
 }

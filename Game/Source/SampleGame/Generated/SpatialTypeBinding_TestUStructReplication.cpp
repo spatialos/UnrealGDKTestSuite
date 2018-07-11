@@ -74,8 +74,8 @@ void USpatialTypeBinding_TestUStructReplication::Init(USpatialInterop* InInterop
 	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"UStructWithCStyleArray", "Array"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(23, FRepHandleData(Class, {"UStructWithCStyleArray", "Array"}, {0, 1}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(24, FRepHandleData(Class, {"UStructWithTArray", "Array"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(25, FRepHandleData(Class, {"UStructWithUnrealStyleEnum", "UEnum"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"UStructWithCppStyleEnum", "Test32Enum"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(25, FRepHandleData(Class, {"UStructWithUnrealStyleEnum", "Test32Enum"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"UStructWithCppStyleEnum", "UEnum"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
 }
 
 void USpatialTypeBinding_TestUStructReplication::BindToView(bool bIsClient)
@@ -773,18 +773,18 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 			OutUpdate.set_field_ustructwithtarray0_array0(List);
 			break;
 		}
-		case 25: // field_ustructwithunrealstyleenum0_uenum0
-		{
-			TEnumAsByte<EnumNamespace::EUnrealTestEnum> Value = *(reinterpret_cast<TEnumAsByte<EnumNamespace::EUnrealTestEnum> const*>(Data));
-
-			OutUpdate.set_field_ustructwithunrealstyleenum0_uenum0(uint32_t(Value));
-			break;
-		}
-		case 26: // field_ustructwithcppstyleenum0_test32enum0
+		case 25: // field_ustructwithunrealstyleenum0_test32enum0
 		{
 			ETest32Enum Value = *(reinterpret_cast<ETest32Enum const*>(Data));
 
-			OutUpdate.set_field_ustructwithcppstyleenum0_test32enum0(uint32(Value));
+			OutUpdate.set_field_ustructwithunrealstyleenum0_test32enum0(uint32(Value));
+			break;
+		}
+		case 26: // field_ustructwithcppstyleenum0_uenum0
+		{
+			TEnumAsByte<EnumNamespace::EUnrealTestEnum> Value = *(reinterpret_cast<TEnumAsByte<EnumNamespace::EUnrealTestEnum> const*>(Data));
+
+			OutUpdate.set_field_ustructwithcppstyleenum0_uenum0(uint32_t(Value));
 			break;
 		}
 	default:
@@ -1602,17 +1602,17 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 				Handle);
 		}
 	}
-	if (!Update.field_ustructwithunrealstyleenum0_uenum0().empty())
+	if (!Update.field_ustructwithunrealstyleenum0_test32enum0().empty())
 	{
-		// field_ustructwithunrealstyleenum0_uenum0
+		// field_ustructwithunrealstyleenum0_test32enum0
 		uint16 Handle = 25;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			TEnumAsByte<EnumNamespace::EUnrealTestEnum> Value = *(reinterpret_cast<TEnumAsByte<EnumNamespace::EUnrealTestEnum> const*>(PropertyData));
+			ETest32Enum Value = *(reinterpret_cast<ETest32Enum const*>(PropertyData));
 
-			Value = TEnumAsByte<EnumNamespace::EUnrealTestEnum>(uint8((*Update.field_ustructwithunrealstyleenum0_uenum0().data())));
+			Value = ETest32Enum((*Update.field_ustructwithunrealstyleenum0_test32enum0().data()));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1624,17 +1624,17 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 				Handle);
 		}
 	}
-	if (!Update.field_ustructwithcppstyleenum0_test32enum0().empty())
+	if (!Update.field_ustructwithcppstyleenum0_uenum0().empty())
 	{
-		// field_ustructwithcppstyleenum0_test32enum0
+		// field_ustructwithcppstyleenum0_uenum0
 		uint16 Handle = 26;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			ETest32Enum Value = *(reinterpret_cast<ETest32Enum const*>(PropertyData));
+			TEnumAsByte<EnumNamespace::EUnrealTestEnum> Value = *(reinterpret_cast<TEnumAsByte<EnumNamespace::EUnrealTestEnum> const*>(PropertyData));
 
-			Value = ETest32Enum((*Update.field_ustructwithcppstyleenum0_test32enum0().data()));
+			Value = TEnumAsByte<EnumNamespace::EUnrealTestEnum>(uint8((*Update.field_ustructwithcppstyleenum0_uenum0().data())));
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1759,10 +1759,10 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 			RPCPayload.set_field_repustructwithtarray0_array0(List);
 		}
 		{
-			RPCPayload.set_field_repustructwithunrealstyleenum0_uenum0(uint32_t(StructuredParams.RepUStructWithUnrealStyleEnum.UEnum));
+			RPCPayload.set_field_repustructwithunrealstyleenum0_test32enum0(uint32(StructuredParams.RepUStructWithUnrealStyleEnum.Test32Enum));
 		}
 		{
-			RPCPayload.set_field_repustructwithcppstyleenum0_test32enum0(uint32(StructuredParams.RepUStructWithCppStyleEnum.Test32Enum));
+			RPCPayload.set_field_repustructwithcppstyleenum0_uenum0(uint32_t(StructuredParams.RepUStructWithCppStyleEnum.UEnum));
 		}
 
 		// Send RPC
@@ -1917,10 +1917,10 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_OnRPCP
 			}
 		}
 		{
-			Parameters.RepUStructWithUnrealStyleEnum.UEnum = TEnumAsByte<EnumNamespace::EUnrealTestEnum>(uint8(Op.Request.field_repustructwithunrealstyleenum0_uenum0()));
+			Parameters.RepUStructWithUnrealStyleEnum.Test32Enum = ETest32Enum(Op.Request.field_repustructwithunrealstyleenum0_test32enum0());
 		}
 		{
-			Parameters.RepUStructWithCppStyleEnum.Test32Enum = ETest32Enum(Op.Request.field_repustructwithcppstyleenum0_test32enum0());
+			Parameters.RepUStructWithCppStyleEnum.UEnum = TEnumAsByte<EnumNamespace::EUnrealTestEnum>(uint8(Op.Request.field_repustructwithcppstyleenum0_uenum0()));
 		}
 
 		// Call implementation.
