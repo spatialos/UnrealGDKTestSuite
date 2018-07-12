@@ -26,6 +26,7 @@ void ASampleGamePlayerController::TestMulticast_Implementation()
 
 void ASampleGamePlayerController::InitPlayerState()
 {
+	// TODO: this is a workaround until we can query a replicated UObject*'s UnrealObjRef - UNR-407
 	FEntityId EntityId = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver())->GetEntityRegistry()->GetEntityIdFromActor(this);
 	UE_LOG(LogTemp, Log, TEXT("PC:InitPlayerState called with entity id %d"), EntityId.ToSpatialEntityId());
 	if (EntityId == 0)
