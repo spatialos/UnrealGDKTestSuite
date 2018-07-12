@@ -53,7 +53,7 @@ void AGDKTestRunner::Tick(float DeltaTime)
 							ReadyClientsCount = 0;
 							CurrentTestIndex = 0;
 							TearDownTestCases();
-							//ReportTestResults();
+							UE_LOG(LogSpatialGDKTests, Warning, TEXT("TestRunner: All Test completed successfully!"));
 						}
 						else
 						{
@@ -64,8 +64,6 @@ void AGDKTestRunner::Tick(float DeltaTime)
 			}
 		}
 	}
-
-	//	UE_LOG(LogSpatialGDKTests, Warning, TEXT("TestCase: %s: Test complete!"), *TestName);
 }
 
 bool AGDKTestRunner::Server_RunTests_Validate()
