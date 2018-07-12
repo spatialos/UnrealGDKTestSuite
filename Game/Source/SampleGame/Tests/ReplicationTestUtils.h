@@ -144,11 +144,6 @@ struct FTestStructWithNetSerialize
 	{
 		EStructFlags Flags = FTestStructWithNetSerialize::StaticStruct()->StructFlags;
 
-		if (Flags & STRUCT_NetSerializeNative)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("native flag - %x0x"), Flags)
-		}
-
 		Ar << MyInt;
 
 		Ar << MyFloat;

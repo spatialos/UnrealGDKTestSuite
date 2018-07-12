@@ -125,6 +125,30 @@ void ATestUStructReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
+void ATestUStructReplication::TearDownImpl()
+{
+	PODUStruct.RootProp = 0;
+
+	NestedUStruct.NestedStruct.RootProp = 0;
+
+	UStructWithStablyNamedObject.StablyNamedObject = nullptr;
+
+	UStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->Destroy(true);
+	UStructWithDynamicallyCreatedActor.DynamicallyCreatedActor = nullptr;
+
+	UStructWithNetSerialize.MyInt = 0;
+	UStructWithNetSerialize.MyFloat = 0.0f;
+
+	UStructWithCStyleArray.Array[0] = 0;
+	UStructWithCStyleArray.Array[1] = 0;
+
+	UStructWithTArray.Array.Empty();
+
+	UStructWithUnrealStyleEnum.Test32Enum = ETest32Enum::Enum_0;
+
+	UStructWithCppStyleEnum.UEnum = EnumNamespace::Enum_0;
+}
+
 void ATestUStructReplication::ValidateClientReplicationImpl()
 {
 	bReplicationRecievedOnClient = true;

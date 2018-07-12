@@ -30,6 +30,11 @@ void ATestBoolReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
+void ATestBoolReplication::TearDownImpl()
+{
+	TestBool = false;
+}
+
 void ATestBoolReplication::ValidateClientReplicationImpl()
 {
 	check(TestBool == true);

@@ -30,6 +30,11 @@ void ATestFStringReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
+void ATestFStringReplication::TearDownImpl()
+{
+	TestFString = TEXT("");
+}
+
 void ATestFStringReplication::ValidateClientReplicationImpl()
 {
 	check(TestFString == ComparisonValue);

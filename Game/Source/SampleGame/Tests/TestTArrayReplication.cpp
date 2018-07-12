@@ -99,6 +99,26 @@ void ATestTArrayReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
+void ATestTArrayReplication::TearDownImpl()
+{
+	PODArray.Empty();
+	StablyNamedArray.Empty();
+
+	for (ATestActor* Actor : DynamicallyCreatedArray)
+	{
+		Actor->Destroy(true);
+	}
+	DynamicallyCreatedArray.Empty();
+
+	ArrayOfStructs.Empty();
+
+	ArrayOfStructNetSerialize.Empty();
+
+	EnumTArray.Empty();
+
+	UEnumTArray.Empty();
+}
+
 void ATestTArrayReplication::ValidateClientReplicationImpl()
 {
 	bReplicationRecievedOnClient = true;

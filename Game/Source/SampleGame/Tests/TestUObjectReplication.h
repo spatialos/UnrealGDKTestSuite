@@ -36,21 +36,13 @@ public:
 	virtual void StartTestImpl() override;
 
 	UFUNCTION()
+	virtual void TearDownImpl() override;
+
+	UFUNCTION()
 	virtual void ValidateClientReplicationImpl() override;
 
 	UFUNCTION()
 	virtual void SendTestResponseRPCImpl() override;
-
-	// Test Dynmaically created actor
-	UPROPERTY(ReplicatedUsing= OnRep_DynamicallyCreatedActor)
-	ATestActor* DynamicallyCreatedActor;
-
-	// Test UObject with replicated component
-	// TODO: UNR-238 Add tests.
-
-	// Test Stably named UObject
-	UPROPERTY(Replicated)
-	UTestUObject* StablyNamedUObject;
 
 private: 
 
@@ -64,6 +56,17 @@ private:
 	void ValidateRPC_Server(ATestActor* TestDynamicallyCreatedActor,
 							/*const TArray<UTestUObject*>& TestUObjectWithReplicatedComponent,*/
 							UTestUObject* TestStablyNamedUObject);
+
+	// Test Dynmaically created actor
+	UPROPERTY(ReplicatedUsing = OnRep_DynamicallyCreatedActor)
+	ATestActor* DynamicallyCreatedActor;
+
+	// Test UObject with replicated component
+	// TODO: UNR-238 Add tests.
+
+	// Test Stably named UObject
+	UPROPERTY(Replicated)
+	UTestUObject* StablyNamedUObject;
 
 	bool bDynamicallyCreatedActorReplicated;
 	bool bReplicationRecievedOnClient;

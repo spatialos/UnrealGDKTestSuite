@@ -40,10 +40,15 @@ public:
 	virtual void StartTestImpl() override;
 
 	UFUNCTION()
+	virtual void TearDownImpl() override;
+
+	UFUNCTION()
 	virtual void ValidateClientReplicationImpl() override;
 
 	UFUNCTION()
 	virtual void SendTestResponseRPCImpl() override;
+
+private:
 
 	// Test C-style array with POD
 	UPROPERTY(Replicated)
@@ -72,8 +77,6 @@ public:
 	// Test array of C++ 11 style enums
 	UPROPERTY(Replicated)
 	TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>> UEnumTArray;
-
-private: 
 
 	UFUNCTION()
 	void OnRep_DynamicallyCreatedArray();

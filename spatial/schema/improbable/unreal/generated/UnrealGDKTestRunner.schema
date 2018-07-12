@@ -1,14 +1,14 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.testactor;
+package improbable.unreal.generated.gdktestrunner;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component TestActorSingleClientRepData {
-	id = 100124;
+component GDKTestRunnerSingleClientRepData {
+	id = 100046;
 }
-component TestActorMultiClientRepData {
-	id = 100125;
+component GDKTestRunnerMultiClientRepData {
+	id = 100047;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -24,18 +24,22 @@ component TestActorMultiClientRepData {
 	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
-	string field_actorname0 = 16; // COND_None // ::TestActor
+	list<UnrealObjectRef> field_testcases0 = 16; // COND_None // ::GDKTestRunner
+	bool field_bisrunning0 = 17; // COND_None // ::GDKTestRunner
 }
-component TestActorMigratableData {
-	id = 100126;
+component GDKTestRunnerMigratableData {
+	id = 100048;
 }
+import "improbable/unreal/generated/UnrealGDKTestRunnerTypes.schema";
 
-component TestActorClientRPCs {
-	id = 100127;
+component GDKTestRunnerClientRPCs {
+	id = 100049;
 }
-component TestActorServerRPCs {
-	id = 100128;
+component GDKTestRunnerServerRPCs {
+	id = 100050;
+	command UnrealRPCCommandResponse serversignalclientready(gdktestrunner.ServerSignalClientReadyRequest);
+	command UnrealRPCCommandResponse serverruntests(gdktestrunner.ServerRunTestsRequest);
 }
-component TestActorNetMulticastRPCs {
-	id = 100129;
+component GDKTestRunnerNetMulticastRPCs {
+	id = 100051;
 }

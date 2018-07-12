@@ -27,6 +27,11 @@ void ATestCharReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
+void ATestCharReplication::TearDownImpl()
+{
+	// Left empty as there is no teardown required for this test.
+}
+
 void ATestCharReplication::ValidateClientReplicationImpl()
 {
 }

@@ -30,6 +30,11 @@ void ATestFNameReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
+void ATestFNameReplication::TearDownImpl()
+{
+	TestFName = TEXT("");
+}
+
 void ATestFNameReplication::ValidateClientReplicationImpl()
 {
 	check(TestFName.Compare(ValidationName) == 0);

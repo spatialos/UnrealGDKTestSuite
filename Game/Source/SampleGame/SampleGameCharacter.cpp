@@ -12,19 +12,6 @@
 #include "SampleGameGameStateBase.h"
 #include "SpatialNetDriver.h"
 
-#include "Tests/TestIntReplication.h"
-#include "Tests/TestFloatReplication.h"
-#include "Tests/TestBoolReplication.h"
-#include "Tests/TestCharReplication.h"
-#include "Tests/TestFStringReplication.h"
-#include "Tests/TestCArrayReplication.h"
-#include "Tests/TestTArrayReplication.h"
-#include "Tests/TestEnumReplication.h"
-#include "Tests/TestFTextReplication.h"
-#include "Tests/TestFNameReplication.h"
-#include "Tests/TestUStructReplication.h"
-#include "Tests/TestUObjectReplication.h"
-
 #include "UnrealNetwork.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,7 +59,6 @@ ASampleGameCharacter::ASampleGameCharacter()
 
 												   // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 												   // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
-	//TestEnumArray.AddDefaulted(5);
 }
 
 void ASampleGameCharacter::BeginPlay()
@@ -82,53 +68,7 @@ void ASampleGameCharacter::BeginPlay()
 	UWorld* World = GetWorld();
 	if (World && GetNetMode() == NM_DedicatedServer)
 	{
-		ATestIntReplication* IntTest = World->SpawnActor<ATestIntReplication>();
-		check(IntTest);
-		TestCases.Add(IntTest);
-
-		ATestFloatReplication* FloatTest = World->SpawnActor<ATestFloatReplication>();
-		check(FloatTest);
-		TestCases.Add(FloatTest);
-
-		ATestBoolReplication* BoolTest = World->SpawnActor<ATestBoolReplication>();
-		check(BoolTest);
-		TestCases.Add(BoolTest);
-
-		ATestCharReplication* CharTest = World->SpawnActor<ATestCharReplication>();
-		check(CharTest);
-		TestCases.Add(CharTest);
-
-		ATestFStringReplication* FStringTest = World->SpawnActor<ATestFStringReplication>();
-		check(FStringTest);
-		TestCases.Add(FStringTest);
-
-		ATestCArrayReplication* CArrayTest = World->SpawnActor<ATestCArrayReplication>();
-		check(CArrayTest);
-		TestCases.Add(CArrayTest);
-
-		ATestTArrayReplication* TArrayTest = World->SpawnActor<ATestTArrayReplication>();
-		check(TArrayTest);
-		TestCases.Add(TArrayTest);
-
-		ATestEnumReplication* EnumTest = World->SpawnActor<ATestEnumReplication>();
-		check(EnumTest);
-		TestCases.Add(EnumTest);
-
-		ATestFTextReplication* FTextTest = World->SpawnActor<ATestFTextReplication>();
-		check(FTextTest);
-		TestCases.Add(FTextTest);
-
-		ATestFNameReplication* FNameTest = World->SpawnActor<ATestFNameReplication>();
-		check(FNameTest);
-		TestCases.Add(FNameTest);
-
-		ATestUObjectReplication* UObjectTest = World->SpawnActor<ATestUObjectReplication>();
-		check(UObjectTest);
-		TestCases.Add(UObjectTest);
-
-		ATestUStructReplication* UStructTest = World->SpawnActor<ATestUStructReplication>();
-		check(UStructTest);
-		TestCases.Add(UStructTest);
+		TestRunner = World->SpawnActor<AGDKTestRunner>();
 	}
 }
 
@@ -173,16 +113,20 @@ void ASampleGameCharacter::DebugCmd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s: DebugCmd"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
 
-	if (bTestCasesReplicated)
+	if (bTestRunnerReplicated)
 	{
-		for (AReplicationTestCase* TestCase : TestCases)
+		if (!TestRunner->IsRunning())
 		{
-			TestCase->Server_StartTest();
+			TestRunner->Server_RunTests();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Test runner is already running!"));
 		}
 	}
-	else 
+	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Test suite not ready yet!"));
+		UE_LOG(LogTemp, Error, TEXT("Test runner not ready yet!"));
 	}
 }
 
@@ -232,16 +176,16 @@ void ASampleGameCharacter::Client_TestConstArgs_Implementation(FConstStruct Cons
 
 }
 
-void ASampleGameCharacter::OnRep_TestCases()
+void ASampleGameCharacter::OnRep_TestRunner()
 {
-	bTestCasesReplicated = true;
+	bTestRunnerReplicated = true;
 }
 
 void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestCases, COND_InitialOnly);
+	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestRunner, COND_InitialOnly);
 }
 
 bool ASampleGameCharacter::TestMulticast_Validate()

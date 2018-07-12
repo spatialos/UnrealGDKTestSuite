@@ -30,6 +30,11 @@ void ATestFTextReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
+void ATestFTextReplication::TearDownImpl()
+{
+	TestFText = FText::FromString(TEXT(""));
+}
+
 void ATestFTextReplication::ValidateClientReplicationImpl()
 {
 	check(TestFText.EqualTo(ValidationText));

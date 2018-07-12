@@ -33,7 +33,6 @@ void ATestCArrayReplication::Tick(float DeltaTime)
 	}
 }
 
-
 bool ATestCArrayReplication::Server_ReportReplication_Validate()
 {
 	return true;
@@ -87,6 +86,35 @@ void ATestCArrayReplication::StartTestImpl()
 	UEnumCArray[1] = EnumNamespace::Enum_0;
 
 	SignalReplicationSetup();
+}
+
+void ATestCArrayReplication::TearDownImpl()
+{
+	PODArray[0] = 0;
+	PODArray[1] = 0;
+
+	StablyNamedArray[0] = nullptr;
+	StablyNamedArray[1] = nullptr;
+
+	DynamicallyCreatedArray[0]->Destroy(true);
+	DynamicallyCreatedArray[1]->Destroy(true);
+
+	DynamicallyCreatedArray[0] = nullptr;
+	DynamicallyCreatedArray[1] = nullptr;
+
+	ArrayOfStructs[0].RootProp = 0;
+	ArrayOfStructs[1].RootProp = 0;
+
+	ArrayOfStructNetSerialize[0].MyInt = 0;
+	ArrayOfStructNetSerialize[0].MyFloat = 0.0f;
+	ArrayOfStructNetSerialize[1].MyInt = 0;
+	ArrayOfStructNetSerialize[1].MyFloat = 0.0f;
+
+	EnumCArray[0] = ETest8Enum::Enum_0;
+	EnumCArray[1] = ETest8Enum::Enum_0;
+
+	UEnumCArray[0] = EnumNamespace::Enum_0;
+	UEnumCArray[1] = EnumNamespace::Enum_0;
 }
 
 void ATestCArrayReplication::ValidateClientReplicationImpl()

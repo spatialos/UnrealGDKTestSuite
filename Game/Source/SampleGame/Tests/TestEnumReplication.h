@@ -28,6 +28,9 @@ public:
 	virtual void StartTestImpl() override;
 
 	UFUNCTION()
+	virtual void TearDownImpl() override;
+
+	UFUNCTION()
 	virtual void ValidateClientReplicationImpl() override;
 
 	UFUNCTION()
@@ -35,6 +38,8 @@ public:
 
 	UFUNCTION()
 	void Validate(ETest8Enum Test8, ETest16Enum Test16, ETest32Enum Test32, ETest64Enum Test64, EnumNamespace::EUnrealTestEnum TestU);
+
+private:
 
 	UPROPERTY(Replicated)
 	ETest8Enum Test8Enum;

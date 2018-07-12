@@ -2,14 +2,12 @@
 
 #include "ReplicationTestCase.h"
 
+#include "GDKTestRunner.h"
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 
-DEFINE_LOG_CATEGORY(LogSpatialGDKTests);
-
 AReplicationTestCase::AReplicationTestCase()
 	: bRunning(false)
-	, bSuccess(false)
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -30,12 +28,28 @@ void AReplicationTestCase::Tick(float DeltaTime)
 				if (RPCResponsecCount == GameMode->GetNumPlayers())
 				{
 					UE_LOG(LogSpatialGDKTests, Warning, TEXT("TestCase: %s: Test complete!"), *TestName);
-					bSuccess = true;
+					bIsFinished = true;
 					bRunning = false;
 				}
 			}
 		}
 	}
+}
+
+void AReplicationTestCase::StartTest()
+{
+	UE_LOG(LogSpatialGDKTests, Warning, TEXT("TestCase %s: Test started!"), *TestName);
+
+	bIsFinished = false;
+	bRunning = true;
+	RPCResponsecCount = 0;
+
+	StartTestImpl();
+}
+
+void AReplicationTestCase::TearDown()
+{
+	TearDownImpl();
 }
 
 bool AReplicationTestCase::Server_StartTest_Validate()

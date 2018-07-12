@@ -66,6 +66,13 @@ void ATestUObjectReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
+void ATestUObjectReplication::TearDownImpl()
+{
+	DynamicallyCreatedActor->Destroy(true);
+
+	StablyNamedUObject = nullptr;
+}
+
 void ATestUObjectReplication::ValidateClientReplicationImpl()
 {
 	bReplicationRecievedOnClient = true;

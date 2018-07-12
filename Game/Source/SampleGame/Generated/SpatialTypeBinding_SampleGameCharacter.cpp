@@ -107,7 +107,7 @@ void USpatialTypeBinding_SampleGameCharacter::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(41, FRepHandleData(Class, {"RepRootMotion", "AuthoritativeRootMotion"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(42, FRepHandleData(Class, {"RepRootMotion", "Acceleration"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(43, FRepHandleData(Class, {"RepRootMotion", "LinearVelocity"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"TestCases"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"TestRunner"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
 
 	// Populate MigratableHandleToPropertyMap.
 	MigratableHandleToPropertyMap.Add(1, FMigratableHandleData(Class, {"CharacterMovement", "MovementMode"}));
@@ -1133,48 +1133,35 @@ void USpatialTypeBinding_SampleGameCharacter::ServerSendUpdate_MultiClient(const
 			}
 			break;
 		}
-		case 44: // field_testcases0
+		case 44: // field_testrunner0
 		{
-			const TArray<AReplicationTestCase*>& Value = *(reinterpret_cast<TArray<AReplicationTestCase*> const*>(Data));
+			AGDKTestRunner* Value = *(reinterpret_cast<AGDKTestRunner* const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 44);
-			TSet<const UObject*> UnresolvedObjects;
-			::worker::List<improbable::unreal::UnrealObjectRef> List;
-			for(int i = 0; i < Value.Num(); i++)
+			if (Value != nullptr)
 			{
-				if (Value[i] != nullptr)
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value[i]);
-					if (!NetGUID.IsValid())
+					if (Value->IsFullNameStableForNetworking())
 					{
-						if (Value[i]->IsFullNameStableForNetworking())
-						{
-							NetGUID = PackageMap->ResolveStablyNamedObject(Value[i]);
-						}
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
-					improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-					if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-					{
-						UnresolvedObjects.Add(Value[i]);
-					}
-					else
-					{
-						List.emplace_back(ObjectRef);
-					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 44);
 				}
 				else
 				{
-					List.emplace_back(SpatialConstants::NULL_OBJECT_REF);
+					OutUpdate.set_field_testrunner0(ObjectRef);
 				}
-			}
-			const ::worker::List<improbable::unreal::UnrealObjectRef>& Result = (List);
-			if (UnresolvedObjects.Num() == 0)
-			{
-				OutUpdate.set_field_testcases0(Result);
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 44);
+				OutUpdate.set_field_testrunner0(SpatialConstants::NULL_OBJECT_REF);
 			}
 			break;
 		}
@@ -2571,60 +2558,60 @@ void USpatialTypeBinding_SampleGameCharacter::ReceiveUpdate_MultiClient(USpatial
 				Handle);
 		}
 	}
-	if (!Update.field_testcases0().empty())
+	if (!Update.field_testrunner0().empty())
 	{
-		// field_testcases0
+		// field_testrunner0
 		uint16 Handle = 44;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
+			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			TArray<AReplicationTestCase*> Value = *(reinterpret_cast<TArray<AReplicationTestCase*> *>(PropertyData));
+			AGDKTestRunner* Value = *(reinterpret_cast<AGDKTestRunner* const*>(PropertyData));
 
-			auto& List = (*Update.field_testcases0().data());
-			Value.SetNum(List.size());
-			for(int i = 0; i < List.size(); i++)
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_testrunner0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				improbable::unreal::UnrealObjectRef ObjectRef = List[i];
-				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
-				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
 				{
-					Value[i] = nullptr;
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<AGDKTestRunner>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<AGDKTestRunner>(Object_Raw);
 				}
 				else
 				{
-					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-					if (NetGUID.IsValid())
-					{
-						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
-						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-						checkf(Cast<AReplicationTestCase>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-						Value[i] = Cast<AReplicationTestCase>(Object_Raw);
-					}
-					else
-					{
-						// Pre-alpha limitation: if a UObject* in an array property is unresolved, we currently don't have a way to update it once
-						// it is resolved. It will remain null and will only be updated when the server replicates this array again (when it changes).
-						UE_LOG(LogSpatialOSInterop, Warning, TEXT("%s: Ignoring unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
-							*Interop->GetSpatialOS()->GetWorkerId(),
-							*ObjectRefToString(ObjectRef),
-							*ActorChannel->Actor->GetName(),
-							ActorChannel->GetEntityId().ToSpatialEntityId(),
-							*RepData->Property->GetName(),
-							Handle);
-						Value[i] = nullptr;
-					}
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
 				}
 			}
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
 		}
 	}
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());

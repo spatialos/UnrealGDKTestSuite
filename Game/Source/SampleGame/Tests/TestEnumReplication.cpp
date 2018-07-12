@@ -27,16 +27,24 @@ void ATestEnumReplication::Server_ReportReplication_Implementation(ETest8Enum Re
 	SignalResponseRecieved();
 }
 
-
 void ATestEnumReplication::StartTestImpl()
 {
-	Test8Enum = (Test8Enum == ETest8Enum::Enum_0) ? ETest8Enum::Enum_1 : ETest8Enum::Enum_0;
-	Test16Enum = (Test16Enum == ETest16Enum::Enum_0) ? ETest16Enum::Enum_1 : ETest16Enum::Enum_0;
-	Test32Enum = (Test32Enum == ETest32Enum::Enum_0) ? ETest32Enum::Enum_1 : ETest32Enum::Enum_0;
-	Test64Enum = (Test64Enum == ETest64Enum::Enum_0) ? ETest64Enum::Enum_1 : ETest64Enum::Enum_0;
-	TestUEnum = (TestUEnum == EnumNamespace::Enum_0) ? EnumNamespace::Enum_1 : EnumNamespace::Enum_0;
+	Test8Enum = ETest8Enum::Enum_1;
+	Test16Enum = ETest16Enum::Enum_1;
+	Test32Enum = ETest32Enum::Enum_1;
+	Test64Enum = ETest64Enum::Enum_1;
+	TestUEnum = EnumNamespace::Enum_1;
 
 	SignalReplicationSetup();
+}
+
+void ATestEnumReplication::TearDownImpl()
+{
+	Test8Enum = ETest8Enum::Enum_0;
+	Test16Enum = ETest16Enum::Enum_0;
+	Test32Enum = ETest32Enum::Enum_0;
+	Test64Enum = ETest64Enum::Enum_0;
+	TestUEnum = EnumNamespace::Enum_0;
 }
 
 void ATestEnumReplication::ValidateClientReplicationImpl()
@@ -51,20 +59,9 @@ void ATestEnumReplication::SendTestResponseRPCImpl()
 
 void ATestEnumReplication::Validate(ETest8Enum Test8, ETest16Enum Test16, ETest32Enum Test32, ETest64Enum Test64, EnumNamespace::EUnrealTestEnum TestU)
 {
-	if (Test8 == ETest8Enum::Enum_0)
-	{
-		check(Test8 == ETest8Enum::Enum_0);
-		check(Test16 == ETest16Enum::Enum_0);
-		check(Test32 == ETest32Enum::Enum_0);
-		check(Test64 == ETest64Enum::Enum_0);
-		check(TestU == EnumNamespace::Enum_0);
-	}
-	else
-	{
-		check(Test8 == ETest8Enum::Enum_1);
-		check(Test16 == ETest16Enum::Enum_1);
-		check(Test32 == ETest32Enum::Enum_1);
-		check(Test64 == ETest64Enum::Enum_1);
-		check(TestU == EnumNamespace::Enum_1);
-	}
+	check(Test8 == ETest8Enum::Enum_1);
+	check(Test16 == ETest16Enum::Enum_1);
+	check(Test32 == ETest32Enum::Enum_1);
+	check(Test64 == ETest64Enum::Enum_1);
+	check(TestU == EnumNamespace::Enum_1);
 }

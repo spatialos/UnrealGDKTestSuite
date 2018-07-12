@@ -24,10 +24,15 @@ public:
 	virtual void StartTestImpl() override;
 
 	UFUNCTION()
+	virtual void TearDownImpl() override;
+
+	UFUNCTION()
 	virtual void ValidateClientReplicationImpl() override;
 
 	UFUNCTION()
 	virtual void SendTestResponseRPCImpl() override;
+
+private:
 
 	UPROPERTY(Replicated)
 	int8 Test8Int;

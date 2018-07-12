@@ -1,7 +1,7 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
 
-#include "SpatialTypeBinding_TestFTextReplication.h"
+#include "SpatialTypeBinding_GDKTestRunner.h"
 
 #include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
@@ -18,36 +18,35 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
-#include "Tests/TestFTextReplication.h"
-#include "improbable/unreal/generated/UnrealReplicationTestCaseTypes.h"
+#include "Tests/GDKTestRunner.h"
 
-#include "TestFTextReplicationSingleClientRepDataAddComponentOp.h"
-#include "TestFTextReplicationMultiClientRepDataAddComponentOp.h"
-#include "TestFTextReplicationMigratableDataAddComponentOp.h"
+#include "GDKTestRunnerSingleClientRepDataAddComponentOp.h"
+#include "GDKTestRunnerMultiClientRepDataAddComponentOp.h"
+#include "GDKTestRunnerMigratableDataAddComponentOp.h"
 
-const FRepHandlePropertyMap& USpatialTypeBinding_TestFTextReplication::GetRepHandlePropertyMap() const
+const FRepHandlePropertyMap& USpatialTypeBinding_GDKTestRunner::GetRepHandlePropertyMap() const
 {
 	return RepHandleToPropertyMap;
 }
 
-const FMigratableHandlePropertyMap& USpatialTypeBinding_TestFTextReplication::GetMigratableHandlePropertyMap() const
+const FMigratableHandlePropertyMap& USpatialTypeBinding_GDKTestRunner::GetMigratableHandlePropertyMap() const
 {
 	return MigratableHandleToPropertyMap;
 }
 
-UClass* USpatialTypeBinding_TestFTextReplication::GetBoundClass() const
+UClass* USpatialTypeBinding_GDKTestRunner::GetBoundClass() const
 {
-	return ATestFTextReplication::StaticClass();
+	return AGDKTestRunner::StaticClass();
 }
 
-void USpatialTypeBinding_TestFTextReplication::Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap)
+void USpatialTypeBinding_GDKTestRunner::Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap)
 {
 	Super::Init(InInterop, InPackageMap);
 
-	RPCToSenderMap.Emplace("Server_ReportReplication", &USpatialTypeBinding_TestFTextReplication::Server_ReportReplication_SendRPC);
-	RPCToSenderMap.Emplace("Server_StartTest", &USpatialTypeBinding_TestFTextReplication::Server_StartTest_SendRPC);
+	RPCToSenderMap.Emplace("Server_SignalClientReady", &USpatialTypeBinding_GDKTestRunner::Server_SignalClientReady_SendRPC);
+	RPCToSenderMap.Emplace("Server_RunTests", &USpatialTypeBinding_GDKTestRunner::Server_RunTests_SendRPC);
 
-	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("TestFTextReplication"));
+	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("GDKTestRunner"));
 
 	// Populate RepHandleToPropertyMap.
 	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, {0}, COND_None, REPNOTIFY_OnChanged));
@@ -55,32 +54,32 @@ void USpatialTypeBinding_TestFTextReplication::Init(USpatialInterop* InInterop, 
 	RepHandleToPropertyMap.Add(3, FRepHandleData(Class, {"bTearOff"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(4, FRepHandleData(Class, {"bCanBeDamaged"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(5, FRepHandleData(Class, {"RemoteRole"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(6, FRepHandleData(Class, {"ReplicatedMovement"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(7, FRepHandleData(Class, {"AttachmentReplication", "AttachParent"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(8, FRepHandleData(Class, {"AttachmentReplication", "LocationOffset"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(9, FRepHandleData(Class, {"AttachmentReplication", "RelativeScale3D"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(10, FRepHandleData(Class, {"AttachmentReplication", "RotationOffset"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(11, FRepHandleData(Class, {"AttachmentReplication", "AttachSocket"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(12, FRepHandleData(Class, {"AttachmentReplication", "AttachComponent"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(6, FRepHandleData(Class, {"ReplicatedMovement"}, {0}, COND_SimulatedOrPhysics, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(7, FRepHandleData(Class, {"AttachmentReplication", "AttachParent"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(8, FRepHandleData(Class, {"AttachmentReplication", "LocationOffset"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(9, FRepHandleData(Class, {"AttachmentReplication", "RelativeScale3D"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(10, FRepHandleData(Class, {"AttachmentReplication", "RotationOffset"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(11, FRepHandleData(Class, {"AttachmentReplication", "AttachSocket"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(12, FRepHandleData(Class, {"AttachmentReplication", "AttachComponent"}, {0, 0}, COND_Custom, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestBookend"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"TestFText"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestCases"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"bIsRunning"}, {0}, COND_None, REPNOTIFY_OnChanged));
 }
 
-void USpatialTypeBinding_TestFTextReplication::BindToView(bool bIsClient)
+void USpatialTypeBinding_GDKTestRunner::BindToView(bool bIsClient)
 {
 	TSharedPtr<worker::View> View = Interop->GetSpatialOS()->GetView().Pin();
 	ViewCallbacks.Init(View);
 
 	if (Interop->GetNetDriver()->GetNetMode() == NM_Client)
 	{
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -88,11 +87,11 @@ void USpatialTypeBinding_TestFTextReplication::BindToView(bool bIsClient)
 			check(ActorChannel);
 			ReceiveUpdate_SingleClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -102,11 +101,11 @@ void USpatialTypeBinding_TestFTextReplication::BindToView(bool bIsClient)
 		}));
 		if (!bIsClient)
 		{
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData>& Op)
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData>& Op)
 			{
 				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData::ComponentId))
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::ComponentId))
 				{
 					return;
 				}
@@ -116,30 +115,30 @@ void USpatialTypeBinding_TestFTextReplication::BindToView(bool bIsClient)
 			}));
 		}
 	}
-	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testftextreplication::TestFTextReplicationNetMulticastRPCs>([this](
-		const worker::ComponentUpdateOp<improbable::unreal::generated::testftextreplication::TestFTextReplicationNetMulticastRPCs>& Op)
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::gdktestrunner::GDKTestRunnerNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::gdktestrunner::GDKTestRunnerNetMulticastRPCs>& Op)
 	{
 		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testftextreplication::TestFTextReplicationNetMulticastRPCs::ComponentId))
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::gdktestrunner::GDKTestRunnerNetMulticastRPCs::ComponentId))
 		{
 			return;
 		}
 		ReceiveUpdate_NetMulticastRPCs(Op.EntityId, Op.Update);
 	}));
 
-	using ServerRPCCommandTypes = improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands;
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverreportreplication>(std::bind(&USpatialTypeBinding_TestFTextReplication::Server_ReportReplication_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverstarttest>(std::bind(&USpatialTypeBinding_TestFTextReplication::Server_StartTest_OnRPCPayload, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverreportreplication>(std::bind(&USpatialTypeBinding_TestFTextReplication::Server_ReportReplication_OnCommandResponse, this, std::placeholders::_1)));
-	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverstarttest>(std::bind(&USpatialTypeBinding_TestFTextReplication::Server_StartTest_OnCommandResponse, this, std::placeholders::_1)));
+	using ServerRPCCommandTypes = improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Commands;
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serversignalclientready>(std::bind(&USpatialTypeBinding_GDKTestRunner::Server_SignalClientReady_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverruntests>(std::bind(&USpatialTypeBinding_GDKTestRunner::Server_RunTests_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serversignalclientready>(std::bind(&USpatialTypeBinding_GDKTestRunner::Server_SignalClientReady_OnCommandResponse, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverruntests>(std::bind(&USpatialTypeBinding_GDKTestRunner::Server_RunTests_OnCommandResponse, this, std::placeholders::_1)));
 }
 
-void USpatialTypeBinding_TestFTextReplication::UnbindFromView()
+void USpatialTypeBinding_GDKTestRunner::UnbindFromView()
 {
 	ViewCallbacks.Reset();
 }
 
-worker::Entity USpatialTypeBinding_TestFTextReplication::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
+worker::Entity USpatialTypeBinding_GDKTestRunner::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
 {
 	// Validate replication list.
 	const uint16 RepHandlePropertyMapCount = GetRepHandlePropertyMap().Num();
@@ -149,14 +148,14 @@ worker::Entity USpatialTypeBinding_TestFTextReplication::CreateActorEntity(const
 	}
 
 	// Setup initial data.
-	improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData::Data SingleClientData;
-	improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData::Data SingleClientData;
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData::Data MultiClientData;
-	improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData::Data MultiClientData;
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData::Data MigratableData;
-	improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData::Update MigratableDataUpdate;
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Data MigratableData;
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Update MigratableDataUpdate;
 	bool bMigratableDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 	SingleClientUpdate.ApplyTo(SingleClientData);
@@ -208,23 +207,23 @@ worker::Entity USpatialTypeBinding_TestFTextReplication::CreateActorEntity(const
 		.SetPersistence(true)
 		.SetReadAcl(AnyUnrealWorkerOrClient)
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData>(SingleClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData>(MultiClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData>(MigratableData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testftextreplication::TestFTextReplicationClientRPCs>(improbable::unreal::generated::testftextreplication::TestFTextReplicationClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs>(improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testftextreplication::TestFTextReplicationNetMulticastRPCs>(improbable::unreal::generated::testftextreplication::TestFTextReplicationNetMulticastRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData>(SingleClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData>(MultiClientData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData>(MigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerClientRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerClientRPCs::Data{}, OwningClientOnly)
+		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerNetMulticastRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
-void USpatialTypeBinding_TestFTextReplication::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
+void USpatialTypeBinding_GDKTestRunner::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
 {
 	// Build SpatialOS updates.
-	improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData::Update MigratableDataUpdate;
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Update MigratableDataUpdate;
 	bool bMigratableDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 
@@ -232,19 +231,19 @@ void USpatialTypeBinding_TestFTextReplication::SendComponentUpdates(const FPrope
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	if (bSingleClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
 	}
 	if (bMultiClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
 	if (bMigratableDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
 	}
 }
 
-void USpatialTypeBinding_TestFTextReplication::SendRPCCommand(UObject* TargetObject, const UFunction* const Function, void* Parameters)
+void USpatialTypeBinding_GDKTestRunner::SendRPCCommand(UObject* TargetObject, const UFunction* const Function, void* Parameters)
 {
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	auto SenderFuncIterator = RPCToSenderMap.Find(Function->GetFName());
@@ -257,50 +256,50 @@ void USpatialTypeBinding_TestFTextReplication::SendRPCCommand(UObject* TargetObj
 	(this->*(*SenderFuncIterator))(Connection.Get(), Parameters, TargetObject);
 }
 
-void USpatialTypeBinding_TestFTextReplication::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
+void USpatialTypeBinding_GDKTestRunner::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
 {
-	auto* SingleClientAddOp = Cast<UTestFTextReplicationSingleClientRepDataAddComponentOp>(AddComponentOp);
+	auto* SingleClientAddOp = Cast<UGDKTestRunnerSingleClientRepDataAddComponentOp>(AddComponentOp);
 	if (SingleClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
 		ReceiveUpdate_SingleClient(Channel, Update);
 	}
-	auto* MultiClientAddOp = Cast<UTestFTextReplicationMultiClientRepDataAddComponentOp>(AddComponentOp);
+	auto* MultiClientAddOp = Cast<UGDKTestRunnerMultiClientRepDataAddComponentOp>(AddComponentOp);
 	if (MultiClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
 		ReceiveUpdate_MultiClient(Channel, Update);
 	}
-	auto* MigratableDataAddOp = Cast<UTestFTextReplicationMigratableDataAddComponentOp>(AddComponentOp);
+	auto* MigratableDataAddOp = Cast<UGDKTestRunnerMigratableDataAddComponentOp>(AddComponentOp);
 	if (MigratableDataAddOp)
 	{
-		auto Update = improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
+		auto Update = improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
 		ReceiveUpdate_Migratable(Channel, Update);
 	}
 }
 
-worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TestFTextReplication::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
+worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_GDKTestRunner::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
 {
 	worker::Map<worker::ComponentId, worker::InterestOverride> Interest;
 	if (bIsClient)
 	{
 		if (!bAutonomousProxy)
 		{
-			Interest.emplace(improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData::ComponentId, worker::InterestOverride{false});
+			Interest.emplace(improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
 
-void USpatialTypeBinding_TestFTextReplication::BuildSpatialComponentUpdate(
+void USpatialTypeBinding_GDKTestRunner::BuildSpatialComponentUpdate(
 	const FPropertyChangeState& Changes,
 	USpatialActorChannel* Channel,
-	improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData::Update& SingleClientUpdate,
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData::Update& SingleClientUpdate,
 	bool& bSingleClientUpdateChanged,
-	improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData::Update& MultiClientUpdate,
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData::Update& MigratableDataUpdate,
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Update& MigratableDataUpdate,
 	bool& bMigratableDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
@@ -358,11 +357,11 @@ void USpatialTypeBinding_TestFTextReplication::BuildSpatialComponentUpdate(
 	}
 }
 
-void USpatialTypeBinding_TestFTextReplication::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_GDKTestRunner::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TestFTextReplication::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_GDKTestRunner::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -631,18 +630,56 @@ void USpatialTypeBinding_TestFTextReplication::ServerSendUpdate_MultiClient(cons
 			}
 			break;
 		}
-		case 16: // field_testbookend0
+		case 16: // field_testcases0
 		{
-			int32 Value = *(reinterpret_cast<int32 const*>(Data));
+			const TArray<AGDKTestCase*>& Value = *(reinterpret_cast<TArray<AGDKTestCase*> const*>(Data));
 
-			OutUpdate.set_field_testbookend0(int32_t(Value));
+			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 16);
+			TSet<const UObject*> UnresolvedObjects;
+			::worker::List<improbable::unreal::UnrealObjectRef> List;
+			for(int i = 0; i < Value.Num(); i++)
+			{
+				if (Value[i] != nullptr)
+				{
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value[i]);
+					if (!NetGUID.IsValid())
+					{
+						if (Value[i]->IsFullNameStableForNetworking())
+						{
+							NetGUID = PackageMap->ResolveStablyNamedObject(Value[i]);
+						}
+					}
+					improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+					if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+					{
+						UnresolvedObjects.Add(Value[i]);
+					}
+					else
+					{
+						List.emplace_back(ObjectRef);
+					}
+				}
+				else
+				{
+					List.emplace_back(SpatialConstants::NULL_OBJECT_REF);
+				}
+			}
+			const ::worker::List<improbable::unreal::UnrealObjectRef>& Result = (List);
+			if (UnresolvedObjects.Num() == 0)
+			{
+				OutUpdate.set_field_testcases0(Result);
+			}
+			else
+			{
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 16);
+			}
 			break;
 		}
-		case 17: // field_testftext0
+		case 17: // field_bisrunning0
 		{
-			FText Value = *(reinterpret_cast<FText const*>(Data));
+			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
 
-			OutUpdate.set_field_testftext0(TCHAR_TO_UTF8(*Value.ToString()));
+			OutUpdate.set_field_bisrunning0(Value);
 			break;
 		}
 	default:
@@ -651,24 +688,24 @@ void USpatialTypeBinding_TestFTextReplication::ServerSendUpdate_MultiClient(cons
 	}
 }
 
-void USpatialTypeBinding_TestFTextReplication::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData::Update& OutUpdate) const
+void USpatialTypeBinding_GDKTestRunner::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TestFTextReplication::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData::Update& Update) const
+void USpatialTypeBinding_GDKTestRunner::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData::Update& Update) const
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TArray<UProperty*> RepNotifies;
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies);
 }
 
-void USpatialTypeBinding_TestFTextReplication::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData::Update& Update) const
+void USpatialTypeBinding_GDKTestRunner::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData::Update& Update) const
 {
 	Interop->PreReceiveSpatialUpdate(ActorChannel);
 	TSet<UProperty*> RepNotifies;
 
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
-	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::testftextreplication::TestFTextReplicationClientRPCs::ComponentId);
+	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::gdktestrunner::GDKTestRunnerClientRPCs::ComponentId);
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
@@ -1183,17 +1220,51 @@ void USpatialTypeBinding_TestFTextReplication::ReceiveUpdate_MultiClient(USpatia
 			}
 		}
 	}
-	if (!Update.field_testbookend0().empty())
+	if (!Update.field_testcases0().empty())
 	{
-		// field_testbookend0
+		// field_testcases0
 		uint16 Handle = 16;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
+			TArray<AGDKTestCase*> Value = *(reinterpret_cast<TArray<AGDKTestCase*> *>(PropertyData));
 
-			Value = (*Update.field_testbookend0().data());
+			auto& List = (*Update.field_testcases0().data());
+			Value.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
+			{
+				improbable::unreal::UnrealObjectRef ObjectRef = List[i];
+				check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+				if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+				{
+					Value[i] = nullptr;
+				}
+				else
+				{
+					FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+					if (NetGUID.IsValid())
+					{
+						UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+						checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+						checkf(Cast<AGDKTestCase>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+						Value[i] = Cast<AGDKTestCase>(Object_Raw);
+					}
+					else
+					{
+						// Pre-alpha limitation: if a UObject* in an array property is unresolved, we currently don't have a way to update it once
+						// it is resolved. It will remain null and will only be updated when the server replicates this array again (when it changes).
+						UE_LOG(LogSpatialOSInterop, Warning, TEXT("%s: Ignoring unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+							*Interop->GetSpatialOS()->GetWorkerId(),
+							*ObjectRefToString(ObjectRef),
+							*ActorChannel->Actor->GetName(),
+							ActorChannel->GetEntityId().ToSpatialEntityId(),
+							*RepData->Property->GetName(),
+							Handle);
+						Value[i] = nullptr;
+					}
+				}
+			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1205,17 +1276,17 @@ void USpatialTypeBinding_TestFTextReplication::ReceiveUpdate_MultiClient(USpatia
 				Handle);
 		}
 	}
-	if (!Update.field_testftext0().empty())
+	if (!Update.field_bisrunning0().empty())
 	{
-		// field_testftext0
+		// field_bisrunning0
 		uint16 Handle = 17;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
-			FText Value = *(reinterpret_cast<FText const*>(PropertyData));
+			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
-			Value = FText::FromString(((*Update.field_testftext0().data())).data());
+			Value = (*Update.field_bisrunning0().data());
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
@@ -1230,47 +1301,14 @@ void USpatialTypeBinding_TestFTextReplication::ReceiveUpdate_MultiClient(USpatia
 	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_TestFTextReplication::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testftextreplication::TestFTextReplicationMigratableData::Update& Update) const
+void USpatialTypeBinding_GDKTestRunner::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Update& Update) const
 {
 }
 
-void USpatialTypeBinding_TestFTextReplication::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::testftextreplication::TestFTextReplicationNetMulticastRPCs::Update& Update)
+void USpatialTypeBinding_GDKTestRunner::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::gdktestrunner::GDKTestRunnerNetMulticastRPCs::Update& Update)
 {
 }
-void USpatialTypeBinding_TestFTextReplication::Server_ReportReplication_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
-{
-	// This struct is declared in TestFTextReplication.generated.h (in a macro that is then put in TestFTextReplication.h UCLASS macro)
-	TestFTextReplication_eventServer_ReportReplication_Parms StructuredParams = *static_cast<TestFTextReplication_eventServer_ReportReplication_Parms*>(Parameters);
-
-	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
-	{
-		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
-		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-			return {TargetObject};
-		}
-
-		// Build RPC Payload.
-		improbable::unreal::generated::testftextreplication::ServerReportReplicationRequest RPCPayload;
-		{
-			RPCPayload.set_field_repftext0(TCHAR_TO_UTF8(*StructuredParams.RepFText.ToString()));
-		}
-
-		// Send RPC
-		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
-		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Server_ReportReplication, target: %s %s"),
-			*Interop->GetSpatialOS()->GetWorkerId(),
-			*TargetObject->GetName(),
-			*ObjectRefToString(TargetObjectRef));
-
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands::Serverreportreplication>(TargetObjectRef.entity(), RPCPayload, 0);
-			return {RequestId.Id};
-	};
-	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
-}
-void USpatialTypeBinding_TestFTextReplication::Server_StartTest_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+void USpatialTypeBinding_GDKTestRunner::Server_SignalClientReady_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
@@ -1278,80 +1316,53 @@ void USpatialTypeBinding_TestFTextReplication::Server_StartTest_SendRPC(worker::
 		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_StartTest queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_SignalClientReady queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 			return {TargetObject};
 		}
 
 		// Build RPC Payload.
-		improbable::unreal::generated::replicationtestcase::ServerStartTestRequest RPCPayload;
+		improbable::unreal::generated::gdktestrunner::ServerSignalClientReadyRequest RPCPayload;
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
-		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Server_StartTest, target: %s %s"),
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Server_SignalClientReady, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands::Serverstarttest>(TargetObjectRef.entity(), RPCPayload, 0);
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Commands::Serversignalclientready>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
-void USpatialTypeBinding_TestFTextReplication::Server_ReportReplication_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands::Serverreportreplication>& Op)
+void USpatialTypeBinding_GDKTestRunner::Server_RunTests_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
-	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), {}, {}};
-		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
-		if (!TargetNetGUID.IsValid())
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
-			// A legal static object reference should never be unresolved.
-			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_ReportReplication_OnRPCPayload: Target object %s is not resolved on this worker."),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ObjectRefToString(TargetObjectRef));
-			return {TargetObjectRef};
-		}
-		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: Server_ReportReplication_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
-			*Interop->GetSpatialOS()->GetWorkerId(),
-			*ObjectRefToString(TargetObjectRef),
-			*TargetNetGUID.ToString());
-
-		// Declare parameters.
-		// This struct is declared in TestFTextReplication.generated.h (in a macro that is then put in TestFTextReplication.h UCLASS macro)
-		TestFTextReplication_eventServer_ReportReplication_Parms Parameters;
-
-		// Extract from request data.
-		{
-			Parameters.RepFText = FText::FromString((Op.Request.field_repftext0()).data());
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_RunTests queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
 		}
 
-		// Call implementation.
-		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: Server_ReportReplication, target: %s %s"),
+		// Build RPC Payload.
+		improbable::unreal::generated::gdktestrunner::ServerRunTestsRequest RPCPayload;
+
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Server_RunTests, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Server_ReportReplication"))))
-		{
-			TargetObject->ProcessEvent(Function, &Parameters);
-		}
-		else
-		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_ReportReplication_OnRPCPayload: Function not found. Object: %s, Function: Server_ReportReplication."),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*TargetObject->GetFullName());
-		}
-
-		// Send command response.
-		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands::Serverreportreplication>(Op.RequestId, {});
-		return {};
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Commands::Serverruntests>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
 	};
-	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
 }
-void USpatialTypeBinding_TestFTextReplication::Server_StartTest_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands::Serverstarttest>& Op)
+void USpatialTypeBinding_GDKTestRunner::Server_SignalClientReady_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Commands::Serversignalclientready>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
 	{
@@ -1361,48 +1372,93 @@ void USpatialTypeBinding_TestFTextReplication::Server_StartTest_OnRPCPayload(con
 		{
 			// A legal static object reference should never be unresolved.
 			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_StartTest_OnRPCPayload: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_SignalClientReady_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
 		}
 		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: Server_StartTest_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+		checkf(TargetObject, TEXT("%s: Server_SignalClientReady_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ObjectRefToString(TargetObjectRef),
 			*TargetNetGUID.ToString());
 
 		// Call implementation.
-		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: Server_StartTest, target: %s %s"),
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: Server_SignalClientReady, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
 
-		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Server_StartTest"))))
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Server_SignalClientReady"))))
 		{
 			TargetObject->ProcessEvent(Function, nullptr);
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_StartTest_OnRPCPayload: Function not found. Object: %s, Function: Server_StartTest."),
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_SignalClientReady_OnRPCPayload: Function not found. Object: %s, Function: Server_SignalClientReady."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
 
 		// Send command response.
 		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
-		Connection->SendCommandResponse<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands::Serverstarttest>(Op.RequestId, {});
+		Connection->SendCommandResponse<improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Commands::Serversignalclientready>(Op.RequestId, {});
+		return {};
+	};
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+}
+void USpatialTypeBinding_GDKTestRunner::Server_RunTests_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Commands::Serverruntests>& Op)
+{
+	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), {}, {}};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			// A legal static object reference should never be unresolved.
+			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_RunTests_OnRPCPayload: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: Server_RunTests_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Call implementation.
+		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: Server_RunTests, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Server_RunTests"))))
+		{
+			TargetObject->ProcessEvent(Function, nullptr);
+		}
+		else
+		{
+			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_RunTests_OnRPCPayload: Function not found. Object: %s, Function: Server_RunTests."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		// Send command response.
+		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
+		Connection->SendCommandResponse<improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Commands::Serverruntests>(Op.RequestId, {});
 		return {};
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
 
-void USpatialTypeBinding_TestFTextReplication::Server_ReportReplication_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands::Serverreportreplication>& Op)
+void USpatialTypeBinding_GDKTestRunner::Server_SignalClientReady_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Commands::Serversignalclientready>& Op)
 {
-	Interop->HandleCommandResponse_Internal(TEXT("Server_ReportReplication"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
+	Interop->HandleCommandResponse_Internal(TEXT("Server_SignalClientReady"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
-void USpatialTypeBinding_TestFTextReplication::Server_StartTest_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands::Serverstarttest>& Op)
+void USpatialTypeBinding_GDKTestRunner::Server_RunTests_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Commands::Serverruntests>& Op)
 {
-	Interop->HandleCommandResponse_Internal(TEXT("Server_StartTest"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
+	Interop->HandleCommandResponse_Internal(TEXT("Server_RunTests"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }

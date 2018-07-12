@@ -5,22 +5,22 @@ package improbable.unreal.generated.testfnamereplication;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestFNameReplicationSingleClientRepData {
-	id = 100112;
+	id = 100118;
 }
 component TestFNameReplicationMultiClientRepData {
-	id = 100113;
+	id = 100119;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
 	bool field_bcanbedamaged0 = 4; // COND_None // ::Actor
 	uint32 field_remoterole0 = 5; // COND_None // ::Actor
-	bytes field_replicatedmovement0 = 6; // COND_SimulatedOrPhysics // ::Actor
-	UnrealObjectRef field_attachmentreplication0_attachparent0 = 7; // COND_Custom // RepAttachment::AttachmentReplication::Actor
-	bytes field_attachmentreplication0_locationoffset0 = 8; // COND_Custom // RepAttachment::AttachmentReplication::Actor
-	bytes field_attachmentreplication0_relativescale3d0 = 9; // COND_Custom // RepAttachment::AttachmentReplication::Actor
-	bytes field_attachmentreplication0_rotationoffset0 = 10; // COND_Custom // RepAttachment::AttachmentReplication::Actor
-	string field_attachmentreplication0_attachsocket0 = 11; // COND_Custom // RepAttachment::AttachmentReplication::Actor
-	UnrealObjectRef field_attachmentreplication0_attachcomponent0 = 12; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_replicatedmovement0 = 6; // COND_None // ::Actor
+	UnrealObjectRef field_attachmentreplication0_attachparent0 = 7; // COND_None // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication0_locationoffset0 = 8; // COND_None // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication0_relativescale3d0 = 9; // COND_None // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication0_rotationoffset0 = 10; // COND_None // RepAttachment::AttachmentReplication::Actor
+	string field_attachmentreplication0_attachsocket0 = 11; // COND_None // RepAttachment::AttachmentReplication::Actor
+	UnrealObjectRef field_attachmentreplication0_attachcomponent0 = 12; // COND_None // RepAttachment::AttachmentReplication::Actor
 	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
@@ -28,19 +28,19 @@ component TestFNameReplicationMultiClientRepData {
 	string field_testfname0 = 17; // COND_None // ::TestFNameReplication
 }
 component TestFNameReplicationMigratableData {
-	id = 100114;
+	id = 100120;
 }
 import "improbable/unreal/generated/UnrealTestFNameReplicationTypes.schema";
 import "improbable/unreal/generated/UnrealReplicationTestCaseTypes.schema";
 
 component TestFNameReplicationClientRPCs {
-	id = 100115;
+	id = 100121;
 }
 component TestFNameReplicationServerRPCs {
-	id = 100116;
+	id = 100122;
 	command UnrealRPCCommandResponse serverreportreplication(testfnamereplication.ServerReportReplicationRequest);
 	command UnrealRPCCommandResponse serverstarttest(replicationtestcase.ServerStartTestRequest);
 }
 component TestFNameReplicationNetMulticastRPCs {
-	id = 100117;
+	id = 100123;
 }

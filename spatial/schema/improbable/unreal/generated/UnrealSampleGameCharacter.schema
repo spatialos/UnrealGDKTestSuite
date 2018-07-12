@@ -52,7 +52,7 @@ component SampleGameCharacterMultiClientRepData {
 	bytes field_reprootmotion0_authoritativerootmotion0 = 41; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion0_acceleration0 = 42; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion0_linearvelocity0 = 43; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
-	list<UnrealObjectRef> field_testcases0 = 44; // COND_InitialOnly // ::SampleGameCharacter
+	UnrealObjectRef field_testrunner0 = 44; // COND_InitialOnly // ::SampleGameCharacter
 }
 component SampleGameCharacterMigratableData {
 	id = 100024;

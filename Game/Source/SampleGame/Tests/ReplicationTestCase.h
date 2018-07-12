@@ -3,13 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GDKTestCase.h"
 #include "GameFramework/Actor.h"
 #include "ReplicationTestCase.generated.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSpatialGDKTests, Log, All);
-
 UCLASS(Abstract)
-class SAMPLEGAME_API AReplicationTestCase : public AActor
+class SAMPLEGAME_API AReplicationTestCase : public AGDKTestCase
 {
 	GENERATED_BODY()
 
@@ -19,6 +18,10 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void StartTest() override;
+
+	virtual void TearDown() override;
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_StartTest();
@@ -40,15 +43,16 @@ protected:
 	PURE_VIRTUAL(AReplicationTestCase::StartTestImpl(), );
 
 	UFUNCTION()
+	virtual void TearDownImpl()
+	PURE_VIRTUAL(AReplicationTestCase::TearDownImpl(), );
+
+	UFUNCTION()
 	virtual void ValidateClientReplicationImpl()
 	PURE_VIRTUAL(AReplicationTestCase::ValidateClientReplicationImpl(), );
 
 	UFUNCTION()
 	virtual void SendTestResponseRPCImpl()
 	PURE_VIRTUAL(AReplicationTestCase::SendTestResponseRPCImpl(), );
-
-	UPROPERTY()
-	FString TestName;
 
 private:
 

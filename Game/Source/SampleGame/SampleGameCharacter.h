@@ -7,6 +7,7 @@
 #include "CoreMinimal.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
+#include "Tests/GDKTestRunner.h"
 #include "Tests/ReplicationTestCase.h"
 #include "Tests/ReplicationTestUtils.h"
 #include "SampleGameCharacter.generated.h"
@@ -45,14 +46,14 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	float BaseLookUpRate;
 
-	UPROPERTY(ReplicatedUsing = OnRep_TestCases)
-	TArray<AReplicationTestCase*> TestCases;
+	UPROPERTY(ReplicatedUsing = OnRep_TestRunner)
+	AGDKTestRunner* TestRunner;
 
 	UFUNCTION(Client, Reliable)
 	void Client_TestConstArgs(FConstStruct ConstStruct);
 
 	UFUNCTION()
-	void OnRep_TestCases();
+	void OnRep_TestRunner();
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -94,7 +95,7 @@ protected:
 	UFUNCTION(NetMulticast, Unreliable, WithValidation)
 	void TestMulticast();
 
-	bool bTestCasesReplicated;
+	bool bTestRunnerReplicated;
 
 public:
 	/** Returns CameraBoom subobject **/

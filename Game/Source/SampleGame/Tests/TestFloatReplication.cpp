@@ -25,13 +25,18 @@ void ATestFloatReplication::Server_ReportReplication_Implementation(float RepFlo
 	SignalResponseRecieved();
 }
 
-
 void ATestFloatReplication::StartTestImpl()
 {
 	TestFloat = FloatComparisonValue;
 	TestDouble = DoubleComparisonValue;
 
 	SignalReplicationSetup();
+}
+
+void ATestFloatReplication::TearDownImpl()
+{
+	TestFloat = 0.0f;
+	TestDouble = 0.0;
 }
 
 void ATestFloatReplication::ValidateClientReplicationImpl()

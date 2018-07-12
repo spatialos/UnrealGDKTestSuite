@@ -51,6 +51,18 @@ void ATestIntReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
+void ATestIntReplication::TearDownImpl()
+{
+	Test8Int = 0;
+	Test16Int = 0;
+	Test32Int = 0;
+	Test64Int = 0;
+	Test8UInt = 0;
+	Test16UInt = 0;
+	Test32UInt = 0;
+	Test64UInt = 0;
+}
+
 void ATestIntReplication::ValidateClientReplicationImpl()
 {
 	check(Test8Int == (1 << 6));

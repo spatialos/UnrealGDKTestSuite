@@ -42,46 +42,13 @@ public:
 	virtual void StartTestImpl() override;
 
 	UFUNCTION()
+	virtual void TearDownImpl() override;
+
+	UFUNCTION()
 	virtual void ValidateClientReplicationImpl() override;
 
 	UFUNCTION()
 	virtual void SendTestResponseRPCImpl() override;
-
-	// Test UStruct with POD
-	UPROPERTY(Replicated)
-	FSimpleTestStruct PODUStruct;
-
-	// Test UStruct with a nested UStruct
-	UPROPERTY(Replicated)
-	FNestedTestStruct NestedUStruct;
-
-	// Test UStruct with Stably named UObject
-	UPROPERTY(Replicated)
-	FStablyNamedObjectTestStruct UStructWithStablyNamedObject;
-
-	// Test UStruct with a dynamically created actor
-	UPROPERTY(ReplicatedUsing= OnRep_UStructWithDynamicallyCreatedActor)
-	FDynamicallyCreatedActorTestStruct UStructWithDynamicallyCreatedActor;
-
-	// Test UStruct with Netserialize
-	UPROPERTY(Replicated)
-	FTestStructWithNetSerialize UStructWithNetSerialize;
-
-	// Test UStruct with C-style array
-	UPROPERTY(Replicated)
-	FCArrayTestStruct UStructWithCStyleArray;
-
-	// Test UStruct with TArray
-	UPROPERTY(Replicated)
-	FTArrayTestStruct UStructWithTArray;
-
-	// Test UStruct with Unreal style enum
-	UPROPERTY(Replicated)
-	FUnrealStyleEnumTestStruct UStructWithUnrealStyleEnum;
-
-	// Test UStruct with C++ 11 style enum
-	UPROPERTY(Replicated)
-	FCStyleEnumTestStruct UStructWithCppStyleEnum;
 
 private: 
 
@@ -107,6 +74,42 @@ private:
 							const FTArrayTestStruct& TestUStructWithTArray,
 							const FUnrealStyleEnumTestStruct& TestUStructWithUnrealStyleEnum,
 							const FCStyleEnumTestStruct& TestUStructWithCppStyleEnum);
+
+	// Test UStruct with POD
+	UPROPERTY(Replicated)
+	FSimpleTestStruct PODUStruct;
+
+	// Test UStruct with a nested UStruct
+	UPROPERTY(Replicated)
+	FNestedTestStruct NestedUStruct;
+
+	// Test UStruct with Stably named UObject
+	UPROPERTY(Replicated)
+	FStablyNamedObjectTestStruct UStructWithStablyNamedObject;
+
+	// Test UStruct with a dynamically created actor
+	UPROPERTY(ReplicatedUsing = OnRep_UStructWithDynamicallyCreatedActor)
+	FDynamicallyCreatedActorTestStruct UStructWithDynamicallyCreatedActor;
+
+	// Test UStruct with Netserialize
+	UPROPERTY(Replicated)
+	FTestStructWithNetSerialize UStructWithNetSerialize;
+
+	// Test UStruct with C-style array
+	UPROPERTY(Replicated)
+	FCArrayTestStruct UStructWithCStyleArray;
+
+	// Test UStruct with TArray
+	UPROPERTY(Replicated)
+	FTArrayTestStruct UStructWithTArray;
+
+	// Test UStruct with Unreal style enum
+	UPROPERTY(Replicated)
+	FUnrealStyleEnumTestStruct UStructWithUnrealStyleEnum;
+
+	// Test UStruct with C++ 11 style enum
+	UPROPERTY(Replicated)
+	FCStyleEnumTestStruct UStructWithCppStyleEnum;
 
 	bool bDynamicallyCreatedActorReplicated;
 	bool bReplicationRecievedOnClient;
