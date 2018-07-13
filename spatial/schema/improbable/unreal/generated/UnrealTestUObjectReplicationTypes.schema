@@ -8,4 +8,5 @@ type ServerReportReplicationRequest {
 	uint32 target_subobject_offset = 1;
 	UnrealObjectRef field_repdynamicallycreatedactor0 = 2;
 	UnrealObjectRef field_repstablynameduobject0 = 3;
+	UnrealObjectRef field_repconstobj0 = 4;
 }

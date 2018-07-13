@@ -23,6 +23,7 @@ void ATestUStructReplication::Tick(float DeltaTime)
 			ValidateReplication_Client(PODUStruct,
 									   NestedUStruct,
 									   UStructWithStablyNamedObject,
+									   UStructWithConstStablyNamedObject,
 									   UStructWithDynamicallyCreatedActor,
 									   UStructWithNetSerialize,
 									   UStructWithCStyleArray,
@@ -33,6 +34,7 @@ void ATestUStructReplication::Tick(float DeltaTime)
 			Server_ReportReplication(PODUStruct,
 									 NestedUStruct,
 									 UStructWithStablyNamedObject,
+									 UStructWithConstStablyNamedObject,
 									 UStructWithDynamicallyCreatedActor,
 									 UStructWithNetSerialize,
 									 UStructWithCStyleArray,
@@ -49,6 +51,7 @@ void ATestUStructReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProper
 	DOREPLIFETIME_CONDITION(ATestUStructReplication, PODUStruct, COND_None);
 	DOREPLIFETIME_CONDITION(ATestUStructReplication, NestedUStruct, COND_None);
 	DOREPLIFETIME_CONDITION(ATestUStructReplication, UStructWithStablyNamedObject, COND_None);
+	DOREPLIFETIME_CONDITION(ATestUStructReplication, UStructWithConstStablyNamedObject, COND_None);	
 	DOREPLIFETIME_CONDITION(ATestUStructReplication, UStructWithDynamicallyCreatedActor, COND_None);
 	DOREPLIFETIME_CONDITION(ATestUStructReplication, UStructWithNetSerialize, COND_None);
 	DOREPLIFETIME_CONDITION(ATestUStructReplication, UStructWithCStyleArray, COND_None);
@@ -60,6 +63,7 @@ void ATestUStructReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProper
 bool ATestUStructReplication::Server_ReportReplication_Validate(const FSimpleTestStruct& RepPODUStruct,
 																const FNestedTestStruct& RepNestedUStruct,
 																const FStablyNamedObjectTestStruct& RepUStructWithStablyNamedObject,
+																const FConstStablyNamedObjectTestStruct& RepUStructWithConstStablyNamedObject,
 																const FDynamicallyCreatedActorTestStruct& RepUStructWithDynamicallyCreatedActor,
 																const FTestStructWithNetSerialize& RepUStructWithNetSerialize,
 																const FCArrayTestStruct& RepUStructWithCStyleArray,
@@ -73,6 +77,7 @@ bool ATestUStructReplication::Server_ReportReplication_Validate(const FSimpleTes
 void ATestUStructReplication::Server_ReportReplication_Implementation(const FSimpleTestStruct& RepPODUStruct,
 																	  const FNestedTestStruct& RepNestedUStruct,
 																	  const FStablyNamedObjectTestStruct& RepUStructWithStablyNamedObject,
+																	  const FConstStablyNamedObjectTestStruct& RepUStructWithConstStablyNamedObject,
 																	  const FDynamicallyCreatedActorTestStruct& RepUStructWithDynamicallyCreatedActor,
 																	  const FTestStructWithNetSerialize& RepUStructWithNetSerialize,
 																	  const FCArrayTestStruct& RepUStructWithCStyleArray,
@@ -82,7 +87,8 @@ void ATestUStructReplication::Server_ReportReplication_Implementation(const FSim
 {
 	ValidateRPC_Server(RepPODUStruct,
 					   RepNestedUStruct, 
-					   RepUStructWithStablyNamedObject, 
+					   RepUStructWithStablyNamedObject,
+					   RepUStructWithConstStablyNamedObject,
 					   RepUStructWithDynamicallyCreatedActor, 
 					   RepUStructWithNetSerialize, 
 					   RepUStructWithCStyleArray, 
@@ -101,8 +107,11 @@ void ATestUStructReplication::Server_StartTestImpl()
 	// Setup UStruct with a nested UStruct
 	NestedUStruct.NestedStruct.RootProp = 42;
 
-	// Setup UStruct with Stably named UObject
+	// Setup UStruct with stably named UObject
 	UStructWithStablyNamedObject.StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+
+	// Setup UStruct with const stably named UObject
+	UStructWithConstStablyNamedObject.StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
 
 	// Setup UStruct with a dynamically created actor
 	ATestActor* NewActor = GetWorld()->SpawnActor<ATestActor>();
@@ -137,6 +146,8 @@ void ATestUStructReplication::Server_TearDownImpl()
 	NestedUStruct.NestedStruct.RootProp = 0;
 
 	UStructWithStablyNamedObject.StablyNamedObject = nullptr;
+
+	UStructWithConstStablyNamedObject.StablyNamedObject = nullptr;
 
 	if (!UStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->Destroy(true))
 	{
@@ -175,6 +186,7 @@ void ATestUStructReplication::OnRep_UStructWithDynamicallyCreatedActor()
 void ATestUStructReplication::ValidateReplication_Client(const FSimpleTestStruct& TestPODUStruct,
 														 const FNestedTestStruct& TestNestedUStruct,
 														 const FStablyNamedObjectTestStruct& TestUStructWithStablyNamedObject,
+														 const FConstStablyNamedObjectTestStruct& TestUStructWithConstStablyNamedObject,
 														 const FDynamicallyCreatedActorTestStruct& TestUStructWithDynamicallyCreatedActor,
 														 const FTestStructWithNetSerialize& TestUStructWithNetSerialize,
 														 const FCArrayTestStruct& TestUStructWithCStyleArray,
@@ -192,6 +204,11 @@ void ATestUStructReplication::ValidateReplication_Client(const FSimpleTestStruct
 	check(TestUStructWithStablyNamedObject.StablyNamedObject->IsA(UTestUObject::StaticClass()));
 	check(TestUStructWithStablyNamedObject.StablyNamedObject == UTestUObject::StaticClass()->GetDefaultObject());
 	check(TestUStructWithStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+
+	// Validate the const stably named object
+	check(TestUStructWithConstStablyNamedObject.StablyNamedObject->IsA(UTestUObject::StaticClass()));
+	check(TestUStructWithConstStablyNamedObject.StablyNamedObject == UTestUObject::StaticClass()->GetDefaultObject());
+	check(TestUStructWithConstStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
 
 	// Validate Dynamically created actors
 	check(TestUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->IsA(ATestActor::StaticClass()));
@@ -219,6 +236,7 @@ void ATestUStructReplication::ValidateReplication_Client(const FSimpleTestStruct
 void ATestUStructReplication::ValidateRPC_Server(const FSimpleTestStruct& TestPODUStruct,
 												 const FNestedTestStruct& TestNestedUStruct,
 												 const FStablyNamedObjectTestStruct& TestUStructWithStablyNamedObject,
+												 const FConstStablyNamedObjectTestStruct& TestUStructWithConstStablyNamedObject,
 												 const FDynamicallyCreatedActorTestStruct& TestUStructWithDynamicallyCreatedActor,
 												 const FTestStructWithNetSerialize& TestUStructWithNetSerialize,
 												 const FCArrayTestStruct& TestUStructWithCStyleArray,
@@ -237,6 +255,10 @@ void ATestUStructReplication::ValidateRPC_Server(const FSimpleTestStruct& TestPO
 	check(TestUStructWithStablyNamedObject.StablyNamedObject == UTestUObject::StaticClass()->GetDefaultObject());
 	check(TestUStructWithStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
 
+	// Validate the const stably named object
+	check(TestUStructWithConstStablyNamedObject.StablyNamedObject->IsA(UTestUObject::StaticClass()));
+	check(TestUStructWithConstStablyNamedObject.StablyNamedObject == UTestUObject::StaticClass()->GetDefaultObject());
+	check(TestUStructWithConstStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
 
 	// Validate Dynamically created actors
 	check(TestUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->IsA(ATestActor::StaticClass()));

@@ -171,11 +171,6 @@ void ASampleGameCharacter::MoveRight(float Value)
 	}
 }
 
-void ASampleGameCharacter::Client_TestConstArgs_Implementation(FConstStruct ConstStruct)
-{
-
-}
-
 void ASampleGameCharacter::OnRep_TestRunner()
 {
 	check(TestRunner)

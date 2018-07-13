@@ -29,6 +29,7 @@ public:
 	void Server_ReportReplication(const FSimpleTestStruct& RepPODUStruct,
 								  const FNestedTestStruct& RepNestedUStruct,
 								  const FStablyNamedObjectTestStruct& RepUStructWithStablyNamedObject,
+								  const FConstStablyNamedObjectTestStruct& RepUStructWithConstStablyNamedObject,
 								  const FDynamicallyCreatedActorTestStruct& RepUStructWithDynamicallyCreatedActor,
 								  const FTestStructWithNetSerialize& RepUStructWithNetSerialize,
 								  const FCArrayTestStruct& RepUStructWithCStyleArray,
@@ -58,6 +59,7 @@ private:
 	void ValidateReplication_Client(const FSimpleTestStruct& TestPODUStruct,
 									const FNestedTestStruct& TestNestedUStruct,
 									const FStablyNamedObjectTestStruct& TestUStructWithStablyNamedObject,
+									const FConstStablyNamedObjectTestStruct& TestConstUStructWithStablyNamedObject,
 									const FDynamicallyCreatedActorTestStruct& TestUStructWithDynamicallyCreatedActor,
 									const FTestStructWithNetSerialize& TestUStructWithNetSerialize,
 									const FCArrayTestStruct& TestUStructWithCStyleArray,
@@ -68,6 +70,7 @@ private:
 	void ValidateRPC_Server(const FSimpleTestStruct& TestPODUStruct,
 							const FNestedTestStruct& TestNestedUStruct,
 							const FStablyNamedObjectTestStruct& TestUStructWithStablyNamedObject,
+							const FConstStablyNamedObjectTestStruct& TestConstUStructWithStablyNamedObject,
 							const FDynamicallyCreatedActorTestStruct& TestUStructWithDynamicallyCreatedActor,
 							const FTestStructWithNetSerialize& TestUStructWithNetSerialize,
 							const FCArrayTestStruct& TestUStructWithCStyleArray,
@@ -86,6 +89,10 @@ private:
 	// Test UStruct with Stably named UObject
 	UPROPERTY(Replicated)
 	FStablyNamedObjectTestStruct UStructWithStablyNamedObject;
+
+	// Test UStruct with const stably named UObject
+	UPROPERTY(Replicated)
+	FConstStablyNamedObjectTestStruct UStructWithConstStablyNamedObject;
 
 	// Test UStruct with a dynamically created actor
 	UPROPERTY(ReplicatedUsing = OnRep_UStructWithDynamicallyCreatedActor)

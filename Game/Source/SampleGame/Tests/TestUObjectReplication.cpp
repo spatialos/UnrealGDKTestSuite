@@ -22,11 +22,13 @@ void ATestUObjectReplication::Tick(float DeltaTime)
 
 			ValidateReplication_Client(DynamicallyCreatedActor,
 									   /*UObjectWithReplicatedComponent,*/
-									   StablyNamedUObject);
+									   StablyNamedUObject,
+									   ConstObj);
 
 			Server_ReportReplication(DynamicallyCreatedActor,
 									 /*UObjectWithReplicatedComponent,*/
-									 StablyNamedUObject);
+									 StablyNamedUObject,
+									 ConstObj);
 		}
 	}
 }
@@ -37,22 +39,26 @@ void ATestUObjectReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProper
 	DOREPLIFETIME_CONDITION(ATestUObjectReplication, DynamicallyCreatedActor, COND_None);
 	/*DOREPLIFETIME_CONDITION(ATestUObjectReplication, UObjectWithReplicatedComponent, COND_None);*/
 	DOREPLIFETIME_CONDITION(ATestUObjectReplication, StablyNamedUObject, COND_None);
+	DOREPLIFETIME_CONDITION(ATestUObjectReplication, ConstObj, COND_None);
 }
 
-bool ATestUObjectReplication::Server_ReportReplication_Validate(ATestActor*  RepDynamicallyCreatedActor,
+bool ATestUObjectReplication::Server_ReportReplication_Validate(ATestActor* RepDynamicallyCreatedActor,
 																/*const TArray<UTestUObject*>& RepUObjectWithReplicatedComponent,*/ 
-																UTestUObject* RepStablyNamedUObject)
+																UTestUObject* RepStablyNamedUObject,
+																const UTestUObject* RepConstObj)
 {
 	return true;
 }
 
-void ATestUObjectReplication::Server_ReportReplication_Implementation(ATestActor*  RepDynamicallyCreatedActor,
+void ATestUObjectReplication::Server_ReportReplication_Implementation(ATestActor* RepDynamicallyCreatedActor,
 																	  /*const TArray<UTestUObject*>& RepUObjectWithReplicatedComponent, */
-																	  UTestUObject* RepStablyNamedUObject)
+																	  UTestUObject* RepStablyNamedUObject,
+																	  const UTestUObject* RepConstObj)
 {
 	ValidateRPC_Server(RepDynamicallyCreatedActor, 
 					   /*RepUObjectWithReplicatedComponent,*/
-					   RepStablyNamedUObject);
+					   RepStablyNamedUObject,
+					   RepConstObj);
 
 	SignalResponseRecieved();
 }
@@ -68,6 +74,9 @@ void ATestUObjectReplication::Server_StartTestImpl()
 	// Setup stably named UObject
 	StablyNamedUObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
 
+	// Setup const UObject
+	ConstObj = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+
 	SignalReplicationSetup();
 }
 
@@ -79,6 +88,7 @@ void ATestUObjectReplication::Server_TearDownImpl()
 	}
 
 	StablyNamedUObject = nullptr;
+	ConstObj = nullptr;
 }
 
 void ATestUObjectReplication::ValidateClientReplicationImpl()
@@ -98,22 +108,29 @@ void ATestUObjectReplication::OnRep_DynamicallyCreatedActor()
 
 void ATestUObjectReplication::ValidateReplication_Client(ATestActor*  TestDynamicallyCreatedActor,
 														 /*const TArray<UTestUObject*>& TestUObjectWithReplicatedComponent,*/ 
-														 UTestUObject* TestStablyNamedUObject)
+														 UTestUObject* TestStablyNamedUObject,
+														 const UTestUObject* TestConstObj)
 {
 	// Validate Dynamically created UObject
 	check(TestDynamicallyCreatedActor->IsA(ATestActor::StaticClass()));
 
 	// TODO: UNR-238 Add tests.
 
-	// // Validate the stably named object
+	// Validate the stably named object
 	check(TestStablyNamedUObject->IsA(UTestUObject::StaticClass()));
 	check(TestStablyNamedUObject == UTestUObject::StaticClass()->GetDefaultObject());
 	check(TestStablyNamedUObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+
+	// Validate const UObject
+	check(TestConstObj->IsA(UTestUObject::StaticClass()));
+	check(TestConstObj == UTestUObject::StaticClass()->GetDefaultObject());
+	check(TestConstObj->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
 }
 
 void ATestUObjectReplication::ValidateRPC_Server(ATestActor*  TestDynamicallyCreatedActor,
 												 /*const TArray<UTestUObject*>& TestUObjectWithReplicatedComponent,*/
-												 UTestUObject* TestStablyNamedUObject)
+												 UTestUObject* TestStablyNamedUObject,
+												 const UTestUObject* TestConstObj)
 {
 	// Validate Dynamically created UObject
 	//Get the net driver
@@ -129,4 +146,9 @@ void ATestUObjectReplication::ValidateRPC_Server(ATestActor*  TestDynamicallyCre
 	check(TestStablyNamedUObject->IsA(UTestUObject::StaticClass()));
 	check(TestStablyNamedUObject == UTestUObject::StaticClass()->GetDefaultObject());
 	check(TestStablyNamedUObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+
+	// Validate const UObject
+	check(TestConstObj->IsA(UTestUObject::StaticClass()));
+	check(TestConstObj == UTestUObject::StaticClass()->GetDefaultObject());
+	check(TestConstObj->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
 }

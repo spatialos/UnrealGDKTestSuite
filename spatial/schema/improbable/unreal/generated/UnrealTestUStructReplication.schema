@@ -28,13 +28,14 @@ component TestUStructReplicationMultiClientRepData {
 	int32 field_podustruct0_rootprop0 = 17; // COND_None // SimpleTestStruct::PODUStruct::TestUStructReplication
 	int32 field_nestedustruct0_nestedstruct0_rootprop0 = 18; // COND_None // SimpleTestStruct::NestedStructNestedTestStruct::NestedUStruct::TestUStructReplication
 	UnrealObjectRef field_ustructwithstablynamedobject0_stablynamedobject0 = 19; // COND_None // StablyNamedObjectTestStruct::UStructWithStablyNamedObject::TestUStructReplication
-	UnrealObjectRef field_ustructwithdynamicallycreatedactor0_dynamicallycreatedactor0 = 20; // COND_None // DynamicallyCreatedActorTestStruct::UStructWithDynamicallyCreatedActor::TestUStructReplication
-	bytes field_ustructwithnetserialize0 = 21; // COND_None // ::TestUStructReplication
-	int32 field_ustructwithcstylearray0_array0 = 22; // COND_None // CArrayTestStruct::UStructWithCStyleArray::TestUStructReplication
-	int32 field_ustructwithcstylearray0_array1 = 23; // COND_None // CArrayTestStruct::UStructWithCStyleArray::TestUStructReplication
-	list<int32> field_ustructwithtarray0_array0 = 24; // COND_None // TArrayTestStruct::UStructWithTArray::TestUStructReplication
-	uint32 field_ustructwithunrealstyleenum0_test32enum0 = 25; // COND_None // UnrealStyleEnumTestStruct::UStructWithUnrealStyleEnum::TestUStructReplication
-	uint32 field_ustructwithcppstyleenum0_uenum0 = 26; // COND_None // CStyleEnumTestStruct::UStructWithCppStyleEnum::TestUStructReplication
+	UnrealObjectRef field_ustructwithconststablynamedobject0_stablynamedobject0 = 20; // COND_None // ConstStablyNamedObjectTestStruct::UStructWithConstStablyNamedObject::TestUStructReplication
+	UnrealObjectRef field_ustructwithdynamicallycreatedactor0_dynamicallycreatedactor0 = 21; // COND_None // DynamicallyCreatedActorTestStruct::UStructWithDynamicallyCreatedActor::TestUStructReplication
+	bytes field_ustructwithnetserialize0 = 22; // COND_None // ::TestUStructReplication
+	int32 field_ustructwithcstylearray0_array0 = 23; // COND_None // CArrayTestStruct::UStructWithCStyleArray::TestUStructReplication
+	int32 field_ustructwithcstylearray0_array1 = 24; // COND_None // CArrayTestStruct::UStructWithCStyleArray::TestUStructReplication
+	list<int32> field_ustructwithtarray0_array0 = 25; // COND_None // TArrayTestStruct::UStructWithTArray::TestUStructReplication
+	uint32 field_ustructwithunrealstyleenum0_test32enum0 = 26; // COND_None // UnrealStyleEnumTestStruct::UStructWithUnrealStyleEnum::TestUStructReplication
+	uint32 field_ustructwithcppstyleenum0_uenum0 = 27; // COND_None // CStyleEnumTestStruct::UStructWithCppStyleEnum::TestUStructReplication
 }
 component TestUStructReplicationMigratableData {
 	id = 100108;

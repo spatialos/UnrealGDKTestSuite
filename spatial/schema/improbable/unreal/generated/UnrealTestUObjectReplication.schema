@@ -27,6 +27,7 @@ component TestUObjectReplicationMultiClientRepData {
 	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
 	UnrealObjectRef field_dynamicallycreatedactor0 = 17; // COND_None // ::TestUObjectReplication
 	UnrealObjectRef field_stablynameduobject0 = 18; // COND_None // ::TestUObjectReplication
+	UnrealObjectRef field_constobj0 = 19; // COND_None // ::TestUObjectReplication
 }
 component TestUObjectReplicationMigratableData {
 	id = 100102;

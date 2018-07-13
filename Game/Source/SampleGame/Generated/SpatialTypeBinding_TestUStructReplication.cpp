@@ -67,13 +67,14 @@ void USpatialTypeBinding_TestUStructReplication::Init(USpatialInterop* InInterop
 	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"PODUStruct", "RootProp"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"NestedUStruct", "NestedStruct", "RootProp"}, {0, 0, 0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"UStructWithStablyNamedObject", "StablyNamedObject"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"UStructWithDynamicallyCreatedActor", "DynamicallyCreatedActor"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"UStructWithNetSerialize"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"UStructWithCStyleArray", "Array"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(23, FRepHandleData(Class, {"UStructWithCStyleArray", "Array"}, {0, 1}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(24, FRepHandleData(Class, {"UStructWithTArray", "Array"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(25, FRepHandleData(Class, {"UStructWithUnrealStyleEnum", "Test32Enum"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"UStructWithCppStyleEnum", "UEnum"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"UStructWithConstStablyNamedObject", "StablyNamedObject"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"UStructWithDynamicallyCreatedActor", "DynamicallyCreatedActor"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"UStructWithNetSerialize"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(23, FRepHandleData(Class, {"UStructWithCStyleArray", "Array"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(24, FRepHandleData(Class, {"UStructWithCStyleArray", "Array"}, {0, 1}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(25, FRepHandleData(Class, {"UStructWithTArray", "Array"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"UStructWithUnrealStyleEnum", "Test32Enum"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(27, FRepHandleData(Class, {"UStructWithCppStyleEnum", "UEnum"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
 }
 
 void USpatialTypeBinding_TestUStructReplication::BindToView(bool bIsClient)
@@ -689,9 +690,9 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 			}
 			break;
 		}
-		case 20: // field_ustructwithdynamicallycreatedactor0_dynamicallycreatedactor0
+		case 20: // field_ustructwithconststablynamedobject0_stablynamedobject0
 		{
-			ATestActor* Value = *(reinterpret_cast<ATestActor* const*>(Data));
+			UTestUObject* Value = *(reinterpret_cast<UTestUObject* const*>(Data));
 
 			if (Value != nullptr)
 			{
@@ -712,6 +713,38 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 				}
 				else
 				{
+					OutUpdate.set_field_ustructwithconststablynamedobject0_stablynamedobject0(ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_ustructwithconststablynamedobject0_stablynamedobject0(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 21: // field_ustructwithdynamicallycreatedactor0_dynamicallycreatedactor0
+		{
+			ATestActor* Value = *(reinterpret_cast<ATestActor* const*>(Data));
+
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 21);
+				}
+				else
+				{
 					OutUpdate.set_field_ustructwithdynamicallycreatedactor0_dynamicallycreatedactor0(ObjectRef);
 				}
 			}
@@ -721,11 +754,11 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 			}
 			break;
 		}
-		case 21: // field_ustructwithnetserialize0
+		case 22: // field_ustructwithnetserialize0
 		{
 			const FTestStructWithNetSerialize& Value = *(reinterpret_cast<FTestStructWithNetSerialize const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 21);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 22);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -739,25 +772,25 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 21);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 22);
 			}
 			break;
 		}
-		case 22: // field_ustructwithcstylearray0_array0
+		case 23: // field_ustructwithcstylearray0_array0
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
 			OutUpdate.set_field_ustructwithcstylearray0_array0(int32_t(Value));
 			break;
 		}
-		case 23: // field_ustructwithcstylearray0_array1
+		case 24: // field_ustructwithcstylearray0_array1
 		{
 			int32 Value = *(reinterpret_cast<int32 const*>(Data));
 
 			OutUpdate.set_field_ustructwithcstylearray0_array1(int32_t(Value));
 			break;
 		}
-		case 24: // field_ustructwithtarray0_array0
+		case 25: // field_ustructwithtarray0_array0
 		{
 			const TArray<int32>& Value = *(reinterpret_cast<TArray<int32> const*>(Data));
 
@@ -769,14 +802,14 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 			OutUpdate.set_field_ustructwithtarray0_array0(List);
 			break;
 		}
-		case 25: // field_ustructwithunrealstyleenum0_test32enum0
+		case 26: // field_ustructwithunrealstyleenum0_test32enum0
 		{
 			ETest32Enum Value = *(reinterpret_cast<ETest32Enum const*>(Data));
 
 			OutUpdate.set_field_ustructwithunrealstyleenum0_test32enum0(uint32(Value));
 			break;
 		}
-		case 26: // field_ustructwithcppstyleenum0_uenum0
+		case 27: // field_ustructwithcppstyleenum0_uenum0
 		{
 			TEnumAsByte<EnumNamespace::EUnrealTestEnum> Value = *(reinterpret_cast<TEnumAsByte<EnumNamespace::EUnrealTestEnum> const*>(Data));
 
@@ -1443,10 +1476,66 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			}
 		}
 	}
+	if (!Update.field_ustructwithconststablynamedobject0_stablynamedobject0().empty())
+	{
+		// field_ustructwithconststablynamedobject0_stablynamedobject0
+		uint16 Handle = 20;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			bool bWriteObjectProperty = true;
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			UTestUObject* Value = *(reinterpret_cast<UTestUObject* const*>(PropertyData));
+
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_ustructwithconststablynamedobject0_stablynamedobject0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UTestUObject>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<UTestUObject>(Object_Raw);
+				}
+				else
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+				}
+			}
+
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+
+				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
+		}
+	}
 	if (!Update.field_ustructwithdynamicallycreatedactor0_dynamicallycreatedactor0().empty())
 	{
 		// field_ustructwithdynamicallycreatedactor0_dynamicallycreatedactor0
-		uint16 Handle = 20;
+		uint16 Handle = 21;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1502,7 +1591,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 	if (!Update.field_ustructwithnetserialize0().empty())
 	{
 		// field_ustructwithnetserialize0
-		uint16 Handle = 21;
+		uint16 Handle = 22;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1530,7 +1619,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 	if (!Update.field_ustructwithcstylearray0_array0().empty())
 	{
 		// field_ustructwithcstylearray0_array0
-		uint16 Handle = 22;
+		uint16 Handle = 23;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1552,7 +1641,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 	if (!Update.field_ustructwithcstylearray0_array1().empty())
 	{
 		// field_ustructwithcstylearray0_array1
-		uint16 Handle = 23;
+		uint16 Handle = 24;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1574,7 +1663,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 	if (!Update.field_ustructwithtarray0_array0().empty())
 	{
 		// field_ustructwithtarray0_array0
-		uint16 Handle = 24;
+		uint16 Handle = 25;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1601,7 +1690,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 	if (!Update.field_ustructwithunrealstyleenum0_test32enum0().empty())
 	{
 		// field_ustructwithunrealstyleenum0_test32enum0
-		uint16 Handle = 25;
+		uint16 Handle = 26;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1623,7 +1712,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 	if (!Update.field_ustructwithcppstyleenum0_uenum0().empty())
 	{
 		// field_ustructwithcppstyleenum0_uenum0
-		uint16 Handle = 26;
+		uint16 Handle = 27;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
@@ -1700,6 +1789,33 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 			else
 			{
 				RPCPayload.set_field_repustructwithstablynamedobject0_stablynamedobject0(SpatialConstants::NULL_OBJECT_REF);
+			}
+		}
+		{
+			if (StructuredParams.RepUStructWithConstStablyNamedObject.StablyNamedObject != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StructuredParams.RepUStructWithConstStablyNamedObject.StablyNamedObject);
+				if (!NetGUID.IsValid())
+				{
+					if (StructuredParams.RepUStructWithConstStablyNamedObject.StablyNamedObject->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RepUStructWithConstStablyNamedObject.StablyNamedObject);
+					}
+				}
+				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepUStructWithConstStablyNamedObject.StablyNamedObject is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					return {Cast<UObject>(StructuredParams.RepUStructWithConstStablyNamedObject.StablyNamedObject)};
+				}
+				else
+				{
+					RPCPayload.set_field_repustructwithconststablynamedobject0_stablynamedobject0(ObjectRef);
+				}
+			}
+			else
+			{
+				RPCPayload.set_field_repustructwithconststablynamedobject0_stablynamedobject0(SpatialConstants::NULL_OBJECT_REF);
 			}
 		}
 		{
@@ -1827,6 +1943,34 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_OnRPCP
 					// A legal static object reference should never be unresolved.
 					checkf(ObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
 					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_ReportReplication_OnRPCPayload: Parameters.RepUStructWithStablyNamedObject.StablyNamedObject %s is not resolved on this worker."),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef));
+					return {ObjectRef};
+				}
+			}
+		}
+		{
+			improbable::unreal::UnrealObjectRef ObjectRef = Op.Request.field_repustructwithconststablynamedobject0_stablynamedobject0();
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				Parameters.RepUStructWithConstStablyNamedObject.StablyNamedObject = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UTestUObject>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Parameters.RepUStructWithConstStablyNamedObject.StablyNamedObject = Cast<UTestUObject>(Object_Raw);
+				}
+				else
+				{
+					// A legal static object reference should never be unresolved.
+					checkf(ObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_ReportReplication_OnRPCPayload: Parameters.RepUStructWithConstStablyNamedObject.StablyNamedObject %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};

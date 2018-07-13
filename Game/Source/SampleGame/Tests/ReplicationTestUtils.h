@@ -121,6 +121,15 @@ struct FStablyNamedObjectTestStruct
 };
 
 USTRUCT()
+struct FConstStablyNamedObjectTestStruct
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	const UTestUObject* StablyNamedObject;
+};
+
+USTRUCT()
 struct FDynamicallyCreatedActorTestStruct
 {
 	GENERATED_BODY()

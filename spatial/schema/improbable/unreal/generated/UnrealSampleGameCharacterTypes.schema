@@ -4,10 +4,6 @@ package improbable.unreal.generated.samplegamecharacter;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-type ClientTestConstArgsRequest {
-	uint32 target_subobject_offset = 1;
-	UnrealObjectRef field_conststruct0_constobj0 = 2;
-}
 type TestMulticastRequest {
 	uint32 target_subobject_offset = 1;
 }

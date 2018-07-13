@@ -28,7 +28,8 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReportReplication(ATestActor* RepDynamicallyCreatedActor,
 								  /*const TArray<UTestUObject*>& RepUObjectWithReplicatedComponent,*/
-								  UTestUObject* RepStablyNamedUObject);
+								  UTestUObject* RepStablyNamedUObject,
+								  const UTestUObject* RepConstObj);
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -51,11 +52,13 @@ private:
 
 	void ValidateReplication_Client(ATestActor* TestDynamicallyCreatedActor,
 									/*const TArray<UTestUObject*>& TestUObjectWithReplicatedComponent,*/
-									UTestUObject* TestStablyNamedUObject);
+									UTestUObject* TestStablyNamedUObject,
+									const UTestUObject* TestConstObj);
 
 	void ValidateRPC_Server(ATestActor* TestDynamicallyCreatedActor,
 							/*const TArray<UTestUObject*>& TestUObjectWithReplicatedComponent,*/
-							UTestUObject* TestStablyNamedUObject);
+							UTestUObject* TestStablyNamedUObject,
+							const UTestUObject* TestConstObj);
 
 	// Test Dynmaically created actor
 	UPROPERTY(ReplicatedUsing = OnRep_DynamicallyCreatedActor)
@@ -67,6 +70,10 @@ private:
 	// Test Stably named UObject
 	UPROPERTY(Replicated)
 	UTestUObject* StablyNamedUObject;
+
+	// Test const UObject
+	UPROPERTY(Replicated)
+	const UTestUObject* ConstObj;
 
 	bool bDynamicallyCreatedActorReplicated;
 	bool bReplicationRecievedOnClient;

@@ -10,15 +10,6 @@
 #include "Tests/ReplicationTestUtils.h"
 #include "SampleGameCharacter.generated.h"
 
-USTRUCT()
-struct FConstStruct
-{
-	GENERATED_BODY();
-
-	UPROPERTY()
-	const UObject* ConstObj;
-};
-
 UCLASS(config = Game)
 class ASampleGameCharacter : public ACharacter
 {
@@ -46,9 +37,6 @@ public:
 
 	UPROPERTY(ReplicatedUsing = OnRep_TestRunner)
 	AGDKTestRunner* TestRunner;
-
-	UFUNCTION(Client, Reliable)
-	void Client_TestConstArgs(FConstStruct ConstStruct);
 
 	UFUNCTION()
 	void OnRep_TestRunner();

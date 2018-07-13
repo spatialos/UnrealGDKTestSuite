@@ -65,7 +65,6 @@ import "improbable/unreal/generated/UnrealCharacterTypes.schema";
 
 component SampleGameCharacterClientRPCs {
 	id = 100025;
-	command UnrealRPCCommandResponse clienttestconstargs(samplegamecharacter.ClientTestConstArgsRequest);
 	command UnrealRPCCommandResponse rootmotiondebugclientprintonscreen(character.RootMotionDebugClientPrintOnScreenRequest);
 	command UnrealRPCCommandResponse clientveryshortadjustposition(character.ClientVeryShortAdjustPositionRequest);
 	command UnrealRPCCommandResponse clientcheatwalk(character.ClientCheatWalkRequest);
