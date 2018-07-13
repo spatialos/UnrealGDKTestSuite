@@ -205,8 +205,7 @@ void ATestTArrayReplication::ValidateRPC_Server(const TArray<int>& TestPODArray,
 	check(TestPODArray[1] == 37);
 
 	// Validate the stably named object
-	int num = TestStablyNamedArray.Num();
-	check(num == 2);
+	check(TestStablyNamedArray.Num() == 2);
 
 	check(TestStablyNamedArray[0]->IsA(UTestUObject::StaticClass()));
 	check(TestStablyNamedArray[0] == UTestUObject::StaticClass()->GetDefaultObject());

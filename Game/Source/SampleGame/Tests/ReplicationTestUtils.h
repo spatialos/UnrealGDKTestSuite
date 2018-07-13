@@ -82,7 +82,7 @@ public:
 	}
 
 	UPROPERTY()
-		int RootProp;
+	int RootProp;
 };
 // UObject test types end
 
@@ -95,7 +95,6 @@ struct FSimpleTestStruct
 	FSimpleTestStruct() 
 		: RootProp(-1)
 	{
-
 	}
 
 	UPROPERTY()

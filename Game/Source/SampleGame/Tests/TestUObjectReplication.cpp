@@ -37,6 +37,7 @@ void ATestUObjectReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProper
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION(ATestUObjectReplication, DynamicallyCreatedActor, COND_None);
+	// TODO: UNR-238 Add tests.
 	/*DOREPLIFETIME_CONDITION(ATestUObjectReplication, UObjectWithReplicatedComponent, COND_None);*/
 	DOREPLIFETIME_CONDITION(ATestUObjectReplication, StablyNamedUObject, COND_None);
 	DOREPLIFETIME_CONDITION(ATestUObjectReplication, ConstObj, COND_None);
