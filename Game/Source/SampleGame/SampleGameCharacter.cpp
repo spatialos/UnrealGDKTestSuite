@@ -178,6 +178,7 @@ void ASampleGameCharacter::Client_TestConstArgs_Implementation(FConstStruct Cons
 
 void ASampleGameCharacter::OnRep_TestRunner()
 {
+	check(TestRunner)
 	bTestRunnerReplicated = true;
 }
 
