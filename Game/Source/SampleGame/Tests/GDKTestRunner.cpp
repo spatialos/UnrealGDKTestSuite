@@ -3,6 +3,7 @@
 #include "GDKTestRunner.h"
 
 #include "UnrealNetwork.h"
+#include "GameFramework/GameModeBase.h"
 
 #include "Tests/TestIntReplication.h"
 #include "Tests/TestFloatReplication.h"
@@ -24,7 +25,6 @@ AGDKTestRunner::AGDKTestRunner()
 	, CurrentTestIndex(0)
 	, ReadyClientsCount(0)
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
 }
@@ -36,31 +36,29 @@ void AGDKTestRunner::Tick(float DeltaTime)
 
 	if (bIsRunning)
 	{
-		if (UWorld* World = GetWorld())
+		UWorld* World = GetWorld();
+		AGameModeBase* GameMode = World->GetAuthGameMode();
+		if (!World || !GameMode || !(ReadyClientsCount == GameMode->GetNumPlayers()))
 		{
-			if (AGameModeBase* GameMode = World->GetAuthGameMode())
-			{
-				if (ReadyClientsCount == GameMode->GetNumPlayers())
-				{
-					// execute the tests
-					if (TestCases[CurrentTestIndex]->IsFinished())
-					{
-						CurrentTestIndex++;
+			return;
+		}
 
-						if (CurrentTestIndex == TestCases.Num())
-						{
-							bIsRunning = false;
-							ReadyClientsCount = 0;
-							CurrentTestIndex = 0;
-							TearDownTestCases();
-							UE_LOG(LogSpatialGDKTests, Warning, TEXT("TestRunner: All Test completed successfully!"));
-						}
-						else
-						{
-							TestCases[CurrentTestIndex]->StartTest();
-						}
-					}			
-				}
+		// execute the tests
+		if (TestCases[CurrentTestIndex]->IsFinished())
+		{
+			CurrentTestIndex++;
+
+			if (CurrentTestIndex == TestCases.Num())
+			{
+				bIsRunning = false;
+				ReadyClientsCount = 0;
+				CurrentTestIndex = 0;
+				Server_TearDownTestCases();
+				UE_LOG(LogSpatialGDKTests, Log, TEXT("TestRunner: All Test completed successfully!"));
+			}
+			else
+			{
+				TestCases[CurrentTestIndex]->Server_StartTest();
 			}
 		}
 	}
@@ -78,11 +76,11 @@ void AGDKTestRunner::Server_RunTests_Implementation()
 		ReadyClientsCount = 0;
 		bIsRunning = true;
 
-		SetupTestCases();
+		Server_SetupTestCases();
 	}
 	else
 	{
-		//Log that test suite is already running.
+		UE_LOG(LogSpatialGDKTests, Log, TEXT("TestRunner: Could not start the test runner, it is already running."));
 	}
 
 }
@@ -115,13 +113,14 @@ void AGDKTestRunner::Server_SignalClientReady_Implementation()
 			if (ReadyClientsCount == GameMode->GetNumPlayers())
 			{
 				// Start the new test case as we are ready
-				TestCases[0]->StartTest();
+				CurrentTestIndex = 0;
+				TestCases[CurrentTestIndex]->Server_StartTest();
 			}
 		}
 	}
 }
 
-void AGDKTestRunner::SetupTestCases()
+void AGDKTestRunner::Server_SetupTestCases()
 {
 	// Setup the testcases here.
 	UWorld* World = GetWorld();
@@ -177,11 +176,11 @@ void AGDKTestRunner::SetupTestCases()
 	}
 }
 
-void AGDKTestRunner::TearDownTestCases()
+void AGDKTestRunner::Server_TearDownTestCases()
 {
 	for (AGDKTestCase* TestCase : TestCases)
 	{
-		TestCase->TearDown();
+		TestCase->Server_TearDown();
 	}
 
 	TestCases.Empty();

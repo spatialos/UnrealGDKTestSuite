@@ -22,12 +22,12 @@ void ATestCharReplication::Server_ReportReplication_Implementation()
 	SignalResponseRecieved();
 }
 
-void ATestCharReplication::StartTestImpl()
+void ATestCharReplication::Server_StartTestImpl()
 {
 	SignalReplicationSetup();
 }
 
-void ATestCharReplication::TearDownImpl()
+void ATestCharReplication::Server_TearDownImpl()
 {
 	// Left empty as there is no teardown required for this test.
 }

@@ -37,7 +37,7 @@ void ATestIntReplication::Server_ReportReplication_Implementation(int8 Rep8Int, 
 	SignalResponseRecieved();
 }
 
-void ATestIntReplication::StartTestImpl()
+void ATestIntReplication::Server_StartTestImpl()
 {
 	Test8Int = (1 << 6);
 	Test16Int = (1 << 14);
@@ -51,7 +51,7 @@ void ATestIntReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
-void ATestIntReplication::TearDownImpl()
+void ATestIntReplication::Server_TearDownImpl()
 {
 	Test8Int = 0;
 	Test16Int = 0;

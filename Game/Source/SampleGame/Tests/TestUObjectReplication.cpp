@@ -2,6 +2,7 @@
 
 #include "TestUObjectReplication.h"
 
+#include "GDKTestRunner.h"
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 #include "SpatialNetDriver.h"
@@ -11,18 +12,22 @@ void ATestUObjectReplication::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
+	UWorld* World = GetWorld();
+	if (World && GetNetMode() == NM_Client)
 	{
-		bDynamicallyCreatedActorReplicated = false;
-		bReplicationRecievedOnClient = false;
+		if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
+		{
+			bDynamicallyCreatedActorReplicated = false;
+			bReplicationRecievedOnClient = false;
 
-		ValidateReplication_Client(DynamicallyCreatedActor, 
-								   /*UObjectWithReplicatedComponent,*/
-								   StablyNamedUObject);
+			ValidateReplication_Client(DynamicallyCreatedActor,
+									   /*UObjectWithReplicatedComponent,*/
+									   StablyNamedUObject);
 
-		Server_ReportReplication(DynamicallyCreatedActor, 
-								 /*UObjectWithReplicatedComponent,*/
-								 StablyNamedUObject);
+			Server_ReportReplication(DynamicallyCreatedActor,
+									 /*UObjectWithReplicatedComponent,*/
+									 StablyNamedUObject);
+		}
 	}
 }
 
@@ -52,7 +57,7 @@ void ATestUObjectReplication::Server_ReportReplication_Implementation(ATestActor
 	SignalResponseRecieved();
 }
 
-void ATestUObjectReplication::StartTestImpl()
+void ATestUObjectReplication::Server_StartTestImpl()
 {
 	// Setup dynamically generated actors
 	DynamicallyCreatedActor = GetWorld()->SpawnActor<ATestActor>();
@@ -66,9 +71,12 @@ void ATestUObjectReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
-void ATestUObjectReplication::TearDownImpl()
+void ATestUObjectReplication::Server_TearDownImpl()
 {
-	DynamicallyCreatedActor->Destroy(true);
+	if (!DynamicallyCreatedActor->Destroy(true))
+	{
+		UE_LOG(LogSpatialGDKTests, Log, TEXT("TestCase %s: Unable to tear down dynamically created actor"), *TestName);
+	}
 
 	StablyNamedUObject = nullptr;
 }

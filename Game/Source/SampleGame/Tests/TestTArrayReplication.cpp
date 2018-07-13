@@ -2,6 +2,7 @@
 
 #include "TestTArrayReplication.h"
 
+#include "GDKTestRunner.h"
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 #include "SpatialNetDriver.h"
@@ -11,14 +12,18 @@ void ATestTArrayReplication::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
+	UWorld* World = GetWorld();
+	if (World && GetNetMode() == NM_Client)
 	{
-		bDynamicallyCreatedActorReplicated = false;
-		bReplicationRecievedOnClient = false;
+		if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
+		{
+			bDynamicallyCreatedActorReplicated = false;
+			bReplicationRecievedOnClient = false;
 
-		ValidateReplication_Client(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
+			ValidateReplication_Client(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
 
-		Server_ReportReplication(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
+			Server_ReportReplication(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
+		}
 	}
 }
 
@@ -58,7 +63,7 @@ void ATestTArrayReplication::Server_ReportReplication_Implementation(const TArra
 	SignalResponseRecieved();
 }
 
-void ATestTArrayReplication::StartTestImpl()
+void ATestTArrayReplication::Server_StartTestImpl()
 {
 	// Setup PODs
 	PODArray.Add(42);
@@ -99,14 +104,17 @@ void ATestTArrayReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
-void ATestTArrayReplication::TearDownImpl()
+void ATestTArrayReplication::Server_TearDownImpl()
 {
 	PODArray.Empty();
 	StablyNamedArray.Empty();
 
 	for (ATestActor* Actor : DynamicallyCreatedArray)
 	{
-		Actor->Destroy(true);
+		if (!Actor->Destroy(true))
+		{
+			UE_LOG(LogSpatialGDKTests, Log, TEXT("TestCase %s: Unable to tear down dynamically created actor in TArray"), *TestName);
+		}
 	}
 	DynamicallyCreatedArray.Empty();
 

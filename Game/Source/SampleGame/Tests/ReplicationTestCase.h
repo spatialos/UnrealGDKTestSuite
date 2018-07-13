@@ -19,17 +19,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void StartTest() override;
+	virtual void Server_StartTest() override;
 
-	virtual void TearDown() override;
-
-	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_StartTest();
+	virtual void Server_TearDown() override;
 
 	UFUNCTION()
 	void OnRep_TestBookend();
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 
 	UFUNCTION()
@@ -39,12 +37,12 @@ protected:
 	void SignalResponseRecieved();
 
 	UFUNCTION()
-	virtual void StartTestImpl()
-	PURE_VIRTUAL(AReplicationTestCase::StartTestImpl(), );
+	virtual void Server_StartTestImpl()
+	PURE_VIRTUAL(AReplicationTestCase::Server_StartTestImpl(), );
 
 	UFUNCTION()
-	virtual void TearDownImpl()
-	PURE_VIRTUAL(AReplicationTestCase::TearDownImpl(), );
+	virtual void Server_TearDownImpl()
+	PURE_VIRTUAL(AReplicationTestCase::Server_TearDownImpl(), );
 
 	UFUNCTION()
 	virtual void ValidateClientReplicationImpl()

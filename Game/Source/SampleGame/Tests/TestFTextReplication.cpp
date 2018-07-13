@@ -23,14 +23,14 @@ void ATestFTextReplication::Server_ReportReplication_Implementation(const FText&
 	SignalResponseRecieved();
 }
 
-void ATestFTextReplication::StartTestImpl()
+void ATestFTextReplication::Server_StartTestImpl()
 {
 	TestFText = ValidationText;
 
 	SignalReplicationSetup();
 }
 
-void ATestFTextReplication::TearDownImpl()
+void ATestFTextReplication::Server_TearDownImpl()
 {
 	TestFText = FText::FromString(TEXT(""));
 }

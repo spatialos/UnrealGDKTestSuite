@@ -61,7 +61,7 @@ public:
 
 	ATestActor();
 
-	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const;
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const;
 
 	UPROPERTY(Replicated)
 	FString ActorName;
@@ -77,8 +77,8 @@ class UTestUObject : public UObject
 public:
 
 	UTestUObject()
+		: RootProp(0)
 	{
-		RootProp = 42;
 	}
 
 	UPROPERTY()
@@ -142,10 +142,7 @@ struct FTestStructWithNetSerialize
 
 	bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
 	{
-		EStructFlags Flags = FTestStructWithNetSerialize::StaticStruct()->StructFlags;
-
 		Ar << MyInt;
-
 		Ar << MyFloat;
 
 		return true;
@@ -159,15 +156,6 @@ struct TStructOpsTypeTraits<FTestStructWithNetSerialize> : public TStructOpsType
 	{
 		WithNetSerializer = true
 	};
-};
-
-USTRUCT()
-struct FTestStructWithNestedTArray
-{
-	GENERATED_BODY()
-
-	UPROPERTY()
-	TArray<int> MyArray;
 };
 
 USTRUCT()

@@ -2,6 +2,7 @@
 
 #include "TestCArrayReplication.h"
 
+#include "GDKTestRunner.h"
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 
@@ -22,14 +23,18 @@ void ATestCArrayReplication::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
+	UWorld* World = GetWorld();
+	if (World && GetNetMode() == NM_Client)
 	{
-		bDynamicallyCreatedActorReplicated = false;
-		bReplicationRecievedOnClient = false;
+		if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
+		{
+			bDynamicallyCreatedActorReplicated = false;
+			bReplicationRecievedOnClient = false;
 
-		ValidateReplication_Client();
+			ValidateReplication_Client();
 
-		Server_ReportReplication();
+			Server_ReportReplication();
+		}
 	}
 }
 
@@ -43,7 +48,7 @@ void ATestCArrayReplication::Server_ReportReplication_Implementation()
 	SignalResponseRecieved();
 }
 
-void ATestCArrayReplication::StartTestImpl()
+void ATestCArrayReplication::Server_StartTestImpl()
 {
 	// Setup PODs
 	PODArray[0] = FirstComparisonValue;
@@ -88,7 +93,7 @@ void ATestCArrayReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
-void ATestCArrayReplication::TearDownImpl()
+void ATestCArrayReplication::Server_TearDownImpl()
 {
 	PODArray[0] = 0;
 	PODArray[1] = 0;
@@ -96,8 +101,15 @@ void ATestCArrayReplication::TearDownImpl()
 	StablyNamedArray[0] = nullptr;
 	StablyNamedArray[1] = nullptr;
 
-	DynamicallyCreatedArray[0]->Destroy(true);
-	DynamicallyCreatedArray[1]->Destroy(true);
+	if (!DynamicallyCreatedArray[0]->Destroy(true))
+	{
+		UE_LOG(LogSpatialGDKTests, Log, TEXT("TestCase %s: Unable to tear down dynamically created actor C style array"), *TestName);
+	}
+
+	if (!DynamicallyCreatedArray[1]->Destroy(true))
+	{
+		UE_LOG(LogSpatialGDKTests, Log, TEXT("TestCase %s: Unable to tear down dynamically created actor C style array"), *TestName);
+	}
 
 	DynamicallyCreatedArray[0] = nullptr;
 	DynamicallyCreatedArray[1] = nullptr;
@@ -149,6 +161,7 @@ void ATestCArrayReplication::ValidateReplication_Client()
 
 	// Validate Dynamically created UObjects in the array
 	check(DynamicallyCreatedArray[0]->IsA(ATestActor::StaticClass()));
+	check(DynamicallyCreatedArray[1]->IsA(ATestActor::StaticClass()));
 
 	// Validate TArray with structs
 	check(ArrayOfStructs[0].RootProp == 42);

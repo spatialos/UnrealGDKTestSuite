@@ -2,8 +2,6 @@
 
 #pragma once
 
-#pragma optimize("", off)
-
 #include "CoreMinimal.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
@@ -103,5 +101,3 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
-
-#pragma optimize("", on)

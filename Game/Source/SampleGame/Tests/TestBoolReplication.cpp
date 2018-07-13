@@ -23,14 +23,14 @@ void ATestBoolReplication::Server_ReportReplication_Implementation(bool RepBool)
 	SignalResponseRecieved();
 }
 
-void ATestBoolReplication::StartTestImpl()
+void ATestBoolReplication::Server_StartTestImpl()
 {
 	TestBool = true;
 
 	SignalReplicationSetup();
 }
 
-void ATestBoolReplication::TearDownImpl()
+void ATestBoolReplication::Server_TearDownImpl()
 {
 	TestBool = false;
 }

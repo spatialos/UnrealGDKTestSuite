@@ -23,14 +23,14 @@ void ATestFNameReplication::Server_ReportReplication_Implementation(const FName&
 	SignalResponseRecieved();
 }
 
-void ATestFNameReplication::StartTestImpl()
+void ATestFNameReplication::Server_StartTestImpl()
 {
 	TestFName = ValidationName;
 
 	SignalReplicationSetup();
 }
 
-void ATestFNameReplication::TearDownImpl()
+void ATestFNameReplication::Server_TearDownImpl()
 {
 	TestFName = TEXT("");
 }

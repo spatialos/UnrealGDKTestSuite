@@ -38,13 +38,13 @@ public:
 								  FTestStructWithNetSerialize RepArrayOfStructNetSerialize[2],
 								  TEnumAsByte<EnumNamespace::EUnrealTestEnum> RepTestUEnumCArray[16]*/);
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION()
-	virtual void StartTestImpl() override;
+	virtual void Server_StartTestImpl() override;
 
 	UFUNCTION()
-	virtual void TearDownImpl() override;
+	virtual void Server_TearDownImpl() override;
 
 	UFUNCTION()
 	virtual void ValidateClientReplicationImpl() override;

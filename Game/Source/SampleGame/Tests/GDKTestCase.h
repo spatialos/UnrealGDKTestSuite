@@ -21,15 +21,15 @@ public:
 	UFUNCTION()
 	FString GetResultSummary() const;
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION()
-	virtual void StartTest()
-	PURE_VIRTUAL(AGDKTestCase::StartTest(), );
+	virtual void Server_StartTest()
+	PURE_VIRTUAL(AGDKTestCase::Server_StartTest(), );
 
 	UFUNCTION()
-	virtual void TearDown()
-	PURE_VIRTUAL(AGDKTestCase::StartTest(), );
+	virtual void Server_TearDown()
+	PURE_VIRTUAL(AGDKTestCase::Server_TearDown(), );
 
 
 protected:

@@ -63,13 +63,10 @@ private:
 
 	// RPC command sender functions.
 	void Server_ReportReplication_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
-	void Server_StartTest_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
 	void Server_ReportReplication_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands::Serverreportreplication>& Op);
-	void Server_StartTest_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands::Serverstarttest>& Op);
 
 	// RPC command response handler functions.
 	void Server_ReportReplication_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands::Serverreportreplication>& Op);
-	void Server_StartTest_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testftextreplication::TestFTextReplicationServerRPCs::Commands::Serverstarttest>& Op);
 };

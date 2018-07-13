@@ -27,17 +27,15 @@ public:
 	UFUNCTION()
 	bool IsRunning() const;
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_SignalClientReady();
 
-	UFUNCTION()
-	void SetupTestCases();
+	void Server_SetupTestCases();
 
-	UFUNCTION()
-	void TearDownTestCases();
+	void Server_TearDownTestCases();
 
 	UFUNCTION()
 	void OnRep_TestCases();

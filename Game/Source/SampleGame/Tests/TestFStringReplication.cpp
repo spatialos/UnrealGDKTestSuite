@@ -23,14 +23,14 @@ void ATestFStringReplication::Server_ReportReplication_Implementation(const FStr
 	SignalResponseRecieved();
 }
 
-void ATestFStringReplication::StartTestImpl()
+void ATestFStringReplication::Server_StartTestImpl()
 {
 	TestFString = ComparisonValue;
 
 	SignalReplicationSetup();
 }
 
-void ATestFStringReplication::TearDownImpl()
+void ATestFStringReplication::Server_TearDownImpl()
 {
 	TestFString = TEXT("");
 }

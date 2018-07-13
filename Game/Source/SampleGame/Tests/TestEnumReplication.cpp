@@ -27,7 +27,7 @@ void ATestEnumReplication::Server_ReportReplication_Implementation(ETest8Enum Re
 	SignalResponseRecieved();
 }
 
-void ATestEnumReplication::StartTestImpl()
+void ATestEnumReplication::Server_StartTestImpl()
 {
 	Test8Enum = ETest8Enum::Enum_1;
 	Test16Enum = ETest16Enum::Enum_1;
@@ -38,7 +38,7 @@ void ATestEnumReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
-void ATestEnumReplication::TearDownImpl()
+void ATestEnumReplication::Server_TearDownImpl()
 {
 	Test8Enum = ETest8Enum::Enum_0;
 	Test16Enum = ETest16Enum::Enum_0;

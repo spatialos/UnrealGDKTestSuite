@@ -2,6 +2,7 @@
 
 #include "TestUStructReplication.h"
 
+#include "GDKTestRunner.h"
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 #include "SpatialNetDriver.h"
@@ -11,30 +12,34 @@ void ATestUStructReplication::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
+	UWorld* World = GetWorld();
+	if (World && GetNetMode() == NM_Client)
 	{
-		bDynamicallyCreatedActorReplicated = false;
-		bReplicationRecievedOnClient = false;
+		if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
+		{
+			bDynamicallyCreatedActorReplicated = false;
+			bReplicationRecievedOnClient = false;
 
-		ValidateReplication_Client(PODUStruct, 
-								   NestedUStruct, 
-								   UStructWithStablyNamedObject,
-								   UStructWithDynamicallyCreatedActor, 
-								   UStructWithNetSerialize, 
-								   UStructWithCStyleArray, 
-								   UStructWithTArray,
-								   UStructWithUnrealStyleEnum,
-								   UStructWithCppStyleEnum);
+			ValidateReplication_Client(PODUStruct,
+									   NestedUStruct,
+									   UStructWithStablyNamedObject,
+									   UStructWithDynamicallyCreatedActor,
+									   UStructWithNetSerialize,
+									   UStructWithCStyleArray,
+									   UStructWithTArray,
+									   UStructWithUnrealStyleEnum,
+									   UStructWithCppStyleEnum);
 
-		Server_ReportReplication(PODUStruct, 
-								 NestedUStruct,
-								 UStructWithStablyNamedObject,
-								 UStructWithDynamicallyCreatedActor,
-								 UStructWithNetSerialize,
-								 UStructWithCStyleArray,
-								 UStructWithTArray,
-								 UStructWithUnrealStyleEnum,
-								 UStructWithCppStyleEnum);
+			Server_ReportReplication(PODUStruct,
+									 NestedUStruct,
+									 UStructWithStablyNamedObject,
+									 UStructWithDynamicallyCreatedActor,
+									 UStructWithNetSerialize,
+									 UStructWithCStyleArray,
+									 UStructWithTArray,
+									 UStructWithUnrealStyleEnum,
+									 UStructWithCppStyleEnum);
+		}
 	}
 }
 
@@ -88,7 +93,7 @@ void ATestUStructReplication::Server_ReportReplication_Implementation(const FSim
 	SignalResponseRecieved();
 }
 
-void ATestUStructReplication::StartTestImpl()
+void ATestUStructReplication::Server_StartTestImpl()
 {
 	// Setup UStruct with POD
 	PODUStruct.RootProp = 42;
@@ -125,7 +130,7 @@ void ATestUStructReplication::StartTestImpl()
 	SignalReplicationSetup();
 }
 
-void ATestUStructReplication::TearDownImpl()
+void ATestUStructReplication::Server_TearDownImpl()
 {
 	PODUStruct.RootProp = 0;
 
@@ -133,7 +138,10 @@ void ATestUStructReplication::TearDownImpl()
 
 	UStructWithStablyNamedObject.StablyNamedObject = nullptr;
 
-	UStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->Destroy(true);
+	if (!UStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->Destroy(true))
+	{
+		UE_LOG(LogSpatialGDKTests, Log, TEXT("TestCase %s: Unable to tear down dynamically created actor"), *TestName);
+	}
 	UStructWithDynamicallyCreatedActor.DynamicallyCreatedActor = nullptr;
 
 	UStructWithNetSerialize.MyInt = 0;
