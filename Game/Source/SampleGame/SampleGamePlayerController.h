@@ -20,4 +20,7 @@ class SAMPLEGAME_API ASampleGamePlayerController : public APlayerController
 	UFUNCTION(NetMulticast, Unreliable, WithValidation)
 	void TestMulticast();
 
+public:
+
+	virtual void InitPlayerState() override;
 };
