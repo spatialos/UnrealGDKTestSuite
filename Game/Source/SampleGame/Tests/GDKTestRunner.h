@@ -58,6 +58,9 @@ private:
 	UFUNCTION()
 	void OnRep_TestCases();
 
+	template<typename T>
+	void AddTestCase();
+
 	UPROPERTY(ReplicatedUsing = OnRep_TestCases)
 	TArray<AGDKTestCase*> TestCases;
 
@@ -70,3 +73,17 @@ private:
 	UPROPERTY()
 	int ReadyClientsCount;
 };
+
+template<typename T>
+void AGDKTestRunner::AddTestCase()
+{ 
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		return;
+	}
+
+	T* TestCase = World->SpawnActor<T>();
+	check(TestCase);
+	TestCases.Add(TestCase);
+}

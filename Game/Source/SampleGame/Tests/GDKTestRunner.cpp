@@ -132,59 +132,23 @@ void AGDKTestRunner::Server_SignalClientReady_Implementation()
 void AGDKTestRunner::Server_SetupTestCases()
 {
 	// Setup the test cases here.
-	UWorld* World = GetWorld();
-	if (!World && GetNetMode() == NM_DedicatedServer)
+	if (GetNetMode() != NM_DedicatedServer)
 	{
 		return;
 	}
 
-	ATestIntReplication* IntTest = World->SpawnActor<ATestIntReplication>();
-	check(IntTest);
-	TestCases.Add(IntTest);
-
-	ATestFloatReplication* FloatTest = World->SpawnActor<ATestFloatReplication>();
-	check(FloatTest);
-	TestCases.Add(FloatTest);
-
-	ATestBoolReplication* BoolTest = World->SpawnActor<ATestBoolReplication>();
-	check(BoolTest);
-	TestCases.Add(BoolTest);
-		
-	ATestCharReplication* CharTest = World->SpawnActor<ATestCharReplication>();
-	check(CharTest);
-	TestCases.Add(CharTest);
-
-	ATestFStringReplication* FStringTest = World->SpawnActor<ATestFStringReplication>();
-	check(FStringTest);
-	TestCases.Add(FStringTest);
-
-	ATestCArrayReplication* CArrayTest = World->SpawnActor<ATestCArrayReplication>();
-	check(CArrayTest);
-	TestCases.Add(CArrayTest);
-		
-	ATestTArrayReplication* TArrayTest = World->SpawnActor<ATestTArrayReplication>();
-	check(TArrayTest);
-	TestCases.Add(TArrayTest);
-
-	ATestEnumReplication* EnumTest = World->SpawnActor<ATestEnumReplication>();
-	check(EnumTest);
-	TestCases.Add(EnumTest);
-
-	ATestFTextReplication* FTextTest = World->SpawnActor<ATestFTextReplication>();
-	check(FTextTest);
-	TestCases.Add(FTextTest);
-
-	ATestFNameReplication* FNameTest = World->SpawnActor<ATestFNameReplication>();
-	check(FNameTest);
-	TestCases.Add(FNameTest);
-
-	ATestUObjectReplication* UObjectTest = World->SpawnActor<ATestUObjectReplication>();
-	check(UObjectTest);
-	TestCases.Add(UObjectTest);
-
-	ATestUStructReplication* UStructTest = World->SpawnActor<ATestUStructReplication>();
-	check(UStructTest);
-	TestCases.Add(UStructTest);
+	AddTestCase<ATestIntReplication>();
+	AddTestCase<ATestFloatReplication>();
+	AddTestCase<ATestBoolReplication>();
+	AddTestCase<ATestCharReplication>();
+	AddTestCase<ATestFStringReplication>();
+	AddTestCase<ATestCArrayReplication>();
+	AddTestCase<ATestTArrayReplication>();
+	AddTestCase<ATestEnumReplication>();
+	AddTestCase<ATestFTextReplication>();
+	AddTestCase<ATestFNameReplication>();
+	AddTestCase<ATestUObjectReplication>();
+	AddTestCase<ATestUStructReplication>();
 }
 
 void AGDKTestRunner::Server_TearDownTestCases()
