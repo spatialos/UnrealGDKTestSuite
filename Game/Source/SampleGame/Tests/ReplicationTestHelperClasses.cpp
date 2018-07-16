@@ -1,6 +1,6 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
-#include "ReplicationTestUtils.h"
+#include "ReplicationTestHelperClasses.h"
 #include "UnrealNetwork.h"
 
 ATestActor::ATestActor()

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ReplicationTestUtils.generated.h"
+#include "ReplicationTestHelperClasses.generated.h"
 
 UENUM()
 enum class ETest8Enum : uint8

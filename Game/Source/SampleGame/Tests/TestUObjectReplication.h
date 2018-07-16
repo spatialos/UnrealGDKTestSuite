@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ReplicationTestCase.h"
-#include "ReplicationTestUtils.h"
+#include "ReplicationTestHelperClasses.h"
 #include "TestUObjectReplication.generated.h"
 
 UCLASS()

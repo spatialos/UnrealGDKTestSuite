@@ -7,7 +7,7 @@
 #include "GameFramework/Character.h"
 #include "Tests/GDKTestRunner.h"
 #include "Tests/ReplicationTestCase.h"
-#include "Tests/ReplicationTestUtils.h"
+#include "Tests/ReplicationTestHelperClasses.h"
 #include "SampleGameCharacter.generated.h"
 
 UCLASS(config = Game)
