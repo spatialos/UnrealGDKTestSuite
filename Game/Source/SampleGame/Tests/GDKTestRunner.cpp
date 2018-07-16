@@ -37,8 +37,13 @@ void AGDKTestRunner::Tick(float DeltaTime)
 	if (bIsRunning)
 	{
 		UWorld* World = GetWorld();
+		if (!World)
+		{
+			return;
+		}
+
 		AGameModeBase* GameMode = World->GetAuthGameMode();
-		if (!World || GetNetMode() != NM_DedicatedServer || !GameMode || !(ReadyClientsCount == GameMode->GetNumPlayers()))
+		if (GetNetMode() != NM_DedicatedServer || !GameMode || !(ReadyClientsCount == GameMode->GetNumPlayers()))
 		{
 			return;
 		}
@@ -108,8 +113,13 @@ void AGDKTestRunner::Server_SignalClientReady_Implementation()
 	ReadyClientsCount++;
 
 	UWorld* World = GetWorld();
+	if (!World)
+	{
+		return;
+	}
+
 	AGameModeBase* GameMode = World->GetAuthGameMode();
-	if (!World || !GameMode || !(ReadyClientsCount == GameMode->GetNumPlayers()))
+	if (!GameMode || !(ReadyClientsCount == GameMode->GetNumPlayers()))
 	{
 		return;
 	}
