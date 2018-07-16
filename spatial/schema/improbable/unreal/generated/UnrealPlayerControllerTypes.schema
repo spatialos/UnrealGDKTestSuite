@@ -10,7 +10,7 @@ type OnServerStartedVisualLoggerRequest {
 }
 type ClientWasKickedRequest {
 	uint32 target_subobject_offset = 1;
-	bytes field_kickreason0 = 2;
+	string field_kickreason0 = 2;
 }
 type ClientVoiceHandshakeCompleteRequest {
 	uint32 target_subobject_offset = 1;
@@ -118,7 +118,7 @@ type ClientSetBlockOnAsyncLoadingRequest {
 }
 type ClientReturnToMainMenuWithTextReasonRequest {
 	uint32 target_subobject_offset = 1;
-	bytes field_returnreason0 = 2;
+	string field_returnreason0 = 2;
 }
 type ClientReturnToMainMenuRequest {
 	uint32 target_subobject_offset = 1;

@@ -5,76 +5,137 @@
 #include "CoreMinimal.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
+#include "PickUpAndRotateActor.h"
 #include "SampleGameCharacter.generated.h"
 
-UCLASS(config=Game)
+UCLASS(config = Game)
 class ASampleGameCharacter : public ACharacter
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
-	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+    /** Camera boom positioning the camera behind the character */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera,
+              meta = (AllowPrivateAccess = "true"))
+    class USpringArmComponent* CameraBoom;
 
-	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
-public:
-	ASampleGameCharacter();
+    /** Follow camera */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera,
+              meta = (AllowPrivateAccess = "true"))
+    class UCameraComponent* FollowCamera;
 
-	virtual void BeginPlay() override;
+    /** Holding Component */
+    UPROPERTY(EditAnywhere)
+    class USceneComponent* HoldingComponent;
 
-	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseTurnRate;
+  public:
+    ASampleGameCharacter();
 
-	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseLookUpRate;
+    virtual void BeginPlay() override;
+    virtual void Tick(float DeltaSeconds) override;
 
-protected:
+    /** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+    float BaseTurnRate;
 
-	/** Called for forwards/backward input */
-	void MoveForward(float Value);
+    /** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+    float BaseLookUpRate;
 
-	/** Called for side to side input */
-	void MoveRight(float Value);
+    // blueprint cube to spawn
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class AMyCube> CubeToSpawn;
 
-	/** 
-	 * Called via input to turn at a given rate. 
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
-	void TurnAtRate(float Rate);
+    // pickup objects
+    UPROPERTY(EditAnywhere, Replicated)
+    class APickupAndRotateActor* CurrentItem;
 
-	/**
-	 * Called via input to turn look up/down at a given rate. 
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
-	void LookUpAtRate(float Rate);
-
-	/** Handler for when a touch input begins. */
-	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/** Handler for when a touch input stops. */
-	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
-protected:
-	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	// End of APawn interface
-
-	void Interact();
+    UFUNCTION()
+    void RaycastSearchForItem();
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void TestRPC();
+    void SetCurrentItem(class APickupAndRotateActor* currItem);
 
-	UFUNCTION(NetMulticast, Unreliable, WithValidation)
-	void TestMulticast();
 
-public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+    bool bCanMove;
+    bool bInspecting;
+
+    UPROPERTY(Replicated)
+    bool bHoldingItem;  // server needs to know this
+
+    
+
+    float PitchMax;
+    float PitchMin;
+
+    FVector HoldingComp;
+    FRotator LastRotation;
+
+    FVector Start;
+    FVector ForwardVector;
+    FVector End;
+
+    FHitResult Hit;
+
+    FComponentQueryParams DefaultComponentQueryParams;
+    FCollisionResponseParams DefaultResponseParam;
+
+    virtual void OnRep_Controller() override;
+
+    /** Returns CameraBoom subobject **/
+    FORCEINLINE class USpringArmComponent* GetCameraBoom() const
+    {
+        return CameraBoom;
+    }
+    /** Returns FollowCamera subobject **/
+    FORCEINLINE class UCameraComponent* GetFollowCamera() const
+    {
+        return FollowCamera;
+    }
+
+  protected:
+    /** Called for forwards/backward input */
+    void MoveForward(float Value);
+
+    /** Called for side to side input */
+    void MoveRight(float Value);
+
+    /**
+     * Called via input to turn at a given rate.
+     * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
+     */
+    void TurnAtRate(float Rate);
+
+    /**
+     * Called via input to turn look up/down at a given rate.
+     * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
+     */
+    void LookUpAtRate(float Rate);
+
+    /** Handler for when a touch input begins. */
+    void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
+
+    /** Handler for when a touch input stops. */
+    void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+    /** spawns a cube on input mapping */
+    UFUNCTION(Server, Reliable, WithValidation)
+    void SpawnCube();
+
+    // APawn interface
+    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+    // End of APawn interface
+
+    void Interact();
+    void OnInspect();
+    void OnInspectStopped();
+    void ToggleMovement();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+    void ToggleItemPickup();
+
+    UFUNCTION(Server, Reliable, WithValidation)
+    void TestRPC();
+
+    UFUNCTION(NetMulticast, Unreliable, WithValidation)
+    void TestMulticast();
 };
-

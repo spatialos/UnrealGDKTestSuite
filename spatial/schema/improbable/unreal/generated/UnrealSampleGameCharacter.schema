@@ -52,6 +52,8 @@ component SampleGameCharacterMultiClientRepData {
 	bytes field_reprootmotion0_authoritativerootmotion0 = 41; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion0_acceleration0 = 42; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion0_linearvelocity0 = 43; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
+	UnrealObjectRef field_currentitem0 = 44; // COND_None // ::SampleGameCharacter
+	bool field_bholdingitem0 = 45; // COND_None // ::SampleGameCharacter
 }
 component SampleGameCharacterMigratableData {
 	id = 100024;
@@ -76,7 +78,10 @@ component SampleGameCharacterClientRPCs {
 }
 component SampleGameCharacterServerRPCs {
 	id = 100026;
+	command UnrealRPCCommandResponse toggleitempickup(samplegamecharacter.ToggleItemPickupRequest);
 	command UnrealRPCCommandResponse testrpc(samplegamecharacter.TestRPCRequest);
+	command UnrealRPCCommandResponse spawncube(samplegamecharacter.SpawnCubeRequest);
+	command UnrealRPCCommandResponse setcurrentitem(samplegamecharacter.SetCurrentItemRequest);
 	command UnrealRPCCommandResponse servermoveold(character.ServerMoveOldRequest);
 	command UnrealRPCCommandResponse servermovenobase(character.ServerMoveNoBaseRequest);
 	command UnrealRPCCommandResponse servermovedualnobase(character.ServerMoveDualNoBaseRequest);

@@ -4,8 +4,18 @@ package improbable.unreal.generated.samplegamecharacter;
 
 import "improbable/unreal/gdk/core_types.schema";
 
+type ToggleItemPickupRequest {
+	uint32 target_subobject_offset = 1;
+}
 type TestRPCRequest {
 	uint32 target_subobject_offset = 1;
+}
+type SpawnCubeRequest {
+	uint32 target_subobject_offset = 1;
+}
+type SetCurrentItemRequest {
+	uint32 target_subobject_offset = 1;
+	UnrealObjectRef field_curritem0 = 2;
 }
 type TestMulticastRequest {
 	uint32 target_subobject_offset = 1;
