@@ -16,7 +16,6 @@ public:
 
 	AReplicationTestCase();
 
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void Server_StartTest() override;

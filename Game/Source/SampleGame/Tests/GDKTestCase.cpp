@@ -18,11 +18,6 @@ bool AGDKTestCase::IsFinished() const
 	return bIsFinished;
 }
 
-FString AGDKTestCase::GetResultSummary() const
-{
-	return ResultString;
-}
-
 void AGDKTestCase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

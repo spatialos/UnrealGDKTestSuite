@@ -21,7 +21,7 @@ void AReplicationTestCase::Tick(float DeltaTime)
 	{
 		UWorld* World = GetWorld();
 		AGameModeBase* GameMode = World->GetAuthGameMode();
-		if (!World || !GameMode || !(RPCResponseCount == GameMode->GetNumPlayers()))
+		if (!World || GetNetMode() != NM_DedicatedServer || !GameMode || !(RPCResponseCount == GameMode->GetNumPlayers()))
 		{
 			return;
 		}

@@ -38,7 +38,7 @@ void AGDKTestRunner::Tick(float DeltaTime)
 	{
 		UWorld* World = GetWorld();
 		AGameModeBase* GameMode = World->GetAuthGameMode();
-		if (!World || !GameMode || !(ReadyClientsCount == GameMode->GetNumPlayers()))
+		if (!World || GetNetMode() != NM_DedicatedServer || !GameMode || !(ReadyClientsCount == GameMode->GetNumPlayers()))
 		{
 			return;
 		}
