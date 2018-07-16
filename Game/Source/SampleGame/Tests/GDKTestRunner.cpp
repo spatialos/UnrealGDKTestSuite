@@ -55,6 +55,7 @@ void AGDKTestRunner::Tick(float DeltaTime)
 				CurrentTestIndex = 0;
 				Server_TearDownTestCases();
 				UE_LOG(LogSpatialGDKTests, Log, TEXT("TestRunner: All Test completed successfully!"));
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TestRunner: All Test completed successfully!"));
 			}
 			else
 			{
@@ -106,74 +107,74 @@ void AGDKTestRunner::Server_SignalClientReady_Implementation()
 {
 	ReadyClientsCount++;
 
-	if (UWorld* World = GetWorld())
+	UWorld* World = GetWorld();
+	AGameModeBase* GameMode = World->GetAuthGameMode();
+	if (!World || !GameMode || !(ReadyClientsCount == GameMode->GetNumPlayers()))
 	{
-		if (AGameModeBase* GameMode = World->GetAuthGameMode())
-		{
-			if (ReadyClientsCount == GameMode->GetNumPlayers())
-			{
-				// Start the new test case as we are ready
-				CurrentTestIndex = 0;
-				TestCases[CurrentTestIndex]->Server_StartTest();
-			}
-		}
+		return;
 	}
+
+	// Start the new test case as we are ready
+	CurrentTestIndex = 0;
+	TestCases[CurrentTestIndex]->Server_StartTest();
 }
 
 void AGDKTestRunner::Server_SetupTestCases()
 {
-	// Setup the testcases here.
+	// Setup the test cases here.
 	UWorld* World = GetWorld();
-	if (World && GetNetMode() == NM_DedicatedServer)
+	if (!World && GetNetMode() == NM_DedicatedServer)
 	{
-		ATestIntReplication* IntTest = World->SpawnActor<ATestIntReplication>();
-		check(IntTest);
-		TestCases.Add(IntTest);
-
-		ATestFloatReplication* FloatTest = World->SpawnActor<ATestFloatReplication>();
-		check(FloatTest);
-		TestCases.Add(FloatTest);
-
-		ATestBoolReplication* BoolTest = World->SpawnActor<ATestBoolReplication>();
-		check(BoolTest);
-		TestCases.Add(BoolTest);
-		
-		ATestCharReplication* CharTest = World->SpawnActor<ATestCharReplication>();
-		check(CharTest);
-		TestCases.Add(CharTest);
-
-		ATestFStringReplication* FStringTest = World->SpawnActor<ATestFStringReplication>();
-		check(FStringTest);
-		TestCases.Add(FStringTest);
-
-		ATestCArrayReplication* CArrayTest = World->SpawnActor<ATestCArrayReplication>();
-		check(CArrayTest);
-		TestCases.Add(CArrayTest);
-		
-		ATestTArrayReplication* TArrayTest = World->SpawnActor<ATestTArrayReplication>();
-		check(TArrayTest);
-		TestCases.Add(TArrayTest);
-
-		ATestEnumReplication* EnumTest = World->SpawnActor<ATestEnumReplication>();
-		check(EnumTest);
-		TestCases.Add(EnumTest);
-
-		ATestFTextReplication* FTextTest = World->SpawnActor<ATestFTextReplication>();
-		check(FTextTest);
-		TestCases.Add(FTextTest);
-
-		ATestFNameReplication* FNameTest = World->SpawnActor<ATestFNameReplication>();
-		check(FNameTest);
-		TestCases.Add(FNameTest);
-
-		ATestUObjectReplication* UObjectTest = World->SpawnActor<ATestUObjectReplication>();
-		check(UObjectTest);
-		TestCases.Add(UObjectTest);
-
-		ATestUStructReplication* UStructTest = World->SpawnActor<ATestUStructReplication>();
-		check(UStructTest);
-		TestCases.Add(UStructTest);
+		return;
 	}
+
+	ATestIntReplication* IntTest = World->SpawnActor<ATestIntReplication>();
+	check(IntTest);
+	TestCases.Add(IntTest);
+
+	ATestFloatReplication* FloatTest = World->SpawnActor<ATestFloatReplication>();
+	check(FloatTest);
+	TestCases.Add(FloatTest);
+
+	ATestBoolReplication* BoolTest = World->SpawnActor<ATestBoolReplication>();
+	check(BoolTest);
+	TestCases.Add(BoolTest);
+		
+	ATestCharReplication* CharTest = World->SpawnActor<ATestCharReplication>();
+	check(CharTest);
+	TestCases.Add(CharTest);
+
+	ATestFStringReplication* FStringTest = World->SpawnActor<ATestFStringReplication>();
+	check(FStringTest);
+	TestCases.Add(FStringTest);
+
+	ATestCArrayReplication* CArrayTest = World->SpawnActor<ATestCArrayReplication>();
+	check(CArrayTest);
+	TestCases.Add(CArrayTest);
+		
+	ATestTArrayReplication* TArrayTest = World->SpawnActor<ATestTArrayReplication>();
+	check(TArrayTest);
+	TestCases.Add(TArrayTest);
+
+	ATestEnumReplication* EnumTest = World->SpawnActor<ATestEnumReplication>();
+	check(EnumTest);
+	TestCases.Add(EnumTest);
+
+	ATestFTextReplication* FTextTest = World->SpawnActor<ATestFTextReplication>();
+	check(FTextTest);
+	TestCases.Add(FTextTest);
+
+	ATestFNameReplication* FNameTest = World->SpawnActor<ATestFNameReplication>();
+	check(FNameTest);
+	TestCases.Add(FNameTest);
+
+	ATestUObjectReplication* UObjectTest = World->SpawnActor<ATestUObjectReplication>();
+	check(UObjectTest);
+	TestCases.Add(UObjectTest);
+
+	ATestUStructReplication* UStructTest = World->SpawnActor<ATestUStructReplication>();
+	check(UStructTest);
+	TestCases.Add(UStructTest);
 }
 
 void AGDKTestRunner::Server_TearDownTestCases()
