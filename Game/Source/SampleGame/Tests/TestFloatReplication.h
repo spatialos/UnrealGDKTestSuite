@@ -23,16 +23,21 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReportReplication(float RepFloat, double RepDouble);
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION()
-	virtual void StartTestImpl() override;
+	virtual void Server_StartTestImpl() override;
+
+	UFUNCTION()
+	virtual void Server_TearDownImpl() override;
 
 	UFUNCTION()
 	virtual void ValidateClientReplicationImpl() override;
 
 	UFUNCTION()
 	virtual void SendTestResponseRPCImpl() override;
+
+private:
 
 	UPROPERTY(Replicated)
 	float TestFloat;

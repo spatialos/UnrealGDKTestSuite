@@ -18,16 +18,21 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReportReplication(int8 Rep8Int, int16 Rep16Int, int32 Rep32Int, int64 Rep64Int, uint8 Rep8UInt, uint16 Rep16UInt, uint32 Rep32UInt, uint64 Rep64UInt);
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION()
-	virtual void StartTestImpl() override;
+	virtual void Server_StartTestImpl() override;
+
+	UFUNCTION()
+	virtual void Server_TearDownImpl() override;
 
 	UFUNCTION()
 	virtual void ValidateClientReplicationImpl() override;
 
 	UFUNCTION()
 	virtual void SendTestResponseRPCImpl() override;
+
+private:
 
 	UPROPERTY(Replicated)
 	int8 Test8Int;

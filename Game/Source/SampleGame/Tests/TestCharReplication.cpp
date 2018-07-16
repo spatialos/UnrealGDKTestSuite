@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "TestCharReplication.h"
 
@@ -22,9 +22,14 @@ void ATestCharReplication::Server_ReportReplication_Implementation()
 	SignalResponseRecieved();
 }
 
-void ATestCharReplication::StartTestImpl()
+void ATestCharReplication::Server_StartTestImpl()
 {
 	SignalReplicationSetup();
+}
+
+void ATestCharReplication::Server_TearDownImpl()
+{
+	// Left empty as there is no teardown required for this test.
 }
 
 void ATestCharReplication::ValidateClientReplicationImpl()

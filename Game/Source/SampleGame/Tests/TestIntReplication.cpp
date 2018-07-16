@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "TestIntReplication.h"
 
@@ -37,7 +37,7 @@ void ATestIntReplication::Server_ReportReplication_Implementation(int8 Rep8Int, 
 	SignalResponseRecieved();
 }
 
-void ATestIntReplication::StartTestImpl()
+void ATestIntReplication::Server_StartTestImpl()
 {
 	Test8Int = (1 << 6);
 	Test16Int = (1 << 14);
@@ -49,6 +49,18 @@ void ATestIntReplication::StartTestImpl()
 	Test64UInt = 0xDEADBEEFDEADBEEF;
 
 	SignalReplicationSetup();
+}
+
+void ATestIntReplication::Server_TearDownImpl()
+{
+	Test8Int = 0;
+	Test16Int = 0;
+	Test32Int = 0;
+	Test64Int = 0;
+	Test8UInt = 0;
+	Test16UInt = 0;
+	Test32UInt = 0;
+	Test64UInt = 0;
 }
 
 void ATestIntReplication::ValidateClientReplicationImpl()
