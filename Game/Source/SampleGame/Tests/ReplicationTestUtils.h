@@ -4,7 +4,6 @@
 
 #include "ReplicationTestUtils.generated.h"
 
-// Enum test types begin
 UENUM()
 enum class ETest8Enum : uint8
 {
@@ -50,9 +49,7 @@ namespace EnumNamespace
 		Enum_1,
 	};
 }
-// Enum test types end
 
-// Actor test types begin
 UCLASS()
 class ATestActor : public AActor
 {
@@ -67,9 +64,7 @@ public:
 	FString ActorName;
 
 };
-// Actor test types end
 
-// UObject test types begin
 UCLASS(BlueprintType, Blueprintable)
 class UTestUObject : public UObject
 {
@@ -84,9 +79,7 @@ public:
 	UPROPERTY()
 	int RootProp;
 };
-// UObject test types end
 
-// Struct test types begin
 USTRUCT()
 struct FSimpleTestStruct
 {
@@ -201,4 +194,3 @@ struct FCStyleEnumTestStruct
 	UPROPERTY()
 	TEnumAsByte<EnumNamespace::EUnrealTestEnum> UEnum;
 };
-// Struct test types end

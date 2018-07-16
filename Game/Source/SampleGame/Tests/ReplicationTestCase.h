@@ -58,7 +58,7 @@ private:
 	int TestBookend;
 
 	UPROPERTY()
-	int RPCResponsecCount;
+	int RPCResponseCount;
 
 	bool bRunning;
 

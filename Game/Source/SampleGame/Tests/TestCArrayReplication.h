@@ -83,7 +83,7 @@ private:
 	UPROPERTY(Replicated)
 	ETest8Enum EnumCArray[2];
 
-	// Test C-style array with C++ 11 style enums
+	// Test C-style array with enum classes
 	UPROPERTY(Replicated)
 	TEnumAsByte<EnumNamespace::EUnrealTestEnum> UEnumCArray[2];
 

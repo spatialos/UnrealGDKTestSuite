@@ -24,7 +24,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Replicated C-style arrays are not supported in Unreal.
+	// Replicated C-style arrays are not supported in Unreal RPCs.
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReportReplication(ATestActor* RepDynamicallyCreatedActor,
 								  /*const TArray<UTestUObject*>& RepUObjectWithReplicatedComponent,*/

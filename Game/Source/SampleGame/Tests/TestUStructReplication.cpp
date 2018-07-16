@@ -226,7 +226,7 @@ void ATestUStructReplication::ValidateReplication_Client(const FSimpleTestStruct
 	check(TestUStructWithTArray.Array[0] == 42);
 	check(TestUStructWithTArray.Array[1] == 57);
 	
-	// Validate TArray of C++ 11 style enums
+	// Validate TArray of enum classes
 	check(TestUStructWithUnrealStyleEnum.Test32Enum == ETest32Enum::Enum_1);
 
 	// Setup of array of Unreal style enums
@@ -283,7 +283,7 @@ void ATestUStructReplication::ValidateRPC_Server(const FSimpleTestStruct& TestPO
 	check(TestUStructWithTArray.Array[0] == 42);
 	check(TestUStructWithTArray.Array[1] == 57);
 
-	// Validate TArray of C++ 11 style enums
+	// Validate TArray of enum classes
 	check(TestUStructWithUnrealStyleEnum.Test32Enum == ETest32Enum::Enum_1);
 
 	// Setup of array of Unreal style enums

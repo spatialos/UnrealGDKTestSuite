@@ -74,7 +74,7 @@ private:
 	UPROPERTY(Replicated)
 	TArray<ETest8Enum> EnumTArray;
 
-	// Test array of C++ 11 style enums
+	// Test array of enum classes
 	UPROPERTY(Replicated)
 	TArray<TEnumAsByte<EnumNamespace::EUnrealTestEnum>> UEnumTArray;
 

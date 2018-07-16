@@ -86,7 +86,7 @@ void ATestCArrayReplication::Server_StartTestImpl()
 	EnumCArray[0] = ETest8Enum::Enum_1;
 	EnumCArray[1] = ETest8Enum::Enum_0;
 
-	// Setup of array of C++ 11 style enums
+	// Setup of array of enum classes
 	UEnumCArray[0] = EnumNamespace::Enum_1;
 	UEnumCArray[1] = EnumNamespace::Enum_0;
 
@@ -177,7 +177,7 @@ void ATestCArrayReplication::ValidateReplication_Client()
 	check(EnumCArray[0] == ETest8Enum::Enum_1);
 	check(EnumCArray[1] == ETest8Enum::Enum_0);
 
-	// Setup of array of C++ 11 style enums
+	// Setup of array of enum classes
 	check(UEnumCArray[0] == EnumNamespace::Enum_1);
 	check(UEnumCArray[1] == EnumNamespace::Enum_0);
 }

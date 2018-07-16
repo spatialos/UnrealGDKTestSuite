@@ -97,7 +97,7 @@ void ATestTArrayReplication::Server_StartTestImpl()
 	EnumTArray.Push(ETest8Enum::Enum_1);
 	EnumTArray.Push(ETest8Enum::Enum_0);
 
-	// Setup of array of C++ 11 style enums
+	// Setup of array of enum classes
 	UEnumTArray.Push(EnumNamespace::Enum_1);
 	UEnumTArray.Push(EnumNamespace::Enum_0);
 
@@ -185,7 +185,7 @@ void ATestTArrayReplication::ValidateReplication_Client(const TArray<int>& TestP
 	check(TestEnumTArray[0] == ETest8Enum::Enum_1);
 	check(TestEnumTArray[1] == ETest8Enum::Enum_0);
 
-	// Setup of array of C++ 11 style enums
+	// Setup of array of enum classes
 	check(TestUEnumTArray.Num() == 2);
 	check(TestUEnumTArray[0] == EnumNamespace::Enum_1);
 	check(TestUEnumTArray[1] == EnumNamespace::Enum_0);
@@ -235,7 +235,7 @@ void ATestTArrayReplication::ValidateRPC_Server(const TArray<int>& TestPODArray,
 	check(TestEnumTArray[0] == ETest8Enum::Enum_1);
 	check(TestEnumTArray[1] == ETest8Enum::Enum_0);
 
-	// Setup of array of C++ 11 style enums
+	// Setup of array of enum classes
 	check(TestUEnumTArray.Num() == 2);
 	check(TestUEnumTArray[0] == EnumNamespace::Enum_1);
 	check(TestUEnumTArray[1] == EnumNamespace::Enum_0);

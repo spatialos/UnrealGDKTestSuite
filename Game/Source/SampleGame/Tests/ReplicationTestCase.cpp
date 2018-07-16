@@ -13,25 +13,22 @@ AReplicationTestCase::AReplicationTestCase()
 	bReplicates = true;
 }
 
-// Called every frame
 void AReplicationTestCase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	if (bRunning)
 	{
-		if (UWorld* World = GetWorld())
+		UWorld* World = GetWorld();
+		AGameModeBase* GameMode = World->GetAuthGameMode();
+		if (!World || !GameMode || !(RPCResponseCount == GameMode->GetNumPlayers()))
 		{
-			if (AGameModeBase* GameMode = World->GetAuthGameMode())
-			{
-				if (RPCResponsecCount == GameMode->GetNumPlayers())
-				{
-					UE_LOG(LogSpatialGDKTests, Log, TEXT("TestCase: %s: Test complete!"), *TestName);
-					bIsFinished = true;
-					bRunning = false;
-				}
-			}
+			return;
 		}
+
+		UE_LOG(LogSpatialGDKTests, Log, TEXT("TestCase: %s: Test complete!"), *TestName);
+		bIsFinished = true;
+		bRunning = false;
 	}
 }
 
@@ -41,7 +38,7 @@ void AReplicationTestCase::Server_StartTest()
 
 	bIsFinished = false;
 	bRunning = true;
-	RPCResponsecCount = 0;
+	RPCResponseCount = 0;
 
 	Server_StartTestImpl();
 }
@@ -71,7 +68,7 @@ void AReplicationTestCase::SignalReplicationSetup()
 
 void AReplicationTestCase::SignalResponseRecieved()
 {
-	RPCResponsecCount++;
+	RPCResponseCount++;
 	UE_LOG(LogSpatialGDKTests, Log, TEXT("TestCase %s: Response RPC recieved from a client"), *TestName);
 }
 
