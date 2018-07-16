@@ -1,5 +1,21 @@
 # SpatialGDK sample game: Unreal project demonstrating SpatialOS integration
 
+-- Wanqi's playground
+
+Goal: understand Unreal's network flow and the developer experience working with Spatial.
+See https://docs.google.com/document/d/1mcC3e2qNEbiA2DRw11QDyvh9SqPnk1DlZ-a03CmVEoY
+
+C to spawn cube
+E to pickup (see focus on green laser) (inconsistent)
+right click to zoom
+
+
+Known issues:
+- picked up cube is jittery -- the position of the cube is updated every tick to match the player, creating jittery movement
+- picking up is bad -- recognizing and updating CurrentItem is inconsistent
+
+
+
 * Repository: [github.com/improbable/unreal-gdk-sample-game](https://github.com/improbable/unreal-gdk-sample-game)
 * By: [improbable.io](https://improbable.io/)
 * License: Use of the contents of this repository is subject to the [Improbable license](LICENSE.md). <br/>
