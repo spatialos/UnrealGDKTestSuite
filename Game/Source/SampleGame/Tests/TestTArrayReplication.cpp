@@ -73,6 +73,7 @@ void ATestTArrayReplication::Server_StartTestImpl()
 
 	// Setup stably named UObjects
 	UTestUObject* StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(StablyNamedObject);
 
 	StablyNamedArray.Add(StablyNamedObject);
 	StablyNamedArray.Add(StablyNamedObject);

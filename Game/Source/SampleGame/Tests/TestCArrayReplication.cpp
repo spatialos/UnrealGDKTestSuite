@@ -56,6 +56,7 @@ void ATestCArrayReplication::Server_StartTestImpl()
 
 	// Setup stably named UObjects
 	UTestUObject* StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(StablyNamedObject);
 
 	StablyNamedArray[0] = StablyNamedObject;
 	StablyNamedArray[1] = StablyNamedObject;

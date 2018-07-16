@@ -111,9 +111,11 @@ void ATestUStructReplication::Server_StartTestImpl()
 
 	// Setup UStruct with stably named UObject
 	UStructWithStablyNamedObject.StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(UStructWithStablyNamedObject.StablyNamedObject);
 
 	// Setup UStruct with const stably named UObject
 	UStructWithConstStablyNamedObject.StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(UStructWithConstStablyNamedObject.StablyNamedObject);
 
 	// Setup UStruct with a dynamically created actor
 	ATestActor* NewActor = GetWorld()->SpawnActor<ATestActor>();

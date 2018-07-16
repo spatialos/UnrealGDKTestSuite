@@ -76,9 +76,11 @@ void ATestUObjectReplication::Server_StartTestImpl()
 
 	// Setup stably named UObject
 	StablyNamedUObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(StablyNamedUObject);
 
 	// Setup const UObject
 	ConstObj = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(ConstObj);
 
 	SignalReplicationSetup();
 }
