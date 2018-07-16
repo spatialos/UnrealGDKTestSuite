@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "TestFStringReplication.h"
 
@@ -23,11 +23,16 @@ void ATestFStringReplication::Server_ReportReplication_Implementation(const FStr
 	SignalResponseRecieved();
 }
 
-void ATestFStringReplication::StartTestImpl()
+void ATestFStringReplication::Server_StartTestImpl()
 {
 	TestFString = ComparisonValue;
 
 	SignalReplicationSetup();
+}
+
+void ATestFStringReplication::Server_TearDownImpl()
+{
+	TestFString = TEXT("");
 }
 
 void ATestFStringReplication::ValidateClientReplicationImpl()

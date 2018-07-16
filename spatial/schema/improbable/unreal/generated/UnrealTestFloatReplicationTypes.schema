@@ -6,6 +6,6 @@ import "improbable/unreal/gdk/core_types.schema";
 
 type ServerReportReplicationRequest {
 	uint32 target_subobject_offset = 1;
-	float field_repfloat = 2;
-	double field_repdouble = 3;
+	float field_repfloat0 = 2;
+	double field_repdouble0 = 3;
 }

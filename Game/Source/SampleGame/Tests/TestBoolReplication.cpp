@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "TestBoolReplication.h"
 
@@ -23,11 +23,16 @@ void ATestBoolReplication::Server_ReportReplication_Implementation(bool RepBool)
 	SignalResponseRecieved();
 }
 
-void ATestBoolReplication::StartTestImpl()
+void ATestBoolReplication::Server_StartTestImpl()
 {
 	TestBool = true;
 
 	SignalReplicationSetup();
+}
+
+void ATestBoolReplication::Server_TearDownImpl()
+{
+	TestBool = false;
 }
 
 void ATestBoolReplication::ValidateClientReplicationImpl()

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "TestFloatReplication.h"
 
@@ -25,13 +25,18 @@ void ATestFloatReplication::Server_ReportReplication_Implementation(float RepFlo
 	SignalResponseRecieved();
 }
 
-
-void ATestFloatReplication::StartTestImpl()
+void ATestFloatReplication::Server_StartTestImpl()
 {
 	TestFloat = FloatComparisonValue;
 	TestDouble = DoubleComparisonValue;
 
 	SignalReplicationSetup();
+}
+
+void ATestFloatReplication::Server_TearDownImpl()
+{
+	TestFloat = 0.0f;
+	TestDouble = 0.0;
 }
 
 void ATestFloatReplication::ValidateClientReplicationImpl()

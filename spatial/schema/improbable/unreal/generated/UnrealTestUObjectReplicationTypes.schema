@@ -1,0 +1,12 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated.testuobjectreplication;
+
+import "improbable/unreal/gdk/core_types.schema";
+
+type ServerReportReplicationRequest {
+	uint32 target_subobject_offset = 1;
+	UnrealObjectRef field_repdynamicallycreatedactor0 = 2;
+	UnrealObjectRef field_repstablynameduobject0 = 3;
+	UnrealObjectRef field_repconstobj0 = 4;
+}

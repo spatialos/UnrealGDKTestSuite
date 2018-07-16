@@ -3,13 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GDKTestCase.h"
 #include "GameFramework/Actor.h"
 #include "ReplicationTestCase.generated.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSpatialGDKTests, Log, All);
-
 UCLASS(Abstract)
-class SAMPLEGAME_API AReplicationTestCase : public AActor
+class SAMPLEGAME_API AReplicationTestCase : public AGDKTestCase
 {
 	GENERATED_BODY()
 
@@ -17,16 +16,17 @@ public:
 
 	AReplicationTestCase();
 
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_StartTest();
+	virtual void Server_StartTest() override;
+
+	virtual void Server_TearDown() override;
 
 	UFUNCTION()
 	void OnRep_TestBookend();
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 
 	UFUNCTION()
@@ -36,8 +36,12 @@ protected:
 	void SignalResponseRecieved();
 
 	UFUNCTION()
-	virtual void StartTestImpl()
-	PURE_VIRTUAL(AReplicationTestCase::StartTestImpl(), );
+	virtual void Server_StartTestImpl()
+	PURE_VIRTUAL(AReplicationTestCase::Server_StartTestImpl(), );
+
+	UFUNCTION()
+	virtual void Server_TearDownImpl()
+	PURE_VIRTUAL(AReplicationTestCase::Server_TearDownImpl(), );
 
 	UFUNCTION()
 	virtual void ValidateClientReplicationImpl()
@@ -47,16 +51,13 @@ protected:
 	virtual void SendTestResponseRPCImpl()
 	PURE_VIRTUAL(AReplicationTestCase::SendTestResponseRPCImpl(), );
 
-	UPROPERTY()
-	FString TestName;
-
 private:
 
 	UPROPERTY(ReplicatedUsing = OnRep_TestBookend)
 	int TestBookend;
 
 	UPROPERTY()
-	int RPCResponsecCount;
+	int RPCResponseCount;
 
 	bool bRunning;
 

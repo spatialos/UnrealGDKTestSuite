@@ -1,0 +1,54 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated.testustructreplication;
+
+import "improbable/unreal/gdk/core_types.schema";
+
+component TestUStructReplicationSingleClientRepData {
+	id = 100106;
+}
+component TestUStructReplicationMultiClientRepData {
+	id = 100107;
+	bool field_bhidden0 = 1; // COND_None // ::Actor
+	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
+	bool field_btearoff0 = 3; // COND_None // ::Actor
+	bool field_bcanbedamaged0 = 4; // COND_None // ::Actor
+	uint32 field_remoterole0 = 5; // COND_None // ::Actor
+	bytes field_replicatedmovement0 = 6; // COND_SimulatedOrPhysics // ::Actor
+	UnrealObjectRef field_attachmentreplication0_attachparent0 = 7; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication0_locationoffset0 = 8; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication0_relativescale3d0 = 9; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication0_rotationoffset0 = 10; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	string field_attachmentreplication0_attachsocket0 = 11; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	UnrealObjectRef field_attachmentreplication0_attachcomponent0 = 12; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
+	uint32 field_role0 = 14; // COND_None // ::Actor
+	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
+	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
+	int32 field_podustruct0_rootprop0 = 17; // COND_None // SimpleTestStruct::PODUStruct::TestUStructReplication
+	int32 field_nestedustruct0_nestedstruct0_rootprop0 = 18; // COND_None // SimpleTestStruct::NestedStructNestedTestStruct::NestedUStruct::TestUStructReplication
+	UnrealObjectRef field_ustructwithstablynamedobject0_stablynamedobject0 = 19; // COND_None // StablyNamedObjectTestStruct::UStructWithStablyNamedObject::TestUStructReplication
+	UnrealObjectRef field_ustructwithconststablynamedobject0_stablynamedobject0 = 20; // COND_None // ConstStablyNamedObjectTestStruct::UStructWithConstStablyNamedObject::TestUStructReplication
+	UnrealObjectRef field_ustructwithdynamicallycreatedactor0_dynamicallycreatedactor0 = 21; // COND_None // DynamicallyCreatedActorTestStruct::UStructWithDynamicallyCreatedActor::TestUStructReplication
+	bytes field_ustructwithnetserialize0 = 22; // COND_None // ::TestUStructReplication
+	int32 field_ustructwithcstylearray0_array0 = 23; // COND_None // CArrayTestStruct::UStructWithCStyleArray::TestUStructReplication
+	int32 field_ustructwithcstylearray0_array1 = 24; // COND_None // CArrayTestStruct::UStructWithCStyleArray::TestUStructReplication
+	list<int32> field_ustructwithtarray0_array0 = 25; // COND_None // TArrayTestStruct::UStructWithTArray::TestUStructReplication
+	uint32 field_ustructwithunrealstyleenum0_test32enum0 = 26; // COND_None // UnrealStyleEnumTestStruct::UStructWithUnrealStyleEnum::TestUStructReplication
+	uint32 field_ustructwithcppstyleenum0_uenum0 = 27; // COND_None // CStyleEnumTestStruct::UStructWithCppStyleEnum::TestUStructReplication
+}
+component TestUStructReplicationMigratableData {
+	id = 100108;
+}
+import "improbable/unreal/generated/UnrealTestUStructReplicationTypes.schema";
+
+component TestUStructReplicationClientRPCs {
+	id = 100109;
+}
+component TestUStructReplicationServerRPCs {
+	id = 100110;
+	command UnrealRPCCommandResponse serverreportreplication(testustructreplication.ServerReportReplicationRequest);
+}
+component TestUStructReplicationNetMulticastRPCs {
+	id = 100111;
+}

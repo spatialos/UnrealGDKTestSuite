@@ -5,43 +5,53 @@ package improbable.unreal.generated.testcarrayreplication;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestCArrayReplicationSingleClientRepData {
-	id = 100076;
+	id = 100082;
 }
 component TestCArrayReplicationMultiClientRepData {
-	id = 100077;
-	bool field_bhidden = 1; // COND_None // ::Actor
-	bool field_breplicatemovement = 2; // COND_None // ::Actor
-	bool field_btearoff = 3; // COND_None // ::Actor
-	bool field_bcanbedamaged = 4; // COND_None // ::Actor
-	uint32 field_remoterole = 5; // COND_None // ::Actor
-	bytes field_replicatedmovement = 6; // COND_SimulatedOrPhysics // ::Actor
-	UnrealObjectRef field_attachmentreplication_attachparent = 7; // COND_Custom // RepAttachment::AttachmentReplication::Actor
-	bytes field_attachmentreplication_locationoffset = 8; // COND_Custom // RepAttachment::AttachmentReplication::Actor
-	bytes field_attachmentreplication_relativescale3d = 9; // COND_Custom // RepAttachment::AttachmentReplication::Actor
-	bytes field_attachmentreplication_rotationoffset = 10; // COND_Custom // RepAttachment::AttachmentReplication::Actor
-	string field_attachmentreplication_attachsocket = 11; // COND_Custom // RepAttachment::AttachmentReplication::Actor
-	UnrealObjectRef field_attachmentreplication_attachcomponent = 12; // COND_Custom // RepAttachment::AttachmentReplication::Actor
-	UnrealObjectRef field_owner = 13; // COND_None // ::Actor
-	uint32 field_role = 14; // COND_None // ::Actor
-	UnrealObjectRef field_instigator = 15; // COND_None // ::Actor
-	int32 field_testbookend = 16; // COND_None // ::ReplicationTestCase
-	int32 field_testpod0 = 17; // COND_None // ::TestCArrayReplication
-	int32 field_testpod1 = 18; // COND_None // ::TestCArrayReplication
+	id = 100083;
+	bool field_bhidden0 = 1; // COND_None // ::Actor
+	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
+	bool field_btearoff0 = 3; // COND_None // ::Actor
+	bool field_bcanbedamaged0 = 4; // COND_None // ::Actor
+	uint32 field_remoterole0 = 5; // COND_None // ::Actor
+	bytes field_replicatedmovement0 = 6; // COND_SimulatedOrPhysics // ::Actor
+	UnrealObjectRef field_attachmentreplication0_attachparent0 = 7; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication0_locationoffset0 = 8; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication0_relativescale3d0 = 9; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	bytes field_attachmentreplication0_rotationoffset0 = 10; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	string field_attachmentreplication0_attachsocket0 = 11; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	UnrealObjectRef field_attachmentreplication0_attachcomponent0 = 12; // COND_Custom // RepAttachment::AttachmentReplication::Actor
+	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
+	uint32 field_role0 = 14; // COND_None // ::Actor
+	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
+	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
+	int32 field_podarray0 = 17; // COND_None // ::TestCArrayReplication
+	int32 field_podarray1 = 18; // COND_None // ::TestCArrayReplication
+	UnrealObjectRef field_stablynamedarray0 = 19; // COND_None // ::TestCArrayReplication
+	UnrealObjectRef field_stablynamedarray1 = 20; // COND_None // ::TestCArrayReplication
+	UnrealObjectRef field_dynamicallycreatedarray0 = 21; // COND_None // ::TestCArrayReplication
+	UnrealObjectRef field_dynamicallycreatedarray1 = 22; // COND_None // ::TestCArrayReplication
+	int32 field_arrayofstructs0_rootprop0 = 23; // COND_None // SimpleTestStruct::ArrayOfStructs::TestCArrayReplication
+	int32 field_arrayofstructs1_rootprop0 = 24; // COND_None // SimpleTestStruct::ArrayOfStructs::TestCArrayReplication
+	bytes field_arrayofstructnetserialize0 = 25; // COND_None // ::TestCArrayReplication
+	bytes field_arrayofstructnetserialize1 = 26; // COND_None // ::TestCArrayReplication
+	uint32 field_enumcarray0 = 27; // COND_None // ::TestCArrayReplication
+	uint32 field_enumcarray1 = 28; // COND_None // ::TestCArrayReplication
+	uint32 field_uenumcarray0 = 29; // COND_None // ::TestCArrayReplication
+	uint32 field_uenumcarray1 = 30; // COND_None // ::TestCArrayReplication
 }
 component TestCArrayReplicationMigratableData {
-	id = 100078;
+	id = 100084;
 }
 import "improbable/unreal/generated/UnrealTestCArrayReplicationTypes.schema";
-import "improbable/unreal/generated/UnrealReplicationTestCaseTypes.schema";
 
 component TestCArrayReplicationClientRPCs {
-	id = 100079;
+	id = 100085;
 }
 component TestCArrayReplicationServerRPCs {
-	id = 100080;
+	id = 100086;
 	command UnrealRPCCommandResponse serverreportreplication(testcarrayreplication.ServerReportReplicationRequest);
-	command UnrealRPCCommandResponse serverstarttest(replicationtestcase.ServerStartTestRequest);
 }
 component TestCArrayReplicationNetMulticastRPCs {
-	id = 100081;
+	id = 100087;
 }
