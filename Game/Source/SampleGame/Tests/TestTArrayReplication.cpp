@@ -13,17 +13,19 @@ void ATestTArrayReplication::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	UWorld* World = GetWorld();
-	if (World && GetNetMode() == NM_Client)
+	if (!World || GetNetMode() != NM_Client)
 	{
-		if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
-		{
-			bDynamicallyCreatedActorReplicated = false;
-			bReplicationRecievedOnClient = false;
+		return;
+	}
 
-			ValidateReplication_Client(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
+	if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
+	{
+		bDynamicallyCreatedActorReplicated = false;
+		bReplicationRecievedOnClient = false;
 
-			Server_ReportReplication(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
-		}
+		ValidateReplication_Client(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
+
+		Server_ReportReplication(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
 	}
 }
 

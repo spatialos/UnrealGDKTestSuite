@@ -13,23 +13,25 @@ void ATestUObjectReplication::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	UWorld* World = GetWorld();
-	if (World && GetNetMode() == NM_Client)
+	if (!World || GetNetMode() != NM_Client)
 	{
-		if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
-		{
-			bDynamicallyCreatedActorReplicated = false;
-			bReplicationRecievedOnClient = false;
+		return;
+	}
 
-			ValidateReplication_Client(DynamicallyCreatedActor,
-									   /*UObjectWithReplicatedComponent,*/
-									   StablyNamedUObject,
-									   ConstObj);
+	if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
+	{
+		bDynamicallyCreatedActorReplicated = false;
+		bReplicationRecievedOnClient = false;
 
-			Server_ReportReplication(DynamicallyCreatedActor,
-									 /*UObjectWithReplicatedComponent,*/
-									 StablyNamedUObject,
-									 ConstObj);
-		}
+		ValidateReplication_Client(DynamicallyCreatedActor,
+								   /*UObjectWithReplicatedComponent,*/
+								   StablyNamedUObject,
+								   ConstObj);
+
+		Server_ReportReplication(DynamicallyCreatedActor,
+								 /*UObjectWithReplicatedComponent,*/
+								 StablyNamedUObject,
+								 ConstObj);
 	}
 }
 

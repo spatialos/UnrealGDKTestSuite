@@ -13,35 +13,37 @@ void ATestUStructReplication::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	UWorld* World = GetWorld();
-	if (World && GetNetMode() == NM_Client)
+	if (!World || GetNetMode() != NM_Client)
 	{
-		if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
-		{
-			bDynamicallyCreatedActorReplicated = false;
-			bReplicationRecievedOnClient = false;
+		return;
+	}
 
-			ValidateReplication_Client(PODUStruct,
-									   NestedUStruct,
-									   UStructWithStablyNamedObject,
-									   UStructWithConstStablyNamedObject,
-									   UStructWithDynamicallyCreatedActor,
-									   UStructWithNetSerialize,
-									   UStructWithCStyleArray,
-									   UStructWithTArray,
-									   UStructWithUnrealStyleEnum,
-									   UStructWithCppStyleEnum);
+	if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
+	{
+		bDynamicallyCreatedActorReplicated = false;
+		bReplicationRecievedOnClient = false;
 
-			Server_ReportReplication(PODUStruct,
-									 NestedUStruct,
-									 UStructWithStablyNamedObject,
-									 UStructWithConstStablyNamedObject,
-									 UStructWithDynamicallyCreatedActor,
-									 UStructWithNetSerialize,
-									 UStructWithCStyleArray,
-									 UStructWithTArray,
-									 UStructWithUnrealStyleEnum,
-									 UStructWithCppStyleEnum);
-		}
+		ValidateReplication_Client(PODUStruct,
+								   NestedUStruct,
+								   UStructWithStablyNamedObject,
+								   UStructWithConstStablyNamedObject,
+								   UStructWithDynamicallyCreatedActor,
+								   UStructWithNetSerialize,
+								   UStructWithCStyleArray,
+								   UStructWithTArray,
+								   UStructWithUnrealStyleEnum,
+								   UStructWithCppStyleEnum);
+
+		Server_ReportReplication(PODUStruct,
+								 NestedUStruct,
+								 UStructWithStablyNamedObject,
+								 UStructWithConstStablyNamedObject,
+								 UStructWithDynamicallyCreatedActor,
+								 UStructWithNetSerialize,
+								 UStructWithCStyleArray,
+								 UStructWithTArray,
+								 UStructWithUnrealStyleEnum,
+								 UStructWithCppStyleEnum);
 	}
 }
 
