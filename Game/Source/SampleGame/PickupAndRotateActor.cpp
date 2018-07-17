@@ -12,7 +12,6 @@ APickupAndRotateActor::APickupAndRotateActor()
 	PrimaryActorTick.bCanEverTick = true;
 
     bHolding = false;
-
 	bReplicates = true;
 }
 
@@ -23,7 +22,6 @@ void APickupAndRotateActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>
     DOREPLIFETIME(APickupAndRotateActor, HoldingComp);
     DOREPLIFETIME(APickupAndRotateActor, bHolding);
     DOREPLIFETIME(APickupAndRotateActor, MyCharacter);
-    DOREPLIFETIME(APickupAndRotateActor, PlayerCamera);
 }
 
 // Called when the game starts or when spawned
@@ -38,15 +36,6 @@ void APickupAndRotateActor::BeginPlay()
         MyMesh->SetSimulatePhysics(true);
         RootComponent = MyMesh;
 	}
-	
-	//if (Role < ROLE_Authority)
- //   {
-	//	// stop physics simulation on client side
-	//	GetMesh()->PutRigidBodyToSleep();
- //       GetMesh()->SetSimulatePhysics(false);
- //       GetMesh()->SetEnableGravity(false);
- //       GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	//}
 }
 
 // Called every frame
@@ -95,7 +84,7 @@ void APickupAndRotateActor::LinkToPlayer_Implementation(ACharacter* myChar)
 }
 
 
-
+// this function is optional and buggy
 void APickupAndRotateActor::RotateActor()
 {
     if (MyCharacter == nullptr)
@@ -104,6 +93,7 @@ void APickupAndRotateActor::RotateActor()
     FRotator ControlRotation = MyCharacter->GetControlRotation();
     SetActorRotation(FQuat(ControlRotation));
 }
+
 
 bool APickupAndRotateActor::Pickup_Validate() {
     return true;
@@ -115,14 +105,20 @@ void APickupAndRotateActor::Pickup_Implementation()
         return;
 
     bHolding = !bHolding;
-    GetMesh()->SetEnableGravity(bHolding ? false : true);
-    GetMesh()->SetSimulatePhysics(bHolding ? false : true);
-    GetMesh()->SetCollisionEnabled(bHolding ? ECollisionEnabled::NoCollision
-                                         : ECollisionEnabled::QueryAndPhysics);
+    OnRep_ToggleHolding();  // call on server manually, since rep changes only go to clients
 
     if (!bHolding)
     {
         FVector ForwardVector = PlayerCamera->GetForwardVector();
         GetMesh()->AddForce(ForwardVector * 50000 * GetMesh()->GetMass());
     }
+}
+
+// set physics presets appropriately
+void APickupAndRotateActor::OnRep_ToggleHolding()
+{
+    GetMesh()->SetEnableGravity(bHolding ? false : true);
+    GetMesh()->SetSimulatePhysics(bHolding ? false : true);
+    GetMesh()->SetCollisionEnabled(bHolding ? ECollisionEnabled::NoCollision
+                                            : ECollisionEnabled::QueryAndPhysics);
 }

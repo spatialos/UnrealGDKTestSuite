@@ -23,7 +23,7 @@ class ASampleGameCharacter : public ACharacter
               meta = (AllowPrivateAccess = "true"))
     class UCameraComponent* FollowCamera;
 
-    /** Holding Component */
+    /** Holding Component for items */
     UPROPERTY(EditAnywhere)
     class USceneComponent* HoldingComponent;
 
@@ -55,29 +55,17 @@ class ASampleGameCharacter : public ACharacter
 	UFUNCTION(Server, Reliable, WithValidation)
     void SetCurrentItem(class APickupAndRotateActor* currItem);
 
-
-    bool bCanMove;
-    bool bInspecting;
-
     UPROPERTY(Replicated)
     bool bHoldingItem;  // server needs to know this
 
-    
-
+	// local camera variables
+	bool bCanMove;
+    bool bInspecting;
     float PitchMax;
     float PitchMin;
 
     FVector HoldingComp;
     FRotator LastRotation;
-
-    FVector Start;
-    FVector ForwardVector;
-    FVector End;
-
-    FHitResult Hit;
-
-    FComponentQueryParams DefaultComponentQueryParams;
-    FCollisionResponseParams DefaultResponseParam;
 
     virtual void OnRep_Controller() override;
 
@@ -125,13 +113,14 @@ class ASampleGameCharacter : public ACharacter
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
     // End of APawn interface
 
+	// interact and inspecting objects
     void Interact();
     void OnInspect();
     void OnInspectStopped();
     void ToggleMovement();
 
 	UFUNCTION(Server, Reliable, WithValidation)
-    void ToggleItemPickup();
+    void ToggleItemPickup();  // called on server within Interact() to correctly process item pickups
 
     UFUNCTION(Server, Reliable, WithValidation)
     void TestRPC();

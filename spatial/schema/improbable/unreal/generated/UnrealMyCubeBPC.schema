@@ -27,8 +27,7 @@ component MyCubeBPCMultiClientRepData {
 	UnrealObjectRef field_holdingcomp0 = 16; // COND_None // ::PickupAndRotateActor
 	bool field_bholding0 = 17; // COND_None // ::PickupAndRotateActor
 	UnrealObjectRef field_mycharacter0 = 18; // COND_None // ::PickupAndRotateActor
-	UnrealObjectRef field_playercamera0 = 19; // COND_None // ::PickupAndRotateActor
-	float field_transparency0 = 20; // COND_None // ::MyCube
+	float field_transparency0 = 19; // COND_None // ::MyCube
 }
 component MyCubeBPCMigratableData {
 	id = 100036;

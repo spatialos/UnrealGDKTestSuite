@@ -123,15 +123,35 @@ void ASampleGameCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    if (!HasAuthority())
+	if (bInspecting)
     {
-        RaycastSearchForItem();  // only execute on client
+        if (bHoldingItem)
+        {
+            GetFollowCamera()->SetFieldOfView(
+                FMath::Lerp(GetFollowCamera()->FieldOfView, 90.0f, 0.1f));
+            HoldingComponent->SetRelativeLocation(FVector(0.0f, 50.0f, 50.0f));
+            Cast<ASampleGamePlayerController>(Controller)->PlayerCameraManager->ViewPitchMax =
+                179.9000002f;
+            Cast<ASampleGamePlayerController>(Controller)->PlayerCameraManager->ViewPitchMin =
+                -179.9000002f;
 
-        GEngine->AddOnScreenDebugMessage(
-            -1, 5.f, FColor::Red,
-            FString::Printf(TEXT("CurrentItem: %s, bHoldingItem: %d, bInspecting: %d"),
-                            CurrentItem ? *CurrentItem->GetName() : TEXT("None"), bHoldingItem,
-                            bInspecting));
+            if (CurrentItem)
+                CurrentItem->RotateActor();
+        }
+        else
+        {
+            GetFollowCamera()->SetFieldOfView(
+                FMath::Lerp(GetFollowCamera()->FieldOfView, 45.0f, 0.1f));
+        }
+    }
+    else
+    {
+        GetFollowCamera()->SetFieldOfView(FMath::Lerp(GetFollowCamera()->FieldOfView, 90.0f, 0.1f));
+
+        if (bHoldingItem)
+        {
+            HoldingComponent->SetRelativeLocation(FVector(50.0f, 0.0f, 0.f));
+        }
     }
 }
 
@@ -226,6 +246,8 @@ void ASampleGameCharacter::MoveRight(float Value)
     }
 }
 
+bool ASampleGameCharacter::SpawnCube_Validate(){return true;}
+
 void ASampleGameCharacter::SpawnCube_Implementation()
 {
     FVector CameraCenter = GetFollowCamera()->GetComponentLocation();
@@ -234,32 +256,17 @@ void ASampleGameCharacter::SpawnCube_Implementation()
     GetWorld()->SpawnActor<AActor>(CubeToSpawn, SpawnTranform);
 }
 
-bool ASampleGameCharacter::SpawnCube_Validate()
-{
-    return true;
-}
-
-bool ASampleGameCharacter::TestMulticast_Validate()
-{
-    return true;
-}
-
-void ASampleGameCharacter::TestMulticast_Implementation() {}
-
-bool ASampleGameCharacter::TestRPC_Validate()
-{
-    return true;
-}
-
-void ASampleGameCharacter::TestRPC_Implementation() {}
 
 // this is called locally to draw the debug lines and set camera/visuals
 // we will call server RPCs for SetCurrentItem
 void ASampleGameCharacter::RaycastSearchForItem()
 {
-    Start = GetActorLocation();
-    ForwardVector = GetFollowCamera()->GetForwardVector();
-    End = ((ForwardVector * 500.f) + Start);
+    FVector Start = GetActorLocation();
+    FVector ForwardVector = GetFollowCamera()->GetForwardVector();
+    FVector End = ((ForwardVector * 500.f) + Start);
+	FHitResult Hit;
+    FComponentQueryParams DefaultComponentQueryParams;
+    FCollisionResponseParams DefaultResponseParam;
 
     DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1, 0, 1);
 
@@ -270,45 +277,23 @@ void ASampleGameCharacter::RaycastSearchForItem()
         {
             if (Hit.GetActor()->GetClass()->IsChildOf(APickupAndRotateActor::StaticClass()))
             {
-                // focus on item
+                CurrentItem = Cast<APickupAndRotateActor>(Hit.GetActor()); // set locally here as well to ensure no asynchronous issues
                 SetCurrentItem(Cast<APickupAndRotateActor>(Hit.GetActor()));
             }
         }
         else
         {
+            CurrentItem = nullptr;  // set locally here as well to ensure no asynchronous issues
             SetCurrentItem(nullptr);
         }
     }
 
-    if (bInspecting)
-    {
-        if (bHoldingItem)
-        {
-            GetFollowCamera()->SetFieldOfView(
-                FMath::Lerp(GetFollowCamera()->FieldOfView, 90.0f, 0.1f));
-            HoldingComponent->SetRelativeLocation(FVector(0.0f, 50.0f, 50.0f));
-            Cast<ASampleGamePlayerController>(Controller)->PlayerCameraManager->ViewPitchMax =
-                179.9000002f;
-            Cast<ASampleGamePlayerController>(Controller)->PlayerCameraManager->ViewPitchMin =
-                -179.9000002f;
+	GEngine->AddOnScreenDebugMessage(
+        -1, 5.f, FColor::Red,
+        FString::Printf(TEXT("CurrentItem: %s, bHoldingItem: %d, bInspecting: %d"),
+                        CurrentItem ? *CurrentItem->GetName() : TEXT("None"), bHoldingItem,
+                        bInspecting));
 
-			if (CurrentItem) CurrentItem->RotateActor();
-        }
-        else
-        {
-            GetFollowCamera()->SetFieldOfView(
-                FMath::Lerp(GetFollowCamera()->FieldOfView, 45.0f, 0.1f));
-        }
-    }
-    else
-    {
-        GetFollowCamera()->SetFieldOfView(FMath::Lerp(GetFollowCamera()->FieldOfView, 90.0f, 0.1f));
-
-        if (bHoldingItem)
-        {
-            HoldingComponent->SetRelativeLocation(FVector(50.0f, 0.0f, 0.f));
-        }
-    }
 }
 
 void ASampleGameCharacter::SetCurrentItem_Implementation(class APickupAndRotateActor* currItem)
@@ -323,19 +308,44 @@ bool ASampleGameCharacter::SetCurrentItem_Validate(class APickupAndRotateActor* 
 
 void ASampleGameCharacter::Interact()
 {
+    RaycastSearchForItem();  // only execute on client
+
     if (CurrentItem && !bInspecting)
     {
-        if (CurrentItem) CurrentItem->LinkToPlayer(this);  // call this on client side
-														   // since we want to link the cube only to THIS player
-														   // the cube function LinkToPlayer is server side anyways, so its changes will replicate
+        CurrentItem->LinkToPlayer(this);  // call this on client side
+										  // since we want to link the cube only to THIS player
+										  // the cube function LinkToPlayer is server side anyways, so its changes will replicate
 
         ToggleItemPickup();  // this is executed on the server, so it won't know which player to link cube to
     }
 }
 
+// this, however, needs to be called server side to set the flags
+void ASampleGameCharacter::ToggleItemPickup_Implementation()
+{
+    if (CurrentItem)
+    {
+        bHoldingItem = !bHoldingItem;
+        CurrentItem->Pickup();
+
+        if (!bHoldingItem)
+        {
+            CurrentItem = nullptr;
+        }
+    }
+}
+
+bool ASampleGameCharacter::ToggleItemPickup_Validate()
+{
+    return true;
+}
+
+
 // inspecting is a local action; no broadcast needed
 void ASampleGameCharacter::OnInspect()
 {
+    RaycastSearchForItem();  // we also raycast on inspect to show people where they're looking
+
     if (bHoldingItem)
     {
         LastRotation = GetControlRotation();
@@ -370,21 +380,21 @@ void ASampleGameCharacter::ToggleMovement()
     bUseControllerRotationYaw = !bUseControllerRotationYaw;
 }
 
-// this, however, needs to be called server side to set the flags
-void ASampleGameCharacter::ToggleItemPickup_Implementation()
+
+
+
+
+
+bool ASampleGameCharacter::TestMulticast_Validate()
 {
-    if (CurrentItem)
-    {
-        bHoldingItem = !bHoldingItem;
-        CurrentItem->Pickup();
-
-        if (!bHoldingItem)
-        {
-            CurrentItem = nullptr;
-        }
-    }
-}
-
-bool ASampleGameCharacter::ToggleItemPickup_Validate() {
     return true;
 }
+
+void ASampleGameCharacter::TestMulticast_Implementation() {}
+
+bool ASampleGameCharacter::TestRPC_Validate()
+{
+    return true;
+}
+
+void ASampleGameCharacter::TestRPC_Implementation() {}

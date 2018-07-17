@@ -23,18 +23,17 @@ class SAMPLEGAME_API APickupAndRotateActor : public AActor
 	// make virtual getter function so derived classes can overwrite the mesh
 	virtual UStaticMeshComponent* GetMesh();
 
-    UPROPERTY(EditAnywhere, Replicated)
+    UPROPERTY(Replicated)
     USceneComponent* HoldingComp;
 
-    UFUNCTION()
-    void RotateActor();  // still unsure what this function does
-
-	UPROPERTY(Replicated, EditAnywhere)
+	UPROPERTY(ReplicatedUsing=OnRep_ToggleHolding)
     bool bHolding;
+	UFUNCTION()
+    void OnRep_ToggleHolding();
 
     UPROPERTY(Replicated, EditAnywhere)
     ACharacter* MyCharacter;
-    UPROPERTY(Replicated, EditAnywhere)
+
     UCameraComponent* PlayerCamera;
 
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -42,6 +41,8 @@ class SAMPLEGAME_API APickupAndRotateActor : public AActor
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void LinkToPlayer(ACharacter* myChar);
+
+	void RotateActor();
 
   protected:
     // Called when the game starts or when spawned

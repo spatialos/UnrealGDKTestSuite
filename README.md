@@ -1,18 +1,38 @@
 # SpatialGDK sample game: Unreal project demonstrating SpatialOS integration
 
--- Wanqi's playground
+*Wanqi's playground*
 
 Goal: understand Unreal's network flow and the developer experience working with Spatial.
 See https://docs.google.com/document/d/1mcC3e2qNEbiA2DRw11QDyvh9SqPnk1DlZ-a03CmVEoY
 
-C to spawn cube
-E to pickup (see focus on green laser) (inconsistent)
-right click to zoom
+
+![Spawning Cubes](Game/Screenshots/SpawningCubes.png)
+![Holding Object](Game/Screenshots/HoldingObject.png)
+![Throwing](Game/Screenshots/Throwing.png)
+
+
+Logic summary:
+
+C - spawns cube. MyCube_BP -> MyCube.h -> PickupAndRotateActor.h
+
+Right click or left shift (inspect) - zooms in, changes player camera locally
+
+E (interact) - pickup/throw item
+
+
+On inspect or interact, we raycast from the player in forward camera direction. If it hits any pickup-able object, we set Player->CurrentItem = Hit
+
+When we press E, if CurrentItem is set to an Object and we’re not holding anything, we pick up the object. This is done by linking the object to the player, setting Object->MyCharacter = this and updating its location to always follow the player.
+
+If we inspect while holding an object, we stand still and can rotate to view the object (this is buggy)
+
+If we press E while holding an object, we let it go and throw it forward.
+
 
 
 Known issues:
-- picked up cube is jittery -- the position of the cube is updated every tick to match the player, creating jittery movement
-- picking up is bad -- recognizing and updating CurrentItem is inconsistent
+Sometimes player camera Y axis (up-down tilt) gets locked out after inspecting a held item
+Cube spawn behind the player instead of forward
 
 
 
