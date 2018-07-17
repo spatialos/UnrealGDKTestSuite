@@ -16,6 +16,8 @@ Known issues:
 
 
 
+--------
+
 * Repository: [github.com/improbable/unreal-gdk-sample-game](https://github.com/improbable/unreal-gdk-sample-game)
 * By: [improbable.io](https://improbable.io/)
 * License: Use of the contents of this repository is subject to the [Improbable license](LICENSE.md). <br/>
