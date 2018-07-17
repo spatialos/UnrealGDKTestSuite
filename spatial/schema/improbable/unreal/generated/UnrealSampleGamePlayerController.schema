@@ -33,6 +33,7 @@ component SampleGamePlayerControllerMigratableData {
 	id = 100012;
 	UnrealObjectRef field_acknowledgedpawn0 = 1;
 }
+import "improbable/unreal/generated/UnrealSampleGamePlayerControllerTypes.schema";
 import "improbable/unreal/generated/UnrealPlayerControllerTypes.schema";
 import "improbable/unreal/generated/UnrealControllerTypes.schema";
 
@@ -93,6 +94,7 @@ component SampleGamePlayerControllerClientRPCs {
 }
 component SampleGamePlayerControllerServerRPCs {
 	id = 100014;
+	command UnrealRPCCommandResponse testrpc(samplegameplayercontroller.TestRPCRequest);
 	command UnrealRPCCommandResponse serverviewself(playercontroller.ServerViewSelfRequest);
 	command UnrealRPCCommandResponse serverviewprevplayer(playercontroller.ServerViewPrevPlayerRequest);
 	command UnrealRPCCommandResponse serverviewnextplayer(playercontroller.ServerViewNextPlayerRequest);
@@ -117,4 +119,5 @@ component SampleGamePlayerControllerServerRPCs {
 }
 component SampleGamePlayerControllerNetMulticastRPCs {
 	id = 100015;
+	event samplegameplayercontroller.TestMulticastRequest testmulticast;
 }

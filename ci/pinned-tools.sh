@@ -33,7 +33,7 @@ function getPlatformName() {
 
 # The current version of Unreal.
 if [ -z "${UNREAL_HOME+x}" ]; then
-  UNREAL_VERSION="4.19-GDK-51ab03656b3"
+  UNREAL_VERSION="4.19-GDK-28d221de526"
   export UNREAL_HOME="C:/Unreal/UnrealEngine-${UNREAL_VERSION}"
 fi
 
