@@ -1,7 +1,6 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "SampleGamePlayerController.h"
-#include "SampleGamePlayerController.h"
 #include "EntityId.h"
 #include "SpatialNetDriver.h"
 #include "EntityRegistry.h"
