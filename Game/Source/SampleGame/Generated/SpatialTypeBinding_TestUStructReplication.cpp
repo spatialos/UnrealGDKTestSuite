@@ -256,7 +256,7 @@ void USpatialTypeBinding_TestUStructReplication::SendRPCCommand(UObject* TargetO
 	auto SenderFuncIterator = RPCToSenderMap.Find(Function->GetFName());
 	if (SenderFuncIterator == nullptr)
 	{
-		UE_LOG(LogSpatialOSInterop, Error, TEXT("Sender for %s has not been registered with RPCToSenderMap."), *Function->GetFName().ToString());
+		UE_LOG(LogSpatialGDKInterop, Error, TEXT("Sender for %s has not been registered with RPCToSenderMap."), *Function->GetFName().ToString());
 		return;
 	}
 	checkf(*SenderFuncIterator, TEXT("Sender for %s has been registered as null."), *Function->GetFName().ToString());
@@ -321,7 +321,7 @@ void USpatialTypeBinding_TestUStructReplication::BuildSpatialComponentUpdate(
 			const FRepLayoutCmd& Cmd = Changes.RepCmds[HandleIterator.CmdIndex];
 			const FRepHandleData& PropertyMapData = RepPropertyMap[HandleIterator.Handle];
 			const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData) + HandleIterator.ArrayOffset;
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*Channel->Actor->GetName(),
 				Channel->GetEntityId().ToSpatialEntityId(),
@@ -353,7 +353,7 @@ void USpatialTypeBinding_TestUStructReplication::BuildSpatialComponentUpdate(
 	{
 		const FMigratableHandleData& PropertyMapData = MigPropertyMap[ChangedHandle];
 		const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData);
-		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending migratable property update. actor %s (%lld), property %s (handle %d)"),
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending migratable property update. actor %s (%lld), property %s (handle %d)"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*Channel->Actor->GetName(),
 			Channel->GetEntityId().ToSpatialEntityId(),
@@ -857,7 +857,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -879,7 +879,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -901,7 +901,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -923,7 +923,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -959,7 +959,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -987,7 +987,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1024,7 +1024,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef),
 						*ActorChannel->Actor->GetName(),
@@ -1042,7 +1042,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			{
 				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
 					*ActorChannel->Actor->GetName(),
 					ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1071,7 +1071,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1099,7 +1099,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1127,7 +1127,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1149,7 +1149,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1186,7 +1186,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef),
 						*ActorChannel->Actor->GetName(),
@@ -1204,7 +1204,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			{
 				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
 					*ActorChannel->Actor->GetName(),
 					ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1242,7 +1242,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef),
 						*ActorChannel->Actor->GetName(),
@@ -1260,7 +1260,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			{
 				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
 					*ActorChannel->Actor->GetName(),
 					ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1290,7 +1290,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1327,7 +1327,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef),
 						*ActorChannel->Actor->GetName(),
@@ -1345,7 +1345,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			{
 				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
 					*ActorChannel->Actor->GetName(),
 					ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1368,7 +1368,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1390,7 +1390,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1412,7 +1412,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1449,7 +1449,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef),
 						*ActorChannel->Actor->GetName(),
@@ -1467,7 +1467,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			{
 				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
 					*ActorChannel->Actor->GetName(),
 					ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1505,7 +1505,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef),
 						*ActorChannel->Actor->GetName(),
@@ -1523,7 +1523,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			{
 				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
 					*ActorChannel->Actor->GetName(),
 					ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1561,7 +1561,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 				}
 				else
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef),
 						*ActorChannel->Actor->GetName(),
@@ -1579,7 +1579,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			{
 				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-				UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
 					*ActorChannel->Actor->GetName(),
 					ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1608,7 +1608,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1630,7 +1630,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1652,7 +1652,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1679,7 +1679,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1701,7 +1701,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1723,7 +1723,7 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),
@@ -1752,7 +1752,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 			return {TargetObject};
 		}
 
@@ -1778,7 +1778,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepUStructWithStablyNamedObject.StablyNamedObject is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepUStructWithStablyNamedObject.StablyNamedObject is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 					return {Cast<UObject>(StructuredParams.RepUStructWithStablyNamedObject.StablyNamedObject)};
 				}
 				else
@@ -1805,7 +1805,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepUStructWithConstStablyNamedObject.StablyNamedObject is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepUStructWithConstStablyNamedObject.StablyNamedObject is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 					return {Cast<UObject>(StructuredParams.RepUStructWithConstStablyNamedObject.StablyNamedObject)};
 				}
 				else
@@ -1832,7 +1832,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 					return {Cast<UObject>(StructuredParams.RepUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor)};
 				}
 				else
@@ -1879,7 +1879,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 
 		// Send RPC
 		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
-		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending RPC: Server_ReportReplication, target: %s %s"),
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending RPC: Server_ReportReplication, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
@@ -1899,7 +1899,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_OnRPCP
 		{
 			// A legal static object reference should never be unresolved.
 			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
-			UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_ReportReplication_OnRPCPayload: Target object %s is not resolved on this worker."),
+			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Server_ReportReplication_OnRPCPayload: Target object %s is not resolved on this worker."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ObjectRefToString(TargetObjectRef));
 			return {TargetObjectRef};
@@ -1942,7 +1942,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_OnRPCP
 				{
 					// A legal static object reference should never be unresolved.
 					checkf(ObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_ReportReplication_OnRPCPayload: Parameters.RepUStructWithStablyNamedObject.StablyNamedObject %s is not resolved on this worker."),
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Server_ReportReplication_OnRPCPayload: Parameters.RepUStructWithStablyNamedObject.StablyNamedObject %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
@@ -1970,7 +1970,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_OnRPCP
 				{
 					// A legal static object reference should never be unresolved.
 					checkf(ObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_ReportReplication_OnRPCPayload: Parameters.RepUStructWithConstStablyNamedObject.StablyNamedObject %s is not resolved on this worker."),
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Server_ReportReplication_OnRPCPayload: Parameters.RepUStructWithConstStablyNamedObject.StablyNamedObject %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
@@ -1998,7 +1998,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_OnRPCP
 				{
 					// A legal static object reference should never be unresolved.
 					checkf(ObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
-					UE_LOG(LogSpatialOSInterop, Log, TEXT("%s: Server_ReportReplication_OnRPCPayload: Parameters.RepUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor %s is not resolved on this worker."),
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Server_ReportReplication_OnRPCPayload: Parameters.RepUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor %s is not resolved on this worker."),
 						*Interop->GetSpatialOS()->GetWorkerId(),
 						*ObjectRefToString(ObjectRef));
 					return {ObjectRef};
@@ -2037,7 +2037,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_OnRPCP
 		}
 
 		// Call implementation.
-		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received RPC: Server_ReportReplication, target: %s %s"),
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received RPC: Server_ReportReplication, target: %s %s"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*TargetObject->GetName(),
 			*ObjectRefToString(TargetObjectRef));
@@ -2048,7 +2048,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_OnRPCP
 		}
 		else
 		{
-			UE_LOG(LogSpatialOSInterop, Error, TEXT("%s: Server_ReportReplication_OnRPCPayload: Function not found. Object: %s, Function: Server_ReportReplication."),
+			UE_LOG(LogSpatialGDKInterop, Error, TEXT("%s: Server_ReportReplication_OnRPCPayload: Function not found. Object: %s, Function: Server_ReportReplication."),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*TargetObject->GetFullName());
 		}
