@@ -146,19 +146,21 @@ worker::Entity USpatialTypeBinding_TestFloatReplication::CreateActorEntity(const
 	}
 
 	// Setup initial data.
-	improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData::Data SingleClientData;
-	improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData::Update SingleClientUpdate;
-	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData::Data MultiClientData;
-	improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData::Update MultiClientUpdate;
-	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::testfloatreplication::TestFloatReplicationMigratableData::Data MigratableData;
-	improbable::unreal::generated::testfloatreplication::TestFloatReplicationMigratableData::Update MigratableDataUpdate;
-	bool bMigratableDataUpdateChanged = false;
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
-	SingleClientUpdate.ApplyTo(SingleClientData);
-	MultiClientUpdate.ApplyTo(MultiClientData);
-	MigratableDataUpdate.ApplyTo(MigratableData);
+
+	improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData::Data SingleClientTestFloatReplicationData;
+	improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData::Update SingleClientTestFloatReplicationUpdate;
+	bool bSingleClientTestFloatReplicationUpdateChanged = false;
+	improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData::Data MultiClientTestFloatReplicationData;
+	improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData::Update MultiClientTestFloatReplicationUpdate;
+	bool bMultiClientTestFloatReplicationUpdateChanged = false;
+	improbable::unreal::generated::testfloatreplication::TestFloatReplicationMigratableData::Data TestFloatReplicationMigratableData;
+	improbable::unreal::generated::testfloatreplication::TestFloatReplicationMigratableData::Update TestFloatReplicationMigratableDataUpdate;
+	bool bTestFloatReplicationMigratableDataUpdateChanged = false;
+
+	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientTestFloatReplicationUpdate, bSingleClientTestFloatReplicationUpdateChanged, MultiClientTestFloatReplicationUpdate, bMultiClientTestFloatReplicationUpdateChanged, TestFloatReplicationMigratableDataUpdate, bTestFloatReplicationMigratableDataUpdateChanged);
+	SingleClientTestFloatReplicationUpdate.ApplyTo(SingleClientTestFloatReplicationData);
+	MultiClientTestFloatReplicationUpdate.ApplyTo(MultiClientTestFloatReplicationData);
+	TestFloatReplicationMigratableDataUpdate.ApplyTo(TestFloatReplicationMigratableData);
 
 	// Create entity.
 	std::string ClientWorkerIdString = TCHAR_TO_UTF8(*ClientWorkerId);
@@ -205,9 +207,9 @@ worker::Entity USpatialTypeBinding_TestFloatReplication::CreateActorEntity(const
 		.SetPersistence(true)
 		.SetReadAcl(AnyUnrealWorkerOrClient)
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData>(SingleClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData>(MultiClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationMigratableData>(MigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData>(SingleClientTestFloatReplicationData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData>(MultiClientTestFloatReplicationData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationMigratableData>(TestFloatReplicationMigratableData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationClientRPCs>(improbable::unreal::generated::testfloatreplication::TestFloatReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs>(improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationNetMulticastRPCs>(improbable::unreal::generated::testfloatreplication::TestFloatReplicationNetMulticastRPCs::Data{}, WorkersOnly)
@@ -261,18 +263,21 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveAddComponent(USpatialActor
 	{
 		auto Update = improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
 		ReceiveUpdate_SingleClient(Channel, Update);
+		return;
 	}
 	auto* MultiClientAddOp = Cast<UTestFloatReplicationMultiClientRepDataAddComponentOp>(AddComponentOp);
 	if (MultiClientAddOp)
 	{
 		auto Update = improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
 		ReceiveUpdate_MultiClient(Channel, Update);
+		return;
 	}
 	auto* MigratableDataAddOp = Cast<UTestFloatReplicationMigratableDataAddComponentOp>(AddComponentOp);
 	if (MigratableDataAddOp)
 	{
 		auto Update = improbable::unreal::generated::testfloatreplication::TestFloatReplicationMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
 		ReceiveUpdate_Migratable(Channel, Update);
+		return;
 	}
 }
 
@@ -661,14 +666,16 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_Migratable(const
 
 void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData::Update& Update) const
 {
-	Interop->PreReceiveSpatialUpdate(ActorChannel);
+	AActor* TargetObject = ActorChannel->Actor;
+	ActorChannel->PreReceiveSpatialUpdate(TargetObject);
 	TArray<UProperty*> RepNotifies;
-	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies);
+	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies);
 }
 
 void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData::Update& Update) const
 {
-	Interop->PreReceiveSpatialUpdate(ActorChannel);
+	AActor* TargetObject = ActorChannel->Actor;
+	ActorChannel->PreReceiveSpatialUpdate(TargetObject);
 	TSet<UProperty*> RepNotifies;
 
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
@@ -683,12 +690,12 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
 			Value = (*Update.field_bhidden0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -705,12 +712,12 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
 			Value = (*Update.field_breplicatemovement0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -727,12 +734,12 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
 			Value = (*Update.field_btearoff0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -749,12 +756,12 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
 
 			Value = (*Update.field_bcanbedamaged0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -778,7 +785,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 				RepData = &HandleToPropertyMap[Handle];
 			}
 
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(PropertyData));
 
 			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_remoterole0().data())));
@@ -790,7 +797,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 				Value = ROLE_SimulatedProxy;
 			}
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -807,7 +814,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FRepMovement Value = *(reinterpret_cast<FRepMovement const*>(PropertyData));
 
 			auto& ValueDataStr = (*Update.field_replicatedmovement0().data());
@@ -818,7 +825,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRepMovement failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -836,7 +843,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachparent0().data());
@@ -873,7 +880,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -891,7 +898,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			auto& ValueDataStr = (*Update.field_attachmentreplication0_locationoffset0().data());
@@ -902,7 +909,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -919,7 +926,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FVector_NetQuantize100 Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(PropertyData));
 
 			auto& ValueDataStr = (*Update.field_attachmentreplication0_relativescale3d0().data());
@@ -930,7 +937,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FVector_NetQuantize100 failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -947,7 +954,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FRotator Value = *(reinterpret_cast<FRotator const*>(PropertyData));
 
 			auto& ValueDataStr = (*Update.field_attachmentreplication0_rotationoffset0().data());
@@ -958,7 +965,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 			Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
 			checkf(bSuccess, TEXT("NetSerialize on FRotator failed."));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -975,12 +982,12 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			FName Value = *(reinterpret_cast<FName const*>(PropertyData));
 
 			Value = FName(((*Update.field_attachmentreplication0_attachsocket0().data())).data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -998,7 +1005,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(PropertyData));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachcomponent0().data());
@@ -1035,7 +1042,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1054,7 +1061,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner0().data());
@@ -1091,7 +1098,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1116,12 +1123,12 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 				RepData = &HandleToPropertyMap[Handle];
 			}
 
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			TEnumAsByte<ENetRole> Value = *(reinterpret_cast<TEnumAsByte<ENetRole> const*>(PropertyData));
 
 			Value = TEnumAsByte<ENetRole>(uint8((*Update.field_role0().data())));
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1139,7 +1146,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator0().data());
@@ -1176,7 +1183,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 
 			if (bWriteObjectProperty)
 			{
-				ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 				UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 					*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1194,12 +1201,12 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			int32 Value = *(reinterpret_cast<int32 const*>(PropertyData));
 
 			Value = (*Update.field_testbookend0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1216,12 +1223,12 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			float Value = *(reinterpret_cast<float const*>(PropertyData));
 
 			Value = (*Update.field_testfloat0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1238,12 +1245,12 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			double Value = *(reinterpret_cast<double const*>(PropertyData));
 
 			Value = (*Update.field_testdouble0().data());
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, ActorChannel->Actor, static_cast<const void*>(&Value), RepNotifies);
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
@@ -1253,7 +1260,7 @@ void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_MultiClient(USpatia
 				Handle);
 		}
 	}
-	Interop->PostReceiveSpatialUpdate(ActorChannel, RepNotifies.Array());
+	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies.Array());
 }
 
 void USpatialTypeBinding_TestFloatReplication::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testfloatreplication::TestFloatReplicationMigratableData::Update& Update) const

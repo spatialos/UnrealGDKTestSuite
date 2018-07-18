@@ -33,6 +33,16 @@ public:
 	void ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const override;
 	worker::Map<worker::ComponentId, worker::InterestOverride> GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const override;
 
+	void BuildSpatialComponentUpdate(
+		const FPropertyChangeState& Changes,
+		USpatialActorChannel* Channel,
+		improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameSingleClientRepData::Update& SingleClientUpdate,
+		bool& bSingleClientUpdateChanged,
+		improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameMultiClientRepData::Update& MultiClientUpdate,
+		bool& bMultiClientUpdateChanged,
+		improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameMigratableData::Update& MigratableDataUpdate,
+		bool& bMigratableDataUpdateChanged) const;
+
 private:
 	improbable::unreal::callbacks::FScopedViewCallbacks ViewCallbacks;
 
@@ -43,16 +53,6 @@ private:
 	FRepHandlePropertyMap RepHandleToPropertyMap;
 	FMigratableHandlePropertyMap MigratableHandleToPropertyMap;
 
-	// Component update helper functions.
-	void BuildSpatialComponentUpdate(
-		const FPropertyChangeState& Changes,
-		USpatialActorChannel* Channel,
-		improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameSingleClientRepData::Update& SingleClientUpdate,
-		bool& bSingleClientUpdateChanged,
-		improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameMultiClientRepData::Update& MultiClientUpdate,
-		bool& bMultiClientUpdateChanged,
-		improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameMigratableData::Update& MigratableDataUpdate,
-		bool& bMigratableDataUpdateChanged) const;
 	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameSingleClientRepData::Update& OutUpdate) const;
 	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameMultiClientRepData::Update& OutUpdate) const;
 	void ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameMigratableData::Update& OutUpdate) const;
