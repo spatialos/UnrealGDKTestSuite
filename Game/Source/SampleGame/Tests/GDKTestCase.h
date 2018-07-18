@@ -27,14 +27,14 @@ public:
 	bool IsFinished() const;
 
 	/* 
-	* This function is triggered by the GDK test runner to start the execution of the test.
+	* The GDKTestRunner triggers this function to start the execution of the test.
 	*/
 	UFUNCTION()
 	virtual void Server_StartTest()
 	PURE_VIRTUAL(AGDKTestCase::Server_StartTest(), );
 
 	/* 
-	* This function is triggered by the GDK test runner to start the tear down process of the test after its completion. 
+	* The GDKTestRunner triggers this function to start tearing down the test after its completion. 
 	*/
 	UFUNCTION()
 	virtual void Server_TearDown()

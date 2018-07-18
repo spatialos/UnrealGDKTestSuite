@@ -10,14 +10,14 @@
 DECLARE_LOG_CATEGORY_EXTERN(LogSpatialGDKTests, Log, All);
 
 /*
-* The GDKTestRunner is the testing suite used for Unreal GDK system level testing.
-* It contains a list of test cases that are populated on the Server using the Server_SetupTestCases() function 
-* and then replicated to the clients. To start the execution of the test suite, call the function Server_RunTests()
-* on a client. This server RPC will then setup the test case array on the server and wait for it to replicate to 
-* the connected clients. The clients sends another RPC once all test cases have been replicated to indicate that the 
+* The GDKTestRunner is the testing suite used for Unreal GDK system-level testing.
+* It contains a list of test cases that are populated on the server using the `Server_SetupTestCases()` function 
+* and then replicated to the clients. To start the execution of the test suite, call the function `Server_RunTests()`
+* on a client. This server RPC sets up the test case array on the server and waits for it to replicate to 
+* the connected clients. Each client sends another RPC once all test cases have been replicated to indicate that the 
 * server can start executing the tests.
 *
-* All test cases must implement the AGDKTestCase interface. The test cases need to be added in the Server_SetupTestCases() server RPC.
+* All test cases must implement the AGDKTestCase interface. The test cases need to be added in the `Server_SetupTestCases()` server RPC.
 */
 UCLASS()
 class SAMPLEGAME_API AGDKTestRunner : public AActor
