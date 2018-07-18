@@ -1,9 +1,0 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
-// Note that this file has been generated automatically
-package improbable.unreal.generated.TestSuitecharacter;
-
-import "improbable/unreal/gdk/core_types.schema";
-
-type TestMulticastRequest {
-	uint32 target_subobject_offset = 1;
-}
