@@ -12,8 +12,7 @@ void ATestUStructReplication::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	UWorld* World = GetWorld();
-	if (!World || GetNetMode() != NM_Client)
+	if (GetNetMode() != NM_Client)
 	{
 		return;
 	}
