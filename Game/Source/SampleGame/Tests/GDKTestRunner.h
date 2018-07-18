@@ -14,10 +14,10 @@ DECLARE_LOG_CATEGORY_EXTERN(LogSpatialGDKTests, Log, All);
 * It contains a list of test cases that are populated on the server using the `Server_SetupTestCases()` function 
 * and then replicated to the clients. To start the execution of the test suite, call the function `Server_RunTests()`
 * on a client. This server RPC sets up the test case array on the server and waits for it to replicate to 
-* the connected clients. Each client sends another RPC once all test cases have been replicated to indicate that the 
+* the connected clients. Each client send another RPC once all test cases have been replicated to indicate that the 
 * server can start executing the tests.
 *
-* All test cases must implement the AGDKTestCase interface. The test cases need to be added in the `Server_SetupTestCases()` server RPC.
+* All test cases must implement the AGDKTestCase interface.You need to add the test cases in the `Server_SetupTestCases()` server RPC.
 */
 UCLASS()
 class SAMPLEGAME_API AGDKTestRunner : public AActor
@@ -34,7 +34,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	/* 
-	* Sent from the client to trigger the execution of the test setup and execution. 
+	* Sent from the client to trigger the test setup and execution. 
 	*/
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_RunTests();

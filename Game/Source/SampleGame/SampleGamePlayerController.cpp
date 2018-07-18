@@ -28,8 +28,9 @@ void ASampleGamePlayerController::InitPlayerState()
 {
 	// TODO: this is a workaround until we can query a replicated UObject*'s UnrealObjRef - UNR-407
 	UWorld* World = GetWorld();
+	check(World);
 	USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(World->GetNetDriver());
-	if (World && NetDriver)
+	if (NetDriver)
 	{
 		const FEntityId EntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(this);
 		UE_LOG(LogTemp, Log, TEXT("PC:InitPlayerState called with entity id %d"), EntityId.ToSpatialEntityId());
