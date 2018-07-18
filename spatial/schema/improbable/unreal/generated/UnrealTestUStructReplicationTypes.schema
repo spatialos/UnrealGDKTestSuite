@@ -1,0 +1,19 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated.testustructreplication;
+
+import "improbable/unreal/gdk/core_types.schema";
+
+type ServerReportReplicationRequest {
+	uint32 target_subobject_offset = 1;
+	int32 field_reppodustruct0_rootprop0 = 2;
+	int32 field_repnestedustruct0_nestedstruct0_rootprop0 = 3;
+	UnrealObjectRef field_repustructwithstablynamedobject0_stablynamedobject0 = 4;
+	UnrealObjectRef field_repustructwithconststablynamedobject0_stablynamedobject0 = 5;
+	UnrealObjectRef field_repustructwithdynamicallycreatedactor0_dynamicallycreatedactor0 = 6;
+	bytes field_repustructwithnetserialize0 = 7;
+	list<int32> field_repustructwithcstylearray0_array0 = 8;
+	list<int32> field_repustructwithtarray0_array0 = 9;
+	uint32 field_repustructwithunrealstyleenum0_test32enum0 = 10;
+	uint32 field_repustructwithcppstyleenum0_uenum0 = 11;
+}
