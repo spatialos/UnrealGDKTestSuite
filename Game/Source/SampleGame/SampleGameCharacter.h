@@ -84,7 +84,7 @@ protected:
 	bool bTestRunnerReplicated;
 
 public:
-	/** Returns CameraBoom subobject **/
+	/** Returns CameraBoom subobject **/ 
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
