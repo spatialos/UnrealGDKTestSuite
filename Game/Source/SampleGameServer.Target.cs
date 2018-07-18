@@ -3,11 +3,11 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class SampleGameServerTarget : TargetRules
+public class TestSuiteServerTarget : TargetRules
 {
-	public SampleGameServerTarget(TargetInfo Target) : base(Target)
+	public TestSuiteServerTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Server;
-		ExtraModuleNames.Add("SampleGame");
+		ExtraModuleNames.Add("TestSuite");
 	}
 }

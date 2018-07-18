@@ -6,11 +6,11 @@
 #include "Commander.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
-#include "SampleGameCharacterSibling.generated.h"
+#include "TestSuiteCharacterSibling.generated.h"
 
 
 UCLASS(config=Game)
-class ASampleGameCharacterSibling : public ACharacter
+class ATestSuiteCharacterSibling : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -22,7 +22,7 @@ class ASampleGameCharacterSibling : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 public:
-	ASampleGameCharacterSibling();
+	ATestSuiteCharacterSibling();
 
 	virtual void BeginPlay() override;
 

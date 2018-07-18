@@ -74,11 +74,11 @@ void ATestUObjectReplication::Server_StartTestImpl()
 	// TODO: UNR-238 Add tests.
 
 	// Setup stably named UObject
-	StablyNamedUObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	StablyNamedUObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/TestSuite.Default__TestUObject"));
 	check(StablyNamedUObject);
 
 	// Setup const UObject
-	ConstObj = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	ConstObj = LoadObject<UTestUObject>(nullptr, TEXT("/Script/TestSuite.Default__TestUObject"));
 	check(ConstObj);
 
 	SignalReplicationSetup();
@@ -123,12 +123,12 @@ void ATestUObjectReplication::ValidateReplication_Client(ATestActor*  TestDynami
 	// Validate the stably named object
 	check(TestStablyNamedUObject->IsA(UTestUObject::StaticClass()));
 	check(TestStablyNamedUObject == UTestUObject::StaticClass()->GetDefaultObject());
-	check(TestStablyNamedUObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(TestStablyNamedUObject->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	// Validate const UObject
 	check(TestConstObj->IsA(UTestUObject::StaticClass()));
 	check(TestConstObj == UTestUObject::StaticClass()->GetDefaultObject());
-	check(TestConstObj->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(TestConstObj->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 }
 
 void ATestUObjectReplication::ValidateRPC_Server(ATestActor*  TestDynamicallyCreatedActor,
@@ -149,10 +149,10 @@ void ATestUObjectReplication::ValidateRPC_Server(ATestActor*  TestDynamicallyCre
 	// // Validate the stably named object
 	check(TestStablyNamedUObject->IsA(UTestUObject::StaticClass()));
 	check(TestStablyNamedUObject == UTestUObject::StaticClass()->GetDefaultObject());
-	check(TestStablyNamedUObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(TestStablyNamedUObject->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	// Validate const UObject
 	check(TestConstObj->IsA(UTestUObject::StaticClass()));
 	check(TestConstObj == UTestUObject::StaticClass()->GetDefaultObject());
-	check(TestConstObj->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(TestConstObj->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 }

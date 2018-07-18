@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
-#include "SampleGameGameStateBase.generated.h"
+#include "TestSuiteGameStateBase.generated.h"
 
 UCLASS()
-class SAMPLEGAME_API ASampleGameGameStateBase : public AGameStateBase
+class TESTSUITE_API ATestSuiteGameStateBase : public AGameStateBase
 {
 	GENERATED_BODY()
 

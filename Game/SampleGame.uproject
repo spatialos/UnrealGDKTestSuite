@@ -1,11 +1,11 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{3CEB792D-4973-1B96-9E4E-DFA70AD979C7}",
+	"EngineAssociation": "{AD63C9CA-4E14-B025-434B-93B2522A7DA4}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
 		{
-			"Name": "SampleGame",
+			"Name": "TestSuite",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [

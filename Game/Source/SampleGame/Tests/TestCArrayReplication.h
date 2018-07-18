@@ -9,7 +9,7 @@
 #include "TestCArrayReplication.generated.h"
 
 UCLASS()
-class SAMPLEGAME_API ATestCArrayReplication : public AReplicationTestCase
+class TESTSUITE_API ATestCArrayReplication : public AReplicationTestCase
 {
 	GENERATED_BODY()
 public:	

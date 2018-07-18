@@ -8,10 +8,10 @@
 #include "Tests/GDKTestRunner.h"
 #include "Tests/ReplicationTestCase.h"
 #include "Tests/ReplicationTestHelperClasses.h"
-#include "SampleGameCharacter.generated.h"
+#include "TestSuiteCharacter.generated.h"
 
 UCLASS(config = Game)
-class ASampleGameCharacter : public ACharacter
+class ATestSuiteCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -23,7 +23,7 @@ class ASampleGameCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 public:
-	ASampleGameCharacter();
+	ATestSuiteCharacter();
 
 	virtual void BeginPlay() override;
 

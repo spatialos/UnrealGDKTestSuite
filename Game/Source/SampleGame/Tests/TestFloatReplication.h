@@ -8,7 +8,7 @@
 #include "TestFloatReplication.generated.h"
 
 UCLASS()
-class SAMPLEGAME_API ATestFloatReplication : public AReplicationTestCase
+class TESTSUITE_API ATestFloatReplication : public AReplicationTestCase
 {
 	GENERATED_BODY()
 public:	

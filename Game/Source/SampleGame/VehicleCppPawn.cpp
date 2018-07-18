@@ -14,9 +14,9 @@
 #include "Components/TextRenderComponent.h"
 #include "Materials/Material.h"
 #include "GameFramework/Controller.h"
-#include "SampleGameCharacter.h"
+#include "TestSuiteCharacter.h"
 #include "SpatialNetDriver.h"
-#include "SampleGameGameStateBase.h"
+#include "TestSuiteGameStateBase.h"
 
 const FName AVehicleCppPawn::LookUpBinding("LookUp");
 const FName AVehicleCppPawn::LookRightBinding("LookRight");

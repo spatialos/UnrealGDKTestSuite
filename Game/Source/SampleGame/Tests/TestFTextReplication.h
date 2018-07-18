@@ -8,7 +8,7 @@
 #include "TestFTextReplication.generated.h"
 
 UCLASS()
-class SAMPLEGAME_API ATestFTextReplication : public AReplicationTestCase
+class TESTSUITE_API ATestFTextReplication : public AReplicationTestCase
 {
 	GENERATED_BODY()
 public:	

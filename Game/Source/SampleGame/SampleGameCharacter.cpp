@@ -1,6 +1,6 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
-#include "SampleGameCharacter.h"
+#include "TestSuiteCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -9,23 +9,23 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "SampleGameGameStateBase.h"
+#include "TestSuiteGameStateBase.h"
 #include "SpatialNetDriver.h"
 
 #include "UnrealNetwork.h"
 
 //////////////////////////////////////////////////////////////////////////
-// ASampleGameCharacter
+// ATestSuiteCharacter
 
-ASampleGameCharacter::ASampleGameCharacter()
+ATestSuiteCharacter::ATestSuiteCharacter()
 {
 	// Hack to ensure that the game state is created and set to tick on a client as we don't replicate it
 	UWorld* World = GetWorld();
 	if (World && World->GetGameState() == nullptr)
 	{
-		AGameStateBase* GameState = World->SpawnActor<AGameStateBase>(ASampleGameGameStateBase::StaticClass());
+		AGameStateBase* GameState = World->SpawnActor<AGameStateBase>(ATestSuiteGameStateBase::StaticClass());
 		World->SetGameState(GameState);
-		Cast<ASampleGameGameStateBase>(GameState)->FakeServerHasBegunPlay();
+		Cast<ATestSuiteGameStateBase>(GameState)->FakeServerHasBegunPlay();
 	}
 
 	// Set size for collision capsule
@@ -61,7 +61,7 @@ ASampleGameCharacter::ASampleGameCharacter()
 												   // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
-void ASampleGameCharacter::BeginPlay()
+void ATestSuiteCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -75,41 +75,41 @@ void ASampleGameCharacter::BeginPlay()
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-void ASampleGameCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void ATestSuiteCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &ASampleGameCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ASampleGameCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &ATestSuiteCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ATestSuiteCharacter::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &ASampleGameCharacter::TurnAtRate);
+	PlayerInputComponent->BindAxis("TurnRate", this, &ATestSuiteCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &ASampleGameCharacter::LookUpAtRate);
-	PlayerInputComponent->BindAction("DebugCmd", IE_Pressed, this, &ASampleGameCharacter::DebugCmd);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &ATestSuiteCharacter::LookUpAtRate);
+	PlayerInputComponent->BindAction("DebugCmd", IE_Pressed, this, &ATestSuiteCharacter::DebugCmd);
 
 	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &ASampleGameCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &ASampleGameCharacter::TouchStopped);
+	PlayerInputComponent->BindTouch(IE_Pressed, this, &ATestSuiteCharacter::TouchStarted);
+	PlayerInputComponent->BindTouch(IE_Released, this, &ATestSuiteCharacter::TouchStopped);
 }
 
-void ASampleGameCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+void ATestSuiteCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
 	Jump();
 }
 
-void ASampleGameCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
+void ATestSuiteCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
 	StopJumping();
 }
 
-void ASampleGameCharacter::DebugCmd()
+void ATestSuiteCharacter::DebugCmd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s: DebugCmd"), GetNetMode() == NM_Client ? TEXT("Client") : TEXT("Server"));
 
@@ -130,19 +130,19 @@ void ASampleGameCharacter::DebugCmd()
 	}
 }
 
-void ASampleGameCharacter::TurnAtRate(float Rate)
+void ATestSuiteCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ASampleGameCharacter::LookUpAtRate(float Rate)
+void ATestSuiteCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ASampleGameCharacter::MoveForward(float Value)
+void ATestSuiteCharacter::MoveForward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
@@ -156,7 +156,7 @@ void ASampleGameCharacter::MoveForward(float Value)
 	}
 }
 
-void ASampleGameCharacter::MoveRight(float Value)
+void ATestSuiteCharacter::MoveRight(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
@@ -171,24 +171,24 @@ void ASampleGameCharacter::MoveRight(float Value)
 	}
 }
 
-void ASampleGameCharacter::OnRep_TestRunner()
+void ATestSuiteCharacter::OnRep_TestRunner()
 {
 	check(TestRunner)
 	bTestRunnerReplicated = true;
 }
 
-void ASampleGameCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+void ATestSuiteCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME_CONDITION(ASampleGameCharacter, TestRunner, COND_InitialOnly);
+	DOREPLIFETIME_CONDITION(ATestSuiteCharacter, TestRunner, COND_InitialOnly);
 }
 
-bool ASampleGameCharacter::TestMulticast_Validate()
+bool ATestSuiteCharacter::TestMulticast_Validate()
 {
 	return true;
 }
 
-void ASampleGameCharacter::TestMulticast_Implementation()
+void ATestSuiteCharacter::TestMulticast_Implementation()
 {
 }

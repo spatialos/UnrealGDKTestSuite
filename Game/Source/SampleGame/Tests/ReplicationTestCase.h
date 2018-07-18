@@ -8,7 +8,7 @@
 #include "ReplicationTestCase.generated.h"
 
 UCLASS(Abstract)
-class SAMPLEGAME_API AReplicationTestCase : public AGDKTestCase
+class TESTSUITE_API AReplicationTestCase : public AGDKTestCase
 {
 	GENERATED_BODY()
 

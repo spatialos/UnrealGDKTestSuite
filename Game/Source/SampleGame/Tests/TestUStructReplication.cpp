@@ -109,11 +109,11 @@ void ATestUStructReplication::Server_StartTestImpl()
 	NestedUStruct.NestedStruct.RootProp = 42;
 
 	// Setup UStruct with stably named UObject
-	UStructWithStablyNamedObject.StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	UStructWithStablyNamedObject.StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/TestSuite.Default__TestUObject"));
 	check(UStructWithStablyNamedObject.StablyNamedObject);
 
 	// Setup UStruct with const stably named UObject
-	UStructWithConstStablyNamedObject.StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	UStructWithConstStablyNamedObject.StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/TestSuite.Default__TestUObject"));
 	check(UStructWithConstStablyNamedObject.StablyNamedObject);
 
 	// Setup UStruct with a dynamically created actor
@@ -206,12 +206,12 @@ void ATestUStructReplication::ValidateReplication_Client(const FSimpleTestStruct
 	// Validate the stably named object
 	check(TestUStructWithStablyNamedObject.StablyNamedObject->IsA(UTestUObject::StaticClass()));
 	check(TestUStructWithStablyNamedObject.StablyNamedObject == UTestUObject::StaticClass()->GetDefaultObject());
-	check(TestUStructWithStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(TestUStructWithStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	// Validate the const stably named object
 	check(TestUStructWithConstStablyNamedObject.StablyNamedObject->IsA(UTestUObject::StaticClass()));
 	check(TestUStructWithConstStablyNamedObject.StablyNamedObject == UTestUObject::StaticClass()->GetDefaultObject());
-	check(TestUStructWithConstStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(TestUStructWithConstStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	// Validate Dynamically created actors
 	check(TestUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->IsA(ATestActor::StaticClass()));
@@ -256,12 +256,12 @@ void ATestUStructReplication::ValidateRPC_Server(const FSimpleTestStruct& TestPO
 	// Validate the stably named object
 	check(TestUStructWithStablyNamedObject.StablyNamedObject->IsA(UTestUObject::StaticClass()));
 	check(TestUStructWithStablyNamedObject.StablyNamedObject == UTestUObject::StaticClass()->GetDefaultObject());
-	check(TestUStructWithStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(TestUStructWithStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	// Validate the const stably named object
 	check(TestUStructWithConstStablyNamedObject.StablyNamedObject->IsA(UTestUObject::StaticClass()));
 	check(TestUStructWithConstStablyNamedObject.StablyNamedObject == UTestUObject::StaticClass()->GetDefaultObject());
-	check(TestUStructWithConstStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(TestUStructWithConstStablyNamedObject.StablyNamedObject->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	// Validate Dynamically created actors
 	check(TestUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor->IsA(ATestActor::StaticClass()));

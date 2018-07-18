@@ -8,7 +8,7 @@
 #include "TestFNameReplication.generated.h"
 
 UCLASS()
-class SAMPLEGAME_API ATestFNameReplication : public AReplicationTestCase
+class TESTSUITE_API ATestFNameReplication : public AReplicationTestCase
 {
 	GENERATED_BODY()
 public:	

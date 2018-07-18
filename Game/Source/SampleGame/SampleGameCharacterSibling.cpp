@@ -1,6 +1,6 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
-#include "SampleGameCharacterSibling.h"
+#include "TestSuiteCharacterSibling.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -9,23 +9,23 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "SampleGameGameStateBase.h"
+#include "TestSuiteGameStateBase.h"
 #include "SpatialNetDriver.h"
 
 #include "UnrealNetwork.h"
 
 //////////////////////////////////////////////////////////////////////////
-// ASampleGameCharacterSibling
+// ATestSuiteCharacterSibling
 
-ASampleGameCharacterSibling::ASampleGameCharacterSibling()
+ATestSuiteCharacterSibling::ATestSuiteCharacterSibling()
 {
 	// Hack to ensure that the game state is created and set to tick on a client as we don't replicate it
 	UWorld* World = GetWorld();
 	if (World && World->GetGameState() == nullptr)
 	{
-		AGameStateBase* GameState = World->SpawnActor<AGameStateBase>(ASampleGameGameStateBase::StaticClass());
+		AGameStateBase* GameState = World->SpawnActor<AGameStateBase>(ATestSuiteGameStateBase::StaticClass());
 		World->SetGameState(GameState);
-		Cast<ASampleGameGameStateBase>(GameState)->FakeServerHasBegunPlay();
+		Cast<ATestSuiteGameStateBase>(GameState)->FakeServerHasBegunPlay();
 	}
 
 	// Set size for collision capsule
@@ -61,7 +61,7 @@ ASampleGameCharacterSibling::ASampleGameCharacterSibling()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
-void ASampleGameCharacterSibling::BeginPlay()
+void ATestSuiteCharacterSibling::BeginPlay()
 {
 	Super::BeginPlay();
 }
@@ -69,60 +69,60 @@ void ASampleGameCharacterSibling::BeginPlay()
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-void ASampleGameCharacterSibling::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void ATestSuiteCharacterSibling::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &ASampleGameCharacterSibling::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ASampleGameCharacterSibling::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &ATestSuiteCharacterSibling::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ATestSuiteCharacterSibling::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &ASampleGameCharacterSibling::TurnAtRate);
+	PlayerInputComponent->BindAxis("TurnRate", this, &ATestSuiteCharacterSibling::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &ASampleGameCharacterSibling::LookUpAtRate);
-	PlayerInputComponent->BindAction("DebugCmd", IE_Pressed, this, &ASampleGameCharacterSibling::DebugCmd);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &ATestSuiteCharacterSibling::LookUpAtRate);
+	PlayerInputComponent->BindAction("DebugCmd", IE_Pressed, this, &ATestSuiteCharacterSibling::DebugCmd);
 
 	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &ASampleGameCharacterSibling::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &ASampleGameCharacterSibling::TouchStopped);
+	PlayerInputComponent->BindTouch(IE_Pressed, this, &ATestSuiteCharacterSibling::TouchStarted);
+	PlayerInputComponent->BindTouch(IE_Released, this, &ATestSuiteCharacterSibling::TouchStopped);
 }
 
-void ASampleGameCharacterSibling::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+void ATestSuiteCharacterSibling::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
 	Jump();
 }
 
-void ASampleGameCharacterSibling::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
+void ATestSuiteCharacterSibling::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
 	StopJumping();
 }
 
-void ASampleGameCharacterSibling::DebugCmd()
+void ATestSuiteCharacterSibling::DebugCmd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("DebugCmd"));
 
 	Server_TestFuncSibling();
 }
 
-void ASampleGameCharacterSibling::TurnAtRate(float Rate)
+void ATestSuiteCharacterSibling::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ASampleGameCharacterSibling::LookUpAtRate(float Rate)
+void ATestSuiteCharacterSibling::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ASampleGameCharacterSibling::MoveForward(float Value)
+void ATestSuiteCharacterSibling::MoveForward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
@@ -136,7 +136,7 @@ void ASampleGameCharacterSibling::MoveForward(float Value)
 	}
 }
 
-void ASampleGameCharacterSibling::MoveRight(float Value)
+void ATestSuiteCharacterSibling::MoveRight(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
@@ -151,7 +151,7 @@ void ASampleGameCharacterSibling::MoveRight(float Value)
 	}
 }
 
-void ASampleGameCharacterSibling::Server_TestFuncSibling_Implementation()
+void ATestSuiteCharacterSibling::Server_TestFuncSibling_Implementation()
 {
 	// modify replicated members to check network serialisation
 	static float Num = 101.f;
@@ -161,12 +161,12 @@ void ASampleGameCharacterSibling::Server_TestFuncSibling_Implementation()
 	TestBookend += 1;
 }
 
-bool ASampleGameCharacterSibling::Server_TestFuncSibling_Validate()
+bool ATestSuiteCharacterSibling::Server_TestFuncSibling_Validate()
 {
 	return true;
 }
 
-void ASampleGameCharacterSibling::OnRep_TestPODArray()
+void ATestSuiteCharacterSibling::OnRep_TestPODArray()
 {
 	FString TestString;
 	for (auto i : TestPODArray)
@@ -178,10 +178,10 @@ void ASampleGameCharacterSibling::OnRep_TestPODArray()
 	UE_LOG(LogTemp, Warning, TEXT("TestPODArray updated - %s"), *TestString);
 }
 
-void ASampleGameCharacterSibling::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+void ATestSuiteCharacterSibling::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME_CONDITION(ASampleGameCharacterSibling, TestPODArray, COND_SimulatedOnly);
-	DOREPLIFETIME_CONDITION(ASampleGameCharacterSibling, TestBookend, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ATestSuiteCharacterSibling, TestPODArray, COND_SimulatedOnly);
+	DOREPLIFETIME_CONDITION(ATestSuiteCharacterSibling, TestBookend, COND_SimulatedOnly);
 }

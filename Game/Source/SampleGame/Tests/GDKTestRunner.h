@@ -20,7 +20,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogSpatialGDKTests, Log, All);
 * All test cases must implement the AGDKTestCase interface.You need to add the test cases in the `Server_SetupTestCases()` server RPC.
 */
 UCLASS()
-class SAMPLEGAME_API AGDKTestRunner : public AActor
+class TESTSUITE_API AGDKTestRunner : public AActor
 {
 	GENERATED_BODY()
 

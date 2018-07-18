@@ -1,7 +1,7 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
-#include "SampleGame.h"
+#include "TestSuite.h"
 #include "Modules/ModuleManager.h"
 
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, SampleGame, "SampleGame" );
+IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, TestSuite, "TestSuite" );
  

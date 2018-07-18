@@ -47,20 +47,20 @@ Run this if you change:
 #### `Game\Scripts\Build.bat`
 Parameters:
 
-`<target> <platform> <configuration> SampleGame.uproject [--skip-codegen]`
+`<target> <platform> <configuration> TestSuite.uproject [--skip-codegen]`
 
 For example:
 
-`Game\Scripts\Build.bat SampleGameEditor Win64 Development SampleGame.uproject`
+`Game\Scripts\Build.bat TestSuiteEditor Win64 Development TestSuite.uproject`
 
 Build, cook and zip special workers for use with:
 * `spatial upload`
 * `spatial local launch`
 
 The following `<target>`s  generate zipped workers:
-* `SampleGameEditor`
-* `SampleGame`
-* `SampleGameServer`
+* `TestSuiteEditor`
+* `TestSuite`
+* `TestSuiteServer`
 
 > Any other `<target>` passes all arguments  to `Engine\Build\BatchFiles\Build.bat` - either no cooking or zipping performed.
 

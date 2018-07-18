@@ -71,7 +71,7 @@
       "command": "StartWorker.sh",
       "arguments": [
         "${IMPROBABLE_WORKER_ID}",
-        "SampleGame",
+        "TestSuite",
         "ThirdPersonExampleMap",
         "+appName",
         "${IMPROBABLE_PROJECT_NAME}",

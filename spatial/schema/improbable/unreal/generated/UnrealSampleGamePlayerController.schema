@@ -1,15 +1,15 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.samplegameplayercontroller;
+package improbable.unreal.generated.TestSuiteplayercontroller;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component SampleGamePlayerControllerSingleClientRepData {
+component TestSuitePlayerControllerSingleClientRepData {
 	id = 100010;
 	bytes field_targetviewrotation0 = 1; // COND_OwnerOnly // ::PlayerController
 	bytes field_spawnlocation0 = 2; // COND_OwnerOnly // ::PlayerController
 }
-component SampleGamePlayerControllerMultiClientRepData {
+component TestSuitePlayerControllerMultiClientRepData {
 	id = 100011;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
@@ -29,15 +29,15 @@ component SampleGamePlayerControllerMultiClientRepData {
 	UnrealObjectRef field_playerstate0 = 16; // COND_None // ::Controller
 	UnrealObjectRef field_pawn0 = 17; // COND_None // ::Controller
 }
-component SampleGamePlayerControllerMigratableData {
+component TestSuitePlayerControllerMigratableData {
 	id = 100012;
 	UnrealObjectRef field_acknowledgedpawn0 = 1;
 }
-import "improbable/unreal/generated/UnrealSampleGamePlayerControllerTypes.schema";
+import "improbable/unreal/generated/UnrealTestSuitePlayerControllerTypes.schema";
 import "improbable/unreal/generated/UnrealPlayerControllerTypes.schema";
 import "improbable/unreal/generated/UnrealControllerTypes.schema";
 
-component SampleGamePlayerControllerClientRPCs {
+component TestSuitePlayerControllerClientRPCs {
 	id = 100013;
 	command UnrealRPCCommandResponse onserverstartedvisuallogger(playercontroller.OnServerStartedVisualLoggerRequest);
 	command UnrealRPCCommandResponse clientwaskicked(playercontroller.ClientWasKickedRequest);
@@ -92,9 +92,9 @@ component SampleGamePlayerControllerClientRPCs {
 	command UnrealRPCCommandResponse clientsetrotation(controller.ClientSetRotationRequest);
 	command UnrealRPCCommandResponse clientsetlocation(controller.ClientSetLocationRequest);
 }
-component SampleGamePlayerControllerServerRPCs {
+component TestSuitePlayerControllerServerRPCs {
 	id = 100014;
-	command UnrealRPCCommandResponse testrpc(samplegameplayercontroller.TestRPCRequest);
+	command UnrealRPCCommandResponse testrpc(TestSuiteplayercontroller.TestRPCRequest);
 	command UnrealRPCCommandResponse serverviewself(playercontroller.ServerViewSelfRequest);
 	command UnrealRPCCommandResponse serverviewprevplayer(playercontroller.ServerViewPrevPlayerRequest);
 	command UnrealRPCCommandResponse serverviewnextplayer(playercontroller.ServerViewNextPlayerRequest);
@@ -117,7 +117,7 @@ component SampleGamePlayerControllerServerRPCs {
 	command UnrealRPCCommandResponse servercamera(playercontroller.ServerCameraRequest);
 	command UnrealRPCCommandResponse serveracknowledgepossession(playercontroller.ServerAcknowledgePossessionRequest);
 }
-component SampleGamePlayerControllerNetMulticastRPCs {
+component TestSuitePlayerControllerNetMulticastRPCs {
 	id = 100015;
-	event samplegameplayercontroller.TestMulticastRequest testmulticast;
+	event TestSuiteplayercontroller.TestMulticastRequest testmulticast;
 }

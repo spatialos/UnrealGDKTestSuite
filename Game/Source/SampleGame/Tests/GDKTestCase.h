@@ -12,7 +12,7 @@
 * has finished its execution.
 */
 UCLASS(Abstract)
-class SAMPLEGAME_API AGDKTestCase : public AActor
+class TESTSUITE_API AGDKTestCase : public AActor
 {
 	GENERATED_BODY()
 

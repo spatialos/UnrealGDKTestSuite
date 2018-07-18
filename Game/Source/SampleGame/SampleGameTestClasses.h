@@ -6,7 +6,7 @@
 #include "Commander.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
-#include "SampleGameTestClasses.generated.h"
+#include "TestSuiteTestClasses.generated.h"
 
 
 USTRUCT()

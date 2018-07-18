@@ -1,8 +1,8 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
-#include "SampleGameGameStateBase.h"
+#include "TestSuiteGameStateBase.h"
 
-void ASampleGameGameStateBase::FakeServerHasBegunPlay()
+void ATestSuiteGameStateBase::FakeServerHasBegunPlay()
 {
 	if (!GetWorld()) 
 	{

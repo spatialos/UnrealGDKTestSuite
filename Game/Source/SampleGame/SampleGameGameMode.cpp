@@ -1,17 +1,17 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
-#include "SampleGameGameMode.h"
-#include "SampleGamePlayerController.h"
+#include "TestSuiteGameMode.h"
+#include "TestSuitePlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 
-ASampleGameGameMode::ASampleGameGameMode()
+ATestSuiteGameMode::ATestSuiteGameMode()
 {
 	//set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/EntityBlueprints/SampleGameCharacter_BP"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/EntityBlueprints/TestSuiteCharacter_BP"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 
-	PlayerControllerClass = ASampleGamePlayerController::StaticClass();
+	PlayerControllerClass = ATestSuitePlayerController::StaticClass();
 }

@@ -3,11 +3,11 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class SampleGameEditorTarget : TargetRules
+public class TestSuiteEditorTarget : TargetRules
 {
-	public SampleGameEditorTarget(TargetInfo Target) : base(Target)
+	public TestSuiteEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
-		ExtraModuleNames.Add("SampleGame");
+		ExtraModuleNames.Add("TestSuite");
 	}
 }

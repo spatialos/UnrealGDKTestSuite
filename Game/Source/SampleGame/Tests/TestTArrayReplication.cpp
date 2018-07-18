@@ -71,7 +71,7 @@ void ATestTArrayReplication::Server_StartTestImpl()
 	PODArray.Add(37);
 
 	// Setup stably named UObjects
-	UTestUObject* StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	UTestUObject* StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/TestSuite.Default__TestUObject"));
 	check(StablyNamedObject);
 
 	StablyNamedArray.Add(StablyNamedObject);
@@ -162,11 +162,11 @@ void ATestTArrayReplication::ValidateReplication_Client(const TArray<int>& TestP
 
 	check(TestStablyNamedArray[0]->IsA(UTestUObject::StaticClass()));
 	check(TestStablyNamedArray[0] == UTestUObject::StaticClass()->GetDefaultObject());
-	check(TestStablyNamedArray[0]->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(TestStablyNamedArray[0]->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	check(TestStablyNamedArray[1]->IsA(UTestUObject::StaticClass()));
 	check(TestStablyNamedArray[1] == UTestUObject::StaticClass()->GetDefaultObject());
-	check(TestStablyNamedArray[1]->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(TestStablyNamedArray[1]->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	// Validate Dynamically created UObjects in the array
 	check(TestDynamicallyCreatedActors.Num() == 1);
@@ -211,11 +211,11 @@ void ATestTArrayReplication::ValidateRPC_Server(const TArray<int>& TestPODArray,
 
 	check(TestStablyNamedArray[0]->IsA(UTestUObject::StaticClass()));
 	check(TestStablyNamedArray[0] == UTestUObject::StaticClass()->GetDefaultObject());
-	check(TestStablyNamedArray[0]->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(TestStablyNamedArray[0]->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	check(TestStablyNamedArray[1]->IsA(UTestUObject::StaticClass()));
 	check(TestStablyNamedArray[1] == UTestUObject::StaticClass()->GetDefaultObject());
-	check(TestStablyNamedArray[1]->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(TestStablyNamedArray[1]->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	// Validate Dynamically created UObjects in the array
 	check(TestDynamicallyCreatedActors.Num() == 1);

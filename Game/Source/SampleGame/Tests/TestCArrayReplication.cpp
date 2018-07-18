@@ -54,7 +54,7 @@ void ATestCArrayReplication::Server_StartTestImpl()
 	PODArray[1] = SecondComparisonValue;
 
 	// Setup stably named UObjects
-	UTestUObject* StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/SampleGame.Default__TestUObject"));
+	UTestUObject* StablyNamedObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/TestSuite.Default__TestUObject"));
 	check(StablyNamedObject);
 
 	StablyNamedArray[0] = StablyNamedObject;
@@ -153,11 +153,11 @@ void ATestCArrayReplication::ValidateReplication_Client()
 	// Validate the stably named object
 	check(StablyNamedArray[0]->IsA(UTestUObject::StaticClass()));
 	check(StablyNamedArray[0] == UTestUObject::StaticClass()->GetDefaultObject());
-	check(StablyNamedArray[0]->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(StablyNamedArray[0]->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	check(StablyNamedArray[1]->IsA(UTestUObject::StaticClass()));
 	check(StablyNamedArray[1] == UTestUObject::StaticClass()->GetDefaultObject());
-	check(StablyNamedArray[1]->GetPathName() == TEXT("/Script/SampleGame.Default__TestUObject"));
+	check(StablyNamedArray[1]->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	// Validate Dynamically created UObjects in the array
 	check(DynamicallyCreatedArray[0]->IsA(ATestActor::StaticClass()));

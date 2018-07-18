@@ -1,13 +1,13 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.samplegamecharacter;
+package improbable.unreal.generated.TestSuitecharacter;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component SampleGameCharacterSingleClientRepData {
+component TestSuiteCharacterSingleClientRepData {
 	id = 100022;
 }
-component SampleGameCharacterMultiClientRepData {
+component TestSuiteCharacterMultiClientRepData {
 	id = 100023;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
@@ -52,18 +52,18 @@ component SampleGameCharacterMultiClientRepData {
 	bytes field_reprootmotion0_authoritativerootmotion0 = 41; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion0_acceleration0 = 42; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	bytes field_reprootmotion0_linearvelocity0 = 43; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
-	UnrealObjectRef field_testrunner0 = 44; // COND_InitialOnly // ::SampleGameCharacter
+	UnrealObjectRef field_testrunner0 = 44; // COND_InitialOnly // ::TestSuiteCharacter
 }
-component SampleGameCharacterMigratableData {
+component TestSuiteCharacterMigratableData {
 	id = 100024;
 	uint32 field_charactermovement0_movementmode0 = 1;
 	uint32 field_charactermovement0_custommovementmode0 = 2;
 	uint32 field_charactermovement0_groundmovementmode0 = 3;
 }
-import "improbable/unreal/generated/UnrealSampleGameCharacterTypes.schema";
+import "improbable/unreal/generated/UnrealTestSuiteCharacterTypes.schema";
 import "improbable/unreal/generated/UnrealCharacterTypes.schema";
 
-component SampleGameCharacterClientRPCs {
+component TestSuiteCharacterClientRPCs {
 	id = 100025;
 	command UnrealRPCCommandResponse rootmotiondebugclientprintonscreen(character.RootMotionDebugClientPrintOnScreenRequest);
 	command UnrealRPCCommandResponse clientveryshortadjustposition(character.ClientVeryShortAdjustPositionRequest);
@@ -75,7 +75,7 @@ component SampleGameCharacterClientRPCs {
 	command UnrealRPCCommandResponse clientadjustposition(character.ClientAdjustPositionRequest);
 	command UnrealRPCCommandResponse clientackgoodmove(character.ClientAckGoodMoveRequest);
 }
-component SampleGameCharacterServerRPCs {
+component TestSuiteCharacterServerRPCs {
 	id = 100026;
 	command UnrealRPCCommandResponse servermoveold(character.ServerMoveOldRequest);
 	command UnrealRPCCommandResponse servermovenobase(character.ServerMoveNoBaseRequest);
@@ -84,7 +84,7 @@ component SampleGameCharacterServerRPCs {
 	command UnrealRPCCommandResponse servermovedual(character.ServerMoveDualRequest);
 	command UnrealRPCCommandResponse servermove(character.ServerMoveRequest);
 }
-component SampleGameCharacterNetMulticastRPCs {
+component TestSuiteCharacterNetMulticastRPCs {
 	id = 100027;
-	event samplegamecharacter.TestMulticastRequest testmulticast;
+	event TestSuitecharacter.TestMulticastRequest testmulticast;
 }

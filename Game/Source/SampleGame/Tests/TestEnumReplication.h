@@ -9,7 +9,7 @@
 #include "TestEnumReplication.generated.h"
 
 UCLASS()
-class SAMPLEGAME_API ATestEnumReplication : public AReplicationTestCase
+class TESTSUITE_API ATestEnumReplication : public AReplicationTestCase
 {
 	GENERATED_BODY()
 public:	
