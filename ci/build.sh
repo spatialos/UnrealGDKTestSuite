@@ -8,7 +8,7 @@ source ci/pinned-tools.sh
 source ci/profiling.sh
 
 if ! isWindows ; then
-  echo "SampleGame can only be built on Windows."
+  echo "TestSuite can only be built on Windows."
   exit 0
 fi
 
@@ -35,25 +35,25 @@ markStartOfBlock "Run the GDK setup script"
   ./create_gdk_symlink.bat "build/unreal-gdk"
 markEndOfBlock "Run the GDK setup script"
 
-markStartOfBlock "Build the SampleGame"
+markStartOfBlock "Build the TestSuite"
   # Build each target to ensure scripts are correct, skipping code generation on all but the first to save some time.
-  Game/Scripts/Build.bat "SampleGameEditor" "Win64" "Development" "SampleGame.uproject"
+  Game/Scripts/Build.bat "TestSuiteEditor" "Win64" "Development" "TestSuite.uproject"
   if [[ ! -f "spatial/build/assembly/worker/UnrealEditor@Windows.zip" ]]; then
     echo "Editor was not properly built."
     exit 1
   fi
 
-  Game/Scripts/Build.bat "SampleGameServer" "Linux" "Development" "SampleGame.uproject" --skip-codegen
+  Game/Scripts/Build.bat "TestSuiteServer" "Linux" "Development" "TestSuite.uproject" --skip-codegen
   if [[ ! -f "spatial/build/assembly/worker/UnrealWorker@Linux.zip" ]]; then
     echo "Linux Server was not properly built."
     exit 1
   fi
 
-  Game/Scripts/Build.bat "SampleGame" "Win64" "Development" "SampleGame.uproject" --skip-codegen
+  Game/Scripts/Build.bat "TestSuite" "Win64" "Development" "TestSuite.uproject" --skip-codegen
   if [[ ! -f "spatial/build/assembly/worker/UnrealClient@Windows.zip" ]]; then
      echo "Client was not properly built."
      exit 1
   fi
-markEndOfBlock "Build the SampleGame"
+markEndOfBlock "Build the TestSuite"
 
 markEndOfBlock "$0"

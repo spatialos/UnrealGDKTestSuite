@@ -1,0 +1,16 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated.testtarrayreplication;
+
+import "improbable/unreal/gdk/core_types.schema";
+
+type ServerReportReplicationRequest {
+	uint32 target_subobject_offset = 1;
+	list<int32> field_reppodarray0 = 2;
+	list<UnrealObjectRef> field_repstablynamedarray0 = 3;
+	list<UnrealObjectRef> field_repdynamicallycreatedactors0 = 4;
+	list<bytes> field_reparrayofstructs0 = 5;
+	list<bytes> field_reparrayofstructnetserialize0 = 6;
+	list<uint32> field_repenumtarray0 = 7;
+	list<uint32> field_repuenumtarray0 = 8;
+}
