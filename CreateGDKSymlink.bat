@@ -1,11 +1,11 @@
 @echo off
 
-set SPATIALGDK_PATH="%1"
-set SPATIALGDK_PLUGINSPATH="%1\Plugins\SpatialGDK"
-set SPATIALGDK_MODULEPATH="%1\Source\SpatialGDK"
-set SPATIALGDK_SCRIPTSPATH="%1\Scripts"
-set SPATIALGDK_BINARIESPATH="%1\Binaries\ThirdParty\Improbable"
-set SPATIALGDK_SCHEMAPATH="%1\schema\improbable\unreal\gdk"
+set SPATIALGDK_PATH="%~1"
+set SPATIALGDK_PLUGINSPATH="%~1\Plugins\SpatialGDK"
+set SPATIALGDK_MODULEPATH="%~1\Source\SpatialGDK"
+set SPATIALGDK_SCRIPTSPATH="%~1\Scripts"
+set SPATIALGDK_BINARIESPATH="%~1\Binaries\ThirdParty\Improbable"
+set SPATIALGDK_SCHEMAPATH="%~1\schema\improbable\unreal\gdk"
 
 if %SPATIALGDK_PATH% == "" (
 	echo Error: Please specify the SpatialGDK path.
