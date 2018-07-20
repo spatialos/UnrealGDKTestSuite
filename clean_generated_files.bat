@@ -1,60 +1,60 @@
-@ECHO OFF
+@echo off
 
-:: When flexible project structure is implemented we can gather this information from the project structure descriptor file.
-SET GENERATED_SCHEMA="%~dp0spatial\schema\improbable\unreal\generated"
-SET GENERATED_TYPE_BINDINGS="%~dp0Game\Source\TestSuite\Generated"
-SET GENERATED_WORKER_FILES="%~dp0Game\Source\SpatialGDK\Generated"
+rem When flexible project structure is implemented we can gather this information from the project structure descriptor file.
+set GENERATED_SCHEMA="%~dp0spatial\schema\improbable\unreal\generated"
+set GENERATED_TYPE_BINDINGS="%~dp0Game\Source\TestSuite\Generated"
+set GENERATED_WORKER_FILES="%~dp0Game\Source\SpatialGDK\Generated"
 
-:: If '-a' argument is specified, clean all without prompt
-IF /I "%1"=="-a" (
-   CALL :clean_path %GENERATED_SCHEMA%
-   CALL :clean_path %GENERATED_TYPE_BINDINGS%
-   CALL :clean_path %GENERATED_WORKER_FILES%
-   ECHO Running Game/Scripts/Codegen.bat
-   CALL %~dp0Game/Scripts/Codegen.bat
-) ELSE (
-    GOTO main
+rem If '-a' argument is specified, clean all without prompt
+if /I "%1" == "-a" (
+   call :CleanPath %GENERATED_SCHEMA%
+   call :CleanPath %GENERATED_TYPE_BINDINGS%
+   call :CleanPath %GENERATED_WORKER_FILES%
+   echo Running Game/Scripts/Codegen.bat
+   call %~dp0Game/Scripts/Codegen.bat
+) else (
+    goto Main
 )
-EXIT /B 0
+exit /b 0
 
-:: If '-a' does not exist, prompt the user
-:main
-ECHO This script is intended to clean TestSuite generated files and therefore assumes its project structure.
+rem If '-a' does not exist, prompt the user
+:Main
+echo This script is intended to clean TestSuite generated files and therefore assumes its project structure.
 
-SET /p CLEAN_SCHEMA=Clean generated schema?[Y/N]:
-IF /I %CLEAN_SCHEMA% == Y (
-    CALL :clean_path %GENERATED_SCHEMA%
+set /p CLEAN_SCHEMA=Clean generated schema?[Y/N]:
+if /I "%CLEAN_SCHEMA%" == "Y" (
+    call :CleanPath %GENERATED_SCHEMA%
 )
 
 set /p CLEAN_TYPE_BINDINGS=Clean generated type bindings?[Y/N]:
-IF /I %CLEAN_TYPE_BINDINGS% == Y (
-    CALL :clean_path %GENERATED_TYPE_BINDINGS%
+if /I "%CLEAN_TYPE_BINDINGS%" == "Y" (
+    call :CleanPath %GENERATED_TYPE_BINDINGS%
 )
 
 set /p CLEAN_WORKER_FILES=Clean generated worker code?[Y/N]:
-IF /I %CLEAN_WORKER_FILES% == Y (
-    CALL :clean_worker_files
+if /I "%CLEAN_WORKER_FILES%" == "Y" (
+    call :CleanWorkerFiles
 )
-EXIT /B 0
+exit /b 0
 
-:clean_worker_files
-CALL :clean_path %GENERATED_WORKER_FILES%
-ECHO After removing generated worker code it is recommended to run Codegen.bat
-CALL :worker_codegen
-EXIT /B 0
+:CleanWorkerFiles
+call :CleanPath %GENERATED_WORKER_FILES%
+echo After removing generated worker code it is recommended to run Codegen.bat
+call :WorkerCodegen
+exit /b 0
 
-:clean_path
-IF EXIST "%~1" (
-    RMDIR /s /q "%~1"
-    ECHO The folder "%~1" removed.
-) ELSE (
-    ECHO "%~1" did not exist when performing the clean.
+:CleanPath
+if exist "%~1" (
+    rd /s /q "%~1"
+    echo The folder "%~1" removed.
+) else (
+    echo "%~1" did not exist when performing the clean.
 )
-EXIT /B 0
+exit /b 0
 
-:worker_codegen
-SET /p WORKER_CODEGEN=Run Codegen.bat?[Y/N]:
-IF /I %WORKER_CODEGEN% == Y (
+:WorkerCodegen
+set /p WORKER_CODEGEN=Run Codegen.bat?[Y/N]:
+if /I "%WORKER_CODEGEN%" == "Y" (
     %~dp0Game/Scripts/Codegen.bat
 )
-EXIT /B 0
+exit /b 0
