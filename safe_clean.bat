@@ -15,6 +15,7 @@ IF /I "%1"=="-a" (
     CALL :git_clean_xdf
     ECHO Creating symlinks with known path in this script %SPATIALGDK_UNREALGDKPATH%
     CALL create_gdk_symlink.bat %SPATIALGDK_UNREALGDKPATH%
+    %~dp0Game/Scripts/Build.bat "TestSuiteEditor" "Win64" "Development" "TestSuite.uproject"
 ) ELSE (
     GOTO main
 )
@@ -27,6 +28,7 @@ IF /I %NUKE% == Y (
     CALL :clean_all_symlinks
     CALL :git_clean_xdf
     CALL :build_symlinks
+    CALL :rebuild_project
 )
 EXIT /B 0
 
@@ -67,4 +69,14 @@ EXIT /B 0
 ECHO Performing git clean
 git clean -xdf
 ECHO Finished git clean
+EXIT /B 0
+
+:: run build.bat after cleaning
+:rebuild_project
+ECHO After cleaning all generated code it is recommended to rebuild your project with Build.bat
+SET /p REBUILD_PROJECT=Run Build.bat?[Y/N]: 
+IF /I %REBUILD_PROJECT% == Y (
+    %~dp0Game/Scripts/Build.bat "TestSuiteEditor" "Win64" "Development" "TestSuite.uproject"
+)
+ECHO Safe Clean complete! Make sure you regenerate your Visual Studio .sln file.
 EXIT /B 0
