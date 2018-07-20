@@ -7,11 +7,11 @@ set GENERATED_WORKER_FILES="%~dp0Game\Source\SpatialGDK\Generated"
 
 rem If '-a' argument is specified, clean all without prompt
 if /I "%1" == "-a" (
-   call :CleanPath %GENERATED_SCHEMA%
-   call :CleanPath %GENERATED_TYPE_BINDINGS%
-   call :CleanPath %GENERATED_WORKER_FILES%
-   echo Running Game/Scripts/Codegen.bat
-   call %~dp0Game/Scripts/Codegen.bat
+    call :CleanPath %GENERATED_SCHEMA%
+    call :CleanPath %GENERATED_TYPE_BINDINGS%
+    call :CleanPath %GENERATED_WORKER_FILES%
+    echo Running Game/Scripts/Codegen.bat
+    call "%~dp0Game/Scripts/Codegen.bat"
 ) else (
     goto Main
 )
@@ -55,6 +55,6 @@ exit /b 0
 :WorkerCodegen
 set /p WORKER_CODEGEN=Run Codegen.bat?[Y/N]:
 if /I "%WORKER_CODEGEN%" == "Y" (
-    %~dp0Game/Scripts/Codegen.bat
+    call "%~dp0Game/Scripts/Codegen.bat"
 )
 exit /b 0

@@ -48,18 +48,18 @@ rd "%~dp0Game\Binaries\ThirdParty\Improbable" 2>nul
 rd "%~dp0spatial\schema\improbable\unreal\gdk" 2>nul
 
 rem Ensure plugins folder exists, mklink doesn't recursively create
-if not exist %~dp0Game\Plugins\ (
-	md %~dp0Game\Plugins\
+if not exist "%~dp0Game\Plugins\" (
+	md "%~dp0Game\Plugins\"
 )
 
 rem Ensure codegen folder exists, mklink doesn't recursively create
-if not exist %~dp0Game\Binaries\ThirdParty\ (
-	md %~dp0Game\Binaries\ThirdParty\
+if not exist "%~dp0Game\Binaries\ThirdParty\" (
+	md "%~dp0Game\Binaries\ThirdParty\"
 )
 
 rem Ensure schema folder exists, mklink doesn't recursively create
-if not exist %~dp0spatial\schema\improbable\unreal\ (
-	md %~dp0spatial\schema\improbable\unreal\
+if not exist "%~dp0spatial\schema\improbable\unreal\" (
+	md "%~dp0spatial\schema\improbable\unreal\"
 )
 
 rem Make new symlinks

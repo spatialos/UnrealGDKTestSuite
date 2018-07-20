@@ -14,7 +14,7 @@ if /I "%1" == "-a" (
     call :CleanAllSymlinks
     call :GitClean
     echo Creating symlinks with known path in this script %SPATIALGDK_UNREALGDKPATH%
-    call create_gdk_symlink.bat %SPATIALGDK_UNREALGDKPATH%
+    call CreateGDKSymlink.bat %SPATIALGDK_UNREALGDKPATH%
 ) else (
     goto Main
 )
@@ -41,7 +41,7 @@ exit /b 0
 
 rem All helper methods are below.
 :MakeSymlinks
-call create_gdk_symlink.bat %GDKPATH% 
+call CreateGDKSymlink.bat "%GDKPATH%"
 exit /b 0
 
 :CleanAllSymlinks
