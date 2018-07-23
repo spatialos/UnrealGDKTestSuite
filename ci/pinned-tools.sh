@@ -2,7 +2,7 @@
 
 # Function declarations
 if [ -z "$IMPROBABLE_TOOLS" ]; then
-    echo "The internal tools share is not set up correctly on this machine. Please follow the setup instructions here before running build.sh: https://brevi.link/internal-tools-share"
+    echo "The internal tools share is not set up correctly on this machine."
     exit 1
 fi
 
@@ -16,6 +16,11 @@ function isMacOS() {
 
 function isWindows() {
   ! ( isLinux || isMacOS );
+}
+
+function isTeamCity() {
+  # -n == string comparison "not null"
+  [ -n "${TEAMCITY_CAPTURE_ENV+x}" ]
 }
 
 function getPlatformName() {

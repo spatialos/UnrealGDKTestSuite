@@ -28,6 +28,9 @@ if /I "%NUKE%" == "Y" (
     call :GitClean
     call :BuildSymlinks
 )
+
+echo %0 has completed successfully^!
+pause
 exit /b 0
 
 rem Second section is for rebuilding these symlinks.

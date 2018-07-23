@@ -1,42 +1,41 @@
 @echo off
 
-set SPATIALGDK_PATH="%~1"
-set SPATIALGDK_PLUGINSPATH="%~1\Plugins\SpatialGDK"
-set SPATIALGDK_MODULEPATH="%~1\Source\SpatialGDK"
-set SPATIALGDK_SCRIPTSPATH="%~1\Scripts"
-set SPATIALGDK_BINARIESPATH="%~1\Binaries\ThirdParty\Improbable"
-set SPATIALGDK_SCHEMAPATH="%~1\schema\improbable\unreal\gdk"
-
-if %SPATIALGDK_PATH% == "" (
-	echo Error: Please specify the SpatialGDK path.
-	pause
-	exit /b 1
+if "%~1" == "" (
+	set /p UNREALGDK_PATH=Please specify the path to the UnrealGDK directory: 
+) else (
+	set UNREALGDK_PATH=%~1
 )
 
-if not exist %SPATIALGDK_PATH%\ (
-	echo Error: SpatialGDK path %SPATIALGDK_PATH% does not exist.
-	pause
+set UNREALGDK_PLUGINSPATH="%UNREALGDK_PATH%\Plugins\SpatialGDK"
+set UNREALGDK_MODULEPATH="%UNREALGDK_PATH%\Source\SpatialGDK"
+set UNREALGDK_SCRIPTSPATH="%UNREALGDK_PATH%\Scripts"
+set UNREALGDK_BINARIESPATH="%UNREALGDK_PATH%\Binaries\ThirdParty\Improbable"
+set UNREALGDK_SCHEMAPATH="%UNREALGDK_PATH%\schema\improbable\unreal\gdk"
+
+if not exist "%UNREALGDK_PATH%\" (
+	echo Error: UnrealGDK path "%UNREALGDK_PATH%" does not exist.
+	if not defined TEAMCITY_CAPTURE_ENV pause
 	exit /b 1
 )
 
 set PATH_VALID=true
-if not exist %SPATIALGDK_PLUGINSPATH% set PATH_VALID=false
-if not exist %SPATIALGDK_MODULEPATH% set PATH_VALID=false
-if not exist %SPATIALGDK_SCHEMAPATH% set PATH_VALID=false
+if not exist %UNREALGDK_PLUGINSPATH% set PATH_VALID=false
+if not exist %UNREALGDK_MODULEPATH% set PATH_VALID=false
+if not exist %UNREALGDK_SCHEMAPATH% set PATH_VALID=false
+if not exist %UNREALGDK_SCRIPTSPATH% set PATH_VALID=false
 
 if %PATH_VALID% == false (
-	echo Error: SpatialGDK path %SPATIALGDK_PATH% is invalid. Provide path to cloned SpatialGDK git repository.
-	pause
+	echo Error: UnrealGDK path "%UNREALGDK_PATH%" is invalid. Provide path to cloned UnrealGDK git repository.
+	if not defined TEAMCITY_CAPTURE_ENV pause
 	exit /b 1
 )
 
 set REPO_PREPARED=true
-if not exist %SPATIALGDK_SCRIPTSPATH% set REPO_PREPARED=false
-if not exist %SPATIALGDK_BINARIESPATH% set REPO_PREPARED=false
+if not exist %UNREALGDK_BINARIESPATH% set REPO_PREPARED=false
 
 if %REPO_PREPARED% == false (
-	echo Error: The specified SpatialGDK directory has not been prepared. Please run Build.bat in that directory.
-	pause
+	echo Error: The specified UnrealGDK directory has not been prepared. Please run Build.bat in that directory.
+	if not defined TEAMCITY_CAPTURE_ENV pause
 	exit /b 1
 )
 
@@ -63,12 +62,12 @@ if not exist "%~dp0spatial\schema\improbable\unreal\" (
 )
 
 rem Make new symlinks
-mklink /J "%~dp0Game\Plugins\SpatialGDK" %SPATIALGDK_PLUGINSPATH%
-mklink /J "%~dp0Game\Source\SpatialGDK" %SPATIALGDK_MODULEPATH%
-mklink /J "%~dp0Game\Scripts" %SPATIALGDK_SCRIPTSPATH%
-mklink /J "%~dp0Game\Binaries\ThirdParty\Improbable" %SPATIALGDK_BINARIESPATH%
-mklink /J "%~dp0spatial\schema\improbable\unreal\gdk" %SPATIALGDK_SCHEMAPATH%
+mklink /J "%~dp0Game\Plugins\SpatialGDK" %UNREALGDK_PLUGINSPATH%
+mklink /J "%~dp0Game\Source\SpatialGDK" %UNREALGDK_MODULEPATH%
+mklink /J "%~dp0Game\Scripts" %UNREALGDK_SCRIPTSPATH%
+mklink /J "%~dp0Game\Binaries\ThirdParty\Improbable" %UNREALGDK_BINARIESPATH%
+mklink /J "%~dp0spatial\schema\improbable\unreal\gdk" %UNREALGDK_SCHEMAPATH%
 
-echo Successfully created symlinks to %SPATIALGDK_PATH%
-
+echo Successfully created symlinks to "%UNREALGDK_PATH%"
+if not defined TEAMCITY_CAPTURE_ENV pause
 exit /b 0

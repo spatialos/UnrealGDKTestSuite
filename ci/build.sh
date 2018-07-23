@@ -7,6 +7,11 @@ cd "$(dirname "$0")/../"
 source ci/pinned-tools.sh
 source ci/profiling.sh
 
+if ! isTeamCity ; then
+  echo "This script should only be run on the CI agents."
+  exit 0
+fi
+
 if ! isWindows ; then
   echo "TestSuite can only be built on Windows."
   exit 0
