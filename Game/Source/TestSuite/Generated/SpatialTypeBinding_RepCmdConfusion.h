@@ -19,7 +19,7 @@ class USpatialTypeBinding_RepCmdConfusion : public USpatialTypeBinding
 
 public:
 	const FRepHandlePropertyMap& GetRepHandlePropertyMap() const override;
-	const FMigratableHandlePropertyMap& GetMigratableHandlePropertyMap() const override;
+	const FHandoverHandlePropertyMap& GetHandoverHandlePropertyMap() const override;
 	UClass* GetBoundClass() const override;
 
 	void Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap) override;
@@ -36,6 +36,13 @@ public:
 	void BuildSpatialComponentUpdate(
 		const FPropertyChangeState& Changes,
 		USpatialActorChannel* Channel,
+		improbable::unreal::generated::wheeledvehicle::WheeledVehicleSingleClientRepData::Update& SingleClientUpdate,
+		bool& bSingleClientUpdateChanged,
+		improbable::unreal::generated::wheeledvehicle::WheeledVehicleMultiClientRepData::Update& MultiClientUpdate,
+		bool& bMultiClientUpdateChanged,
+		improbable::unreal::generated::wheeledvehicle::WheeledVehicleHandoverData::Update& HandoverDataUpdate,
+		bool& bHandoverDataUpdateChanged) const;
+
 		improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData::Update& SingleClientUpdate,
 		bool& bSingleClientUpdateChanged,
 		improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Update& MultiClientUpdate,
@@ -51,8 +58,32 @@ private:
 	TMap<FName, FRPCSender> RPCToSenderMap;
 
 	FRepHandlePropertyMap RepHandleToPropertyMap;
-	FMigratableHandlePropertyMap MigratableHandleToPropertyMap;
+	FHandoverHandlePropertyMap HandoverHandleToPropertyMap;
 
+	// Component update helper functions.
+	void BuildSpatialComponentUpdate(
+		const FPropertyChangeState& Changes,
+		USpatialActorChannel* Channel,
+		improbable::unreal::generated::wheeledvehicle::WheeledVehicleSingleClientRepData::Update& SingleClientUpdate,
+		bool& bSingleClientUpdateChanged,
+		improbable::unreal::generated::wheeledvehicle::WheeledVehicleMultiClientRepData::Update& MultiClientUpdate,
+		bool& bMultiClientUpdateChanged,
+		improbable::unreal::generated::wheeledvehicle::WheeledVehicleMigratableData::Update& MigratableDataUpdate,
+		bool& bMigratableDataUpdateChanged) const;
+	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::wheeledvehicle::WheeledVehicleSingleClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::wheeledvehicle::WheeledVehicleMultiClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::wheeledvehicle::WheeledVehicleMigratableData::Update& OutUpdate) const;
+	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::wheeledvehicle::WheeledVehicleSingleClientRepData::Update& Update) const;
+	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::wheeledvehicle::WheeledVehicleMultiClientRepData::Update& Update) const;
+	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::wheeledvehicle::WheeledVehicleMigratableData::Update& Update) const;
+	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::wheeledvehicle::WheeledVehicleNetMulticastRPCs::Update& Update);
+	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::wheeledvehicle::WheeledVehicleSingleClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::wheeledvehicle::WheeledVehicleMultiClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::wheeledvehicle::WheeledVehicleHandoverData::Update& OutUpdate) const;
+	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::wheeledvehicle::WheeledVehicleSingleClientRepData::Update& Update) const;
+	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::wheeledvehicle::WheeledVehicleMultiClientRepData::Update& Update) const;
+	void ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::wheeledvehicle::WheeledVehicleHandoverData::Update& Update) const;
+	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::wheeledvehicle::WheeledVehicleNetMulticastRPCs::Update& Update);
 	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData::Update& OutUpdate) const;
 	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Update& OutUpdate) const;
 	void ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update& OutUpdate) const;

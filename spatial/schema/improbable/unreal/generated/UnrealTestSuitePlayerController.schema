@@ -29,6 +29,8 @@ component TestSuitePlayerControllerMultiClientRepData {
 	UnrealObjectRef field_playerstate0 = 16; // COND_None // ::Controller
 	UnrealObjectRef field_pawn0 = 17; // COND_None // ::Controller
 }
+component SampleGamePlayerControllerMigratableData {
+component SampleGamePlayerControllerHandoverData {
 component TestSuitePlayerControllerMigratableData {
 	id = 100012;
 	UnrealObjectRef field_acknowledgedpawn0 = 1;
