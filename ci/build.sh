@@ -51,7 +51,7 @@ markStartOfBlock "Run the GDK setup script"
       export LINUX_MULTIARCH_ROOT="${UNREAL_HOME}/ClangToolchain"
     fi
   popd
-  ./CreateGDKSymlink.bat "build/UnrealGDK"
+  ./CreateGDKSymlinks.bat "build/UnrealGDK"
 markEndOfBlock "Run the GDK setup script"
 
 markStartOfBlock "Build the TestSuite"
