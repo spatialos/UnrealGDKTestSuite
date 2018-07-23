@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
 # Function declarations
-if [ -z "$IMPROBABLE_TOOLS" ]; then
-    echo "The internal tools share is not set up correctly on this machine."
-    exit 1
-fi
-
 function isLinux() {
   [[ "$(uname -s)" == "Linux" ]];
 }
@@ -21,17 +16,4 @@ function isWindows() {
 function isTeamCity() {
   # -n == string comparison "not null"
   [ -n "${TEAMCITY_CAPTURE_ENV+x}" ]
-}
-
-function getPlatformName() {
-  if isLinux; then
-    echo "linux"
-  elif isMacOS; then
-    echo "mac"
-  elif isWindows; then
-    echo "windows"
-  else
-    echo "ERROR: Unknown platform." >&2
-    exit 1
-  fi
 }
