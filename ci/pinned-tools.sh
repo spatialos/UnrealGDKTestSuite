@@ -30,17 +30,3 @@ function getPlatformName() {
     exit 1
   fi
 }
-
-# The current version of Unreal.
-if [ -z "${UNREAL_HOME+x}" ]; then
-  UNREAL_VERSION="4.19-GDK-dc2f7ad81ce"
-  export UNREAL_HOME="C:/Unreal/UnrealEngine-${UNREAL_VERSION}"
-fi
-
-# LINUX_MULTIARCH_ROOT is used by Unreal when cross compiling Linux workers
-# as Unreal only builds on Windows otherwise. The Linux cross compiling tools
-# should be automatically installed by puppet as part of the Unreal Engine
-# installation.
-if [ -z "${LINUX_MULTIARCH_ROOT+x}" ]; then
-  export LINUX_MULTIARCH_ROOT="${UNREAL_HOME}/ClangToolchain"
-fi
