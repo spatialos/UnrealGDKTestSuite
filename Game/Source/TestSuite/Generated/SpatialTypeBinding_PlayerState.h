@@ -42,8 +42,6 @@ public:
 		bool& bMultiClientUpdateChanged,
 		improbable::unreal::generated::playerstate::PlayerStateHandoverData::Update& HandoverDataUpdate,
 		bool& bHandoverDataUpdateChanged) const;
-		improbable::unreal::generated::playerstate::PlayerStateMigratableData::Update& MigratableDataUpdate,
-		bool& bMigratableDataUpdateChanged) const;
 
 private:
 	improbable::unreal::callbacks::FScopedViewCallbacks ViewCallbacks;

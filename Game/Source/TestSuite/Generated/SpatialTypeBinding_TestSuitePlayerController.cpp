@@ -25,24 +25,16 @@
 #include "GameFramework/LocalMessage.h"
 #include "Particles/EmitterCameraLensEffectBase.h"
 
-#include "SampleGamePlayerControllerSingleClientRepDataAddComponentOp.h"
-#include "SampleGamePlayerControllerMultiClientRepDataAddComponentOp.h"
-#include "SampleGamePlayerControllerMigratableDataAddComponentOp.h"
-#include "SampleGamePlayerControllerSingleClientRepDataAddComponentOp.h"
-#include "SampleGamePlayerControllerMultiClientRepDataAddComponentOp.h"
-#include "SampleGamePlayerControllerHandoverDataAddComponentOp.h"
 #include "TestSuitePlayerControllerSingleClientRepDataAddComponentOp.h"
 #include "TestSuitePlayerControllerMultiClientRepDataAddComponentOp.h"
-#include "TestSuitePlayerControllerMigratableDataAddComponentOp.h"
+#include "TestSuitePlayerControllerHandoverDataAddComponentOp.h"
 
 const FRepHandlePropertyMap& USpatialTypeBinding_TestSuitePlayerController::GetRepHandlePropertyMap() const
 {
 	return RepHandleToPropertyMap;
 }
 
-const FMigratableHandlePropertyMap& USpatialTypeBinding_SampleGamePlayerController::GetMigratableHandlePropertyMap() const
-const FHandoverHandlePropertyMap& USpatialTypeBinding_SampleGamePlayerController::GetHandoverHandlePropertyMap() const
-const FMigratableHandlePropertyMap& USpatialTypeBinding_TestSuitePlayerController::GetMigratableHandlePropertyMap() const
+const FHandoverHandlePropertyMap& USpatialTypeBinding_TestSuitePlayerController::GetHandoverHandlePropertyMap() const
 {
 	return HandoverHandleToPropertyMap;
 }
@@ -192,17 +184,11 @@ void USpatialTypeBinding_TestSuitePlayerController::BindToView(bool bIsClient)
 		}));
 		if (!bIsClient)
 		{
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData>& Op)
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData>& Op)
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData>& Op)
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData>& Op)
 			{
 				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData::ComponentId))
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData::ComponentId))
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData::ComponentId))
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData::ComponentId))
 				{
 					return;
 				}
@@ -392,45 +378,20 @@ worker::Entity USpatialTypeBinding_TestSuitePlayerController::CreateActorEntity(
 
 	// Setup initial data.
 
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerSingleClientRepData::Update SingleClientUpdate;
-	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMultiClientRepData::Data MultiClientData;
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMultiClientRepData::Update MultiClientUpdate;
-	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData::Data MigratableData;
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData::Update MigratableDataUpdate;
-	bool bMigratableDataUpdateChanged = false;
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
-	SingleClientUpdate.ApplyTo(SingleClientData);
-	MultiClientUpdate.ApplyTo(MultiClientData);
-	MigratableDataUpdate.ApplyTo(MigratableData);
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerSingleClientRepData::Data SingleClientSampleGamePlayerControllerData;
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerSingleClientRepData::Update SingleClientSampleGamePlayerControllerUpdate;
-	bool bSingleClientSampleGamePlayerControllerUpdateChanged = false;
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMultiClientRepData::Data MultiClientSampleGamePlayerControllerData;
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMultiClientRepData::Update MultiClientSampleGamePlayerControllerUpdate;
-	bool bMultiClientSampleGamePlayerControllerUpdateChanged = false;
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData::Data SampleGamePlayerControllerHandoverData;
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData::Update SampleGamePlayerControllerHandoverDataUpdate;
-	bool bSampleGamePlayerControllerHandoverDataUpdateChanged = false;
 	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerSingleClientRepData::Data SingleClientTestSuitePlayerControllerData;
 	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerSingleClientRepData::Update SingleClientTestSuitePlayerControllerUpdate;
 	bool bSingleClientTestSuitePlayerControllerUpdateChanged = false;
 	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMultiClientRepData::Data MultiClientTestSuitePlayerControllerData;
 	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMultiClientRepData::Update MultiClientTestSuitePlayerControllerUpdate;
 	bool bMultiClientTestSuitePlayerControllerUpdateChanged = false;
-	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData::Data TestSuitePlayerControllerMigratableData;
-	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData::Update TestSuitePlayerControllerMigratableDataUpdate;
-	bool bTestSuitePlayerControllerMigratableDataUpdateChanged = false;
+	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData::Data TestSuitePlayerControllerHandoverData;
+	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData::Update TestSuitePlayerControllerHandoverDataUpdate;
+	bool bTestSuitePlayerControllerHandoverDataUpdateChanged = false;
 
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientSampleGamePlayerControllerUpdate, bSingleClientSampleGamePlayerControllerUpdateChanged, MultiClientSampleGamePlayerControllerUpdate, bMultiClientSampleGamePlayerControllerUpdateChanged, SampleGamePlayerControllerHandoverDataUpdate, bSampleGamePlayerControllerHandoverDataUpdateChanged);
-	SingleClientSampleGamePlayerControllerUpdate.ApplyTo(SingleClientSampleGamePlayerControllerData);
-	MultiClientSampleGamePlayerControllerUpdate.ApplyTo(MultiClientSampleGamePlayerControllerData);
-	SampleGamePlayerControllerHandoverDataUpdate.ApplyTo(SampleGamePlayerControllerHandoverData);
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientTestSuitePlayerControllerUpdate, bSingleClientTestSuitePlayerControllerUpdateChanged, MultiClientTestSuitePlayerControllerUpdate, bMultiClientTestSuitePlayerControllerUpdateChanged, TestSuitePlayerControllerMigratableDataUpdate, bTestSuitePlayerControllerMigratableDataUpdateChanged);
+	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientTestSuitePlayerControllerUpdate, bSingleClientTestSuitePlayerControllerUpdateChanged, MultiClientTestSuitePlayerControllerUpdate, bMultiClientTestSuitePlayerControllerUpdateChanged, TestSuitePlayerControllerHandoverDataUpdate, bTestSuitePlayerControllerHandoverDataUpdateChanged);
 	SingleClientTestSuitePlayerControllerUpdate.ApplyTo(SingleClientTestSuitePlayerControllerData);
 	MultiClientTestSuitePlayerControllerUpdate.ApplyTo(MultiClientTestSuitePlayerControllerData);
-	TestSuitePlayerControllerMigratableDataUpdate.ApplyTo(TestSuitePlayerControllerMigratableData);
+	TestSuitePlayerControllerHandoverDataUpdate.ApplyTo(TestSuitePlayerControllerHandoverData);
 
 	// Create entity.
 	std::string ClientWorkerIdString = TCHAR_TO_UTF8(*ClientWorkerId);
@@ -477,21 +438,9 @@ worker::Entity USpatialTypeBinding_TestSuitePlayerController::CreateActorEntity(
 		.SetPersistence(true)
 		.SetReadAcl(AnyUnrealWorkerOrOwningClient)
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerSingleClientRepData>(SingleClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMultiClientRepData>(MultiClientData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData>(MigratableData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerClientRPCs>(improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerServerRPCs>(improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerServerRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerNetMulticastRPCs>(improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerNetMulticastRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerSingleClientRepData>(SingleClientSampleGamePlayerControllerData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMultiClientRepData>(MultiClientSampleGamePlayerControllerData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData>(SampleGamePlayerControllerHandoverData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerClientRPCs>(improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerServerRPCs>(improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerServerRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerNetMulticastRPCs>(improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerNetMulticastRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerSingleClientRepData>(SingleClientTestSuitePlayerControllerData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMultiClientRepData>(MultiClientTestSuitePlayerControllerData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData>(TestSuitePlayerControllerMigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData>(TestSuitePlayerControllerHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerClientRPCs>(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerServerRPCs>(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerNetMulticastRPCs>(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerNetMulticastRPCs::Data{}, WorkersOnly)
@@ -505,15 +454,9 @@ void USpatialTypeBinding_TestSuitePlayerController::SendComponentUpdates(const F
 	bool bSingleClientUpdateChanged = false;
 	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData::Update MigratableDataUpdate;
-	bool bMigratableDataUpdateChanged = false;
-	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData::Update HandoverDataUpdate;
+	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData::Update HandoverDataUpdate;
 	bool bHandoverDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, HandoverDataUpdate, bHandoverDataUpdateChanged);
-	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData::Update MigratableDataUpdate;
-	bool bMigratableDataUpdateChanged = false;
-	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
 
 	// Send SpatialOS updates if anything changed.
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
@@ -527,9 +470,7 @@ void USpatialTypeBinding_TestSuitePlayerController::SendComponentUpdates(const F
 	}
 	if (bHandoverDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
-		Connection->SendComponentUpdate<improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData>(EntityId.ToSpatialEntityId(), HandoverDataUpdate);
-		Connection->SendComponentUpdate<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData>(EntityId.ToSpatialEntityId(), HandoverDataUpdate);
 	}
 }
 
@@ -562,17 +503,11 @@ void USpatialTypeBinding_TestSuitePlayerController::ReceiveAddComponent(USpatial
 		ReceiveUpdate_MultiClient(Channel, Update);
 		return;
 	}
-	auto* MigratableDataAddOp = Cast<USampleGamePlayerControllerMigratableDataAddComponentOp>(AddComponentOp);
-	if (MigratableDataAddOp)
-	auto* HandoverDataAddOp = Cast<USampleGamePlayerControllerHandoverDataAddComponentOp>(AddComponentOp);
+	auto* HandoverDataAddOp = Cast<UTestSuitePlayerControllerHandoverDataAddComponentOp>(AddComponentOp);
 	if (HandoverDataAddOp)
-	auto* MigratableDataAddOp = Cast<UTestSuitePlayerControllerMigratableDataAddComponentOp>(AddComponentOp);
-	if (MigratableDataAddOp)
 	{
-		auto Update = improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
-		auto Update = improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
+		auto Update = improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
 		ReceiveUpdate_Handover(Channel, Update);
-		auto Update = improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
 		return;
 	}
 }
@@ -586,9 +521,7 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_T
 		{
 			Interest.emplace(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData::ComponentId, worker::InterestOverride{false});
-		Interest.emplace(improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData::ComponentId, worker::InterestOverride{false});
-		Interest.emplace(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
@@ -600,12 +533,8 @@ void USpatialTypeBinding_TestSuitePlayerController::BuildSpatialComponentUpdate(
 	bool& bSingleClientUpdateChanged,
 	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData::Update& MigratableDataUpdate,
-	bool& bMigratableDataUpdateChanged) const
-	improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData::Update& HandoverDataUpdate,
+	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData::Update& HandoverDataUpdate,
 	bool& bHandoverDataUpdateChanged) const
-	improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData::Update& MigratableDataUpdate,
-	bool& bMigratableDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
 	const FHandoverHandlePropertyMap& HandoverPropertyMap = GetHandoverHandlePropertyMap();
@@ -651,9 +580,7 @@ void USpatialTypeBinding_TestSuitePlayerController::BuildSpatialComponentUpdate(
 	{
 		const FHandoverHandleData& PropertyMapData = HandoverPropertyMap[ChangedHandle];
 		const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData);
-		UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Sending migratable property update. actor %s (%lld), property %s (handle %d)"),
 		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending handover property update. actor %s (%lld), property %s (handle %d)"),
-		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending migratable property update. actor %s (%lld), property %s (handle %d)"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*Channel->Actor->GetName(),
 			Channel->GetEntityId().ToSpatialEntityId(),
@@ -1057,9 +984,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerSendUpdate_MultiClient
 	}
 }
 
-void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData::Update& OutUpdate) const
-void USpatialTypeBinding_SampleGamePlayerController::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData::Update& OutUpdate) const
-void USpatialTypeBinding_TestSuitePlayerController::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData::Update& OutUpdate) const
+void USpatialTypeBinding_TestSuitePlayerController::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -1806,9 +1731,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ReceiveUpdate_MultiClient(US
 	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerMigratableData::Update& Update) const
-void USpatialTypeBinding_SampleGamePlayerController::ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::samplegameplayercontroller::SampleGamePlayerControllerHandoverData::Update& Update) const
-void USpatialTypeBinding_TestSuitePlayerController::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerMigratableData::Update& Update) const
+void USpatialTypeBinding_TestSuitePlayerController::ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData::Update& Update) const
 {
 	const FHandoverHandlePropertyMap& HandleToPropertyMap = GetHandoverHandlePropertyMap();
 
@@ -1855,9 +1778,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ReceiveUpdate_Migratable(USp
 		{
 			ApplyIncomingHandoverPropertyUpdate(*HandoverData, ActorChannel->Actor, static_cast<const void*>(&Value));
 
-			UE_LOG(LogSpatialOSInterop, Verbose, TEXT("%s: Received migratable property update. actor %s (%lld), property %s (handle %d)"),
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received handover property update. actor %s (%lld), property %s (handle %d)"),
-			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received migratable property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
 				*ActorChannel->Actor->GetName(),
 				ActorChannel->GetEntityId().ToSpatialEntityId(),

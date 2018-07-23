@@ -33,7 +33,7 @@ component TestTArrayReplicationMultiClientRepData {
 	list<uint32> field_enumtarray0 = 22; // COND_None // ::TestTArrayReplication
 	list<uint32> field_uenumtarray0 = 23; // COND_None // ::TestTArrayReplication
 }
-component TestTArrayReplicationMigratableData {
+component TestTArrayReplicationHandoverData {
 	id = 100084;
 }
 import "improbable/unreal/generated/UnrealTestTArrayReplicationTypes.schema";

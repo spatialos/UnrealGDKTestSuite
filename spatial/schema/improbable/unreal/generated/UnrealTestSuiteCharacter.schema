@@ -54,9 +54,7 @@ component TestSuiteCharacterMultiClientRepData {
 	bytes field_reprootmotion0_linearvelocity0 = 43; // COND_SimulatedOnlyNoReplay // RepRootMotionMontage::RepRootMotion::Character
 	UnrealObjectRef field_testrunner0 = 44; // COND_InitialOnly // ::TestSuiteCharacter
 }
-component SampleGameCharacterMigratableData {
-component SampleGameCharacterHandoverData {
-component TestSuiteCharacterMigratableData {
+component TestSuiteCharacterHandoverData {
 	id = 100024;
 	uint32 field_charactermovement0_movementmode0 = 1;
 	uint32 field_charactermovement0_custommovementmode0 = 2;

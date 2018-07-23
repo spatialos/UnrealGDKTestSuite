@@ -155,16 +155,6 @@ worker::Entity USpatialTypeBinding_PlayerState::CreateActorEntity(const FString&
 	improbable::unreal::generated::playerstate::PlayerStateMultiClientRepData::Data MultiClientPlayerStateData;
 	improbable::unreal::generated::playerstate::PlayerStateMultiClientRepData::Update MultiClientPlayerStateUpdate;
 	bool bMultiClientPlayerStateUpdateChanged = false;
-<<<<<<< HEAD:Game/Source/TestSuite/Generated/SpatialTypeBinding_PlayerState.cpp
-	improbable::unreal::generated::playerstate::PlayerStateMigratableData::Data PlayerStateMigratableData;
-	improbable::unreal::generated::playerstate::PlayerStateMigratableData::Update PlayerStateMigratableDataUpdate;
-	bool bPlayerStateMigratableDataUpdateChanged = false;
-
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientPlayerStateUpdate, bSingleClientPlayerStateUpdateChanged, MultiClientPlayerStateUpdate, bMultiClientPlayerStateUpdateChanged, PlayerStateMigratableDataUpdate, bPlayerStateMigratableDataUpdateChanged);
-	SingleClientPlayerStateUpdate.ApplyTo(SingleClientPlayerStateData);
-	MultiClientPlayerStateUpdate.ApplyTo(MultiClientPlayerStateData);
-	PlayerStateMigratableDataUpdate.ApplyTo(PlayerStateMigratableData);
-=======
 	improbable::unreal::generated::playerstate::PlayerStateHandoverData::Data PlayerStateHandoverData;
 	improbable::unreal::generated::playerstate::PlayerStateHandoverData::Update PlayerStateHandoverDataUpdate;
 	bool bPlayerStateHandoverDataUpdateChanged = false;
@@ -173,7 +163,6 @@ worker::Entity USpatialTypeBinding_PlayerState::CreateActorEntity(const FString&
 	SingleClientPlayerStateUpdate.ApplyTo(SingleClientPlayerStateData);
 	MultiClientPlayerStateUpdate.ApplyTo(MultiClientPlayerStateData);
 	PlayerStateHandoverDataUpdate.ApplyTo(PlayerStateHandoverData);
->>>>>>> Updated codegen files:Game/Source/SampleGame/Generated/SpatialTypeBinding_PlayerState.cpp
 
 	// Create entity.
 	std::string ClientWorkerIdString = TCHAR_TO_UTF8(*ClientWorkerId);
@@ -222,11 +211,7 @@ worker::Entity USpatialTypeBinding_PlayerState::CreateActorEntity(const FString&
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::playerstate::PlayerStateSingleClientRepData>(SingleClientPlayerStateData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::playerstate::PlayerStateMultiClientRepData>(MultiClientPlayerStateData, WorkersOnly)
-<<<<<<< HEAD:Game/Source/TestSuite/Generated/SpatialTypeBinding_PlayerState.cpp
-		.AddComponent<improbable::unreal::generated::playerstate::PlayerStateMigratableData>(PlayerStateMigratableData, WorkersOnly)
-=======
 		.AddComponent<improbable::unreal::generated::playerstate::PlayerStateHandoverData>(PlayerStateHandoverData, WorkersOnly)
->>>>>>> Updated codegen files:Game/Source/SampleGame/Generated/SpatialTypeBinding_PlayerState.cpp
 		.AddComponent<improbable::unreal::generated::playerstate::PlayerStateClientRPCs>(improbable::unreal::generated::playerstate::PlayerStateClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::playerstate::PlayerStateServerRPCs>(improbable::unreal::generated::playerstate::PlayerStateServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::playerstate::PlayerStateNetMulticastRPCs>(improbable::unreal::generated::playerstate::PlayerStateNetMulticastRPCs::Data{}, WorkersOnly)
@@ -292,13 +277,8 @@ void USpatialTypeBinding_PlayerState::ReceiveAddComponent(USpatialActorChannel* 
 	auto* HandoverDataAddOp = Cast<UPlayerStateHandoverDataAddComponentOp>(AddComponentOp);
 	if (HandoverDataAddOp)
 	{
-<<<<<<< HEAD:Game/Source/TestSuite/Generated/SpatialTypeBinding_PlayerState.cpp
-		auto Update = improbable::unreal::generated::playerstate::PlayerStateMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
-		ReceiveUpdate_Migratable(Channel, Update);
-=======
 		auto Update = improbable::unreal::generated::playerstate::PlayerStateHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
 		ReceiveUpdate_Handover(Channel, Update);
->>>>>>> Updated codegen files:Game/Source/SampleGame/Generated/SpatialTypeBinding_PlayerState.cpp
 		return;
 	}
 }
@@ -371,11 +351,7 @@ void USpatialTypeBinding_PlayerState::BuildSpatialComponentUpdate(
 	{
 		const FHandoverHandleData& PropertyMapData = HandoverPropertyMap[ChangedHandle];
 		const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData);
-<<<<<<< HEAD:Game/Source/TestSuite/Generated/SpatialTypeBinding_PlayerState.cpp
-		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending migratable property update. actor %s (%lld), property %s (handle %d)"),
-=======
 		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending handover property update. actor %s (%lld), property %s (handle %d)"),
->>>>>>> Updated codegen files:Game/Source/SampleGame/Generated/SpatialTypeBinding_PlayerState.cpp
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*Channel->Actor->GetName(),
 			Channel->GetEntityId().ToSpatialEntityId(),

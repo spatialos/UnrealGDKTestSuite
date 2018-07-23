@@ -27,7 +27,7 @@ component GDKTestRunnerMultiClientRepData {
 	list<UnrealObjectRef> field_testcases0 = 16; // COND_None // ::GDKTestRunner
 	bool field_bisrunning0 = 17; // COND_None // ::GDKTestRunner
 }
-component GDKTestRunnerMigratableData {
+component GDKTestRunnerHandoverData {
 	id = 100042;
 }
 import "improbable/unreal/generated/UnrealGDKTestRunnerTypes.schema";

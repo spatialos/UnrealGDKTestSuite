@@ -19,7 +19,7 @@ class USpatialTypeBinding_TestFStringReplication : public USpatialTypeBinding
 
 public:
 	const FRepHandlePropertyMap& GetRepHandlePropertyMap() const override;
-	const FMigratableHandlePropertyMap& GetMigratableHandlePropertyMap() const override;
+	const FHandoverHandlePropertyMap& GetHandoverHandlePropertyMap() const override;
 	UClass* GetBoundClass() const override;
 
 	void Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap) override;
@@ -40,8 +40,8 @@ public:
 		bool& bSingleClientUpdateChanged,
 		improbable::unreal::generated::testfstringreplication::TestFStringReplicationMultiClientRepData::Update& MultiClientUpdate,
 		bool& bMultiClientUpdateChanged,
-		improbable::unreal::generated::testfstringreplication::TestFStringReplicationMigratableData::Update& MigratableDataUpdate,
-		bool& bMigratableDataUpdateChanged) const;
+		improbable::unreal::generated::testfstringreplication::TestFStringReplicationHandoverData::Update& HandoverDataUpdate,
+		bool& bHandoverDataUpdateChanged) const;
 
 private:
 	improbable::unreal::callbacks::FScopedViewCallbacks ViewCallbacks;
@@ -51,14 +51,14 @@ private:
 	TMap<FName, FRPCSender> RPCToSenderMap;
 
 	FRepHandlePropertyMap RepHandleToPropertyMap;
-	FMigratableHandlePropertyMap MigratableHandleToPropertyMap;
+	FHandoverHandlePropertyMap HandoverHandleToPropertyMap;
 
 	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfstringreplication::TestFStringReplicationSingleClientRepData::Update& OutUpdate) const;
 	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfstringreplication::TestFStringReplicationMultiClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfstringreplication::TestFStringReplicationMigratableData::Update& OutUpdate) const;
+	void ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfstringreplication::TestFStringReplicationHandoverData::Update& OutUpdate) const;
 	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testfstringreplication::TestFStringReplicationSingleClientRepData::Update& Update) const;
 	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testfstringreplication::TestFStringReplicationMultiClientRepData::Update& Update) const;
-	void ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testfstringreplication::TestFStringReplicationMigratableData::Update& Update) const;
+	void ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testfstringreplication::TestFStringReplicationHandoverData::Update& Update) const;
 	void ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::testfstringreplication::TestFStringReplicationNetMulticastRPCs::Update& Update);
 
 	// RPC command sender functions.
