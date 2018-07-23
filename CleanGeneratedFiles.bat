@@ -35,6 +35,9 @@ set /p CLEAN_WORKER_FILES=Clean generated worker code?[Y/N]:
 if /I "%CLEAN_WORKER_FILES%" == "Y" (
     call :CleanWorkerFiles
 )
+
+echo %0 has completed successfully^!
+pause
 exit /b 0
 
 :CleanWorkerFiles

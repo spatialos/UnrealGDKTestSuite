@@ -14,7 +14,7 @@ if /I "%1" == "-a" (
     call :CleanAllSymlinks
     call :GitClean
     echo Creating symlinks with known path in this script %SPATIALGDK_UNREALGDKPATH%
-    call CreateGDKSymlink.bat %SPATIALGDK_UNREALGDKPATH%
+    call CreateGDKSymlinks.bat %SPATIALGDK_UNREALGDKPATH%
 ) else (
     goto Main
 )
@@ -28,6 +28,9 @@ if /I "%NUKE%" == "Y" (
     call :GitClean
     call :BuildSymlinks
 )
+
+echo %0 has completed successfully^!
+pause
 exit /b 0
 
 rem Second section is for rebuilding these symlinks.
@@ -41,7 +44,7 @@ exit /b 0
 
 rem All helper methods are below.
 :MakeSymlinks
-call CreateGDKSymlink.bat "%GDKPATH%"
+call CreateGDKSymlinks.bat "%GDKPATH%"
 exit /b 0
 
 :CleanAllSymlinks
