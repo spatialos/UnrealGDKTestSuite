@@ -22,16 +22,16 @@
 
 #include "RepCmdConfusionSingleClientRepDataAddComponentOp.h"
 #include "RepCmdConfusionMultiClientRepDataAddComponentOp.h"
-#include "RepCmdConfusionMigratableDataAddComponentOp.h"
+#include "RepCmdConfusionHandoverDataAddComponentOp.h"
 
 const FRepHandlePropertyMap& USpatialTypeBinding_RepCmdConfusion::GetRepHandlePropertyMap() const
 {
 	return RepHandleToPropertyMap;
 }
 
-const FMigratableHandlePropertyMap& USpatialTypeBinding_RepCmdConfusion::GetMigratableHandlePropertyMap() const
+const FHandoverHandlePropertyMap& USpatialTypeBinding_RepCmdConfusion::GetHandoverHandlePropertyMap() const
 {
-	return MigratableHandleToPropertyMap;
+	return HandoverHandleToPropertyMap;
 }
 
 UClass* USpatialTypeBinding_RepCmdConfusion::GetBoundClass() const
@@ -97,17 +97,17 @@ void USpatialTypeBinding_RepCmdConfusion::BindToView(bool bIsClient)
 		}));
 		if (!bIsClient)
 		{
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData>& Op)
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData>& Op)
 			{
 				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::ComponentId))
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData::ComponentId))
 				{
 					return;
 				}
 				USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
 				check(ActorChannel);
-				ReceiveUpdate_Migratable(ActorChannel, Op.Update);
+				ReceiveUpdate_Handover(ActorChannel, Op.Update);
 			}));
 		}
 	}
@@ -145,14 +145,14 @@ worker::Entity USpatialTypeBinding_RepCmdConfusion::CreateActorEntity(const FStr
 	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Data MultiClientRepCmdConfusionData;
 	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Update MultiClientRepCmdConfusionUpdate;
 	bool bMultiClientRepCmdConfusionUpdateChanged = false;
-	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Data RepCmdConfusionMigratableData;
-	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update RepCmdConfusionMigratableDataUpdate;
-	bool bRepCmdConfusionMigratableDataUpdateChanged = false;
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData::Data RepCmdConfusionHandoverData;
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData::Update RepCmdConfusionHandoverDataUpdate;
+	bool bRepCmdConfusionHandoverDataUpdateChanged = false;
 
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientRepCmdConfusionUpdate, bSingleClientRepCmdConfusionUpdateChanged, MultiClientRepCmdConfusionUpdate, bMultiClientRepCmdConfusionUpdateChanged, RepCmdConfusionMigratableDataUpdate, bRepCmdConfusionMigratableDataUpdateChanged);
+	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientRepCmdConfusionUpdate, bSingleClientRepCmdConfusionUpdateChanged, MultiClientRepCmdConfusionUpdate, bMultiClientRepCmdConfusionUpdateChanged, RepCmdConfusionHandoverDataUpdate, bRepCmdConfusionHandoverDataUpdateChanged);
 	SingleClientRepCmdConfusionUpdate.ApplyTo(SingleClientRepCmdConfusionData);
 	MultiClientRepCmdConfusionUpdate.ApplyTo(MultiClientRepCmdConfusionData);
-	RepCmdConfusionMigratableDataUpdate.ApplyTo(RepCmdConfusionMigratableData);
+	RepCmdConfusionHandoverDataUpdate.ApplyTo(RepCmdConfusionHandoverData);
 
 	// Create entity.
 	std::string ClientWorkerIdString = TCHAR_TO_UTF8(*ClientWorkerId);
@@ -201,7 +201,7 @@ worker::Entity USpatialTypeBinding_RepCmdConfusion::CreateActorEntity(const FStr
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData>(SingleClientRepCmdConfusionData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData>(MultiClientRepCmdConfusionData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData>(RepCmdConfusionMigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData>(RepCmdConfusionHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionClientRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionServerRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionNetMulticastRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionNetMulticastRPCs::Data{}, WorkersOnly)
@@ -215,9 +215,9 @@ void USpatialTypeBinding_RepCmdConfusion::SendComponentUpdates(const FPropertyCh
 	bool bSingleClientUpdateChanged = false;
 	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update MigratableDataUpdate;
-	bool bMigratableDataUpdateChanged = false;
-	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData::Update HandoverDataUpdate;
+	bool bHandoverDataUpdateChanged = false;
+	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, HandoverDataUpdate, bHandoverDataUpdateChanged);
 
 	// Send SpatialOS updates if anything changed.
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
@@ -229,9 +229,9 @@ void USpatialTypeBinding_RepCmdConfusion::SendComponentUpdates(const FPropertyCh
 	{
 		Connection->SendComponentUpdate<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
-	if (bMigratableDataUpdateChanged)
+	if (bHandoverDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData>(EntityId.ToSpatialEntityId(), HandoverDataUpdate);
 	}
 }
 
@@ -264,11 +264,11 @@ void USpatialTypeBinding_RepCmdConfusion::ReceiveAddComponent(USpatialActorChann
 		ReceiveUpdate_MultiClient(Channel, Update);
 		return;
 	}
-	auto* MigratableDataAddOp = Cast<URepCmdConfusionMigratableDataAddComponentOp>(AddComponentOp);
-	if (MigratableDataAddOp)
+	auto* HandoverDataAddOp = Cast<URepCmdConfusionHandoverDataAddComponentOp>(AddComponentOp);
+	if (HandoverDataAddOp)
 	{
-		auto Update = improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
-		ReceiveUpdate_Migratable(Channel, Update);
+		auto Update = improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
+		ReceiveUpdate_Handover(Channel, Update);
 		return;
 	}
 }
@@ -282,7 +282,7 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_R
 		{
 			Interest.emplace(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
@@ -294,11 +294,11 @@ void USpatialTypeBinding_RepCmdConfusion::BuildSpatialComponentUpdate(
 	bool& bSingleClientUpdateChanged,
 	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update& MigratableDataUpdate,
-	bool& bMigratableDataUpdateChanged) const
+	improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData::Update& HandoverDataUpdate,
+	bool& bHandoverDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
-	const FMigratableHandlePropertyMap& MigPropertyMap = GetMigratableHandlePropertyMap();
+	const FHandoverHandlePropertyMap& HandoverPropertyMap = GetHandoverHandlePropertyMap();
 	if (Changes.RepChanged.Num() > 0)
 	{
 		// Populate the replicated data component updates from the replicated property changelist.
@@ -336,19 +336,19 @@ void USpatialTypeBinding_RepCmdConfusion::BuildSpatialComponentUpdate(
 		}
 	}
 
-	// Populate the migrated data component update from the migrated property changelist.
-	for (uint16 ChangedHandle : Changes.MigChanged)
+	// Populate the handover data component update from the handover property changelist.
+	for (uint16 ChangedHandle : Changes.HandoverChanged)
 	{
-		const FMigratableHandleData& PropertyMapData = MigPropertyMap[ChangedHandle];
+		const FHandoverHandleData& PropertyMapData = HandoverPropertyMap[ChangedHandle];
 		const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData);
-		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending migratable property update. actor %s (%lld), property %s (handle %d)"),
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending handover property update. actor %s (%lld), property %s (handle %d)"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*Channel->Actor->GetName(),
 			Channel->GetEntityId().ToSpatialEntityId(),
 			*PropertyMapData.Property->GetName(),
 			ChangedHandle);
-		ServerSendUpdate_Migratable(Data, ChangedHandle, PropertyMapData.Property, Channel, MigratableDataUpdate);
-		bMigratableDataUpdateChanged = true;
+		ServerSendUpdate_Handover(Data, ChangedHandle, PropertyMapData.Property, Channel, HandoverDataUpdate);
+		bHandoverDataUpdateChanged = true;
 	}
 }
 
@@ -631,7 +631,7 @@ void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_MultiClient(const uin
 	}
 }
 
-void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update& OutUpdate) const
+void USpatialTypeBinding_RepCmdConfusion::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData::Update& OutUpdate) const
 {
 }
 
@@ -1168,7 +1168,7 @@ void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_MultiClient(USpatialActo
 	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::repcmdconfusion::RepCmdConfusionMigratableData::Update& Update) const
+void USpatialTypeBinding_RepCmdConfusion::ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData::Update& Update) const
 {
 }
 

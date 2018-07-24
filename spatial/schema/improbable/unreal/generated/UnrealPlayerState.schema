@@ -36,7 +36,7 @@ component PlayerStateMultiClientRepData {
 	bytes field_uniqueid0 = 25; // COND_InitialOnly // ::PlayerState
 	string field_playernameprivate0 = 26; // COND_None // ::PlayerState
 }
-component PlayerStateMigratableData {
+component PlayerStateHandoverData {
 	id = 100018;
 }
 

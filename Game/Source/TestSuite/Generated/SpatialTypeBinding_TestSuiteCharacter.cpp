@@ -22,16 +22,16 @@
 
 #include "TestSuiteCharacterSingleClientRepDataAddComponentOp.h"
 #include "TestSuiteCharacterMultiClientRepDataAddComponentOp.h"
-#include "TestSuiteCharacterMigratableDataAddComponentOp.h"
+#include "TestSuiteCharacterHandoverDataAddComponentOp.h"
 
 const FRepHandlePropertyMap& USpatialTypeBinding_TestSuiteCharacter::GetRepHandlePropertyMap() const
 {
 	return RepHandleToPropertyMap;
 }
 
-const FMigratableHandlePropertyMap& USpatialTypeBinding_TestSuiteCharacter::GetMigratableHandlePropertyMap() const
+const FHandoverHandlePropertyMap& USpatialTypeBinding_TestSuiteCharacter::GetHandoverHandlePropertyMap() const
 {
-	return MigratableHandleToPropertyMap;
+	return HandoverHandleToPropertyMap;
 }
 
 UClass* USpatialTypeBinding_TestSuiteCharacter::GetBoundClass() const
@@ -108,10 +108,10 @@ void USpatialTypeBinding_TestSuiteCharacter::Init(USpatialInterop* InInterop, US
 	RepHandleToPropertyMap.Add(43, FRepHandleData(Class, {"RepRootMotion", "LinearVelocity"}, {0, 0}, COND_SimulatedOnlyNoReplay, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"TestRunner"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
 
-	// Populate MigratableHandleToPropertyMap.
-	MigratableHandleToPropertyMap.Add(1, FMigratableHandleData(Class, {"CharacterMovement", "MovementMode"}));
-	MigratableHandleToPropertyMap.Add(2, FMigratableHandleData(Class, {"CharacterMovement", "CustomMovementMode"}));
-	MigratableHandleToPropertyMap.Add(3, FMigratableHandleData(Class, {"CharacterMovement", "GroundMovementMode"}));
+	// Populate HandoverHandleToPropertyMap.
+	HandoverHandleToPropertyMap.Add(1, FHandoverHandleData(Class, {"CharacterMovement", "MovementMode"}));
+	HandoverHandleToPropertyMap.Add(2, FHandoverHandleData(Class, {"CharacterMovement", "CustomMovementMode"}));
+	HandoverHandleToPropertyMap.Add(3, FHandoverHandleData(Class, {"CharacterMovement", "GroundMovementMode"}));
 }
 
 void USpatialTypeBinding_TestSuiteCharacter::BindToView(bool bIsClient)
@@ -147,17 +147,17 @@ void USpatialTypeBinding_TestSuiteCharacter::BindToView(bool bIsClient)
 		}));
 		if (!bIsClient)
 		{
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData>& Op)
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData>& Op)
 			{
 				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData::ComponentId))
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::ComponentId))
 				{
 					return;
 				}
 				USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
 				check(ActorChannel);
-				ReceiveUpdate_Migratable(ActorChannel, Op.Update);
+				ReceiveUpdate_Handover(ActorChannel, Op.Update);
 			}));
 		}
 	}
@@ -229,14 +229,14 @@ worker::Entity USpatialTypeBinding_TestSuiteCharacter::CreateActorEntity(const F
 	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMultiClientRepData::Data MultiClientTestSuiteCharacterData;
 	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMultiClientRepData::Update MultiClientTestSuiteCharacterUpdate;
 	bool bMultiClientTestSuiteCharacterUpdateChanged = false;
-	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData::Data TestSuiteCharacterMigratableData;
-	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData::Update TestSuiteCharacterMigratableDataUpdate;
-	bool bTestSuiteCharacterMigratableDataUpdateChanged = false;
+	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::Data TestSuiteCharacterHandoverData;
+	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::Update TestSuiteCharacterHandoverDataUpdate;
+	bool bTestSuiteCharacterHandoverDataUpdateChanged = false;
 
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientTestSuiteCharacterUpdate, bSingleClientTestSuiteCharacterUpdateChanged, MultiClientTestSuiteCharacterUpdate, bMultiClientTestSuiteCharacterUpdateChanged, TestSuiteCharacterMigratableDataUpdate, bTestSuiteCharacterMigratableDataUpdateChanged);
+	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientTestSuiteCharacterUpdate, bSingleClientTestSuiteCharacterUpdateChanged, MultiClientTestSuiteCharacterUpdate, bMultiClientTestSuiteCharacterUpdateChanged, TestSuiteCharacterHandoverDataUpdate, bTestSuiteCharacterHandoverDataUpdateChanged);
 	SingleClientTestSuiteCharacterUpdate.ApplyTo(SingleClientTestSuiteCharacterData);
 	MultiClientTestSuiteCharacterUpdate.ApplyTo(MultiClientTestSuiteCharacterData);
-	TestSuiteCharacterMigratableDataUpdate.ApplyTo(TestSuiteCharacterMigratableData);
+	TestSuiteCharacterHandoverDataUpdate.ApplyTo(TestSuiteCharacterHandoverData);
 
 	// Create entity.
 	std::string ClientWorkerIdString = TCHAR_TO_UTF8(*ClientWorkerId);
@@ -285,7 +285,7 @@ worker::Entity USpatialTypeBinding_TestSuiteCharacter::CreateActorEntity(const F
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterSingleClientRepData>(SingleClientTestSuiteCharacterData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMultiClientRepData>(MultiClientTestSuiteCharacterData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData>(TestSuiteCharacterMigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData>(TestSuiteCharacterHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs>(improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs>(improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterNetMulticastRPCs>(improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterNetMulticastRPCs::Data{}, WorkersOnly)
@@ -299,9 +299,9 @@ void USpatialTypeBinding_TestSuiteCharacter::SendComponentUpdates(const FPropert
 	bool bSingleClientUpdateChanged = false;
 	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData::Update MigratableDataUpdate;
-	bool bMigratableDataUpdateChanged = false;
-	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
+	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::Update HandoverDataUpdate;
+	bool bHandoverDataUpdateChanged = false;
+	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, HandoverDataUpdate, bHandoverDataUpdateChanged);
 
 	// Send SpatialOS updates if anything changed.
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
@@ -313,9 +313,9 @@ void USpatialTypeBinding_TestSuiteCharacter::SendComponentUpdates(const FPropert
 	{
 		Connection->SendComponentUpdate<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
-	if (bMigratableDataUpdateChanged)
+	if (bHandoverDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData>(EntityId.ToSpatialEntityId(), HandoverDataUpdate);
 	}
 }
 
@@ -348,11 +348,11 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveAddComponent(USpatialActorCh
 		ReceiveUpdate_MultiClient(Channel, Update);
 		return;
 	}
-	auto* MigratableDataAddOp = Cast<UTestSuiteCharacterMigratableDataAddComponentOp>(AddComponentOp);
-	if (MigratableDataAddOp)
+	auto* HandoverDataAddOp = Cast<UTestSuiteCharacterHandoverDataAddComponentOp>(AddComponentOp);
+	if (HandoverDataAddOp)
 	{
-		auto Update = improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
-		ReceiveUpdate_Migratable(Channel, Update);
+		auto Update = improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
+		ReceiveUpdate_Handover(Channel, Update);
 		return;
 	}
 }
@@ -366,7 +366,7 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_T
 		{
 			Interest.emplace(improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
@@ -378,11 +378,11 @@ void USpatialTypeBinding_TestSuiteCharacter::BuildSpatialComponentUpdate(
 	bool& bSingleClientUpdateChanged,
 	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData::Update& MigratableDataUpdate,
-	bool& bMigratableDataUpdateChanged) const
+	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::Update& HandoverDataUpdate,
+	bool& bHandoverDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
-	const FMigratableHandlePropertyMap& MigPropertyMap = GetMigratableHandlePropertyMap();
+	const FHandoverHandlePropertyMap& HandoverPropertyMap = GetHandoverHandlePropertyMap();
 	if (Changes.RepChanged.Num() > 0)
 	{
 		// Populate the replicated data component updates from the replicated property changelist.
@@ -420,19 +420,19 @@ void USpatialTypeBinding_TestSuiteCharacter::BuildSpatialComponentUpdate(
 		}
 	}
 
-	// Populate the migrated data component update from the migrated property changelist.
-	for (uint16 ChangedHandle : Changes.MigChanged)
+	// Populate the handover data component update from the handover property changelist.
+	for (uint16 ChangedHandle : Changes.HandoverChanged)
 	{
-		const FMigratableHandleData& PropertyMapData = MigPropertyMap[ChangedHandle];
+		const FHandoverHandleData& PropertyMapData = HandoverPropertyMap[ChangedHandle];
 		const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData);
-		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending migratable property update. actor %s (%lld), property %s (handle %d)"),
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending handover property update. actor %s (%lld), property %s (handle %d)"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*Channel->Actor->GetName(),
 			Channel->GetEntityId().ToSpatialEntityId(),
 			*PropertyMapData.Property->GetName(),
 			ChangedHandle);
-		ServerSendUpdate_Migratable(Data, ChangedHandle, PropertyMapData.Property, Channel, MigratableDataUpdate);
-		bMigratableDataUpdateChanged = true;
+		ServerSendUpdate_Handover(Data, ChangedHandle, PropertyMapData.Property, Channel, HandoverDataUpdate);
+		bHandoverDataUpdateChanged = true;
 	}
 }
 
@@ -1173,7 +1173,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 	}
 }
 
-void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData::Update& OutUpdate) const
+void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -1199,7 +1199,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_Migratable(const u
 			break;
 		}
 	default:
-		checkf(false, TEXT("Unknown migration property handle %d encountered when creating a SpatialOS update."));
+		checkf(false, TEXT("Unknown handover property handle %d encountered when creating a SpatialOS update."));
 		break;
 	}
 }
@@ -2621,65 +2621,65 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_MultiClient(USpatialA
 	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMigratableData::Update& Update) const
+void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::Update& Update) const
 {
-	const FMigratableHandlePropertyMap& HandleToPropertyMap = GetMigratableHandlePropertyMap();
+	const FHandoverHandlePropertyMap& HandleToPropertyMap = GetHandoverHandlePropertyMap();
 
 	if (!Update.field_charactermovement0_movementmode0().empty())
 	{
 		// field_charactermovement0_movementmode0
 		uint16 Handle = 1;
-		const FMigratableHandleData* MigratableData = &HandleToPropertyMap[Handle];
-		uint8* PropertyData = MigratableData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+		const FHandoverHandleData* HandoverData = &HandleToPropertyMap[Handle];
+		uint8* PropertyData = HandoverData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 		TEnumAsByte<EMovementMode> Value = *(reinterpret_cast<TEnumAsByte<EMovementMode> const*>(PropertyData));
 
 		Value = TEnumAsByte<EMovementMode>(uint8((*Update.field_charactermovement0_movementmode0().data())));
 
-		ApplyIncomingMigratablePropertyUpdate(*MigratableData, ActorChannel->Actor, static_cast<const void*>(&Value));
+		ApplyIncomingHandoverPropertyUpdate(*HandoverData, ActorChannel->Actor, static_cast<const void*>(&Value));
 
-		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received migratable property update. actor %s (%lld), property %s (handle %d)"),
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received handover property update. actor %s (%lld), property %s (handle %d)"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ActorChannel->Actor->GetName(),
 			ActorChannel->GetEntityId().ToSpatialEntityId(),
-			*MigratableData->Property->GetName(),
+			*HandoverData->Property->GetName(),
 			Handle);
 	}
 	if (!Update.field_charactermovement0_custommovementmode0().empty())
 	{
 		// field_charactermovement0_custommovementmode0
 		uint16 Handle = 2;
-		const FMigratableHandleData* MigratableData = &HandleToPropertyMap[Handle];
-		uint8* PropertyData = MigratableData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+		const FHandoverHandleData* HandoverData = &HandleToPropertyMap[Handle];
+		uint8* PropertyData = HandoverData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 		uint8 Value = *(reinterpret_cast<uint8 const*>(PropertyData));
 
 		Value = uint8(uint8((*Update.field_charactermovement0_custommovementmode0().data())));
 
-		ApplyIncomingMigratablePropertyUpdate(*MigratableData, ActorChannel->Actor, static_cast<const void*>(&Value));
+		ApplyIncomingHandoverPropertyUpdate(*HandoverData, ActorChannel->Actor, static_cast<const void*>(&Value));
 
-		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received migratable property update. actor %s (%lld), property %s (handle %d)"),
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received handover property update. actor %s (%lld), property %s (handle %d)"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ActorChannel->Actor->GetName(),
 			ActorChannel->GetEntityId().ToSpatialEntityId(),
-			*MigratableData->Property->GetName(),
+			*HandoverData->Property->GetName(),
 			Handle);
 	}
 	if (!Update.field_charactermovement0_groundmovementmode0().empty())
 	{
 		// field_charactermovement0_groundmovementmode0
 		uint16 Handle = 3;
-		const FMigratableHandleData* MigratableData = &HandleToPropertyMap[Handle];
-		uint8* PropertyData = MigratableData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+		const FHandoverHandleData* HandoverData = &HandleToPropertyMap[Handle];
+		uint8* PropertyData = HandoverData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
 		TEnumAsByte<EMovementMode> Value = *(reinterpret_cast<TEnumAsByte<EMovementMode> const*>(PropertyData));
 
 		Value = TEnumAsByte<EMovementMode>(uint8((*Update.field_charactermovement0_groundmovementmode0().data())));
 
-		ApplyIncomingMigratablePropertyUpdate(*MigratableData, ActorChannel->Actor, static_cast<const void*>(&Value));
+		ApplyIncomingHandoverPropertyUpdate(*HandoverData, ActorChannel->Actor, static_cast<const void*>(&Value));
 
-		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received migratable property update. actor %s (%lld), property %s (handle %d)"),
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received handover property update. actor %s (%lld), property %s (handle %d)"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*ActorChannel->Actor->GetName(),
 			ActorChannel->GetEntityId().ToSpatialEntityId(),
-			*MigratableData->Property->GetName(),
+			*HandoverData->Property->GetName(),
 			Handle);
 	}
 }

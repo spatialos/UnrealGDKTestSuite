@@ -22,16 +22,16 @@
 
 #include "GDKTestRunnerSingleClientRepDataAddComponentOp.h"
 #include "GDKTestRunnerMultiClientRepDataAddComponentOp.h"
-#include "GDKTestRunnerMigratableDataAddComponentOp.h"
+#include "GDKTestRunnerHandoverDataAddComponentOp.h"
 
 const FRepHandlePropertyMap& USpatialTypeBinding_GDKTestRunner::GetRepHandlePropertyMap() const
 {
 	return RepHandleToPropertyMap;
 }
 
-const FMigratableHandlePropertyMap& USpatialTypeBinding_GDKTestRunner::GetMigratableHandlePropertyMap() const
+const FHandoverHandlePropertyMap& USpatialTypeBinding_GDKTestRunner::GetHandoverHandlePropertyMap() const
 {
-	return MigratableHandleToPropertyMap;
+	return HandoverHandleToPropertyMap;
 }
 
 UClass* USpatialTypeBinding_GDKTestRunner::GetBoundClass() const
@@ -101,17 +101,17 @@ void USpatialTypeBinding_GDKTestRunner::BindToView(bool bIsClient)
 		}));
 		if (!bIsClient)
 		{
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData>& Op)
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData>& Op)
 			{
 				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::ComponentId))
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData::ComponentId))
 				{
 					return;
 				}
 				USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
 				check(ActorChannel);
-				ReceiveUpdate_Migratable(ActorChannel, Op.Update);
+				ReceiveUpdate_Handover(ActorChannel, Op.Update);
 			}));
 		}
 	}
@@ -155,14 +155,14 @@ worker::Entity USpatialTypeBinding_GDKTestRunner::CreateActorEntity(const FStrin
 	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData::Data MultiClientGDKTestRunnerData;
 	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData::Update MultiClientGDKTestRunnerUpdate;
 	bool bMultiClientGDKTestRunnerUpdateChanged = false;
-	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Data GDKTestRunnerMigratableData;
-	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Update GDKTestRunnerMigratableDataUpdate;
-	bool bGDKTestRunnerMigratableDataUpdateChanged = false;
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData::Data GDKTestRunnerHandoverData;
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData::Update GDKTestRunnerHandoverDataUpdate;
+	bool bGDKTestRunnerHandoverDataUpdateChanged = false;
 
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientGDKTestRunnerUpdate, bSingleClientGDKTestRunnerUpdateChanged, MultiClientGDKTestRunnerUpdate, bMultiClientGDKTestRunnerUpdateChanged, GDKTestRunnerMigratableDataUpdate, bGDKTestRunnerMigratableDataUpdateChanged);
+	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientGDKTestRunnerUpdate, bSingleClientGDKTestRunnerUpdateChanged, MultiClientGDKTestRunnerUpdate, bMultiClientGDKTestRunnerUpdateChanged, GDKTestRunnerHandoverDataUpdate, bGDKTestRunnerHandoverDataUpdateChanged);
 	SingleClientGDKTestRunnerUpdate.ApplyTo(SingleClientGDKTestRunnerData);
 	MultiClientGDKTestRunnerUpdate.ApplyTo(MultiClientGDKTestRunnerData);
-	GDKTestRunnerMigratableDataUpdate.ApplyTo(GDKTestRunnerMigratableData);
+	GDKTestRunnerHandoverDataUpdate.ApplyTo(GDKTestRunnerHandoverData);
 
 	// Create entity.
 	std::string ClientWorkerIdString = TCHAR_TO_UTF8(*ClientWorkerId);
@@ -211,7 +211,7 @@ worker::Entity USpatialTypeBinding_GDKTestRunner::CreateActorEntity(const FStrin
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData>(SingleClientGDKTestRunnerData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData>(MultiClientGDKTestRunnerData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData>(GDKTestRunnerMigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData>(GDKTestRunnerHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerClientRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerNetMulticastRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerNetMulticastRPCs::Data{}, WorkersOnly)
@@ -225,9 +225,9 @@ void USpatialTypeBinding_GDKTestRunner::SendComponentUpdates(const FPropertyChan
 	bool bSingleClientUpdateChanged = false;
 	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Update MigratableDataUpdate;
-	bool bMigratableDataUpdateChanged = false;
-	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData::Update HandoverDataUpdate;
+	bool bHandoverDataUpdateChanged = false;
+	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, HandoverDataUpdate, bHandoverDataUpdateChanged);
 
 	// Send SpatialOS updates if anything changed.
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
@@ -239,9 +239,9 @@ void USpatialTypeBinding_GDKTestRunner::SendComponentUpdates(const FPropertyChan
 	{
 		Connection->SendComponentUpdate<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
-	if (bMigratableDataUpdateChanged)
+	if (bHandoverDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData>(EntityId.ToSpatialEntityId(), HandoverDataUpdate);
 	}
 }
 
@@ -274,11 +274,11 @@ void USpatialTypeBinding_GDKTestRunner::ReceiveAddComponent(USpatialActorChannel
 		ReceiveUpdate_MultiClient(Channel, Update);
 		return;
 	}
-	auto* MigratableDataAddOp = Cast<UGDKTestRunnerMigratableDataAddComponentOp>(AddComponentOp);
-	if (MigratableDataAddOp)
+	auto* HandoverDataAddOp = Cast<UGDKTestRunnerHandoverDataAddComponentOp>(AddComponentOp);
+	if (HandoverDataAddOp)
 	{
-		auto Update = improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
-		ReceiveUpdate_Migratable(Channel, Update);
+		auto Update = improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
+		ReceiveUpdate_Handover(Channel, Update);
 		return;
 	}
 }
@@ -292,7 +292,7 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_G
 		{
 			Interest.emplace(improbable::unreal::generated::gdktestrunner::GDKTestRunnerSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
@@ -304,11 +304,11 @@ void USpatialTypeBinding_GDKTestRunner::BuildSpatialComponentUpdate(
 	bool& bSingleClientUpdateChanged,
 	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Update& MigratableDataUpdate,
-	bool& bMigratableDataUpdateChanged) const
+	improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData::Update& HandoverDataUpdate,
+	bool& bHandoverDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
-	const FMigratableHandlePropertyMap& MigPropertyMap = GetMigratableHandlePropertyMap();
+	const FHandoverHandlePropertyMap& HandoverPropertyMap = GetHandoverHandlePropertyMap();
 	if (Changes.RepChanged.Num() > 0)
 	{
 		// Populate the replicated data component updates from the replicated property changelist.
@@ -346,19 +346,19 @@ void USpatialTypeBinding_GDKTestRunner::BuildSpatialComponentUpdate(
 		}
 	}
 
-	// Populate the migrated data component update from the migrated property changelist.
-	for (uint16 ChangedHandle : Changes.MigChanged)
+	// Populate the handover data component update from the handover property changelist.
+	for (uint16 ChangedHandle : Changes.HandoverChanged)
 	{
-		const FMigratableHandleData& PropertyMapData = MigPropertyMap[ChangedHandle];
+		const FHandoverHandleData& PropertyMapData = HandoverPropertyMap[ChangedHandle];
 		const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData);
-		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending migratable property update. actor %s (%lld), property %s (handle %d)"),
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending handover property update. actor %s (%lld), property %s (handle %d)"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*Channel->Actor->GetName(),
 			Channel->GetEntityId().ToSpatialEntityId(),
 			*PropertyMapData.Property->GetName(),
 			ChangedHandle);
-		ServerSendUpdate_Migratable(Data, ChangedHandle, PropertyMapData.Property, Channel, MigratableDataUpdate);
-		bMigratableDataUpdateChanged = true;
+		ServerSendUpdate_Handover(Data, ChangedHandle, PropertyMapData.Property, Channel, HandoverDataUpdate);
+		bHandoverDataUpdateChanged = true;
 	}
 }
 
@@ -693,7 +693,7 @@ void USpatialTypeBinding_GDKTestRunner::ServerSendUpdate_MultiClient(const uint8
 	}
 }
 
-void USpatialTypeBinding_GDKTestRunner::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Update& OutUpdate) const
+void USpatialTypeBinding_GDKTestRunner::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData::Update& OutUpdate) const
 {
 }
 
@@ -1308,7 +1308,7 @@ void USpatialTypeBinding_GDKTestRunner::ReceiveUpdate_MultiClient(USpatialActorC
 	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_GDKTestRunner::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::gdktestrunner::GDKTestRunnerMigratableData::Update& Update) const
+void USpatialTypeBinding_GDKTestRunner::ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData::Update& Update) const
 {
 }
 
