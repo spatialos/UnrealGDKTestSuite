@@ -10,6 +10,6 @@ For more information, see the [SpatialOS Unreal GDK repository](https://github.c
 
 | Helper script | Parameters | Description |
 | --- | --- | --- |
-| `CleanGeneratedFiles.bat` |  |  |
-| `CreateGDKSymlinks.bat` |  |  |
-| `SafeClean.bat` |  |  |
+| CleanGeneratedFiles.bat | `[-a]` | Cleans generated schema and/or type bindings and/or worker code. Call with `-a` flag to clean everything without prompting. |
+| CreateGDKSymlinks.bat | `[Unreal GDK path]` | Creates symlinks to the directories in the Unreal GDK containing the SpatialGDK module, plugins, scripts, binaries, and schema. |
+| SafeClean.bat | `[-a]` | Cleans the symlinks, uncommitted changes, and all built files. Call with `-a` flag to clean everything without prompting. Optionally calls `CreateGDKSymlinks.bat` to restore the symlinks. |
