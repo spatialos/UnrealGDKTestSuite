@@ -149,6 +149,8 @@ void USpatialTypeBinding_TestSuitePlayerController::Init(USpatialInterop* InInte
 
 	// Populate MigratableHandleToPropertyMap.
 	MigratableHandleToPropertyMap.Add(1, FMigratableHandleData(Class, {"AcknowledgedPawn"}));
+
+	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestSuitePlayerController::BindToView(bool bIsClient)

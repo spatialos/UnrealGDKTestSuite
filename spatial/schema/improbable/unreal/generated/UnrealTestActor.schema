@@ -5,10 +5,10 @@ package improbable.unreal.generated.testactor;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestActorSingleClientRepData {
-	id = 100118;
+	id = 100124;
 }
 component TestActorMultiClientRepData {
-	id = 100119;
+	id = 100125;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -27,15 +27,15 @@ component TestActorMultiClientRepData {
 	string field_actorname0 = 16; // COND_None // ::TestActor
 }
 component TestActorMigratableData {
-	id = 100120;
+	id = 100126;
 }
 
 component TestActorClientRPCs {
-	id = 100121;
+	id = 100127;
 }
 component TestActorServerRPCs {
-	id = 100122;
+	id = 100128;
 }
 component TestActorNetMulticastRPCs {
-	id = 100123;
+	id = 100129;
 }

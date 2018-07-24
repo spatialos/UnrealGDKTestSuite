@@ -69,6 +69,8 @@ void USpatialTypeBinding_TestEnumReplication::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"Test32Enum"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"Test64Enum"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"TestUEnum"}, {0}, COND_None, REPNOTIFY_OnChanged));
+
+	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestEnumReplication::BindToView(bool bIsClient)

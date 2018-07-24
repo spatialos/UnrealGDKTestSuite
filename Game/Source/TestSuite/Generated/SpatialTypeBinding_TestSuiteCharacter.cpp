@@ -112,6 +112,8 @@ void USpatialTypeBinding_TestSuiteCharacter::Init(USpatialInterop* InInterop, US
 	MigratableHandleToPropertyMap.Add(1, FMigratableHandleData(Class, {"CharacterMovement", "MovementMode"}));
 	MigratableHandleToPropertyMap.Add(2, FMigratableHandleData(Class, {"CharacterMovement", "CustomMovementMode"}));
 	MigratableHandleToPropertyMap.Add(3, FMigratableHandleData(Class, {"CharacterMovement", "GroundMovementMode"}));
+
+	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestSuiteCharacter::BindToView(bool bIsClient)

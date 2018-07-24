@@ -71,6 +71,8 @@ void USpatialTypeBinding_TestTArrayReplication::Init(USpatialInterop* InInterop,
 	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"ArrayOfStructNetSerialize"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"EnumTArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(23, FRepHandleData(Class, {"UEnumTArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
+
+	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestTArrayReplication::BindToView(bool bIsClient)

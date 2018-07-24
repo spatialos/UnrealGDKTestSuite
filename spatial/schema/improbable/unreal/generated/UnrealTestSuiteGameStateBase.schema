@@ -1,14 +1,14 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.testfloatreplication;
+package improbable.unreal.generated.testsuitegamestatebase;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component TestFloatReplicationSingleClientRepData {
-	id = 100058;
+component TestSuiteGameStateBaseSingleClientRepData {
+	id = 100028;
 }
-component TestFloatReplicationMultiClientRepData {
-	id = 100059;
+component TestSuiteGameStateBaseMultiClientRepData {
+	id = 100029;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -24,22 +24,21 @@ component TestFloatReplicationMultiClientRepData {
 	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
-	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
-	float field_testfloat0 = 17; // COND_None // ::TestFloatReplication
-	double field_testdouble0 = 18; // COND_None // ::TestFloatReplication
+	UnrealObjectRef field_gamemodeclass0 = 16; // COND_InitialOnly // ::GameStateBase
+	UnrealObjectRef field_spectatorclass0 = 17; // COND_None // ::GameStateBase
+	bool field_breplicatedhasbegunplay0 = 18; // COND_None // ::GameStateBase
+	float field_replicatedworldtimeseconds0 = 19; // COND_None // ::GameStateBase
 }
-component TestFloatReplicationMigratableData {
-	id = 100060;
+component TestSuiteGameStateBaseMigratableData {
+	id = 100030;
 }
-import "improbable/unreal/generated/UnrealTestFloatReplicationTypes.schema";
 
-component TestFloatReplicationClientRPCs {
-	id = 100061;
+component TestSuiteGameStateBaseClientRPCs {
+	id = 100031;
 }
-component TestFloatReplicationServerRPCs {
-	id = 100062;
-	command UnrealRPCCommandResponse serverreportreplication(testfloatreplication.ServerReportReplicationRequest);
+component TestSuiteGameStateBaseServerRPCs {
+	id = 100032;
 }
-component TestFloatReplicationNetMulticastRPCs {
-	id = 100063;
+component TestSuiteGameStateBaseNetMulticastRPCs {
+	id = 100033;
 }

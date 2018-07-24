@@ -72,6 +72,8 @@ void USpatialTypeBinding_PlayerState::Init(USpatialInterop* InInterop, USpatialP
 	RepHandleToPropertyMap.Add(24, FRepHandleData(Class, {"StartTime"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(25, FRepHandleData(Class, {"UniqueId"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"PlayerNamePrivate"}, {0}, COND_None, REPNOTIFY_OnChanged));
+
+	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_PlayerState::BindToView(bool bIsClient)

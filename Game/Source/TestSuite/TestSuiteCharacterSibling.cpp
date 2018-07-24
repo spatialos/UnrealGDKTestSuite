@@ -19,15 +19,6 @@
 
 ATestSuiteCharacterSibling::ATestSuiteCharacterSibling()
 {
-	// Hack to ensure that the game state is created and set to tick on a client as we don't replicate it
-	UWorld* World = GetWorld();
-	if (World && World->GetGameState() == nullptr)
-	{
-		AGameStateBase* GameState = World->SpawnActor<AGameStateBase>(ATestSuiteGameStateBase::StaticClass());
-		World->SetGameState(GameState);
-		Cast<ATestSuiteGameStateBase>(GameState)->FakeServerHasBegunPlay();
-	}
-
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 

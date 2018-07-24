@@ -67,6 +67,8 @@ void USpatialTypeBinding_TestUObjectReplication::Init(USpatialInterop* InInterop
 	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"DynamicallyCreatedActor"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"StablyNamedUObject"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"ConstObj"}, {0}, COND_None, REPNOTIFY_OnChanged));
+
+	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestUObjectReplication::BindToView(bool bIsClient)

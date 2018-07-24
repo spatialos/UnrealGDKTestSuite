@@ -63,6 +63,8 @@ void USpatialTypeBinding_TestActor::Init(USpatialInterop* InInterop, USpatialPac
 	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"ActorName"}, {0}, COND_None, REPNOTIFY_OnChanged));
+
+	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestActor::BindToView(bool bIsClient)

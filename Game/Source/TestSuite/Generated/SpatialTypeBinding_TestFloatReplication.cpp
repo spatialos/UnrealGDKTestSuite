@@ -66,6 +66,8 @@ void USpatialTypeBinding_TestFloatReplication::Init(USpatialInterop* InInterop, 
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestBookend"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"TestFloat"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"TestDouble"}, {0}, COND_None, REPNOTIFY_OnChanged));
+
+	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestFloatReplication::BindToView(bool bIsClient)
