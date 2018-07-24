@@ -1,4 +1,4 @@
-# SpatialOS Unreal GDK Test Suite (pre-alpha)
+# SpatialOS Unreal GDK Test Suite
 
 ## Introduction
 
