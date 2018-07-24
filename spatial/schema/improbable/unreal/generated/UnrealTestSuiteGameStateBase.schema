@@ -1,14 +1,14 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.testtarrayreplication;
+package improbable.unreal.generated.testsuitegamestatebase;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component TestTArrayReplicationSingleClientRepData {
-	id = 100088;
+component TestSuiteGameStateBaseSingleClientRepData {
+	id = 100028;
 }
-component TestTArrayReplicationMultiClientRepData {
-	id = 100089;
+component TestSuiteGameStateBaseMultiClientRepData {
+	id = 100029;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -24,27 +24,21 @@ component TestTArrayReplicationMultiClientRepData {
 	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
-	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
-	list<int32> field_podarray0 = 17; // COND_None // ::TestTArrayReplication
-	list<UnrealObjectRef> field_stablynamedarray0 = 18; // COND_None // ::TestTArrayReplication
-	list<UnrealObjectRef> field_dynamicallycreatedarray0 = 19; // COND_None // ::TestTArrayReplication
-	list<bytes> field_arrayofstructs0 = 20; // COND_None // ::TestTArrayReplication
-	list<bytes> field_arrayofstructnetserialize0 = 21; // COND_None // ::TestTArrayReplication
-	list<uint32> field_enumtarray0 = 22; // COND_None // ::TestTArrayReplication
-	list<uint32> field_uenumtarray0 = 23; // COND_None // ::TestTArrayReplication
+	UnrealObjectRef field_gamemodeclass0 = 16; // COND_InitialOnly // ::GameStateBase
+	UnrealObjectRef field_spectatorclass0 = 17; // COND_None // ::GameStateBase
+	bool field_breplicatedhasbegunplay0 = 18; // COND_None // ::GameStateBase
+	float field_replicatedworldtimeseconds0 = 19; // COND_None // ::GameStateBase
 }
-component TestTArrayReplicationHandoverData {
-	id = 100090;
+component TestSuiteGameStateBaseHandoverData {
+	id = 100030;
 }
-import "improbable/unreal/generated/UnrealTestTArrayReplicationTypes.schema";
 
-component TestTArrayReplicationClientRPCs {
-	id = 100091;
+component TestSuiteGameStateBaseClientRPCs {
+	id = 100031;
 }
-component TestTArrayReplicationServerRPCs {
-	id = 100092;
-	command UnrealRPCCommandResponse serverreportreplication(testtarrayreplication.ServerReportReplicationRequest);
+component TestSuiteGameStateBaseServerRPCs {
+	id = 100032;
 }
-component TestTArrayReplicationNetMulticastRPCs {
-	id = 100093;
+component TestSuiteGameStateBaseNetMulticastRPCs {
+	id = 100033;
 }

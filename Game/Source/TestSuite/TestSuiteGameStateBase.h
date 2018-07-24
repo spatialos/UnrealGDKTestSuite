@@ -11,6 +11,4 @@ class TESTSUITE_API ATestSuiteGameStateBase : public AGameStateBase
 {
 	GENERATED_BODY()
 
-public:
-	void FakeServerHasBegunPlay();
 };

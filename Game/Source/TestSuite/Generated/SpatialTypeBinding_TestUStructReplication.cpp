@@ -75,6 +75,8 @@ void USpatialTypeBinding_TestUStructReplication::Init(USpatialInterop* InInterop
 	RepHandleToPropertyMap.Add(25, FRepHandleData(Class, {"UStructWithTArray", "Array"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"UStructWithUnrealStyleEnum", "Test32Enum"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(27, FRepHandleData(Class, {"UStructWithCppStyleEnum", "UEnum"}, {0, 0}, COND_None, REPNOTIFY_OnChanged));
+
+	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestUStructReplication::BindToView(bool bIsClient)
