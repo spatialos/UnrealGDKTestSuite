@@ -149,6 +149,8 @@ void USpatialTypeBinding_TestSuitePlayerController::Init(USpatialInterop* InInte
 
 	// Populate HandoverHandleToPropertyMap.
 	HandoverHandleToPropertyMap.Add(1, FHandoverHandleData(Class, {"AcknowledgedPawn"}));
+
+	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestSuitePlayerController::BindToView(bool bIsClient)
