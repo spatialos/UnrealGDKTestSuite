@@ -1,0 +1,22 @@
+{
+    "dimensionsInWorldUnits": {
+        "x": 5000,
+        "z": 5000
+    },
+    "loadBalancing": {
+        "layerConfigurations": [
+            {
+                "layer": "UnrealWorker",
+                "hexGrid": {
+                    "numWorkers": 0
+                },
+                "options": {
+                    "manualWorkerConnectionOnly": true
+                }
+            }
+        ]
+    },
+    "snapshot": {
+        "startDeploymentFromSnapshotFile": "./snapshots/default.snapshot"
+    }
+}

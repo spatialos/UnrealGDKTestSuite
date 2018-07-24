@@ -1,0 +1,31 @@
+{
+    "workerType": "UnrealWorker",
+    "attributeSet": {
+        "attributes": [
+            "UnrealWorker"
+        ]
+    },
+    "entityInterest": {
+        "rangeEntityInterest": {
+            "radius": 0
+        }
+    },
+    "componentDelivery": {
+        "default": "RELIABLE_ORDERED",
+        "checkoutAllInitially": true
+    },
+    "permissions": {
+        "all": {}
+    },
+    "launchConfiguration": {
+        "localDeployment": {
+            "windows": {
+                "localBuildDirectory": "build/assembly/UnrealWorker",
+                "command": "UnrealWorker.exe",
+                "arguments": [
+                    "${IMPROBABLE_WORKER_ID}"
+                ]
+            }
+        }
+    }
+}

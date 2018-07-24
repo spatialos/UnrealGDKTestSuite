@@ -1,0 +1,20 @@
+{
+    "workerType": "UnrealClient",
+    "attributeSet": {
+      "attributes": [
+        "UnrealClient"
+      ]
+    },
+    "entityInterest": {
+      "rangeEntityInterest": {
+        "radius": 50
+      }
+    },
+    "componentDelivery": {
+      "default": "RELIABLE_ORDERED",
+      "checkoutAllInitially": true
+    },
+    "permissions": {
+      "all": {}
+    }
+  }
