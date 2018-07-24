@@ -29,7 +29,7 @@ component TestSuiteGameStateBaseMultiClientRepData {
 	bool field_breplicatedhasbegunplay0 = 18; // COND_None // ::GameStateBase
 	float field_replicatedworldtimeseconds0 = 19; // COND_None // ::GameStateBase
 }
-component TestSuiteGameStateBaseMigratableData {
+component TestSuiteGameStateBaseHandoverData {
 	id = 100030;
 }
 

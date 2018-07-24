@@ -27,7 +27,7 @@ component TestBoolReplicationMultiClientRepData {
 	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
 	bool field_testbool0 = 17; // COND_None // ::TestBoolReplication
 }
-component TestBoolReplicationMigratableData {
+component TestBoolReplicationHandoverData {
 	id = 100066;
 }
 import "improbable/unreal/generated/UnrealTestBoolReplicationTypes.schema";

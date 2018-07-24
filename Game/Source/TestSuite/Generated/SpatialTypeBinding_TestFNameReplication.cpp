@@ -22,16 +22,16 @@
 
 #include "TestFNameReplicationSingleClientRepDataAddComponentOp.h"
 #include "TestFNameReplicationMultiClientRepDataAddComponentOp.h"
-#include "TestFNameReplicationMigratableDataAddComponentOp.h"
+#include "TestFNameReplicationHandoverDataAddComponentOp.h"
 
 const FRepHandlePropertyMap& USpatialTypeBinding_TestFNameReplication::GetRepHandlePropertyMap() const
 {
 	return RepHandleToPropertyMap;
 }
 
-const FMigratableHandlePropertyMap& USpatialTypeBinding_TestFNameReplication::GetMigratableHandlePropertyMap() const
+const FHandoverHandlePropertyMap& USpatialTypeBinding_TestFNameReplication::GetHandoverHandlePropertyMap() const
 {
-	return MigratableHandleToPropertyMap;
+	return HandoverHandleToPropertyMap;
 }
 
 UClass* USpatialTypeBinding_TestFNameReplication::GetBoundClass() const
@@ -102,17 +102,17 @@ void USpatialTypeBinding_TestFNameReplication::BindToView(bool bIsClient)
 		}));
 		if (!bIsClient)
 		{
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData>& Op)
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData>& Op)
 			{
 				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData::ComponentId))
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData::ComponentId))
 				{
 					return;
 				}
 				USpatialActorChannel* ActorChannel = Interop->GetActorChannelByEntityId(Op.EntityId);
 				check(ActorChannel);
-				ReceiveUpdate_Migratable(ActorChannel, Op.Update);
+				ReceiveUpdate_Handover(ActorChannel, Op.Update);
 			}));
 		}
 	}
@@ -154,14 +154,14 @@ worker::Entity USpatialTypeBinding_TestFNameReplication::CreateActorEntity(const
 	improbable::unreal::generated::testfnamereplication::TestFNameReplicationMultiClientRepData::Data MultiClientTestFNameReplicationData;
 	improbable::unreal::generated::testfnamereplication::TestFNameReplicationMultiClientRepData::Update MultiClientTestFNameReplicationUpdate;
 	bool bMultiClientTestFNameReplicationUpdateChanged = false;
-	improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData::Data TestFNameReplicationMigratableData;
-	improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData::Update TestFNameReplicationMigratableDataUpdate;
-	bool bTestFNameReplicationMigratableDataUpdateChanged = false;
+	improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData::Data TestFNameReplicationHandoverData;
+	improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData::Update TestFNameReplicationHandoverDataUpdate;
+	bool bTestFNameReplicationHandoverDataUpdateChanged = false;
 
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientTestFNameReplicationUpdate, bSingleClientTestFNameReplicationUpdateChanged, MultiClientTestFNameReplicationUpdate, bMultiClientTestFNameReplicationUpdateChanged, TestFNameReplicationMigratableDataUpdate, bTestFNameReplicationMigratableDataUpdateChanged);
+	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientTestFNameReplicationUpdate, bSingleClientTestFNameReplicationUpdateChanged, MultiClientTestFNameReplicationUpdate, bMultiClientTestFNameReplicationUpdateChanged, TestFNameReplicationHandoverDataUpdate, bTestFNameReplicationHandoverDataUpdateChanged);
 	SingleClientTestFNameReplicationUpdate.ApplyTo(SingleClientTestFNameReplicationData);
 	MultiClientTestFNameReplicationUpdate.ApplyTo(MultiClientTestFNameReplicationData);
-	TestFNameReplicationMigratableDataUpdate.ApplyTo(TestFNameReplicationMigratableData);
+	TestFNameReplicationHandoverDataUpdate.ApplyTo(TestFNameReplicationHandoverData);
 
 	// Create entity.
 	std::string ClientWorkerIdString = TCHAR_TO_UTF8(*ClientWorkerId);
@@ -210,7 +210,7 @@ worker::Entity USpatialTypeBinding_TestFNameReplication::CreateActorEntity(const
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfnamereplication::TestFNameReplicationSingleClientRepData>(SingleClientTestFNameReplicationData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfnamereplication::TestFNameReplicationMultiClientRepData>(MultiClientTestFNameReplicationData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData>(TestFNameReplicationMigratableData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData>(TestFNameReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfnamereplication::TestFNameReplicationClientRPCs>(improbable::unreal::generated::testfnamereplication::TestFNameReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testfnamereplication::TestFNameReplicationServerRPCs>(improbable::unreal::generated::testfnamereplication::TestFNameReplicationServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfnamereplication::TestFNameReplicationNetMulticastRPCs>(improbable::unreal::generated::testfnamereplication::TestFNameReplicationNetMulticastRPCs::Data{}, WorkersOnly)
@@ -224,9 +224,9 @@ void USpatialTypeBinding_TestFNameReplication::SendComponentUpdates(const FPrope
 	bool bSingleClientUpdateChanged = false;
 	improbable::unreal::generated::testfnamereplication::TestFNameReplicationMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData::Update MigratableDataUpdate;
-	bool bMigratableDataUpdateChanged = false;
-	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, MigratableDataUpdate, bMigratableDataUpdateChanged);
+	improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData::Update HandoverDataUpdate;
+	bool bHandoverDataUpdateChanged = false;
+	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, HandoverDataUpdate, bHandoverDataUpdateChanged);
 
 	// Send SpatialOS updates if anything changed.
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
@@ -238,9 +238,9 @@ void USpatialTypeBinding_TestFNameReplication::SendComponentUpdates(const FPrope
 	{
 		Connection->SendComponentUpdate<improbable::unreal::generated::testfnamereplication::TestFNameReplicationMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
-	if (bMigratableDataUpdateChanged)
+	if (bHandoverDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData>(EntityId.ToSpatialEntityId(), MigratableDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData>(EntityId.ToSpatialEntityId(), HandoverDataUpdate);
 	}
 }
 
@@ -273,11 +273,11 @@ void USpatialTypeBinding_TestFNameReplication::ReceiveAddComponent(USpatialActor
 		ReceiveUpdate_MultiClient(Channel, Update);
 		return;
 	}
-	auto* MigratableDataAddOp = Cast<UTestFNameReplicationMigratableDataAddComponentOp>(AddComponentOp);
-	if (MigratableDataAddOp)
+	auto* HandoverDataAddOp = Cast<UTestFNameReplicationHandoverDataAddComponentOp>(AddComponentOp);
+	if (HandoverDataAddOp)
 	{
-		auto Update = improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData::Update::FromInitialData(*MigratableDataAddOp->Data.data());
-		ReceiveUpdate_Migratable(Channel, Update);
+		auto Update = improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
+		ReceiveUpdate_Handover(Channel, Update);
 		return;
 	}
 }
@@ -291,7 +291,7 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_T
 		{
 			Interest.emplace(improbable::unreal::generated::testfnamereplication::TestFNameReplicationSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
@@ -303,11 +303,11 @@ void USpatialTypeBinding_TestFNameReplication::BuildSpatialComponentUpdate(
 	bool& bSingleClientUpdateChanged,
 	improbable::unreal::generated::testfnamereplication::TestFNameReplicationMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData::Update& MigratableDataUpdate,
-	bool& bMigratableDataUpdateChanged) const
+	improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData::Update& HandoverDataUpdate,
+	bool& bHandoverDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
-	const FMigratableHandlePropertyMap& MigPropertyMap = GetMigratableHandlePropertyMap();
+	const FHandoverHandlePropertyMap& HandoverPropertyMap = GetHandoverHandlePropertyMap();
 	if (Changes.RepChanged.Num() > 0)
 	{
 		// Populate the replicated data component updates from the replicated property changelist.
@@ -345,19 +345,19 @@ void USpatialTypeBinding_TestFNameReplication::BuildSpatialComponentUpdate(
 		}
 	}
 
-	// Populate the migrated data component update from the migrated property changelist.
-	for (uint16 ChangedHandle : Changes.MigChanged)
+	// Populate the handover data component update from the handover property changelist.
+	for (uint16 ChangedHandle : Changes.HandoverChanged)
 	{
-		const FMigratableHandleData& PropertyMapData = MigPropertyMap[ChangedHandle];
+		const FHandoverHandleData& PropertyMapData = HandoverPropertyMap[ChangedHandle];
 		const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData);
-		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending migratable property update. actor %s (%lld), property %s (handle %d)"),
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending handover property update. actor %s (%lld), property %s (handle %d)"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
 			*Channel->Actor->GetName(),
 			Channel->GetEntityId().ToSpatialEntityId(),
 			*PropertyMapData.Property->GetName(),
 			ChangedHandle);
-		ServerSendUpdate_Migratable(Data, ChangedHandle, PropertyMapData.Property, Channel, MigratableDataUpdate);
-		bMigratableDataUpdateChanged = true;
+		ServerSendUpdate_Handover(Data, ChangedHandle, PropertyMapData.Property, Channel, HandoverDataUpdate);
+		bHandoverDataUpdateChanged = true;
 	}
 }
 
@@ -654,7 +654,7 @@ void USpatialTypeBinding_TestFNameReplication::ServerSendUpdate_MultiClient(cons
 	}
 }
 
-void USpatialTypeBinding_TestFNameReplication::ServerSendUpdate_Migratable(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData::Update& OutUpdate) const
+void USpatialTypeBinding_TestFNameReplication::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData::Update& OutUpdate) const
 {
 }
 
@@ -1235,7 +1235,7 @@ void USpatialTypeBinding_TestFNameReplication::ReceiveUpdate_MultiClient(USpatia
 	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_TestFNameReplication::ReceiveUpdate_Migratable(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testfnamereplication::TestFNameReplicationMigratableData::Update& Update) const
+void USpatialTypeBinding_TestFNameReplication::ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData::Update& Update) const
 {
 }
 

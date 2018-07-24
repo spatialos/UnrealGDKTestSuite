@@ -26,7 +26,7 @@ component TestActorMultiClientRepData {
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
 	string field_actorname0 = 16; // COND_None // ::TestActor
 }
-component TestActorMigratableData {
+component TestActorHandoverData {
 	id = 100126;
 }
 

@@ -40,7 +40,7 @@ component TestCArrayReplicationMultiClientRepData {
 	uint32 field_uenumcarray0 = 29; // COND_None // ::TestCArrayReplication
 	uint32 field_uenumcarray1 = 30; // COND_None // ::TestCArrayReplication
 }
-component TestCArrayReplicationMigratableData {
+component TestCArrayReplicationHandoverData {
 	id = 100084;
 }
 import "improbable/unreal/generated/UnrealTestCArrayReplicationTypes.schema";

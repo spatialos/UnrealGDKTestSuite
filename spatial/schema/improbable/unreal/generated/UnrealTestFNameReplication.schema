@@ -27,7 +27,7 @@ component TestFNameReplicationMultiClientRepData {
 	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
 	string field_testfname0 = 17; // COND_None // ::TestFNameReplication
 }
-component TestFNameReplicationMigratableData {
+component TestFNameReplicationHandoverData {
 	id = 100120;
 }
 import "improbable/unreal/generated/UnrealTestFNameReplicationTypes.schema";

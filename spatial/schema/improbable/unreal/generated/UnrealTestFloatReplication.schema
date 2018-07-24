@@ -28,7 +28,7 @@ component TestFloatReplicationMultiClientRepData {
 	float field_testfloat0 = 17; // COND_None // ::TestFloatReplication
 	double field_testdouble0 = 18; // COND_None // ::TestFloatReplication
 }
-component TestFloatReplicationMigratableData {
+component TestFloatReplicationHandoverData {
 	id = 100060;
 }
 import "improbable/unreal/generated/UnrealTestFloatReplicationTypes.schema";

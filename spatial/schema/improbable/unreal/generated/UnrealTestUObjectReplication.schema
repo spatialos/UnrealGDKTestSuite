@@ -29,7 +29,7 @@ component TestUObjectReplicationMultiClientRepData {
 	UnrealObjectRef field_stablynameduobject0 = 18; // COND_None // ::TestUObjectReplication
 	UnrealObjectRef field_constobj0 = 19; // COND_None // ::TestUObjectReplication
 }
-component TestUObjectReplicationMigratableData {
+component TestUObjectReplicationHandoverData {
 	id = 100102;
 }
 import "improbable/unreal/generated/UnrealTestUObjectReplicationTypes.schema";
