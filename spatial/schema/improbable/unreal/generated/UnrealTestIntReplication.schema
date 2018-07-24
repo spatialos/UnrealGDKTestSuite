@@ -34,7 +34,7 @@ component TestIntReplicationMultiClientRepData {
 	uint32 field_test32uint0 = 23; // COND_None // ::TestIntReplication
 	uint64 field_test64uint0 = 24; // COND_None // ::TestIntReplication
 }
-component TestIntReplicationMigratableData {
+component TestIntReplicationHandoverData {
 	id = 100048;
 }
 import "improbable/unreal/generated/UnrealTestIntReplicationTypes.schema";

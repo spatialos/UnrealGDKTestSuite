@@ -37,7 +37,7 @@ component TestUStructReplicationMultiClientRepData {
 	uint32 field_ustructwithunrealstyleenum0_test32enum0 = 26; // COND_None // UnrealStyleEnumTestStruct::UStructWithUnrealStyleEnum::TestUStructReplication
 	uint32 field_ustructwithcppstyleenum0_uenum0 = 27; // COND_None // CStyleEnumTestStruct::UStructWithCppStyleEnum::TestUStructReplication
 }
-component TestUStructReplicationMigratableData {
+component TestUStructReplicationHandoverData {
 	id = 100102;
 }
 import "improbable/unreal/generated/UnrealTestUStructReplicationTypes.schema";
