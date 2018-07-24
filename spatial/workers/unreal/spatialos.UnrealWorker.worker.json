@@ -32,7 +32,12 @@
     "streaming_query": [
       {
         "global_component_streaming_query": {
-          "component_name": [ "improbable.unreal.GlobalStateManager", "improbable.unreal.generated.testsuitegamestatebase.TestSuiteGameStateBaseMultiClientRepData"]
+          "component_name": "improbable.unreal.GlobalStateManager"
+        }
+      },
+      {
+        "global_component_streaming_query": {
+          "component_name": "improbable.unreal.generated.testsuitegamestatebase.TestSuiteGameStateBaseMultiClientRepData"
         }
       }
     ],
