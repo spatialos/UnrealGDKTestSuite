@@ -27,7 +27,7 @@ component TestFStringReplicationMultiClientRepData {
 	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
 	string field_testfstring0 = 17; // COND_None // ::TestFStringReplication
 }
-component TestFStringReplicationMigratableData {
+component TestFStringReplicationHandoverData {
 	id = 100072;
 }
 import "improbable/unreal/generated/UnrealTestFStringReplicationTypes.schema";

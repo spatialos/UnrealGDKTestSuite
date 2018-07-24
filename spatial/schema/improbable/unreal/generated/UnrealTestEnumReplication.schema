@@ -31,7 +31,7 @@ component TestEnumReplicationMultiClientRepData {
 	int64 field_test64enum0 = 20; // COND_None // ::TestEnumReplication
 	uint32 field_testuenum0 = 21; // COND_None // ::TestEnumReplication
 }
-component TestEnumReplicationMigratableData {
+component TestEnumReplicationHandoverData {
 	id = 100090;
 }
 import "improbable/unreal/generated/UnrealTestEnumReplicationTypes.schema";

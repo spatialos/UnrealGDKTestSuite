@@ -26,7 +26,7 @@ component STestUnderscoreClassNameMultiClientRepData {
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
 	int32 field_foobarcar0 = 16; // COND_None // ::S_TestUnderscoreClassName
 }
-component STestUnderscoreClassNameMigratableData {
+component STestUnderscoreClassNameHandoverData {
 	id = 100030;
 }
 import "improbable/unreal/generated/UnrealSTestUnderscoreClassNameTypes.schema";

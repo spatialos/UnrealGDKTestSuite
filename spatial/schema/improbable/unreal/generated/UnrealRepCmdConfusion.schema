@@ -25,7 +25,7 @@ component RepCmdConfusionMultiClientRepData {
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
 }
-component RepCmdConfusionMigratableData {
+component RepCmdConfusionHandoverData {
 	id = 100036;
 }
 
