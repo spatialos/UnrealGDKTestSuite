@@ -1,17 +1,19 @@
 @echo off
 
+set /p PROJECT_PATH=<"%~dp0project-path"
+
 rem When flexible project structure is implemented we can gather this information from the project structure descriptor file.
 set GENERATED_SCHEMA="%~dp0spatial\schema\improbable\unreal\generated"
-set GENERATED_TYPE_BINDINGS="%~dp0Game\Source\TestSuite\Generated"
-set GENERATED_WORKER_FILES="%~dp0Game\Source\SpatialGDK\Generated"
+set GENERATED_TYPE_BINDINGS="%~dp0%PROJECT_PATH%\Source\TestSuite\Generated"
+set GENERATED_WORKER_FILES="%~dp0%PROJECT_PATH%\Source\SpatialGDK\Generated"
 
 rem If '-a' argument is specified, clean all without prompt
 if /I "%1" == "-a" (
     call :CleanPath %GENERATED_SCHEMA%
     call :CleanPath %GENERATED_TYPE_BINDINGS%
     call :CleanPath %GENERATED_WORKER_FILES%
-    echo Running Game/Scripts/Codegen.bat
-    call "%~dp0Game/Scripts/Codegen.bat"
+    echo Running %PROJECT_PATH%/Scripts/Codegen.bat
+    call "%~dp0%PROJECT_PATH%/Scripts/Codegen.bat"
 ) else (
     goto Main
 )
@@ -58,6 +60,6 @@ exit /b 0
 :WorkerCodegen
 set /p WORKER_CODEGEN=Run Codegen.bat?[Y/N]:
 if /I "%WORKER_CODEGEN%" == "Y" (
-    call "%~dp0Game/Scripts/Codegen.bat"
+    call "%~dp0%PROJECT_PATH%/Scripts/Codegen.bat"
 )
 exit /b 0
