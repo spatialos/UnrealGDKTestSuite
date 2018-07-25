@@ -39,7 +39,7 @@ if %REPO_PREPARED% == false (
 	exit /b 1
 )
 
-set /p PROJECT_PATH=<"%~dp0project.path"
+call "%~dp0ProjectPaths.bat"
 
 rem Cleanup old symlinks
 rd "%~dp0%PROJECT_PATH%\Plugins\SpatialGDK" 2>nul
