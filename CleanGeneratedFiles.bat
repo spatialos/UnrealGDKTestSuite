@@ -1,6 +1,6 @@
 @echo off
 
-set /p PROJECT_PATH=<"%~dp0project-path"
+set /p PROJECT_PATH=<"%~dp0project.path"
 
 rem When flexible project structure is implemented we can gather this information from the project structure descriptor file.
 set GENERATED_SCHEMA="%~dp0spatial\schema\improbable\unreal\generated"

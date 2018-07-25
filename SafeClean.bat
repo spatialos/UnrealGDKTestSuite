@@ -1,6 +1,6 @@
 @echo off
 
-set /p PROJECT_PATH=<"%~dp0project-path"
+set /p PROJECT_PATH=<"%~dp0project.path"
 
 set SPATIALGDK_PLUGINSPATH="%~dp0%PROJECT_PATH%\Plugins\SpatialGDK"
 set SPATIALGDK_MODULEPATH="%~dp0%PROJECT_PATH%\Source\SpatialGDK"
