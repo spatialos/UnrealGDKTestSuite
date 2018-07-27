@@ -17,6 +17,7 @@
 #include "Tests/TestFNameReplication.h"
 #include "Tests/TestUStructReplication.h"
 #include "Tests/TestUObjectReplication.h"
+#include "Tests/TestMulticastRPC.h"
 
 DEFINE_LOG_CATEGORY(LogSpatialGDKTests);
 
@@ -27,6 +28,7 @@ AGDKTestRunner::AGDKTestRunner()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
+	bAlwaysRelevant = true;
 }
 
 // Called every frame
@@ -149,6 +151,7 @@ void AGDKTestRunner::Server_SetupTestCases()
 	AddTestCase<ATestFNameReplication>();
 	AddTestCase<ATestUObjectReplication>();
 	AddTestCase<ATestUStructReplication>();
+	AddTestCase<ATestMulticastRPC>();
 }
 
 void AGDKTestRunner::Server_TearDownTestCases()

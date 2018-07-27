@@ -1,7 +1,7 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
 
-#include "SpatialTypeBinding_TestActor.h"
+#include "SpatialTypeBinding_TestMulticastRPC.h"
 
 #include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
@@ -18,33 +18,35 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
-#include "Tests/TestTArrayReplication.h"
+#include "Tests/TestMulticastRPC.h"
 
-#include "TestActorSingleClientRepDataAddComponentOp.h"
-#include "TestActorMultiClientRepDataAddComponentOp.h"
-#include "TestActorHandoverDataAddComponentOp.h"
+#include "TestMulticastRPCSingleClientRepDataAddComponentOp.h"
+#include "TestMulticastRPCMultiClientRepDataAddComponentOp.h"
+#include "TestMulticastRPCHandoverDataAddComponentOp.h"
 
-const FRepHandlePropertyMap& USpatialTypeBinding_TestActor::GetRepHandlePropertyMap() const
+const FRepHandlePropertyMap& USpatialTypeBinding_TestMulticastRPC::GetRepHandlePropertyMap() const
 {
 	return RepHandleToPropertyMap;
 }
 
-const FHandoverHandlePropertyMap& USpatialTypeBinding_TestActor::GetHandoverHandlePropertyMap() const
+const FHandoverHandlePropertyMap& USpatialTypeBinding_TestMulticastRPC::GetHandoverHandlePropertyMap() const
 {
 	return HandoverHandleToPropertyMap;
 }
 
-UClass* USpatialTypeBinding_TestActor::GetBoundClass() const
+UClass* USpatialTypeBinding_TestMulticastRPC::GetBoundClass() const
 {
-	return ATestActor::StaticClass();
+	return ATestMulticastRPC::StaticClass();
 }
 
-void USpatialTypeBinding_TestActor::Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap)
+void USpatialTypeBinding_TestMulticastRPC::Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap)
 {
 	Super::Init(InInterop, InPackageMap);
 
+	RPCToSenderMap.Emplace("Server_ReportMulticastResult", &USpatialTypeBinding_TestMulticastRPC::Server_ReportMulticastResult_SendRPC);
+	RPCToSenderMap.Emplace("MulticastRPC", &USpatialTypeBinding_TestMulticastRPC::MulticastRPC_SendRPC);
 
-	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("TestActor"));
+	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("TestMulticastRPC"));
 
 	// Populate RepHandleToPropertyMap.
 	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, {0}, COND_None, REPNOTIFY_OnChanged));
@@ -62,23 +64,22 @@ void USpatialTypeBinding_TestActor::Init(USpatialInterop* InInterop, USpatialPac
 	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"ActorName"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
 	bIsSingleton = false;
 }
 
-void USpatialTypeBinding_TestActor::BindToView(bool bIsClient)
+void USpatialTypeBinding_TestMulticastRPC::BindToView(bool bIsClient)
 {
 	TSharedPtr<worker::View> View = Interop->GetSpatialOS()->GetView().Pin();
 	ViewCallbacks.Init(View);
 
 	if (Interop->GetNetDriver()->GetNetMode() == NM_Client)
 	{
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testactor::TestActorSingleClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::testactor::TestActorSingleClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testactor::TestActorSingleClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -86,11 +87,11 @@ void USpatialTypeBinding_TestActor::BindToView(bool bIsClient)
 			check(ActorChannel);
 			ReceiveUpdate_SingleClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testactor::TestActorMultiClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::testactor::TestActorMultiClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCMultiClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCMultiClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testactor::TestActorMultiClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testmulticastrpc::TestMulticastRPCMultiClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -100,11 +101,11 @@ void USpatialTypeBinding_TestActor::BindToView(bool bIsClient)
 		}));
 		if (!bIsClient)
 		{
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testactor::TestActorHandoverData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::testactor::TestActorHandoverData>& Op)
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData>& Op)
 			{
 				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testactor::TestActorHandoverData::ComponentId))
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData::ComponentId))
 				{
 					return;
 				}
@@ -114,24 +115,28 @@ void USpatialTypeBinding_TestActor::BindToView(bool bIsClient)
 			}));
 		}
 	}
-	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testactor::TestActorNetMulticastRPCs>([this](
-		const worker::ComponentUpdateOp<improbable::unreal::generated::testactor::TestActorNetMulticastRPCs>& Op)
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCNetMulticastRPCs>& Op)
 	{
 		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testactor::TestActorNetMulticastRPCs::ComponentId))
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testmulticastrpc::TestMulticastRPCNetMulticastRPCs::ComponentId))
 		{
 			return;
 		}
 		ReceiveUpdate_NetMulticastRPCs(Op.EntityId, Op.Update);
 	}));
+
+	using ServerRPCCommandTypes = improbable::unreal::generated::testmulticastrpc::TestMulticastRPCServerRPCs::Commands;
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverreportmulticastresult>(std::bind(&USpatialTypeBinding_TestMulticastRPC::Server_ReportMulticastResult_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverreportmulticastresult>(std::bind(&USpatialTypeBinding_TestMulticastRPC::Server_ReportMulticastResult_OnCommandResponse, this, std::placeholders::_1)));
 }
 
-void USpatialTypeBinding_TestActor::UnbindFromView()
+void USpatialTypeBinding_TestMulticastRPC::UnbindFromView()
 {
 	ViewCallbacks.Reset();
 }
 
-worker::Entity USpatialTypeBinding_TestActor::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
+worker::Entity USpatialTypeBinding_TestMulticastRPC::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
 {
 	// Validate replication list.
 	const uint16 RepHandlePropertyMapCount = GetRepHandlePropertyMap().Num();
@@ -142,20 +147,20 @@ worker::Entity USpatialTypeBinding_TestActor::CreateActorEntity(const FString& C
 
 	// Setup initial data.
 
-	improbable::unreal::generated::testactor::TestActorSingleClientRepData::Data SingleClientTestActorData;
-	improbable::unreal::generated::testactor::TestActorSingleClientRepData::Update SingleClientTestActorUpdate;
-	bool bSingleClientTestActorUpdateChanged = false;
-	improbable::unreal::generated::testactor::TestActorMultiClientRepData::Data MultiClientTestActorData;
-	improbable::unreal::generated::testactor::TestActorMultiClientRepData::Update MultiClientTestActorUpdate;
-	bool bMultiClientTestActorUpdateChanged = false;
-	improbable::unreal::generated::testactor::TestActorHandoverData::Data TestActorHandoverData;
-	improbable::unreal::generated::testactor::TestActorHandoverData::Update TestActorHandoverDataUpdate;
-	bool bTestActorHandoverDataUpdateChanged = false;
+	improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData::Data SingleClientTestMulticastRPCData;
+	improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData::Update SingleClientTestMulticastRPCUpdate;
+	bool bSingleClientTestMulticastRPCUpdateChanged = false;
+	improbable::unreal::generated::testmulticastrpc::TestMulticastRPCMultiClientRepData::Data MultiClientTestMulticastRPCData;
+	improbable::unreal::generated::testmulticastrpc::TestMulticastRPCMultiClientRepData::Update MultiClientTestMulticastRPCUpdate;
+	bool bMultiClientTestMulticastRPCUpdateChanged = false;
+	improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData::Data TestMulticastRPCHandoverData;
+	improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData::Update TestMulticastRPCHandoverDataUpdate;
+	bool bTestMulticastRPCHandoverDataUpdateChanged = false;
 
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientTestActorUpdate, bSingleClientTestActorUpdateChanged, MultiClientTestActorUpdate, bMultiClientTestActorUpdateChanged, TestActorHandoverDataUpdate, bTestActorHandoverDataUpdateChanged);
-	SingleClientTestActorUpdate.ApplyTo(SingleClientTestActorData);
-	MultiClientTestActorUpdate.ApplyTo(MultiClientTestActorData);
-	TestActorHandoverDataUpdate.ApplyTo(TestActorHandoverData);
+	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientTestMulticastRPCUpdate, bSingleClientTestMulticastRPCUpdateChanged, MultiClientTestMulticastRPCUpdate, bMultiClientTestMulticastRPCUpdateChanged, TestMulticastRPCHandoverDataUpdate, bTestMulticastRPCHandoverDataUpdateChanged);
+	SingleClientTestMulticastRPCUpdate.ApplyTo(SingleClientTestMulticastRPCData);
+	MultiClientTestMulticastRPCUpdate.ApplyTo(MultiClientTestMulticastRPCData);
+	TestMulticastRPCHandoverDataUpdate.ApplyTo(TestMulticastRPCHandoverData);
 
 	// Create entity.
 	std::string ClientWorkerIdString = TCHAR_TO_UTF8(*ClientWorkerId);
@@ -202,23 +207,23 @@ worker::Entity USpatialTypeBinding_TestActor::CreateActorEntity(const FString& C
 		.SetPersistence(true)
 		.SetReadAcl(AnyUnrealWorkerOrClient)
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testactor::TestActorSingleClientRepData>(SingleClientTestActorData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testactor::TestActorMultiClientRepData>(MultiClientTestActorData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testactor::TestActorHandoverData>(TestActorHandoverData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testactor::TestActorClientRPCs>(improbable::unreal::generated::testactor::TestActorClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::generated::testactor::TestActorServerRPCs>(improbable::unreal::generated::testactor::TestActorServerRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testactor::TestActorNetMulticastRPCs>(improbable::unreal::generated::testactor::TestActorNetMulticastRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData>(SingleClientTestMulticastRPCData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCMultiClientRepData>(MultiClientTestMulticastRPCData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData>(TestMulticastRPCHandoverData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCClientRPCs>(improbable::unreal::generated::testmulticastrpc::TestMulticastRPCClientRPCs::Data{}, OwningClientOnly)
+		.AddComponent<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCServerRPCs>(improbable::unreal::generated::testmulticastrpc::TestMulticastRPCServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCNetMulticastRPCs>(improbable::unreal::generated::testmulticastrpc::TestMulticastRPCNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
-void USpatialTypeBinding_TestActor::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
+void USpatialTypeBinding_TestMulticastRPC::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
 {
 	// Build SpatialOS updates.
-	improbable::unreal::generated::testactor::TestActorSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::testactor::TestActorMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::testmulticastrpc::TestMulticastRPCMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::testactor::TestActorHandoverData::Update HandoverDataUpdate;
+	improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData::Update HandoverDataUpdate;
 	bool bHandoverDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, HandoverDataUpdate, bHandoverDataUpdateChanged);
 
@@ -226,19 +231,19 @@ void USpatialTypeBinding_TestActor::SendComponentUpdates(const FPropertyChangeSt
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	if (bSingleClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::testactor::TestActorSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
 	}
 	if (bMultiClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::testactor::TestActorMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
 	if (bHandoverDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::testactor::TestActorHandoverData>(EntityId.ToSpatialEntityId(), HandoverDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData>(EntityId.ToSpatialEntityId(), HandoverDataUpdate);
 	}
 }
 
-void USpatialTypeBinding_TestActor::SendRPCCommand(UObject* TargetObject, const UFunction* const Function, void* Parameters)
+void USpatialTypeBinding_TestMulticastRPC::SendRPCCommand(UObject* TargetObject, const UFunction* const Function, void* Parameters)
 {
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	auto SenderFuncIterator = RPCToSenderMap.Find(Function->GetFName());
@@ -251,53 +256,53 @@ void USpatialTypeBinding_TestActor::SendRPCCommand(UObject* TargetObject, const 
 	(this->*(*SenderFuncIterator))(Connection.Get(), Parameters, TargetObject);
 }
 
-void USpatialTypeBinding_TestActor::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
+void USpatialTypeBinding_TestMulticastRPC::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
 {
-	auto* SingleClientAddOp = Cast<UTestActorSingleClientRepDataAddComponentOp>(AddComponentOp);
+	auto* SingleClientAddOp = Cast<UTestMulticastRPCSingleClientRepDataAddComponentOp>(AddComponentOp);
 	if (SingleClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::testactor::TestActorSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
 		ReceiveUpdate_SingleClient(Channel, Update);
 		return;
 	}
-	auto* MultiClientAddOp = Cast<UTestActorMultiClientRepDataAddComponentOp>(AddComponentOp);
+	auto* MultiClientAddOp = Cast<UTestMulticastRPCMultiClientRepDataAddComponentOp>(AddComponentOp);
 	if (MultiClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::testactor::TestActorMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::testmulticastrpc::TestMulticastRPCMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
 		ReceiveUpdate_MultiClient(Channel, Update);
 		return;
 	}
-	auto* HandoverDataAddOp = Cast<UTestActorHandoverDataAddComponentOp>(AddComponentOp);
+	auto* HandoverDataAddOp = Cast<UTestMulticastRPCHandoverDataAddComponentOp>(AddComponentOp);
 	if (HandoverDataAddOp)
 	{
-		auto Update = improbable::unreal::generated::testactor::TestActorHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
+		auto Update = improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
 		ReceiveUpdate_Handover(Channel, Update);
 		return;
 	}
 }
 
-worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TestActor::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
+worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TestMulticastRPC::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
 {
 	worker::Map<worker::ComponentId, worker::InterestOverride> Interest;
 	if (bIsClient)
 	{
 		if (!bAutonomousProxy)
 		{
-			Interest.emplace(improbable::unreal::generated::testactor::TestActorSingleClientRepData::ComponentId, worker::InterestOverride{false});
+			Interest.emplace(improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::generated::testactor::TestActorHandoverData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
 
-void USpatialTypeBinding_TestActor::BuildSpatialComponentUpdate(
+void USpatialTypeBinding_TestMulticastRPC::BuildSpatialComponentUpdate(
 	const FPropertyChangeState& Changes,
 	USpatialActorChannel* Channel,
-	improbable::unreal::generated::testactor::TestActorSingleClientRepData::Update& SingleClientUpdate,
+	improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData::Update& SingleClientUpdate,
 	bool& bSingleClientUpdateChanged,
-	improbable::unreal::generated::testactor::TestActorMultiClientRepData::Update& MultiClientUpdate,
+	improbable::unreal::generated::testmulticastrpc::TestMulticastRPCMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::generated::testactor::TestActorHandoverData::Update& HandoverDataUpdate,
+	improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData::Update& HandoverDataUpdate,
 	bool& bHandoverDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
@@ -355,11 +360,11 @@ void USpatialTypeBinding_TestActor::BuildSpatialComponentUpdate(
 	}
 }
 
-void USpatialTypeBinding_TestActor::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testactor::TestActorSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestMulticastRPC::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TestActor::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testactor::TestActorMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestMulticastRPC::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testmulticastrpc::TestMulticastRPCMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -628,24 +633,17 @@ void USpatialTypeBinding_TestActor::ServerSendUpdate_MultiClient(const uint8* RE
 			}
 			break;
 		}
-		case 16: // field_actorname0
-		{
-			FString Value = *(reinterpret_cast<FString const*>(Data));
-
-			OutUpdate.set_field_actorname0(TCHAR_TO_UTF8(*Value));
-			break;
-		}
 	default:
 		checkf(false, TEXT("Unknown replication handle %d encountered when creating a SpatialOS update."));
 		break;
 	}
 }
 
-void USpatialTypeBinding_TestActor::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testactor::TestActorHandoverData::Update& OutUpdate) const
+void USpatialTypeBinding_TestMulticastRPC::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TestActor::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testactor::TestActorSingleClientRepData::Update& Update) const
+void USpatialTypeBinding_TestMulticastRPC::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testmulticastrpc::TestMulticastRPCSingleClientRepData::Update& Update) const
 {
 	AActor* TargetObject = ActorChannel->Actor;
 	ActorChannel->PreReceiveSpatialUpdate(TargetObject);
@@ -653,14 +651,14 @@ void USpatialTypeBinding_TestActor::ReceiveUpdate_SingleClient(USpatialActorChan
 	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies);
 }
 
-void USpatialTypeBinding_TestActor::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testactor::TestActorMultiClientRepData::Update& Update) const
+void USpatialTypeBinding_TestMulticastRPC::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testmulticastrpc::TestMulticastRPCMultiClientRepData::Update& Update) const
 {
 	AActor* TargetObject = ActorChannel->Actor;
 	ActorChannel->PreReceiveSpatialUpdate(TargetObject);
 	TSet<UProperty*> RepNotifies;
 
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
-	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::testactor::TestActorClientRPCs::ComponentId);
+	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::testmulticastrpc::TestMulticastRPCClientRPCs::ComponentId);
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
@@ -1175,35 +1173,197 @@ void USpatialTypeBinding_TestActor::ReceiveUpdate_MultiClient(USpatialActorChann
 			}
 		}
 	}
-	if (!Update.field_actorname0().empty())
-	{
-		// field_actorname0
-		uint16 Handle = 16;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
-			FString Value = *(reinterpret_cast<FString const*>(PropertyData));
-
-			Value = FString(UTF8_TO_TCHAR((*Update.field_actorname0().data()).c_str()));
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
 	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_TestActor::ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testactor::TestActorHandoverData::Update& Update) const
+void USpatialTypeBinding_TestMulticastRPC::ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData::Update& Update) const
 {
 }
 
-void USpatialTypeBinding_TestActor::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::testactor::TestActorNetMulticastRPCs::Update& Update)
+void USpatialTypeBinding_TestMulticastRPC::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::testmulticastrpc::TestMulticastRPCNetMulticastRPCs::Update& Update)
 {
+	for (auto& event : Update.multicastrpc())
+	{
+		MulticastRPC_OnRPCPayload(EntityId, event);
+	}
+
+}
+void USpatialTypeBinding_TestMulticastRPC::Server_ReportMulticastResult_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+{
+	// This struct is declared in TestMulticastRPC.generated.h (in a macro that is then put in TestMulticastRPC.h UCLASS macro)
+	TestMulticastRPC_eventServer_ReportMulticastResult_Parms StructuredParams = *static_cast<TestMulticastRPC_eventServer_ReportMulticastResult_Parms*>(Parameters);
+
+	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
+	{
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+		{
+			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_ReportMulticastResult queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
+		}
+
+		// Build RPC Payload.
+		improbable::unreal::generated::testmulticastrpc::ServerReportMulticastResultRequest RPCPayload;
+		{
+			RPCPayload.set_field_newvalue0(int32_t(StructuredParams.NewValue));
+		}
+
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending RPC: Server_ReportMulticastResult, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCServerRPCs::Commands::Serverreportmulticastresult>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_TestMulticastRPC::MulticastRPC_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+{
+	// This struct is declared in TestMulticastRPC.generated.h (in a macro that is then put in TestMulticastRPC.h UCLASS macro)
+	TestMulticastRPC_eventMulticastRPC_Parms StructuredParams = *static_cast<TestMulticastRPC_eventMulticastRPC_Parms*>(Parameters);
+
+	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
+	{
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+		{
+			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC MulticastRPC queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
+		}
+
+		// Build RPC Payload.
+		improbable::unreal::generated::testmulticastrpc::MulticastRPCRequest RPCPayload;
+		{
+			RPCPayload.set_field_startingvalue0(int32_t(StructuredParams.StartingValue));
+		}
+
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending RPC: MulticastRPC, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+			improbable::unreal::generated::testmulticastrpc::TestMulticastRPCNetMulticastRPCs::Update Update;
+			Update.add_multicastrpc(RPCPayload);
+			checkf(Update.multicastrpc().size() == 1, TEXT("MulticastRPC_SendCommand: More than one event being sent"));
+			Connection->SendComponentUpdate<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCNetMulticastRPCs>(TargetObjectRef.entity(), Update);
+			return {};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_TestMulticastRPC::Server_ReportMulticastResult_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCServerRPCs::Commands::Serverreportmulticastresult>& Op)
+{
+	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), {}, {}};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			// A legal static object reference should never be unresolved.
+			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Server_ReportMulticastResult_OnRPCPayload: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: Server_ReportMulticastResult_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Declare parameters.
+		// This struct is declared in TestMulticastRPC.generated.h (in a macro that is then put in TestMulticastRPC.h UCLASS macro)
+		TestMulticastRPC_eventServer_ReportMulticastResult_Parms Parameters;
+
+		// Extract from request data.
+		{
+			Parameters.NewValue = Op.Request.field_newvalue0();
+		}
+
+		// Call implementation.
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received RPC: Server_ReportMulticastResult, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Server_ReportMulticastResult"))))
+		{
+			TargetObject->ProcessEvent(Function, &Parameters);
+		}
+		else
+		{
+			UE_LOG(LogSpatialGDKInterop, Error, TEXT("%s: Server_ReportMulticastResult_OnRPCPayload: Function not found. Object: %s, Function: Server_ReportMulticastResult."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		// Send command response.
+		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
+		Connection->SendCommandResponse<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCServerRPCs::Commands::Serverreportmulticastresult>(Op.RequestId, {});
+		return {};
+	};
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+}
+void USpatialTypeBinding_TestMulticastRPC::MulticastRPC_OnRPCPayload(const worker::EntityId EntityId, const improbable::unreal::generated::testmulticastrpc::MulticastRPCRequest& EventData)
+{
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset(), {}, {}};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			// A legal static object reference should never be unresolved.
+			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: MulticastRPC_OnRPCPayload: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: MulticastRPC_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Declare parameters.
+		// This struct is declared in TestMulticastRPC.generated.h (in a macro that is then put in TestMulticastRPC.h UCLASS macro)
+		TestMulticastRPC_eventMulticastRPC_Parms Parameters;
+
+		// Extract from request data.
+		{
+			Parameters.StartingValue = EventData.field_startingvalue0();
+		}
+
+		// Call implementation.
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received RPC: MulticastRPC, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("MulticastRPC"))))
+		{
+			TargetObject->ProcessEvent(Function, &Parameters);
+		}
+		else
+		{
+			UE_LOG(LogSpatialGDKInterop, Error, TEXT("%s: MulticastRPC_OnRPCPayload: Function not found. Object: %s, Function: MulticastRPC."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		return {};
+	};
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+}
+
+void USpatialTypeBinding_TestMulticastRPC::Server_ReportMulticastResult_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCServerRPCs::Commands::Serverreportmulticastresult>& Op)
+{
+	Interop->HandleCommandResponse_Internal(TEXT("Server_ReportMulticastResult"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
