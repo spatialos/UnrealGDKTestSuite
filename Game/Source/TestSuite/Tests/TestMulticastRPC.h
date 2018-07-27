@@ -34,7 +34,7 @@ private:
 
 	int32 BroadcastValue;
 
-	int RPCResponseCount;
+	uint32 RPCResponseCount;
 
 	bool bRunning;
 

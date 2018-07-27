@@ -48,7 +48,7 @@ void ATestMulticastRPC::Server_StartTest()
 	RPCResponseCount = 0;
 	BroadcastValue = FMath::RandRange(-50, 50);
 
-	MulticastRPC(BroadcastValue);;
+	MulticastRPC(BroadcastValue);
 }
 
 void ATestMulticastRPC::Server_TearDown()
@@ -72,7 +72,6 @@ void ATestMulticastRPC::MulticastRPC_Implementation(int32 StartingValue)
 	}
 	else
 	{
-
 		check(StartingValue == (BroadcastValue + 1));
 	}
 }
