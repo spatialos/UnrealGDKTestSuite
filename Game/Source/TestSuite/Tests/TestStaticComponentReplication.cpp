@@ -31,11 +31,6 @@ ATestStaticComponentReplication::ATestStaticComponentReplication()
 	TestComponent->SetIsReplicated(true);
 }
 
-void ATestStaticComponentReplication::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-}
-
 bool ATestStaticComponentReplication::Server_ReportReplication_Validate(float RepFloat)
 {
 	return true;

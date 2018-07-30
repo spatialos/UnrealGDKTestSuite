@@ -37,8 +37,6 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReportReplication(float RepFloat);
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 	UFUNCTION()
 	virtual void Server_StartTestImpl() override;
 
