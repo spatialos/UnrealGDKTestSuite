@@ -18,6 +18,7 @@
 #include "Tests/TestUStructReplication.h"
 #include "Tests/TestUObjectReplication.h"
 #include "Tests/TestMulticastRPC.h"
+#include "Tests/TestStaticComponentReplication.h"
 
 DEFINE_LOG_CATEGORY(LogSpatialGDKTests);
 
@@ -152,6 +153,7 @@ void AGDKTestRunner::Server_SetupTestCases()
 	AddTestCase<ATestUObjectReplication>();
 	AddTestCase<ATestUStructReplication>();
 	AddTestCase<ATestMulticastRPC>();
+	AddTestCase<ATestStaticComponentReplication>();
 }
 
 void AGDKTestRunner::Server_TearDownTestCases()

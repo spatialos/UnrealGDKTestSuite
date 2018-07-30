@@ -1,0 +1,28 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Note that this file has been generated automatically
+package improbable.unreal.generated.testcomponent;
+
+import "improbable/unreal/gdk/core_types.schema";
+
+component TestComponentSingleClientRepData {
+	id = 100136;
+}
+component TestComponentMultiClientRepData {
+	id = 100137;
+	bool field_breplicates0 = 1; // COND_None // ::ActorComponent
+	bool field_bisactive0 = 2; // COND_None // ::ActorComponent
+	float field_testproperty0 = 3; // COND_None // ::TestComponent
+}
+component TestComponentHandoverData {
+	id = 100138;
+}
+
+component TestComponentClientRPCs {
+	id = 100139;
+}
+component TestComponentServerRPCs {
+	id = 100140;
+}
+component TestComponentNetMulticastRPCs {
+	id = 100141;
+}
