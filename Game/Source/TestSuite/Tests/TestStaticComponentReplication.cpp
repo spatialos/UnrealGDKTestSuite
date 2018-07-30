@@ -4,13 +4,11 @@
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 
-
 UTestComponent::UTestComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	TestProperty = 42.f;
 }
-
 
 void UTestComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -21,6 +19,7 @@ void UTestComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 void UTestComponent::OnRep_TestProperty()
 {
 	auto Owner = Cast<ATestStaticComponentReplication>(GetOwner());
+	check(Owner);
 	Owner->Server_ReportReplication(TestProperty);
 }
 
@@ -66,5 +65,6 @@ void ATestStaticComponentReplication::ValidateClientReplicationImpl()
 
 void ATestStaticComponentReplication::SendTestResponseRPCImpl()
 {
-
+	// ILB - Send test response on UTestComponent::OnRep_TestProperty instead so we're certain the TestProperty
+	// has been replicated by that point.
 }
