@@ -5,10 +5,10 @@ package improbable.unreal.generated.testmulticastrpc;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestMulticastRPCSingleClientRepData {
-	id = 100124;
+	id = 100130;
 }
 component TestMulticastRPCMultiClientRepData {
-	id = 100125;
+	id = 100131;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -26,18 +26,18 @@ component TestMulticastRPCMultiClientRepData {
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
 }
 component TestMulticastRPCHandoverData {
-	id = 100126;
+	id = 100132;
 }
 import "improbable/unreal/generated/UnrealTestMulticastRPCTypes.schema";
 
 component TestMulticastRPCClientRPCs {
-	id = 100127;
+	id = 100133;
 }
 component TestMulticastRPCServerRPCs {
-	id = 100128;
+	id = 100134;
 	command UnrealRPCCommandResponse serverreportmulticastresult(testmulticastrpc.ServerReportMulticastResultRequest);
 }
 component TestMulticastRPCNetMulticastRPCs {
-	id = 100129;
+	id = 100135;
 	event testmulticastrpc.MulticastRPCRequest multicastrpc;
 }
