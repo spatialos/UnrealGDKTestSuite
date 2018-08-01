@@ -891,7 +891,7 @@ void USpatialTypeBinding_TestStaticComponentReplication::ReceiveUpdate_MultiClie
 					// A legal static object reference should never be unresolved.
 					check(ObjectRef.path().empty());
 					bWriteObjectProperty = false;
-					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, TargetObject, RepData);
 				}
 			}
 
@@ -1053,7 +1053,7 @@ void USpatialTypeBinding_TestStaticComponentReplication::ReceiveUpdate_MultiClie
 					// A legal static object reference should never be unresolved.
 					check(ObjectRef.path().empty());
 					bWriteObjectProperty = false;
-					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, TargetObject, RepData);
 				}
 			}
 
@@ -1109,7 +1109,7 @@ void USpatialTypeBinding_TestStaticComponentReplication::ReceiveUpdate_MultiClie
 					// A legal static object reference should never be unresolved.
 					check(ObjectRef.path().empty());
 					bWriteObjectProperty = false;
-					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, TargetObject, RepData);
 				}
 			}
 
@@ -1194,7 +1194,7 @@ void USpatialTypeBinding_TestStaticComponentReplication::ReceiveUpdate_MultiClie
 					// A legal static object reference should never be unresolved.
 					check(ObjectRef.path().empty());
 					bWriteObjectProperty = false;
-					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, RepData);
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, TargetObject, RepData);
 				}
 			}
 
