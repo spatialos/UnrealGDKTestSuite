@@ -1,7 +1,7 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
 
-#include "SpatialTypeBinding_TypebindingActor_C.h"
+#include "SpatialTypeBinding_NoReferenceBPActor_C.h"
 
 #include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
@@ -19,31 +19,31 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "TypebindingActorCSingleClientRepDataAddComponentOp.h"
-#include "TypebindingActorCMultiClientRepDataAddComponentOp.h"
-#include "TypebindingActorCHandoverDataAddComponentOp.h"
+#include "NoReferenceBPActorCSingleClientRepDataAddComponentOp.h"
+#include "NoReferenceBPActorCMultiClientRepDataAddComponentOp.h"
+#include "NoReferenceBPActorCHandoverDataAddComponentOp.h"
 
-const FRepHandlePropertyMap& USpatialTypeBinding_TypebindingActor_C::GetRepHandlePropertyMap() const
+const FRepHandlePropertyMap& USpatialTypeBinding_NoReferenceBPActor_C::GetRepHandlePropertyMap() const
 {
 	return RepHandleToPropertyMap;
 }
 
-const FHandoverHandlePropertyMap& USpatialTypeBinding_TypebindingActor_C::GetHandoverHandlePropertyMap() const
+const FHandoverHandlePropertyMap& USpatialTypeBinding_NoReferenceBPActor_C::GetHandoverHandlePropertyMap() const
 {
 	return HandoverHandleToPropertyMap;
 }
 
-UClass* USpatialTypeBinding_TypebindingActor_C::GetBoundClass() const
+UClass* USpatialTypeBinding_NoReferenceBPActor_C::GetBoundClass() const
 {
-	return LoadObject<UClass>(nullptr, TEXT("/Game/ThirdPerson/TypebindingActor.TypebindingActor_C"), nullptr, LOAD_None, nullptr);
+	return LoadObject<UClass>(nullptr, TEXT("/Game/ThirdPerson/NoReferenceBPActor.NoReferenceBPActor_C"), nullptr, LOAD_None, nullptr);
 }
 
-void USpatialTypeBinding_TypebindingActor_C::Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap)
+void USpatialTypeBinding_NoReferenceBPActor_C::Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap)
 {
 	Super::Init(InInterop, InPackageMap);
 
 
-	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("TypebindingActor_C"));
+	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("NoReferenceBPActor_C"));
 
 	// Populate RepHandleToPropertyMap.
 	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, {0}, COND_None, REPNOTIFY_OnChanged));
@@ -66,18 +66,18 @@ void USpatialTypeBinding_TypebindingActor_C::Init(USpatialInterop* InInterop, US
 	bIsSingleton = false;
 }
 
-void USpatialTypeBinding_TypebindingActor_C::BindToView(bool bIsClient)
+void USpatialTypeBinding_NoReferenceBPActor_C::BindToView(bool bIsClient)
 {
 	TSharedPtr<worker::View> View = Interop->GetSpatialOS()->GetView().Pin();
 	ViewCallbacks.Init(View);
 
 	if (Interop->GetNetDriver()->GetNetMode() == NM_Client)
 	{
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -85,11 +85,11 @@ void USpatialTypeBinding_TypebindingActor_C::BindToView(bool bIsClient)
 			check(ActorChannel);
 			ReceiveUpdate_SingleClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::typebindingactorc::TypebindingActorCMultiClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::typebindingactorc::TypebindingActorCMultiClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::typebindingactorc::TypebindingActorCMultiClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -99,11 +99,11 @@ void USpatialTypeBinding_TypebindingActor_C::BindToView(bool bIsClient)
 		}));
 		if (!bIsClient)
 		{
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData>& Op)
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData>& Op)
 			{
 				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData::ComponentId))
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData::ComponentId))
 				{
 					return;
 				}
@@ -113,11 +113,11 @@ void USpatialTypeBinding_TypebindingActor_C::BindToView(bool bIsClient)
 			}));
 		}
 	}
-	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::typebindingactorc::TypebindingActorCNetMulticastRPCs>([this](
-		const worker::ComponentUpdateOp<improbable::unreal::generated::typebindingactorc::TypebindingActorCNetMulticastRPCs>& Op)
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCNetMulticastRPCs>& Op)
 	{
 		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::typebindingactorc::TypebindingActorCNetMulticastRPCs::ComponentId))
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCNetMulticastRPCs::ComponentId))
 		{
 			return;
 		}
@@ -125,12 +125,12 @@ void USpatialTypeBinding_TypebindingActor_C::BindToView(bool bIsClient)
 	}));
 }
 
-void USpatialTypeBinding_TypebindingActor_C::UnbindFromView()
+void USpatialTypeBinding_NoReferenceBPActor_C::UnbindFromView()
 {
 	ViewCallbacks.Reset();
 }
 
-worker::Entity USpatialTypeBinding_TypebindingActor_C::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
+worker::Entity USpatialTypeBinding_NoReferenceBPActor_C::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
 {
 	// Validate replication list.
 	const uint16 RepHandlePropertyMapCount = GetRepHandlePropertyMap().Num();
@@ -141,20 +141,20 @@ worker::Entity USpatialTypeBinding_TypebindingActor_C::CreateActorEntity(const F
 
 	// Setup initial data.
 
-	improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData::Data SingleClientTypebindingActor_CData;
-	improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData::Update SingleClientTypebindingActor_CUpdate;
-	bool bSingleClientTypebindingActor_CUpdateChanged = false;
-	improbable::unreal::generated::typebindingactorc::TypebindingActorCMultiClientRepData::Data MultiClientTypebindingActor_CData;
-	improbable::unreal::generated::typebindingactorc::TypebindingActorCMultiClientRepData::Update MultiClientTypebindingActor_CUpdate;
-	bool bMultiClientTypebindingActor_CUpdateChanged = false;
-	improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData::Data TypebindingActor_CHandoverData;
-	improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData::Update TypebindingActor_CHandoverDataUpdate;
-	bool bTypebindingActor_CHandoverDataUpdateChanged = false;
+	improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData::Data SingleClientNoReferenceBPActor_CData;
+	improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData::Update SingleClientNoReferenceBPActor_CUpdate;
+	bool bSingleClientNoReferenceBPActor_CUpdateChanged = false;
+	improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData::Data MultiClientNoReferenceBPActor_CData;
+	improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData::Update MultiClientNoReferenceBPActor_CUpdate;
+	bool bMultiClientNoReferenceBPActor_CUpdateChanged = false;
+	improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData::Data NoReferenceBPActor_CHandoverData;
+	improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData::Update NoReferenceBPActor_CHandoverDataUpdate;
+	bool bNoReferenceBPActor_CHandoverDataUpdateChanged = false;
 
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientTypebindingActor_CUpdate, bSingleClientTypebindingActor_CUpdateChanged, MultiClientTypebindingActor_CUpdate, bMultiClientTypebindingActor_CUpdateChanged, TypebindingActor_CHandoverDataUpdate, bTypebindingActor_CHandoverDataUpdateChanged);
-	SingleClientTypebindingActor_CUpdate.ApplyTo(SingleClientTypebindingActor_CData);
-	MultiClientTypebindingActor_CUpdate.ApplyTo(MultiClientTypebindingActor_CData);
-	TypebindingActor_CHandoverDataUpdate.ApplyTo(TypebindingActor_CHandoverData);
+	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientNoReferenceBPActor_CUpdate, bSingleClientNoReferenceBPActor_CUpdateChanged, MultiClientNoReferenceBPActor_CUpdate, bMultiClientNoReferenceBPActor_CUpdateChanged, NoReferenceBPActor_CHandoverDataUpdate, bNoReferenceBPActor_CHandoverDataUpdateChanged);
+	SingleClientNoReferenceBPActor_CUpdate.ApplyTo(SingleClientNoReferenceBPActor_CData);
+	MultiClientNoReferenceBPActor_CUpdate.ApplyTo(MultiClientNoReferenceBPActor_CData);
+	NoReferenceBPActor_CHandoverDataUpdate.ApplyTo(NoReferenceBPActor_CHandoverData);
 
 	// Create entity.
 	std::string ClientWorkerIdString = TCHAR_TO_UTF8(*ClientWorkerId);
@@ -201,23 +201,23 @@ worker::Entity USpatialTypeBinding_TypebindingActor_C::CreateActorEntity(const F
 		.SetPersistence(true)
 		.SetReadAcl(AnyUnrealWorkerOrClient)
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData>(SingleClientTypebindingActor_CData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::typebindingactorc::TypebindingActorCMultiClientRepData>(MultiClientTypebindingActor_CData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData>(TypebindingActor_CHandoverData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::typebindingactorc::TypebindingActorCClientRPCs>(improbable::unreal::generated::typebindingactorc::TypebindingActorCClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::generated::typebindingactorc::TypebindingActorCServerRPCs>(improbable::unreal::generated::typebindingactorc::TypebindingActorCServerRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::typebindingactorc::TypebindingActorCNetMulticastRPCs>(improbable::unreal::generated::typebindingactorc::TypebindingActorCNetMulticastRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData>(SingleClientNoReferenceBPActor_CData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData>(MultiClientNoReferenceBPActor_CData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData>(NoReferenceBPActor_CHandoverData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCClientRPCs>(improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCClientRPCs::Data{}, OwningClientOnly)
+		.AddComponent<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCServerRPCs>(improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCNetMulticastRPCs>(improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
-void USpatialTypeBinding_TypebindingActor_C::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
+void USpatialTypeBinding_NoReferenceBPActor_C::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
 {
 	// Build SpatialOS updates.
-	improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::typebindingactorc::TypebindingActorCMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData::Update HandoverDataUpdate;
+	improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData::Update HandoverDataUpdate;
 	bool bHandoverDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, HandoverDataUpdate, bHandoverDataUpdateChanged);
 
@@ -225,19 +225,19 @@ void USpatialTypeBinding_TypebindingActor_C::SendComponentUpdates(const FPropert
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	if (bSingleClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
 	}
 	if (bMultiClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::typebindingactorc::TypebindingActorCMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
 	if (bHandoverDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData>(EntityId.ToSpatialEntityId(), HandoverDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData>(EntityId.ToSpatialEntityId(), HandoverDataUpdate);
 	}
 }
 
-void USpatialTypeBinding_TypebindingActor_C::SendRPCCommand(UObject* TargetObject, const UFunction* const Function, void* Parameters)
+void USpatialTypeBinding_NoReferenceBPActor_C::SendRPCCommand(UObject* TargetObject, const UFunction* const Function, void* Parameters)
 {
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	auto SenderFuncIterator = RPCToSenderMap.Find(Function->GetFName());
@@ -250,53 +250,53 @@ void USpatialTypeBinding_TypebindingActor_C::SendRPCCommand(UObject* TargetObjec
 	(this->*(*SenderFuncIterator))(Connection.Get(), Parameters, TargetObject);
 }
 
-void USpatialTypeBinding_TypebindingActor_C::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
+void USpatialTypeBinding_NoReferenceBPActor_C::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
 {
-	auto* SingleClientAddOp = Cast<UTypebindingActorCSingleClientRepDataAddComponentOp>(AddComponentOp);
+	auto* SingleClientAddOp = Cast<UNoReferenceBPActorCSingleClientRepDataAddComponentOp>(AddComponentOp);
 	if (SingleClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
 		ReceiveUpdate_SingleClient(Channel, Update);
 		return;
 	}
-	auto* MultiClientAddOp = Cast<UTypebindingActorCMultiClientRepDataAddComponentOp>(AddComponentOp);
+	auto* MultiClientAddOp = Cast<UNoReferenceBPActorCMultiClientRepDataAddComponentOp>(AddComponentOp);
 	if (MultiClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::typebindingactorc::TypebindingActorCMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
 		ReceiveUpdate_MultiClient(Channel, Update);
 		return;
 	}
-	auto* HandoverDataAddOp = Cast<UTypebindingActorCHandoverDataAddComponentOp>(AddComponentOp);
+	auto* HandoverDataAddOp = Cast<UNoReferenceBPActorCHandoverDataAddComponentOp>(AddComponentOp);
 	if (HandoverDataAddOp)
 	{
-		auto Update = improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
+		auto Update = improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
 		ReceiveUpdate_Handover(Channel, Update);
 		return;
 	}
 }
 
-worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TypebindingActor_C::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
+worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_NoReferenceBPActor_C::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
 {
 	worker::Map<worker::ComponentId, worker::InterestOverride> Interest;
 	if (bIsClient)
 	{
 		if (!bAutonomousProxy)
 		{
-			Interest.emplace(improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData::ComponentId, worker::InterestOverride{false});
+			Interest.emplace(improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
 
-void USpatialTypeBinding_TypebindingActor_C::BuildSpatialComponentUpdate(
+void USpatialTypeBinding_NoReferenceBPActor_C::BuildSpatialComponentUpdate(
 	const FPropertyChangeState& Changes,
 	USpatialActorChannel* Channel,
-	improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData::Update& SingleClientUpdate,
+	improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData::Update& SingleClientUpdate,
 	bool& bSingleClientUpdateChanged,
-	improbable::unreal::generated::typebindingactorc::TypebindingActorCMultiClientRepData::Update& MultiClientUpdate,
+	improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData::Update& HandoverDataUpdate,
+	improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData::Update& HandoverDataUpdate,
 	bool& bHandoverDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
@@ -354,11 +354,11 @@ void USpatialTypeBinding_TypebindingActor_C::BuildSpatialComponentUpdate(
 	}
 }
 
-void USpatialTypeBinding_TypebindingActor_C::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_NoReferenceBPActor_C::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TypebindingActor_C::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::typebindingactorc::TypebindingActorCMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_NoReferenceBPActor_C::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -640,11 +640,11 @@ void USpatialTypeBinding_TypebindingActor_C::ServerSendUpdate_MultiClient(const 
 	}
 }
 
-void USpatialTypeBinding_TypebindingActor_C::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData::Update& OutUpdate) const
+void USpatialTypeBinding_NoReferenceBPActor_C::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TypebindingActor_C::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::typebindingactorc::TypebindingActorCSingleClientRepData::Update& Update) const
+void USpatialTypeBinding_NoReferenceBPActor_C::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData::Update& Update) const
 {
 	AActor* TargetObject = ActorChannel->Actor;
 	ActorChannel->PreReceiveSpatialUpdate(TargetObject);
@@ -652,14 +652,14 @@ void USpatialTypeBinding_TypebindingActor_C::ReceiveUpdate_SingleClient(USpatial
 	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies);
 }
 
-void USpatialTypeBinding_TypebindingActor_C::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::typebindingactorc::TypebindingActorCMultiClientRepData::Update& Update) const
+void USpatialTypeBinding_NoReferenceBPActor_C::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData::Update& Update) const
 {
 	AActor* TargetObject = ActorChannel->Actor;
 	ActorChannel->PreReceiveSpatialUpdate(TargetObject);
 	TSet<UProperty*> RepNotifies;
 
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
-	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::typebindingactorc::TypebindingActorCClientRPCs::ComponentId);
+	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCClientRPCs::ComponentId);
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
@@ -1199,10 +1199,10 @@ void USpatialTypeBinding_TypebindingActor_C::ReceiveUpdate_MultiClient(USpatialA
 	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_TypebindingActor_C::ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::typebindingactorc::TypebindingActorCHandoverData::Update& Update) const
+void USpatialTypeBinding_NoReferenceBPActor_C::ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData::Update& Update) const
 {
 }
 
-void USpatialTypeBinding_TypebindingActor_C::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::typebindingactorc::TypebindingActorCNetMulticastRPCs::Update& Update)
+void USpatialTypeBinding_NoReferenceBPActor_C::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCNetMulticastRPCs::Update& Update)
 {
 }
