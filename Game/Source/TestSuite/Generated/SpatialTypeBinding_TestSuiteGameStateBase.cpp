@@ -67,7 +67,7 @@ void USpatialTypeBinding_TestSuiteGameStateBase::Init(USpatialInterop* InInterop
 	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"bReplicatedHasBegunPlay"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"ReplicatedWorldTimeSeconds"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
+	bIsSingleton = true;
 }
 
 void USpatialTypeBinding_TestSuiteGameStateBase::BindToView(bool bIsClient)

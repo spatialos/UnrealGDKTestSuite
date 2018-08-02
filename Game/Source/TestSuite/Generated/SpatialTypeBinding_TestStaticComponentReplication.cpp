@@ -24,11 +24,6 @@
 #include "TestStaticComponentReplicationMultiClientRepDataAddComponentOp.h"
 #include "TestStaticComponentReplicationHandoverDataAddComponentOp.h"
 
-#include "SpatialTypeBinding_TestComponent.h"
-#include "TestComponentSingleClientRepDataAddComponentOp.h"
-#include "TestComponentMultiClientRepDataAddComponentOp.h"
-#include "TestComponentHandoverDataAddComponentOp.h"
-
 const FRepHandlePropertyMap& USpatialTypeBinding_TestStaticComponentReplication::GetRepHandlePropertyMap() const
 {
 	return RepHandleToPropertyMap;
@@ -167,23 +162,6 @@ worker::Entity USpatialTypeBinding_TestStaticComponentReplication::CreateActorEn
 	MultiClientTestStaticComponentReplicationUpdate.ApplyTo(MultiClientTestStaticComponentReplicationData);
 	TestStaticComponentReplicationHandoverDataUpdate.ApplyTo(TestStaticComponentReplicationHandoverData);
 
-	improbable::unreal::generated::testcomponent::TestComponentSingleClientRepData::Data SingleClientTestComponentData;
-	improbable::unreal::generated::testcomponent::TestComponentSingleClientRepData::Update SingleClientTestComponentUpdate;
-	bool bSingleClientTestComponentUpdateChanged = false;
-	improbable::unreal::generated::testcomponent::TestComponentMultiClientRepData::Data MultiClientTestComponentData;
-	improbable::unreal::generated::testcomponent::TestComponentMultiClientRepData::Update MultiClientTestComponentUpdate;
-	bool bMultiClientTestComponentUpdateChanged = false;
-	improbable::unreal::generated::testcomponent::TestComponentHandoverData::Data TestComponentHandoverData;
-	improbable::unreal::generated::testcomponent::TestComponentHandoverData::Update TestComponentHandoverDataUpdate;
-	bool bTestComponentHandoverDataUpdateChanged = false;
-
-	FPropertyChangeState TestComponentChangeState = Channel->CreateSubobjectChangeState(Channel->Actor->FindComponentByClass<UTestComponent>());
-	USpatialTypeBinding_TestComponent* TestComponentTypeBinding = Cast<USpatialTypeBinding_TestComponent>(Interop->GetTypeBindingByClass(UTestComponent::StaticClass()));
-	TestComponentTypeBinding->BuildSpatialComponentUpdate(TestComponentChangeState, Channel, SingleClientTestComponentUpdate, bSingleClientTestComponentUpdateChanged, MultiClientTestComponentUpdate, bMultiClientTestComponentUpdateChanged, TestComponentHandoverDataUpdate, bTestComponentHandoverDataUpdateChanged);
-	SingleClientTestComponentUpdate.ApplyTo(SingleClientTestComponentData);
-	MultiClientTestComponentUpdate.ApplyTo(MultiClientTestComponentData);
-	TestComponentHandoverDataUpdate.ApplyTo(TestComponentHandoverData);
-
 	// Create entity.
 	std::string ClientWorkerIdString = TCHAR_TO_UTF8(*ClientWorkerId);
 
@@ -235,12 +213,6 @@ worker::Entity USpatialTypeBinding_TestStaticComponentReplication::CreateActorEn
 		.AddComponent<improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationClientRPCs>(improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationServerRPCs>(improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationNetMulticastRPCs>(improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationNetMulticastRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentSingleClientRepData>(SingleClientTestComponentData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentMultiClientRepData>(MultiClientTestComponentData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentHandoverData>(TestComponentHandoverData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentClientRPCs>(improbable::unreal::generated::testcomponent::TestComponentClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentServerRPCs>(improbable::unreal::generated::testcomponent::TestComponentServerRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentNetMulticastRPCs>(improbable::unreal::generated::testcomponent::TestComponentNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
@@ -307,9 +279,6 @@ void USpatialTypeBinding_TestStaticComponentReplication::ReceiveAddComponent(USp
 		ReceiveUpdate_Handover(Channel, Update);
 		return;
 	}
-
-	USpatialTypeBinding_TestComponent* TestComponentTypeBinding = Cast<USpatialTypeBinding_TestComponent>(Interop->GetTypeBindingByClass(UTestComponent::StaticClass()));
-	TestComponentTypeBinding->ReceiveAddComponent(Channel, AddComponentOp);
 }
 
 worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TestStaticComponentReplication::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
