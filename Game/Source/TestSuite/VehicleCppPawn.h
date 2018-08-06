@@ -100,8 +100,6 @@ public:
 	static const FName LookUpBinding;
 	static const FName LookRightBinding;
 
-	bool bHasReset;
-
 private:
 	/** 
 	 * Activate In-Car camera. Enable camera and sets visibility of incar hud display
