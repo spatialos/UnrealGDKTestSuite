@@ -175,11 +175,6 @@ void ATestSuiteCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >
 	DOREPLIFETIME_CONDITION(ATestSuiteCharacter, TestRunner, COND_InitialOnly);
 }
 
-bool ATestSuiteCharacter::TestMulticast_Validate()
-{
-	return true;
-}
-
 void ATestSuiteCharacter::TestMulticast_Implementation()
 {
 }
