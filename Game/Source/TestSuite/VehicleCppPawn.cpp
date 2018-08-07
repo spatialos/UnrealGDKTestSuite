@@ -112,8 +112,6 @@ AVehicleCppPawn::AVehicleCppPawn()
 	GearDisplayColor = FColor(255, 255, 255, 255);
 
 	bInReverseGear = false;
-
-	bHasReset = false;
 }
 
 void AVehicleCppPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -184,11 +182,6 @@ void AVehicleCppPawn::EnableIncarView(const bool bState, const bool bForce)
 void AVehicleCppPawn::Tick(float Delta)
 {
 	Super::Tick(Delta);
-
-	if (!bHasReset) {
-		ReregisterAllComponents();
-		bHasReset = true;
-	}
 
 	// Setup the flag to say we are in reverse gear
 	bInReverseGear = GetVehicleMovement()->GetCurrentGear() < 0;
