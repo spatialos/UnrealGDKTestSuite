@@ -109,9 +109,9 @@ void USpatialTypeBinding_TestSuiteCharacter::Init(USpatialInterop* InInterop, US
 	RepHandleToPropertyMap.Add(44, FRepHandleData(Class, {"TestRunner"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
 
 	// Populate HandoverHandleToPropertyMap.
-	HandoverHandleToPropertyMap.Add(1, FHandoverHandleData(Class, {"CharacterMovement", "MovementMode"}));
-	HandoverHandleToPropertyMap.Add(2, FHandoverHandleData(Class, {"CharacterMovement", "CustomMovementMode"}));
-	HandoverHandleToPropertyMap.Add(3, FHandoverHandleData(Class, {"CharacterMovement", "GroundMovementMode"}));
+	HandoverHandleToPropertyMap.Add(1, FHandoverHandleData(Class, {"CharacterMovement", "MovementMode"}, {0, 0}));
+	HandoverHandleToPropertyMap.Add(2, FHandoverHandleData(Class, {"CharacterMovement", "CustomMovementMode"}, {0, 0}));
+	HandoverHandleToPropertyMap.Add(3, FHandoverHandleData(Class, {"CharacterMovement", "GroundMovementMode"}, {0, 0}));
 
 	bIsSingleton = false;
 }

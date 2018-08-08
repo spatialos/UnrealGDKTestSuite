@@ -117,7 +117,10 @@ component TestSuitePlayerControllerServerRPCs {
 	command UnrealRPCCommandResponse servercamera(playercontroller.ServerCameraRequest);
 	command UnrealRPCCommandResponse serveracknowledgepossession(playercontroller.ServerAcknowledgePossessionRequest);
 }
-component TestSuitePlayerControllerNetMulticastRPCs {
+component TestSuitePlayerControllerCrossServerRPCs {
 	id = 100015;
+}
+component TestSuitePlayerControllerNetMulticastRPCs {
+	id = 100016;
 	event testsuiteplayercontroller.TestMulticastRequest testmulticast;
 }
