@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestSuitePlayerController.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,12 +17,23 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "TestSuitePlayerController.h"
-#include "Camera/CameraAnim.h"
-#include "Camera/CameraShake.h"
-#include "GameFramework/HUD.h"
-#include "GameFramework/LocalMessage.h"
-#include "Particles/EmitterCameraLensEffectBase.h"
+#include "Classes/GameFramework/OnlineReplStructs.h"
+#include "Public/UObject/NoExportTypes.h"
+#include "Classes/GameFramework/PlayerState.h"
+#include "Classes/GameFramework/ForceFeedbackEffect.h"
+#include "Classes/Camera/CameraShake.h"
+#include "Classes/Camera/CameraAnim.h"
+#include "Classes/Particles/EmitterCameraLensEffectBase.h"
+#include "Classes/GameFramework/Actor.h"
+#include "Classes/Camera/PlayerCameraManager.h"
+#include "Classes/GameFramework/HUD.h"
+#include "Classes/Materials/MaterialInterface.h"
+#include "Classes/GameFramework/Pawn.h"
+#include "Classes/GameFramework/LocalMessage.h"
+#include "Classes/Sound/SoundBase.h"
+#include "Classes/Engine/NetSerialization.h"
 
 #include "TestSuitePlayerControllerSingleClientRepDataAddComponentOp.h"
 #include "TestSuitePlayerControllerMultiClientRepDataAddComponentOp.h"
@@ -150,7 +160,6 @@ void USpatialTypeBinding_TestSuitePlayerController::Init(USpatialInterop* InInte
 	// Populate HandoverHandleToPropertyMap.
 	HandoverHandleToPropertyMap.Add(1, FHandoverHandleData(Class, {"AcknowledgedPawn"}, {0}));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestSuitePlayerController::BindToView(bool bIsClient)

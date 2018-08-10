@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestStaticComponentReplication.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/TestStaticComponentReplication.h"
 
 #include "TestStaticComponentReplicationSingleClientRepDataAddComponentOp.h"
@@ -70,7 +70,6 @@ void USpatialTypeBinding_TestStaticComponentReplication::Init(USpatialInterop* I
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestBookend"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestStaticComponentReplication::BindToView(bool bIsClient)

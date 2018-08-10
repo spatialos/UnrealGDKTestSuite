@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestSuiteGameStateBase.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "TestSuiteGameStateBase.h"
 
 #include "TestSuiteGameStateBaseSingleClientRepDataAddComponentOp.h"
@@ -67,7 +67,6 @@ void USpatialTypeBinding_TestSuiteGameStateBase::Init(USpatialInterop* InInterop
 	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"bReplicatedHasBegunPlay"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"ReplicatedWorldTimeSeconds"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = true;
 }
 
 void USpatialTypeBinding_TestSuiteGameStateBase::BindToView(bool bIsClient)

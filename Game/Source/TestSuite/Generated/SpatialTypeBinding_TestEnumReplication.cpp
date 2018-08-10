@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestEnumReplication.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/TestEnumReplication.h"
 
 #include "TestEnumReplicationSingleClientRepDataAddComponentOp.h"
@@ -70,7 +70,6 @@ void USpatialTypeBinding_TestEnumReplication::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"Test64Enum"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"TestUEnum"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestEnumReplication::BindToView(bool bIsClient)

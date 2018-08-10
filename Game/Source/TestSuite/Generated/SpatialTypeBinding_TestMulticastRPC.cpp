@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestMulticastRPC.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/TestMulticastRPC.h"
 
 #include "TestMulticastRPCSingleClientRepDataAddComponentOp.h"
@@ -65,7 +65,6 @@ void USpatialTypeBinding_TestMulticastRPC::Init(USpatialInterop* InInterop, USpa
 	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestMulticastRPC::BindToView(bool bIsClient)

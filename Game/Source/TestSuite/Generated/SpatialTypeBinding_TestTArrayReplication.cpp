@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestTArrayReplication.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/TestTArrayReplication.h"
 
 #include "TestTArrayReplicationSingleClientRepDataAddComponentOp.h"
@@ -72,7 +72,6 @@ void USpatialTypeBinding_TestTArrayReplication::Init(USpatialInterop* InInterop,
 	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"EnumTArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(23, FRepHandleData(Class, {"UEnumTArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestTArrayReplication::BindToView(bool bIsClient)

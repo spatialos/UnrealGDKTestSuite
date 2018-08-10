@@ -7,7 +7,7 @@
 #include "ReplicationTestCase.h"
 #include "TestFloatReplication.generated.h"
 
-UCLASS()
+UCLASS(Spatial)
 class TESTSUITE_API ATestFloatReplication : public AReplicationTestCase
 {
 	GENERATED_BODY()

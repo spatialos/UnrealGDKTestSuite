@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_GDKTestRunner.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/GDKTestRunner.h"
 
 #include "GDKTestRunnerSingleClientRepDataAddComponentOp.h"
@@ -67,7 +67,6 @@ void USpatialTypeBinding_GDKTestRunner::Init(USpatialInterop* InInterop, USpatia
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestCases"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"bIsRunning"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_GDKTestRunner::BindToView(bool bIsClient)

@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestIntReplication.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/TestIntReplication.h"
 
 #include "TestIntReplicationSingleClientRepDataAddComponentOp.h"
@@ -73,7 +73,6 @@ void USpatialTypeBinding_TestIntReplication::Init(USpatialInterop* InInterop, US
 	RepHandleToPropertyMap.Add(23, FRepHandleData(Class, {"Test32UInt"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(24, FRepHandleData(Class, {"Test64UInt"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestIntReplication::BindToView(bool bIsClient)

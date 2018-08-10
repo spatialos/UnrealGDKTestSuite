@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestFTextReplication.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/TestFTextReplication.h"
 
 #include "TestFTextReplicationSingleClientRepDataAddComponentOp.h"
@@ -66,7 +66,6 @@ void USpatialTypeBinding_TestFTextReplication::Init(USpatialInterop* InInterop, 
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestBookend"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"TestFText"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestFTextReplication::BindToView(bool bIsClient)

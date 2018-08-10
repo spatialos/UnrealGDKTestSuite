@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestUObjectReplication.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,7 +17,9 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/TestUObjectReplication.h"
+#include "Tests/ReplicationTestHelperClasses.h"
 
 #include "TestUObjectReplicationSingleClientRepDataAddComponentOp.h"
 #include "TestUObjectReplicationMultiClientRepDataAddComponentOp.h"
@@ -68,7 +69,6 @@ void USpatialTypeBinding_TestUObjectReplication::Init(USpatialInterop* InInterop
 	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"StablyNamedUObject"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"ConstObj"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestUObjectReplication::BindToView(bool bIsClient)

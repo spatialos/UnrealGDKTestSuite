@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestSuiteCharacter.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,7 +17,12 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "TestSuiteCharacter.h"
+#include "Public/UObject/NoExportTypes.h"
+#include "Classes/Components/PrimitiveComponent.h"
+#include "Classes/GameFramework/RootMotionSource.h"
+#include "Classes/Engine/NetSerialization.h"
 
 #include "TestSuiteCharacterSingleClientRepDataAddComponentOp.h"
 #include "TestSuiteCharacterMultiClientRepDataAddComponentOp.h"
@@ -113,7 +117,6 @@ void USpatialTypeBinding_TestSuiteCharacter::Init(USpatialInterop* InInterop, US
 	HandoverHandleToPropertyMap.Add(2, FHandoverHandleData(Class, {"CharacterMovement", "CustomMovementMode"}, {0, 0}));
 	HandoverHandleToPropertyMap.Add(3, FHandoverHandleData(Class, {"CharacterMovement", "GroundMovementMode"}, {0, 0}));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestSuiteCharacter::BindToView(bool bIsClient)

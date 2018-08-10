@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_NoReferenceBPActor_C.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,8 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
+#include "Classes/GameFramework/Actor.h"
 
 #include "NoReferenceBPActorCSingleClientRepDataAddComponentOp.h"
 #include "NoReferenceBPActorCMultiClientRepDataAddComponentOp.h"
@@ -63,7 +64,6 @@ void USpatialTypeBinding_NoReferenceBPActor_C::Init(USpatialInterop* InInterop, 
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"MyTestVariable"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_NoReferenceBPActor_C::BindToView(bool bIsClient)

@@ -5,10 +5,10 @@ package improbable.unreal.generated.stestunderscoreclassname;
 import "improbable/unreal/gdk/core_types.schema";
 
 component STestUnderscoreClassNameSingleClientRepData {
-	id = 100034;
+	id = 100124;
 }
 component STestUnderscoreClassNameMultiClientRepData {
-	id = 100035;
+	id = 100125;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -27,18 +27,18 @@ component STestUnderscoreClassNameMultiClientRepData {
 	int32 field_foobarcar0 = 16; // COND_None // ::S_TestUnderscoreClassName
 }
 component STestUnderscoreClassNameHandoverData {
-	id = 100036;
+	id = 100126;
 }
 import "improbable/unreal/generated/UnrealSTestUnderscoreClassNameTypes.schema";
 
 component STestUnderscoreClassNameClientRPCs {
-	id = 100037;
+	id = 100127;
 	command UnrealRPCCommandResponse clientunderscorerpc(stestunderscoreclassname.ClientUnderscoreRPCRequest);
 	command UnrealRPCCommandResponse clientbarrpc(stestunderscoreclassname.ClientBarRPCRequest);
 }
 component STestUnderscoreClassNameServerRPCs {
-	id = 100038;
+	id = 100128;
 }
 component STestUnderscoreClassNameNetMulticastRPCs {
-	id = 100039;
+	id = 100129;
 }

@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestComponent.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/TestStaticComponentReplication.h"
 
 #include "TestComponentSingleClientRepDataAddComponentOp.h"
@@ -51,7 +51,6 @@ void USpatialTypeBinding_TestComponent::Init(USpatialInterop* InInterop, USpatia
 	RepHandleToPropertyMap.Add(2, FRepHandleData(Class, {"bIsActive"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(3, FRepHandleData(Class, {"TestProperty"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestComponent::BindToView(bool bIsClient)

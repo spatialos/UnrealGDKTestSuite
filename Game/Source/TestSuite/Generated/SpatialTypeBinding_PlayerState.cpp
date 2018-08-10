@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_PlayerState.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,8 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
+#include "Classes/GameFramework/PlayerState.h"
 
 #include "PlayerStateSingleClientRepDataAddComponentOp.h"
 #include "PlayerStateMultiClientRepDataAddComponentOp.h"
@@ -73,7 +74,6 @@ void USpatialTypeBinding_PlayerState::Init(USpatialInterop* InInterop, USpatialP
 	RepHandleToPropertyMap.Add(25, FRepHandleData(Class, {"UniqueId"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(26, FRepHandleData(Class, {"PlayerNamePrivate"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_PlayerState::BindToView(bool bIsClient)
