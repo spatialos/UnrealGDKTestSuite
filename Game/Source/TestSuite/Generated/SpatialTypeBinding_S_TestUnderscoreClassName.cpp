@@ -214,6 +214,7 @@ worker::Entity USpatialTypeBinding_S_TestUnderscoreClassName::CreateActorEntity(
 		.AddComponent<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameHandoverData>(S_TestUnderscoreClassNameHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs>(improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameServerRPCs>(improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameCrossServerRPCs>(improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameNetMulticastRPCs>(improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

@@ -215,6 +215,7 @@ worker::Entity USpatialTypeBinding_GDKTestRunner::CreateActorEntity(const FStrin
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData>(GDKTestRunnerHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerClientRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerCrossServerRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerNetMulticastRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

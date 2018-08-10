@@ -216,6 +216,7 @@ worker::Entity USpatialTypeBinding_TestEnumReplication::CreateActorEntity(const 
 		.AddComponent<improbable::unreal::generated::testenumreplication::TestEnumReplicationHandoverData>(TestEnumReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testenumreplication::TestEnumReplicationClientRPCs>(improbable::unreal::generated::testenumreplication::TestEnumReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testenumreplication::TestEnumReplicationServerRPCs>(improbable::unreal::generated::testenumreplication::TestEnumReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testenumreplication::TestEnumReplicationCrossServerRPCs>(improbable::unreal::generated::testenumreplication::TestEnumReplicationCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testenumreplication::TestEnumReplicationNetMulticastRPCs>(improbable::unreal::generated::testenumreplication::TestEnumReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

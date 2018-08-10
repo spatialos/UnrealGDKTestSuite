@@ -205,6 +205,7 @@ worker::Entity USpatialTypeBinding_RepCmdConfusion::CreateActorEntity(const FStr
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData>(RepCmdConfusionHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionClientRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionServerRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionCrossServerRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionNetMulticastRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

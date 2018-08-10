@@ -212,6 +212,7 @@ worker::Entity USpatialTypeBinding_TestFNameReplication::CreateActorEntity(const
 		.AddComponent<improbable::unreal::generated::testfnamereplication::TestFNameReplicationHandoverData>(TestFNameReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfnamereplication::TestFNameReplicationClientRPCs>(improbable::unreal::generated::testfnamereplication::TestFNameReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testfnamereplication::TestFNameReplicationServerRPCs>(improbable::unreal::generated::testfnamereplication::TestFNameReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testfnamereplication::TestFNameReplicationCrossServerRPCs>(improbable::unreal::generated::testfnamereplication::TestFNameReplicationCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfnamereplication::TestFNameReplicationNetMulticastRPCs>(improbable::unreal::generated::testfnamereplication::TestFNameReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

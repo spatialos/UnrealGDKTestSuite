@@ -46,6 +46,9 @@ component PlayerStateClientRPCs {
 component PlayerStateServerRPCs {
 	id = 100014;
 }
-component PlayerStateNetMulticastRPCs {
+component PlayerStateCrossServerRPCs {
 	id = 100015;
+}
+component PlayerStateNetMulticastRPCs {
+	id = 100016;
 }

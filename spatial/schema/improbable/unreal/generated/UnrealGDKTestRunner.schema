@@ -5,10 +5,10 @@ package improbable.unreal.generated.gdktestrunner;
 import "improbable/unreal/gdk/core_types.schema";
 
 component GDKTestRunnerSingleClientRepData {
-	id = 100016;
+	id = 100017;
 }
 component GDKTestRunnerMultiClientRepData {
-	id = 100017;
+	id = 100018;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -28,18 +28,21 @@ component GDKTestRunnerMultiClientRepData {
 	bool field_bisrunning0 = 17; // COND_None // ::GDKTestRunner
 }
 component GDKTestRunnerHandoverData {
-	id = 100018;
+	id = 100019;
 }
 import "improbable/unreal/generated/UnrealGDKTestRunnerTypes.schema";
 
 component GDKTestRunnerClientRPCs {
-	id = 100019;
+	id = 100020;
 }
 component GDKTestRunnerServerRPCs {
-	id = 100020;
+	id = 100021;
 	command UnrealRPCCommandResponse serversignalclientready(gdktestrunner.ServerSignalClientReadyRequest);
 	command UnrealRPCCommandResponse serverruntests(gdktestrunner.ServerRunTestsRequest);
 }
+component GDKTestRunnerCrossServerRPCs {
+	id = 100022;
+}
 component GDKTestRunnerNetMulticastRPCs {
-	id = 100021;
+	id = 100023;
 }

@@ -218,6 +218,7 @@ worker::Entity USpatialTypeBinding_TestTArrayReplication::CreateActorEntity(cons
 		.AddComponent<improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationHandoverData>(TestTArrayReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationClientRPCs>(improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationServerRPCs>(improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationCrossServerRPCs>(improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationNetMulticastRPCs>(improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

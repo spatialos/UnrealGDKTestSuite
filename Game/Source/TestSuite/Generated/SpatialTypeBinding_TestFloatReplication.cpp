@@ -213,6 +213,7 @@ worker::Entity USpatialTypeBinding_TestFloatReplication::CreateActorEntity(const
 		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationHandoverData>(TestFloatReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationClientRPCs>(improbable::unreal::generated::testfloatreplication::TestFloatReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs>(improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationCrossServerRPCs>(improbable::unreal::generated::testfloatreplication::TestFloatReplicationCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationNetMulticastRPCs>(improbable::unreal::generated::testfloatreplication::TestFloatReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

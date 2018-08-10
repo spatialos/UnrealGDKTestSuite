@@ -5,10 +5,10 @@ package improbable.unreal.generated.testcharreplication;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestCharReplicationSingleClientRepData {
-	id = 100040;
+	id = 100045;
 }
 component TestCharReplicationMultiClientRepData {
-	id = 100041;
+	id = 100046;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -27,17 +27,20 @@ component TestCharReplicationMultiClientRepData {
 	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
 }
 component TestCharReplicationHandoverData {
-	id = 100042;
+	id = 100047;
 }
 import "improbable/unreal/generated/UnrealTestCharReplicationTypes.schema";
 
 component TestCharReplicationClientRPCs {
-	id = 100043;
+	id = 100048;
 }
 component TestCharReplicationServerRPCs {
-	id = 100044;
+	id = 100049;
 	command UnrealRPCCommandResponse serverreportreplication(testcharreplication.ServerReportReplicationRequest);
 }
+component TestCharReplicationCrossServerRPCs {
+	id = 100050;
+}
 component TestCharReplicationNetMulticastRPCs {
-	id = 100045;
+	id = 100051;
 }

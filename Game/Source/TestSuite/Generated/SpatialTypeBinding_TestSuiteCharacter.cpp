@@ -293,6 +293,7 @@ worker::Entity USpatialTypeBinding_TestSuiteCharacter::CreateActorEntity(const F
 		.AddComponent<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData>(TestSuiteCharacterHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs>(improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs>(improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterCrossServerRPCs>(improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterNetMulticastRPCs>(improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

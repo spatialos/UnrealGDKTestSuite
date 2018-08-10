@@ -211,6 +211,7 @@ worker::Entity USpatialTypeBinding_TestMulticastRPC::CreateActorEntity(const FSt
 		.AddComponent<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCHandoverData>(TestMulticastRPCHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCClientRPCs>(improbable::unreal::generated::testmulticastrpc::TestMulticastRPCClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCServerRPCs>(improbable::unreal::generated::testmulticastrpc::TestMulticastRPCServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCCrossServerRPCs>(improbable::unreal::generated::testmulticastrpc::TestMulticastRPCCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testmulticastrpc::TestMulticastRPCNetMulticastRPCs>(improbable::unreal::generated::testmulticastrpc::TestMulticastRPCNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

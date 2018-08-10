@@ -206,6 +206,7 @@ worker::Entity USpatialTypeBinding_TestActor::CreateActorEntity(const FString& C
 		.AddComponent<improbable::unreal::generated::testactor::TestActorHandoverData>(TestActorHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testactor::TestActorClientRPCs>(improbable::unreal::generated::testactor::TestActorClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testactor::TestActorServerRPCs>(improbable::unreal::generated::testactor::TestActorServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testactor::TestActorCrossServerRPCs>(improbable::unreal::generated::testactor::TestActorCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testactor::TestActorNetMulticastRPCs>(improbable::unreal::generated::testactor::TestActorNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

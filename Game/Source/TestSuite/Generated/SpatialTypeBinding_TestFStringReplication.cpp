@@ -212,6 +212,7 @@ worker::Entity USpatialTypeBinding_TestFStringReplication::CreateActorEntity(con
 		.AddComponent<improbable::unreal::generated::testfstringreplication::TestFStringReplicationHandoverData>(TestFStringReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfstringreplication::TestFStringReplicationClientRPCs>(improbable::unreal::generated::testfstringreplication::TestFStringReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testfstringreplication::TestFStringReplicationServerRPCs>(improbable::unreal::generated::testfstringreplication::TestFStringReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testfstringreplication::TestFStringReplicationCrossServerRPCs>(improbable::unreal::generated::testfstringreplication::TestFStringReplicationCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfstringreplication::TestFStringReplicationNetMulticastRPCs>(improbable::unreal::generated::testfstringreplication::TestFStringReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

@@ -195,6 +195,7 @@ worker::Entity USpatialTypeBinding_TestComponent::CreateActorEntity(const FStrin
 		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentHandoverData>(TestComponentHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentClientRPCs>(improbable::unreal::generated::testcomponent::TestComponentClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentServerRPCs>(improbable::unreal::generated::testcomponent::TestComponentServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentCrossServerRPCs>(improbable::unreal::generated::testcomponent::TestComponentCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentNetMulticastRPCs>(improbable::unreal::generated::testcomponent::TestComponentNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

@@ -454,6 +454,7 @@ worker::Entity USpatialTypeBinding_TestSuitePlayerController::CreateActorEntity(
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData>(TestSuitePlayerControllerHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerClientRPCs>(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerServerRPCs>(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerCrossServerRPCs>(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerNetMulticastRPCs>(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

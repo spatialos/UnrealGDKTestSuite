@@ -206,6 +206,7 @@ worker::Entity USpatialTypeBinding_NoReferenceBPActor_C::CreateActorEntity(const
 		.AddComponent<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData>(NoReferenceBPActor_CHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCClientRPCs>(improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCServerRPCs>(improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCCrossServerRPCs>(improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCNetMulticastRPCs>(improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

@@ -215,6 +215,7 @@ worker::Entity USpatialTypeBinding_TestUObjectReplication::CreateActorEntity(con
 		.AddComponent<improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationHandoverData>(TestUObjectReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationClientRPCs>(improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationServerRPCs>(improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationCrossServerRPCs>(improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationNetMulticastRPCs>(improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

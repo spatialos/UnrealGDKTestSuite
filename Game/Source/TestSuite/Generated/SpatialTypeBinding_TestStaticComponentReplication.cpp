@@ -233,12 +233,14 @@ worker::Entity USpatialTypeBinding_TestStaticComponentReplication::CreateActorEn
 		.AddComponent<improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationHandoverData>(TestStaticComponentReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationClientRPCs>(improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationServerRPCs>(improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationCrossServerRPCs>(improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationNetMulticastRPCs>(improbable::unreal::generated::teststaticcomponentreplication::TestStaticComponentReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentSingleClientRepData>(SingleClientTestComponentData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentMultiClientRepData>(MultiClientTestComponentData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentHandoverData>(TestComponentHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentClientRPCs>(improbable::unreal::generated::testcomponent::TestComponentClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentServerRPCs>(improbable::unreal::generated::testcomponent::TestComponentServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentCrossServerRPCs>(improbable::unreal::generated::testcomponent::TestComponentCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testcomponent::TestComponentNetMulticastRPCs>(improbable::unreal::generated::testcomponent::TestComponentNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
