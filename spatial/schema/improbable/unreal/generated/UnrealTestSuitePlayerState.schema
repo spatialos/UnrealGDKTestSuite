@@ -1,14 +1,14 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.playerstate;
+package improbable.unreal.generated.testsuiteplayerstate;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component PlayerStateSingleClientRepData {
-	id = 100010;
+component TestSuitePlayerStateSingleClientRepData {
+	id = 100129;
 }
-component PlayerStateMultiClientRepData {
-	id = 100011;
+component TestSuitePlayerStateMultiClientRepData {
+	id = 100130;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -36,19 +36,19 @@ component PlayerStateMultiClientRepData {
 	bytes field_uniqueid0 = 25; // COND_InitialOnly // ::PlayerState
 	string field_playernameprivate0 = 26; // COND_None // ::PlayerState
 }
-component PlayerStateHandoverData {
-	id = 100012;
+component TestSuitePlayerStateHandoverData {
+	id = 100131;
 }
 
-component PlayerStateClientRPCs {
-	id = 100013;
+component TestSuitePlayerStateClientRPCs {
+	id = 100132;
 }
-component PlayerStateServerRPCs {
-	id = 100014;
+component TestSuitePlayerStateServerRPCs {
+	id = 100133;
 }
-component PlayerStateCrossServerRPCs {
-	id = 100015;
+component TestSuitePlayerStateCrossServerRPCs {
+	id = 100134;
 }
-component PlayerStateNetMulticastRPCs {
-	id = 100016;
+component TestSuitePlayerStateNetMulticastRPCs {
+	id = 100135;
 }
