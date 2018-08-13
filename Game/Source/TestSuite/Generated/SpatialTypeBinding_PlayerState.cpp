@@ -18,7 +18,7 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "Classes/GameFramework/PlayerState.h"
+#include "GameFramework/PlayerState.h"
 
 #include "PlayerStateSingleClientRepDataAddComponentOp.h"
 #include "PlayerStateMultiClientRepDataAddComponentOp.h"

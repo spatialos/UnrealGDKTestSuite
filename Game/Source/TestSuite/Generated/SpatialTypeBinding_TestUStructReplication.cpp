@@ -19,7 +19,6 @@
 #include "SpatialInterop.h"
 
 #include "Tests/TestUStructReplication.h"
-#include "Tests/ReplicationTestHelperClasses.h"
 
 #include "TestUStructReplicationSingleClientRepDataAddComponentOp.h"
 #include "TestUStructReplicationMultiClientRepDataAddComponentOp.h"

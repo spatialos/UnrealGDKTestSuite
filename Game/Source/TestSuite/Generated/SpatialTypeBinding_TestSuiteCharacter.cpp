@@ -19,10 +19,7 @@
 #include "SpatialInterop.h"
 
 #include "TestSuiteCharacter.h"
-#include "Public/UObject/NoExportTypes.h"
-#include "Classes/Components/PrimitiveComponent.h"
-#include "Classes/GameFramework/RootMotionSource.h"
-#include "Classes/Engine/NetSerialization.h"
+#include "Components/PrimitiveComponent.h"
 
 #include "TestSuiteCharacterSingleClientRepDataAddComponentOp.h"
 #include "TestSuiteCharacterMultiClientRepDataAddComponentOp.h"
