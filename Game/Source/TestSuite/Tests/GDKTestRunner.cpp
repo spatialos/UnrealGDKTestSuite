@@ -168,7 +168,7 @@ void AGDKTestRunner::Server_TearDownTestCases()
 
 void AGDKTestRunner::OnRep_TestCases()
 {
-	// Local workaround to allow every client to call server RPCs. This simplifies our testing suite immensly.
+	// Local workaround to allow every client to call server RPCs. This simplifies our testing suite immensely.
 	if (GetNetMode() == NM_Client)
 	{
 		AActor* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(nullptr);
