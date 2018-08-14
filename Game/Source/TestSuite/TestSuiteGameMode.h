@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "TestSuiteGameMode.generated.h"
 
-UCLASS(minimalapi)
+UCLASS(minimalapi, Spatial=PrivateSingleton)
 class ATestSuiteGameMode : public AGameModeBase
 {
 	GENERATED_BODY()

@@ -5,10 +5,10 @@ package improbable.unreal.generated.testsuitegamestatebase;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestSuiteGameStateBaseSingleClientRepData {
-	id = 100115;
+	id = 100122;
 }
 component TestSuiteGameStateBaseMultiClientRepData {
-	id = 100116;
+	id = 100123;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -30,18 +30,18 @@ component TestSuiteGameStateBaseMultiClientRepData {
 	float field_replicatedworldtimeseconds0 = 19; // COND_None // ::GameStateBase
 }
 component TestSuiteGameStateBaseHandoverData {
-	id = 100117;
+	id = 100124;
 }
 
 component TestSuiteGameStateBaseClientRPCs {
-	id = 100118;
+	id = 100125;
 }
 component TestSuiteGameStateBaseServerRPCs {
-	id = 100119;
+	id = 100126;
 }
 component TestSuiteGameStateBaseCrossServerRPCs {
-	id = 100120;
+	id = 100127;
 }
 component TestSuiteGameStateBaseNetMulticastRPCs {
-	id = 100121;
+	id = 100128;
 }
