@@ -56,11 +56,6 @@ void ATestMulticastRPC::Server_TearDown()
 	// No tear down required for MultiCast RPC
 }
 
-bool ATestMulticastRPC::MulticastRPC_Validate(int32 StartingValue)
-{
-	return true;
-}
-
 void ATestMulticastRPC::MulticastRPC_Implementation(int32 StartingValue)
 {
 	StartingValue++;

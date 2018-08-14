@@ -78,8 +78,8 @@ protected:
 
 	void Interact();
 
-	UFUNCTION(NetMulticast, Unreliable, WithValidation)
-	void TestMulticast();
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_StartTestRunner();
 
 	bool bTestRunnerReplicated;
 

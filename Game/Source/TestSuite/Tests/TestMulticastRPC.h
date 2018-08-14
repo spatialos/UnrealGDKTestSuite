@@ -24,7 +24,7 @@ public:
 
 protected:
 
-	UFUNCTION(NetMulticast, Unreliable, WithValidation)
+	UFUNCTION(NetMulticast, Unreliable)
 	void MulticastRPC(int32 StartingValue);
 
 	UFUNCTION(Server, Reliable, WithValidation)
