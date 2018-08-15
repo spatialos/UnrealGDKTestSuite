@@ -71,13 +71,13 @@ private:
 	void ClientAdjustRootMotionPosition_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void ClientAdjustPosition_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void ClientAckGoodMove_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
+	void Server_StartTestRunner_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void ServerMoveOld_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void ServerMoveNoBase_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void ServerMoveDualNoBase_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void ServerMoveDualHybridRootMotion_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void ServerMoveDual_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 	void ServerMove_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
-	void TestMulticast_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject);
 
 	// RPC command request handler functions.
 	void RootMotionDebugClientPrintOnScreen_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs::Commands::Rootmotiondebugclientprintonscreen>& Op);
@@ -89,13 +89,13 @@ private:
 	void ClientAdjustRootMotionPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs::Commands::Clientadjustrootmotionposition>& Op);
 	void ClientAdjustPosition_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs::Commands::Clientadjustposition>& Op);
 	void ClientAckGoodMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs::Commands::Clientackgoodmove>& Op);
+	void Server_StartTestRunner_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Serverstarttestrunner>& Op);
 	void ServerMoveOld_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Servermoveold>& Op);
 	void ServerMoveNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Servermovenobase>& Op);
 	void ServerMoveDualNoBase_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Servermovedualnobase>& Op);
 	void ServerMoveDualHybridRootMotion_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Servermovedualhybridrootmotion>& Op);
 	void ServerMoveDual_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Servermovedual>& Op);
 	void ServerMove_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Servermove>& Op);
-	void TestMulticast_OnRPCPayload(const worker::EntityId EntityId, const improbable::unreal::generated::testsuitecharacter::TestMulticastRequest& EventData);
 
 	// RPC command response handler functions.
 	void RootMotionDebugClientPrintOnScreen_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs::Commands::Rootmotiondebugclientprintonscreen>& Op);
@@ -107,6 +107,7 @@ private:
 	void ClientAdjustRootMotionPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs::Commands::Clientadjustrootmotionposition>& Op);
 	void ClientAdjustPosition_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs::Commands::Clientadjustposition>& Op);
 	void ClientAckGoodMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs::Commands::Clientackgoodmove>& Op);
+	void Server_StartTestRunner_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Serverstarttestrunner>& Op);
 	void ServerMoveOld_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Servermoveold>& Op);
 	void ServerMoveNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Servermovenobase>& Op);
 	void ServerMoveDualNoBase_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Servermovedualnobase>& Op);

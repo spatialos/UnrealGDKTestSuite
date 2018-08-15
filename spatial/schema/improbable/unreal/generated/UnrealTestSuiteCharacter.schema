@@ -5,9 +5,13 @@ package improbable.unreal.generated.testsuitecharacter;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestSuiteCharacterSingleClientRepData {
+	id = 100022;
+	id = 100024;
 	id = 100108;
 }
 component TestSuiteCharacterMultiClientRepData {
+	id = 100023;
+	id = 100025;
 	id = 100109;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
@@ -55,6 +59,8 @@ component TestSuiteCharacterMultiClientRepData {
 	UnrealObjectRef field_testrunner0 = 44; // COND_InitialOnly // ::TestSuiteCharacter
 }
 component TestSuiteCharacterHandoverData {
+	id = 100024;
+	id = 100026;
 	id = 100110;
 	uint32 field_charactermovement0_movementmode0 = 1;
 	uint32 field_charactermovement0_custommovementmode0 = 2;
@@ -66,6 +72,8 @@ import "improbable/unreal/generated/UnrealTestSuiteCharacterTypes.schema";
 import "improbable/unreal/generated/UnrealCharacterTypes.schema";
 
 component TestSuiteCharacterClientRPCs {
+	id = 100025;
+	id = 100027;
 	id = 100111;
 	command UnrealRPCCommandResponse rootmotiondebugclientprintonscreen(character.RootMotionDebugClientPrintOnScreenRequest);
 	command UnrealRPCCommandResponse clientveryshortadjustposition(character.ClientVeryShortAdjustPositionRequest);
@@ -78,6 +86,9 @@ component TestSuiteCharacterClientRPCs {
 	command UnrealRPCCommandResponse clientackgoodmove(character.ClientAckGoodMoveRequest);
 }
 component TestSuiteCharacterServerRPCs {
+	id = 100026;
+	id = 100028;
+	command UnrealRPCCommandResponse serverstarttestrunner(testsuitecharacter.ServerStartTestRunnerRequest);
 	id = 100112;
 	command UnrealRPCCommandResponse servermoveold(character.ServerMoveOldRequest);
 	command UnrealRPCCommandResponse servermovenobase(character.ServerMoveNoBaseRequest);
@@ -87,9 +98,13 @@ component TestSuiteCharacterServerRPCs {
 	command UnrealRPCCommandResponse servermove(character.ServerMoveRequest);
 }
 component TestSuiteCharacterCrossServerRPCs {
+	id = 100029;
 	id = 100113;
 }
 component TestSuiteCharacterNetMulticastRPCs {
+	id = 100027;
+	event testsuitecharacter.TestMulticastRequest testmulticast;
+	id = 100030;
 	id = 100114;
 	event testsuitecharacter.TestMulticastRequest testmulticast;
 }

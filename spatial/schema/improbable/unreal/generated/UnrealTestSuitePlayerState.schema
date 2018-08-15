@@ -4,9 +4,17 @@ package improbable.unreal.generated.testsuiteplayerstate;
 
 import "improbable/unreal/gdk/core_types.schema";
 
+component PlayerStateSingleClientRepData {
+	id = 100016;
+component PlayerStateSingleClientRepData {
+	id = 100017;
 component TestSuitePlayerStateSingleClientRepData {
 	id = 100136;
 }
+component PlayerStateMultiClientRepData {
+	id = 100017;
+component PlayerStateMultiClientRepData {
+	id = 100018;
 component TestSuitePlayerStateMultiClientRepData {
 	id = 100137;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
@@ -36,19 +44,38 @@ component TestSuitePlayerStateMultiClientRepData {
 	bytes field_uniqueid0 = 25; // COND_InitialOnly // ::PlayerState
 	string field_playernameprivate0 = 26; // COND_None // ::PlayerState
 }
+component PlayerStateHandoverData {
+	id = 100018;
+component PlayerStateHandoverData {
+	id = 100019;
 component TestSuitePlayerStateHandoverData {
 	id = 100138;
 }
 
+component PlayerStateClientRPCs {
+	id = 100019;
+component PlayerStateClientRPCs {
+	id = 100020;
 component TestSuitePlayerStateClientRPCs {
 	id = 100139;
 }
 component TestSuitePlayerStateServerRPCs {
 	id = 100140;
 }
+component PlayerStateServerRPCs {
+	id = 100020;
+component PlayerStateServerRPCs {
+	id = 100021;
+}
+component PlayerStateCrossServerRPCs {
+	id = 100022;
 component TestSuitePlayerStateCrossServerRPCs {
 	id = 100141;
 }
+component PlayerStateNetMulticastRPCs {
+	id = 100021;
+component PlayerStateNetMulticastRPCs {
+	id = 100023;
 component TestSuitePlayerStateNetMulticastRPCs {
 	id = 100142;
 }
