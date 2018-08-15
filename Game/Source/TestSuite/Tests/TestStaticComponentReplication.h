@@ -8,7 +8,7 @@
 #include "Components/ActorComponent.h"
 #include "TestStaticComponentReplication.generated.h"
 
-UCLASS(Spatial)
+UCLASS(SpatialType)
 class TESTSUITE_API UTestComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -26,7 +26,7 @@ public:
 	float TestProperty;
 };
 
-UCLASS(Spatial)
+UCLASS(SpatialType)
 class TESTSUITE_API ATestStaticComponentReplication : public AReplicationTestCase
 {
 	GENERATED_BODY()

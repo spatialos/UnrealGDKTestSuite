@@ -30,7 +30,7 @@ struct FContainerStruct
 	FRootStruct Struct_2;
 };
 
-UCLASS(Spatial)
+UCLASS(SpatialType)
 class ARepCmdConfusion : public AActor
 {
 	GENERATED_BODY()
@@ -44,7 +44,7 @@ public:
 	//FContainerStruct MyStruct;
 };
 
-UCLASS(Spatial, config=Game)
+UCLASS(SpatialType, config=Game)
 class AS_TestUnderscoreClassName : public AActor
 {
 	GENERATED_BODY()

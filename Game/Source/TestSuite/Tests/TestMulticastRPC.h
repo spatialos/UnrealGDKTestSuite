@@ -7,7 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "TestMulticastRPC.generated.h"
 
-UCLASS(Spatial)
+UCLASS(SpatialType)
 class TESTSUITE_API ATestMulticastRPC : public AGDKTestCase
 {
 	GENERATED_BODY()

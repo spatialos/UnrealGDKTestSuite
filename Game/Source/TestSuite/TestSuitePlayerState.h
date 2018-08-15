@@ -6,7 +6,7 @@
 #include "GameFramework/PlayerState.h"
 #include "TestSuitePlayerState.generated.h"
 
-UCLASS(Spatial)
+UCLASS(SpatialType)
 class ATestSuitePlayerState : public APlayerState
 {
 	GENERATED_BODY()

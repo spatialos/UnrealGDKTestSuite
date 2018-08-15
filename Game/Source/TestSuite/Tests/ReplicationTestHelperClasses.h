@@ -50,7 +50,7 @@ namespace EnumNamespace
 	};
 }
 
-UCLASS(Spatial)
+UCLASS(SpatialType)
 class ATestActor : public AActor
 {
 	GENERATED_BODY()
