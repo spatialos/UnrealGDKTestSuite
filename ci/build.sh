@@ -33,6 +33,16 @@ markStartOfBlock "Clone the GDK from github"
   git clone git@github.com:improbable/UnrealGDK.git -b ${UNREAL_GDK_BRANCH} --single-branch "build/UnrealGDK"
 markEndOfBlock "Clone the GDK from github"
 
+markStartOfBlock "Build the GDK script"
+
+pushd "build/unreal-gdk/ci"
+
+./build.sh
+
+popd
+
+markEndOfBlock "Build the GDK script"
+
 markStartOfBlock "Run the GDK setup script"
   pushd "build/UnrealGDK"
     ./BuildGDK.bat
