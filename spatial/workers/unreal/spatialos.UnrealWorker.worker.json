@@ -39,7 +39,12 @@
         "global_component_streaming_query": {
           "component_name": "improbable.unreal.generated.testsuitegamestatebase.TestSuiteGameStateBaseMultiClientRepData"
         }
-      }
+      },
+	  {
+		"global_component_streaming_query": {
+		  "component_name": "improbable.unreal.generated.testsuitegamemode.TestSuiteGameModeMultiClientRepData"
+		}
+	  }
     ],
     "component_delivery": {
       "default": "RELIABLE_ORDERED",
