@@ -18,7 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "TestSuitePlayerController.h"
 #include "Camera/CameraAnim.h"
 #include "Camera/CameraShake.h"
 #include "GameFramework/Actor.h"
@@ -30,6 +29,7 @@
 #include "Materials/MaterialInterface.h"
 #include "Particles/EmitterCameraLensEffectBase.h"
 #include "Sound/SoundBase.h"
+#include "TestSuitePlayerController.h"
 #include "UObject/NoExportTypes.h"
 
 #include "TestSuitePlayerControllerSingleClientRepDataAddComponentOp.h"

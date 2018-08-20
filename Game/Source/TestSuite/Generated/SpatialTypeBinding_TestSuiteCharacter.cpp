@@ -18,8 +18,8 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "TestSuiteCharacter.h"
 #include "Components/PrimitiveComponent.h"
+#include "TestSuiteCharacter.h"
 
 #include "TestSuiteCharacterSingleClientRepDataAddComponentOp.h"
 #include "TestSuiteCharacterMultiClientRepDataAddComponentOp.h"
@@ -113,6 +113,8 @@ void USpatialTypeBinding_TestSuiteCharacter::Init(USpatialInterop* InInterop, US
 	HandoverHandleToPropertyMap.Add(1, FHandoverHandleData(Class, {"CharacterMovement", "MovementMode"}, {0, 0}));
 	HandoverHandleToPropertyMap.Add(2, FHandoverHandleData(Class, {"CharacterMovement", "CustomMovementMode"}, {0, 0}));
 	HandoverHandleToPropertyMap.Add(3, FHandoverHandleData(Class, {"CharacterMovement", "GroundMovementMode"}, {0, 0}));
+	HandoverHandleToPropertyMap.Add(4, FHandoverHandleData(Class, {"CharacterMovement", "PredictionHandoverData"}, {0, 0}));
+	HandoverHandleToPropertyMap.Add(5, FHandoverHandleData(Class, {"CharacterMovement", "Velocity"}, {0, 0}));
 
 }
 
@@ -1199,6 +1201,30 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_Handover(const uin
 			TEnumAsByte<EMovementMode> Value = *(reinterpret_cast<TEnumAsByte<EMovementMode> const*>(Data));
 
 			OutUpdate.set_field_charactermovement0_groundmovementmode0(uint32_t(Value));
+			break;
+		}
+		case 4: // field_charactermovement0_predictionhandoverdata0
+		{
+			FPredictionHandoverData Value = *(reinterpret_cast<FPredictionHandoverData const*>(Data));
+
+			TSet<const UObject*> UnresolvedObjects;
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
+			FPredictionHandoverData::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FPredictionHandoverData*>(&Value)));
+			OutUpdate.set_field_charactermovement0_predictionhandoverdata0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			break;
+		}
+		case 5: // field_charactermovement0_velocity0
+		{
+			FVector Value = *(reinterpret_cast<FVector const*>(Data));
+
+			TSet<const UObject*> UnresolvedObjects;
+			TArray<uint8> ValueData;
+			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
+			bool bSuccess = true;
+			(const_cast<FVector&>(Value)).NetSerialize(ValueDataWriter, PackageMap, bSuccess);
+			checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
+			OutUpdate.set_field_charactermovement0_velocity0(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			break;
 		}
 	default:
@@ -2675,6 +2701,54 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_Handover(USpatialActo
 		TEnumAsByte<EMovementMode> Value = *(reinterpret_cast<TEnumAsByte<EMovementMode> const*>(PropertyData));
 
 		Value = TEnumAsByte<EMovementMode>(uint8((*Update.field_charactermovement0_groundmovementmode0().data())));
+
+		ApplyIncomingHandoverPropertyUpdate(*HandoverData, ActorChannel->Actor, static_cast<const void*>(&Value));
+
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received handover property update. actor %s (%lld), property %s (handle %d)"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ActorChannel->Actor->GetName(),
+			ActorChannel->GetEntityId().ToSpatialEntityId(),
+			*HandoverData->Property->GetName(),
+			Handle);
+	}
+	if (!Update.field_charactermovement0_predictionhandoverdata0().empty())
+	{
+		// field_charactermovement0_predictionhandoverdata0
+		uint16 Handle = 4;
+		const FHandoverHandleData* HandoverData = &HandleToPropertyMap[Handle];
+		uint8* PropertyData = HandoverData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+		FPredictionHandoverData Value = *(reinterpret_cast<FPredictionHandoverData const*>(PropertyData));
+
+		auto& ValueDataStr = (*Update.field_charactermovement0_predictionhandoverdata0().data());
+		TArray<uint8> ValueData;
+		ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+		FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+		FPredictionHandoverData::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Value));
+
+		ApplyIncomingHandoverPropertyUpdate(*HandoverData, ActorChannel->Actor, static_cast<const void*>(&Value));
+
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received handover property update. actor %s (%lld), property %s (handle %d)"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ActorChannel->Actor->GetName(),
+			ActorChannel->GetEntityId().ToSpatialEntityId(),
+			*HandoverData->Property->GetName(),
+			Handle);
+	}
+	if (!Update.field_charactermovement0_velocity0().empty())
+	{
+		// field_charactermovement0_velocity0
+		uint16 Handle = 5;
+		const FHandoverHandleData* HandoverData = &HandleToPropertyMap[Handle];
+		uint8* PropertyData = HandoverData->GetPropertyData(reinterpret_cast<uint8*>(ActorChannel->Actor));
+		FVector Value = *(reinterpret_cast<FVector const*>(PropertyData));
+
+		auto& ValueDataStr = (*Update.field_charactermovement0_velocity0().data());
+		TArray<uint8> ValueData;
+		ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+		FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+		bool bSuccess = true;
+		Value.NetSerialize(ValueDataReader, PackageMap, bSuccess);
+		checkf(bSuccess, TEXT("NetSerialize on FVector failed."));
 
 		ApplyIncomingHandoverPropertyUpdate(*HandoverData, ActorChannel->Actor, static_cast<const void*>(&Value));
 

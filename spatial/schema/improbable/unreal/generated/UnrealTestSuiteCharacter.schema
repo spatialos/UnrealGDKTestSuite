@@ -59,6 +59,8 @@ component TestSuiteCharacterHandoverData {
 	uint32 field_charactermovement0_movementmode0 = 1;
 	uint32 field_charactermovement0_custommovementmode0 = 2;
 	uint32 field_charactermovement0_groundmovementmode0 = 3;
+	bytes field_charactermovement0_predictionhandoverdata0 = 4;
+	bytes field_charactermovement0_velocity0 = 5;
 }
 import "improbable/unreal/generated/UnrealTestSuiteCharacterTypes.schema";
 import "improbable/unreal/generated/UnrealCharacterTypes.schema";
