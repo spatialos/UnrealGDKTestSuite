@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestUObjectReplication.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,8 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
+#include "Tests/ReplicationTestHelperClasses.h"
 #include "Tests/TestUObjectReplication.h"
 
 #include "TestUObjectReplicationSingleClientRepDataAddComponentOp.h"
@@ -68,7 +69,6 @@ void USpatialTypeBinding_TestUObjectReplication::Init(USpatialInterop* InInterop
 	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"StablyNamedUObject"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"ConstObj"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestUObjectReplication::BindToView(bool bIsClient)
@@ -215,6 +215,7 @@ worker::Entity USpatialTypeBinding_TestUObjectReplication::CreateActorEntity(con
 		.AddComponent<improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationHandoverData>(TestUObjectReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationClientRPCs>(improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationServerRPCs>(improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationCrossServerRPCs>(improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationNetMulticastRPCs>(improbable::unreal::generated::testuobjectreplication::TestUObjectReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

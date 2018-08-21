@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestCArrayReplication.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/TestCArrayReplication.h"
 
 #include "TestCArrayReplicationSingleClientRepDataAddComponentOp.h"
@@ -79,7 +79,6 @@ void USpatialTypeBinding_TestCArrayReplication::Init(USpatialInterop* InInterop,
 	RepHandleToPropertyMap.Add(29, FRepHandleData(Class, {"UEnumCArray"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(30, FRepHandleData(Class, {"UEnumCArray"}, {1}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestCArrayReplication::BindToView(bool bIsClient)
@@ -226,6 +225,7 @@ worker::Entity USpatialTypeBinding_TestCArrayReplication::CreateActorEntity(cons
 		.AddComponent<improbable::unreal::generated::testcarrayreplication::TestCArrayReplicationHandoverData>(TestCArrayReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testcarrayreplication::TestCArrayReplicationClientRPCs>(improbable::unreal::generated::testcarrayreplication::TestCArrayReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testcarrayreplication::TestCArrayReplicationServerRPCs>(improbable::unreal::generated::testcarrayreplication::TestCArrayReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testcarrayreplication::TestCArrayReplicationCrossServerRPCs>(improbable::unreal::generated::testcarrayreplication::TestCArrayReplicationCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testcarrayreplication::TestCArrayReplicationNetMulticastRPCs>(improbable::unreal::generated::testcarrayreplication::TestCArrayReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

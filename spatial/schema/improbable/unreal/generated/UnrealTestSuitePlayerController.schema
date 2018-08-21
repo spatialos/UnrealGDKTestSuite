@@ -5,12 +5,12 @@ package improbable.unreal.generated.testsuiteplayercontroller;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestSuitePlayerControllerSingleClientRepData {
-	id = 100010;
+	id = 100129;
 	bytes field_targetviewrotation0 = 1; // COND_OwnerOnly // ::PlayerController
 	bytes field_spawnlocation0 = 2; // COND_OwnerOnly // ::PlayerController
 }
 component TestSuitePlayerControllerMultiClientRepData {
-	id = 100011;
+	id = 100130;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -30,7 +30,7 @@ component TestSuitePlayerControllerMultiClientRepData {
 	UnrealObjectRef field_pawn0 = 17; // COND_None // ::Controller
 }
 component TestSuitePlayerControllerHandoverData {
-	id = 100012;
+	id = 100131;
 	UnrealObjectRef field_acknowledgedpawn0 = 1;
 }
 import "improbable/unreal/generated/UnrealTestSuitePlayerControllerTypes.schema";
@@ -38,7 +38,7 @@ import "improbable/unreal/generated/UnrealPlayerControllerTypes.schema";
 import "improbable/unreal/generated/UnrealControllerTypes.schema";
 
 component TestSuitePlayerControllerClientRPCs {
-	id = 100013;
+	id = 100132;
 	command UnrealRPCCommandResponse onserverstartedvisuallogger(playercontroller.OnServerStartedVisualLoggerRequest);
 	command UnrealRPCCommandResponse clientwaskicked(playercontroller.ClientWasKickedRequest);
 	command UnrealRPCCommandResponse clientvoicehandshakecomplete(playercontroller.ClientVoiceHandshakeCompleteRequest);
@@ -93,7 +93,7 @@ component TestSuitePlayerControllerClientRPCs {
 	command UnrealRPCCommandResponse clientsetlocation(controller.ClientSetLocationRequest);
 }
 component TestSuitePlayerControllerServerRPCs {
-	id = 100014;
+	id = 100133;
 	command UnrealRPCCommandResponse testrpc(testsuiteplayercontroller.TestRPCRequest);
 	command UnrealRPCCommandResponse serverviewself(playercontroller.ServerViewSelfRequest);
 	command UnrealRPCCommandResponse serverviewprevplayer(playercontroller.ServerViewPrevPlayerRequest);
@@ -117,7 +117,10 @@ component TestSuitePlayerControllerServerRPCs {
 	command UnrealRPCCommandResponse servercamera(playercontroller.ServerCameraRequest);
 	command UnrealRPCCommandResponse serveracknowledgepossession(playercontroller.ServerAcknowledgePossessionRequest);
 }
+component TestSuitePlayerControllerCrossServerRPCs {
+	id = 100134;
+}
 component TestSuitePlayerControllerNetMulticastRPCs {
-	id = 100015;
+	id = 100135;
 	event testsuiteplayercontroller.TestMulticastRequest testmulticast;
 }

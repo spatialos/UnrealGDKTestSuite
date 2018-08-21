@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_GDKTestRunner.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/GDKTestRunner.h"
 
 #include "GDKTestRunnerSingleClientRepDataAddComponentOp.h"
@@ -67,7 +67,6 @@ void USpatialTypeBinding_GDKTestRunner::Init(USpatialInterop* InInterop, USpatia
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestCases"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"bIsRunning"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_GDKTestRunner::BindToView(bool bIsClient)
@@ -216,6 +215,7 @@ worker::Entity USpatialTypeBinding_GDKTestRunner::CreateActorEntity(const FStrin
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerHandoverData>(GDKTestRunnerHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerClientRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerCrossServerRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::gdktestrunner::GDKTestRunnerNetMulticastRPCs>(improbable::unreal::generated::gdktestrunner::GDKTestRunnerNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

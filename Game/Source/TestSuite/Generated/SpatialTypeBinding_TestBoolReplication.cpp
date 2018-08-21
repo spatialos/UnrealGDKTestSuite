@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestBoolReplication.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/TestBoolReplication.h"
 
 #include "TestBoolReplicationSingleClientRepDataAddComponentOp.h"
@@ -66,7 +66,6 @@ void USpatialTypeBinding_TestBoolReplication::Init(USpatialInterop* InInterop, U
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestBookend"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"TestBool"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestBoolReplication::BindToView(bool bIsClient)
@@ -213,6 +212,7 @@ worker::Entity USpatialTypeBinding_TestBoolReplication::CreateActorEntity(const 
 		.AddComponent<improbable::unreal::generated::testboolreplication::TestBoolReplicationHandoverData>(TestBoolReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testboolreplication::TestBoolReplicationClientRPCs>(improbable::unreal::generated::testboolreplication::TestBoolReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testboolreplication::TestBoolReplicationServerRPCs>(improbable::unreal::generated::testboolreplication::TestBoolReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testboolreplication::TestBoolReplicationCrossServerRPCs>(improbable::unreal::generated::testboolreplication::TestBoolReplicationCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testboolreplication::TestBoolReplicationNetMulticastRPCs>(improbable::unreal::generated::testboolreplication::TestBoolReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(SpatialType)
 class TESTSUITE_API ATestSuitePlayerController : public APlayerController
 {
 	GENERATED_BODY()

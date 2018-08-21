@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_RepCmdConfusion.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "TestSuiteTestClasses.h"
 
 #include "RepCmdConfusionSingleClientRepDataAddComponentOp.h"
@@ -63,7 +63,6 @@ void USpatialTypeBinding_RepCmdConfusion::Init(USpatialInterop* InInterop, USpat
 	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_RepCmdConfusion::BindToView(bool bIsClient)
@@ -206,6 +205,7 @@ worker::Entity USpatialTypeBinding_RepCmdConfusion::CreateActorEntity(const FStr
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionHandoverData>(RepCmdConfusionHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionClientRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionServerRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionCrossServerRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::repcmdconfusion::RepCmdConfusionNetMulticastRPCs>(improbable::unreal::generated::repcmdconfusion::RepCmdConfusionNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

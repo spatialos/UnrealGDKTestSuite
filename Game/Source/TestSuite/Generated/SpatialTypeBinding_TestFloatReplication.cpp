@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestFloatReplication.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/TestFloatReplication.h"
 
 #include "TestFloatReplicationSingleClientRepDataAddComponentOp.h"
@@ -67,7 +67,6 @@ void USpatialTypeBinding_TestFloatReplication::Init(USpatialInterop* InInterop, 
 	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"TestFloat"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"TestDouble"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestFloatReplication::BindToView(bool bIsClient)
@@ -214,6 +213,7 @@ worker::Entity USpatialTypeBinding_TestFloatReplication::CreateActorEntity(const
 		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationHandoverData>(TestFloatReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationClientRPCs>(improbable::unreal::generated::testfloatreplication::TestFloatReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs>(improbable::unreal::generated::testfloatreplication::TestFloatReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationCrossServerRPCs>(improbable::unreal::generated::testfloatreplication::TestFloatReplicationCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfloatreplication::TestFloatReplicationNetMulticastRPCs>(improbable::unreal::generated::testfloatreplication::TestFloatReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

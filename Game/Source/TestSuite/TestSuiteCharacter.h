@@ -10,7 +10,7 @@
 #include "Tests/ReplicationTestHelperClasses.h"
 #include "TestSuiteCharacter.generated.h"
 
-UCLASS(config = Game)
+UCLASS(SpatialType, config = Game)
 class ATestSuiteCharacter : public ACharacter
 {
 	GENERATED_BODY()

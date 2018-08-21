@@ -1,14 +1,14 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.testfstringreplication;
+package improbable.unreal.generated.testsuitegamemode;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component TestFStringReplicationSingleClientRepData {
-	id = 100066;
+component TestSuiteGameModeSingleClientRepData {
+	id = 100115;
 }
-component TestFStringReplicationMultiClientRepData {
-	id = 100067;
+component TestSuiteGameModeMultiClientRepData {
+	id = 100116;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -24,24 +24,20 @@ component TestFStringReplicationMultiClientRepData {
 	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
-	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
-	string field_testfstring0 = 17; // COND_None // ::TestFStringReplication
 }
-component TestFStringReplicationHandoverData {
-	id = 100068;
+component TestSuiteGameModeHandoverData {
+	id = 100117;
 }
-import "improbable/unreal/generated/UnrealTestFStringReplicationTypes.schema";
 
-component TestFStringReplicationClientRPCs {
-	id = 100069;
+component TestSuiteGameModeClientRPCs {
+	id = 100118;
 }
-component TestFStringReplicationServerRPCs {
-	id = 100070;
-	command UnrealRPCCommandResponse serverreportreplication(testfstringreplication.ServerReportReplicationRequest);
+component TestSuiteGameModeServerRPCs {
+	id = 100119;
 }
-component TestFStringReplicationCrossServerRPCs {
-	id = 100071;
+component TestSuiteGameModeCrossServerRPCs {
+	id = 100120;
 }
-component TestFStringReplicationNetMulticastRPCs {
-	id = 100072;
+component TestSuiteGameModeNetMulticastRPCs {
+	id = 100121;
 }

@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestSuitePlayerController.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,12 +17,20 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
-#include "TestSuitePlayerController.h"
+
 #include "Camera/CameraAnim.h"
 #include "Camera/CameraShake.h"
+#include "GameFramework/Actor.h"
+#include "GameFramework/ForceFeedbackEffect.h"
 #include "GameFramework/HUD.h"
 #include "GameFramework/LocalMessage.h"
+#include "GameFramework/Pawn.h"
+#include "GameFramework/PlayerState.h"
+#include "Materials/MaterialInterface.h"
 #include "Particles/EmitterCameraLensEffectBase.h"
+#include "Sound/SoundBase.h"
+#include "TestSuitePlayerController.h"
+#include "UObject/NoExportTypes.h"
 
 #include "TestSuitePlayerControllerSingleClientRepDataAddComponentOp.h"
 #include "TestSuitePlayerControllerMultiClientRepDataAddComponentOp.h"
@@ -150,7 +157,6 @@ void USpatialTypeBinding_TestSuitePlayerController::Init(USpatialInterop* InInte
 	// Populate HandoverHandleToPropertyMap.
 	HandoverHandleToPropertyMap.Add(1, FHandoverHandleData(Class, {"AcknowledgedPawn"}, {0}));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestSuitePlayerController::BindToView(bool bIsClient)
@@ -445,6 +451,7 @@ worker::Entity USpatialTypeBinding_TestSuitePlayerController::CreateActorEntity(
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData>(TestSuitePlayerControllerHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerClientRPCs>(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerServerRPCs>(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerCrossServerRPCs>(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerNetMulticastRPCs>(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

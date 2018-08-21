@@ -8,7 +8,7 @@
 #include "ReplicationTestHelperClasses.h"
 #include "TestEnumReplication.generated.h"
 
-UCLASS()
+UCLASS(SpatialType)
 class TESTSUITE_API ATestEnumReplication : public AReplicationTestCase
 {
 	GENERATED_BODY()

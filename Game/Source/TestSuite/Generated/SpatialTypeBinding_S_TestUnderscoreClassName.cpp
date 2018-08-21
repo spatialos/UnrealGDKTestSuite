@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_S_TestUnderscoreClassName.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "TestSuiteTestClasses.h"
 
 #include "STestUnderscoreClassNameSingleClientRepDataAddComponentOp.h"
@@ -66,7 +66,6 @@ void USpatialTypeBinding_S_TestUnderscoreClassName::Init(USpatialInterop* InInte
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"foo_bar_car"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_S_TestUnderscoreClassName::BindToView(bool bIsClient)
@@ -215,6 +214,7 @@ worker::Entity USpatialTypeBinding_S_TestUnderscoreClassName::CreateActorEntity(
 		.AddComponent<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameHandoverData>(S_TestUnderscoreClassNameHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs>(improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameServerRPCs>(improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameCrossServerRPCs>(improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameNetMulticastRPCs>(improbable::unreal::generated::stestunderscoreclassname::STestUnderscoreClassNameNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

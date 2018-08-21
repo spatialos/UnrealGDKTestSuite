@@ -8,7 +8,7 @@
 #include "ReplicationTestHelperClasses.h"
 #include "TestCArrayReplication.generated.h"
 
-UCLASS()
+UCLASS(SpatialType)
 class TESTSUITE_API ATestCArrayReplication : public AReplicationTestCase
 {
 	GENERATED_BODY()

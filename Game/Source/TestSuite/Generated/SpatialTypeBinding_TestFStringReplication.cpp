@@ -3,7 +3,6 @@
 
 #include "SpatialTypeBinding_TestFStringReplication.h"
 
-#include "GameFramework/PlayerState.h"
 #include "NetworkGuid.h"
 
 #include "SpatialOS.h"
@@ -18,6 +17,7 @@
 #include "SpatialMemoryWriter.h"
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
+
 #include "Tests/TestFStringReplication.h"
 
 #include "TestFStringReplicationSingleClientRepDataAddComponentOp.h"
@@ -66,7 +66,6 @@ void USpatialTypeBinding_TestFStringReplication::Init(USpatialInterop* InInterop
 	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"TestBookend"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"TestFString"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	bIsSingleton = false;
 }
 
 void USpatialTypeBinding_TestFStringReplication::BindToView(bool bIsClient)
@@ -213,6 +212,7 @@ worker::Entity USpatialTypeBinding_TestFStringReplication::CreateActorEntity(con
 		.AddComponent<improbable::unreal::generated::testfstringreplication::TestFStringReplicationHandoverData>(TestFStringReplicationHandoverData, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfstringreplication::TestFStringReplicationClientRPCs>(improbable::unreal::generated::testfstringreplication::TestFStringReplicationClientRPCs::Data{}, OwningClientOnly)
 		.AddComponent<improbable::unreal::generated::testfstringreplication::TestFStringReplicationServerRPCs>(improbable::unreal::generated::testfstringreplication::TestFStringReplicationServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testfstringreplication::TestFStringReplicationCrossServerRPCs>(improbable::unreal::generated::testfstringreplication::TestFStringReplicationCrossServerRPCs::Data{}, WorkersOnly)
 		.AddComponent<improbable::unreal::generated::testfstringreplication::TestFStringReplicationNetMulticastRPCs>(improbable::unreal::generated::testfstringreplication::TestFStringReplicationNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }

@@ -6,7 +6,7 @@
 #include "GameFramework/GameStateBase.h"
 #include "TestSuiteGameStateBase.generated.h"
 
-UCLASS()
+UCLASS(SpatialType=Singleton)
 class TESTSUITE_API ATestSuiteGameStateBase : public AGameStateBase
 {
 	GENERATED_BODY()
