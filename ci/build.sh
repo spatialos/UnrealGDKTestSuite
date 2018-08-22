@@ -62,12 +62,6 @@ markStartOfBlock "Build the TestSuite"
     exit 1
   fi
 
-  Game/Scripts/BuildWorker.bat "TestSuiteServer" "Linux" "Development" "TestSuite.uproject" --skip-codegen
-  if [[ ! -f "spatial/build/assembly/worker/UnrealWorker@Linux.zip" ]]; then
-    echo "Linux Server was not properly built."
-    exit 1
-  fi
-
   Game/Scripts/BuildWorker.bat "TestSuite" "Win64" "Development" "TestSuite.uproject" --skip-codegen
   if [[ ! -f "spatial/build/assembly/worker/UnrealClient@Windows.zip" ]]; then
      echo "Client was not properly built."
