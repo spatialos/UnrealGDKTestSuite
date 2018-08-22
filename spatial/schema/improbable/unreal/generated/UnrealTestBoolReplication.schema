@@ -5,13 +5,9 @@ package improbable.unreal.generated.testboolreplication;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestBoolReplicationSingleClientRepData {
-	id = 100064;
-	id = 100073;
 	id = 100024;
 }
 component TestBoolReplicationMultiClientRepData {
-	id = 100065;
-	id = 100074;
 	id = 100025;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
@@ -32,29 +28,20 @@ component TestBoolReplicationMultiClientRepData {
 	bool field_testbool0 = 17; // COND_None // ::TestBoolReplication
 }
 component TestBoolReplicationHandoverData {
-	id = 100066;
-	id = 100075;
 	id = 100026;
 }
 import "improbable/unreal/generated/UnrealTestBoolReplicationTypes.schema";
 
 component TestBoolReplicationClientRPCs {
-	id = 100067;
-	id = 100076;
 	id = 100027;
 }
 component TestBoolReplicationServerRPCs {
-	id = 100068;
-	id = 100077;
 	id = 100028;
 	command UnrealRPCCommandResponse serverreportreplication(testboolreplication.ServerReportReplicationRequest);
 }
 component TestBoolReplicationCrossServerRPCs {
-	id = 100078;
 	id = 100029;
 }
 component TestBoolReplicationNetMulticastRPCs {
-	id = 100069;
-	id = 100079;
 	id = 100030;
 }

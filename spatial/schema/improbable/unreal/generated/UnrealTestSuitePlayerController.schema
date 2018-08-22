@@ -118,12 +118,9 @@ component TestSuitePlayerControllerServerRPCs {
 	command UnrealRPCCommandResponse serveracknowledgepossession(playercontroller.ServerAcknowledgePossessionRequest);
 }
 component TestSuitePlayerControllerCrossServerRPCs {
-	id = 100015;
 	id = 100134;
 }
 component TestSuitePlayerControllerNetMulticastRPCs {
-	id = 100015;
-	id = 100016;
 	id = 100135;
 	event testsuiteplayercontroller.TestMulticastRequest testmulticast;
 }

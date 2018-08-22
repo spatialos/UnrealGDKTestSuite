@@ -5,13 +5,9 @@ package improbable.unreal.generated.noreferencebpactorc;
 import "improbable/unreal/gdk/core_types.schema";
 
 component NoReferenceBPActorCSingleClientRepData {
-	id = 100148;
-	id = 100171;
 	id = 100178;
 }
 component NoReferenceBPActorCMultiClientRepData {
-	id = 100149;
-	id = 100172;
 	id = 100179;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
@@ -31,27 +27,18 @@ component NoReferenceBPActorCMultiClientRepData {
 	bool field_mytestvariable0 = 16; // COND_None // ::NoReferenceBPActor_C
 }
 component NoReferenceBPActorCHandoverData {
-	id = 100150;
-	id = 100173;
 	id = 100180;
 }
 
 component NoReferenceBPActorCClientRPCs {
-	id = 100151;
-	id = 100174;
 	id = 100181;
 }
 component NoReferenceBPActorCServerRPCs {
-	id = 100152;
-	id = 100175;
 	id = 100182;
 }
 component NoReferenceBPActorCCrossServerRPCs {
-	id = 100176;
 	id = 100183;
 }
 component NoReferenceBPActorCNetMulticastRPCs {
-	id = 100153;
-	id = 100177;
 	id = 100184;
 }
