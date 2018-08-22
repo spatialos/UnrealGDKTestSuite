@@ -90,6 +90,17 @@ void ATestSuiteCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindTouch(IE_Released, this, &ATestSuiteCharacter::TouchStopped);
 }
 
+void ATestSuiteCharacter::Server_StartTestRunner_Implementation()
+{
+	check(TestRunner);
+	TestRunner->Server_RunTests();
+}
+
+bool ATestSuiteCharacter::Server_StartTestRunner_Validate()
+{
+	return true;
+}
+
 void ATestSuiteCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
 	Jump();
@@ -108,7 +119,7 @@ void ATestSuiteCharacter::DebugCmd()
 	{
 		if (!TestRunner->IsRunning())
 		{
-			TestRunner->Server_RunTests();
+			Server_StartTestRunner();
 		}
 		else
 		{
@@ -173,13 +184,4 @@ void ATestSuiteCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(ATestSuiteCharacter, TestRunner, COND_InitialOnly);
-}
-
-bool ATestSuiteCharacter::TestMulticast_Validate()
-{
-	return true;
-}
-
-void ATestSuiteCharacter::TestMulticast_Implementation()
-{
 }

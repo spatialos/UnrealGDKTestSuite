@@ -4,6 +4,6 @@ package improbable.unreal.generated.testsuitecharacter;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-type TestMulticastRequest {
+type ServerStartTestRunnerRequest {
 	uint32 target_subobject_offset = 1;
 }

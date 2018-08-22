@@ -53,13 +53,13 @@ void USpatialTypeBinding_TestSuiteCharacter::Init(USpatialInterop* InInterop, US
 	RPCToSenderMap.Emplace("ClientAdjustRootMotionPosition", &USpatialTypeBinding_TestSuiteCharacter::ClientAdjustRootMotionPosition_SendRPC);
 	RPCToSenderMap.Emplace("ClientAdjustPosition", &USpatialTypeBinding_TestSuiteCharacter::ClientAdjustPosition_SendRPC);
 	RPCToSenderMap.Emplace("ClientAckGoodMove", &USpatialTypeBinding_TestSuiteCharacter::ClientAckGoodMove_SendRPC);
+	RPCToSenderMap.Emplace("Server_StartTestRunner", &USpatialTypeBinding_TestSuiteCharacter::Server_StartTestRunner_SendRPC);
 	RPCToSenderMap.Emplace("ServerMoveOld", &USpatialTypeBinding_TestSuiteCharacter::ServerMoveOld_SendRPC);
 	RPCToSenderMap.Emplace("ServerMoveNoBase", &USpatialTypeBinding_TestSuiteCharacter::ServerMoveNoBase_SendRPC);
 	RPCToSenderMap.Emplace("ServerMoveDualNoBase", &USpatialTypeBinding_TestSuiteCharacter::ServerMoveDualNoBase_SendRPC);
 	RPCToSenderMap.Emplace("ServerMoveDualHybridRootMotion", &USpatialTypeBinding_TestSuiteCharacter::ServerMoveDualHybridRootMotion_SendRPC);
 	RPCToSenderMap.Emplace("ServerMoveDual", &USpatialTypeBinding_TestSuiteCharacter::ServerMoveDual_SendRPC);
 	RPCToSenderMap.Emplace("ServerMove", &USpatialTypeBinding_TestSuiteCharacter::ServerMove_SendRPC);
-	RPCToSenderMap.Emplace("TestMulticast", &USpatialTypeBinding_TestSuiteCharacter::TestMulticast_SendRPC);
 
 	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("TestSuiteCharacter"));
 
@@ -197,12 +197,14 @@ void USpatialTypeBinding_TestSuiteCharacter::BindToView(bool bIsClient)
 	ViewCallbacks.Add(View->OnCommandResponse<ClientRPCCommandTypes::Clientackgoodmove>(std::bind(&USpatialTypeBinding_TestSuiteCharacter::ClientAckGoodMove_OnCommandResponse, this, std::placeholders::_1)));
 
 	using ServerRPCCommandTypes = improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands;
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverstarttestrunner>(std::bind(&USpatialTypeBinding_TestSuiteCharacter::Server_StartTestRunner_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servermoveold>(std::bind(&USpatialTypeBinding_TestSuiteCharacter::ServerMoveOld_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servermovenobase>(std::bind(&USpatialTypeBinding_TestSuiteCharacter::ServerMoveNoBase_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servermovedualnobase>(std::bind(&USpatialTypeBinding_TestSuiteCharacter::ServerMoveDualNoBase_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servermovedualhybridrootmotion>(std::bind(&USpatialTypeBinding_TestSuiteCharacter::ServerMoveDualHybridRootMotion_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servermovedual>(std::bind(&USpatialTypeBinding_TestSuiteCharacter::ServerMoveDual_OnRPCPayload, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Servermove>(std::bind(&USpatialTypeBinding_TestSuiteCharacter::ServerMove_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverstarttestrunner>(std::bind(&USpatialTypeBinding_TestSuiteCharacter::Server_StartTestRunner_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servermoveold>(std::bind(&USpatialTypeBinding_TestSuiteCharacter::ServerMoveOld_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servermovenobase>(std::bind(&USpatialTypeBinding_TestSuiteCharacter::ServerMoveNoBase_OnCommandResponse, this, std::placeholders::_1)));
 	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Servermovedualnobase>(std::bind(&USpatialTypeBinding_TestSuiteCharacter::ServerMoveDualNoBase_OnCommandResponse, this, std::placeholders::_1)));
@@ -2763,11 +2765,6 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_Handover(USpatialActo
 
 void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterNetMulticastRPCs::Update& Update)
 {
-	for (auto& event : Update.testmulticast())
-	{
-		TestMulticast_OnRPCPayload(EntityId, event);
-	}
-
 }
 void USpatialTypeBinding_TestSuiteCharacter::RootMotionDebugClientPrintOnScreen_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
@@ -3291,6 +3288,33 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAckGoodMove_SendRPC(worker::C
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
+void USpatialTypeBinding_TestSuiteCharacter::Server_StartTestRunner_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+{
+	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
+	{
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+		{
+			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_StartTestRunner queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
+		}
+
+		// Build RPC Payload.
+		improbable::unreal::generated::testsuitecharacter::ServerStartTestRunnerRequest RPCPayload;
+
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending RPC: Server_StartTestRunner, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Serverstarttestrunner>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
 void USpatialTypeBinding_TestSuiteCharacter::ServerMoveOld_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
 {
 	// This struct is declared in Character.generated.h (in a macro that is then put in Character.h UCLASS macro)
@@ -3792,36 +3816,6 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMove_SendRPC(worker::Connecti
 
 			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Servermove>(TargetObjectRef.entity(), RPCPayload, 0);
 			return {RequestId.Id};
-	};
-	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
-}
-void USpatialTypeBinding_TestSuiteCharacter::TestMulticast_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
-{
-	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
-	{
-		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
-		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
-		{
-			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC TestMulticast queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
-			return {TargetObject};
-		}
-
-		// Build RPC Payload.
-		improbable::unreal::generated::testsuitecharacter::TestMulticastRequest RPCPayload;
-
-		// Send RPC
-		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
-		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending RPC: TestMulticast, target: %s %s"),
-			*Interop->GetSpatialOS()->GetWorkerId(),
-			*TargetObject->GetName(),
-			*ObjectRefToString(TargetObjectRef));
-
-			improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterNetMulticastRPCs::Update Update;
-			Update.add_testmulticast(RPCPayload);
-			checkf(Update.testmulticast().size() == 1, TEXT("TestMulticast_SendCommand: More than one event being sent"));
-			Connection->SendComponentUpdate<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterNetMulticastRPCs>(TargetObjectRef.entity(), Update);
-			return {};
 	};
 	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
 }
@@ -4531,6 +4525,51 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAckGoodMove_OnRPCPayload(cons
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
+void USpatialTypeBinding_TestSuiteCharacter::Server_StartTestRunner_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Serverstarttestrunner>& Op)
+{
+	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), {}, {}};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			// A legal static object reference should never be unresolved.
+			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Server_StartTestRunner_OnRPCPayload: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: Server_StartTestRunner_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Call implementation.
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received RPC: Server_StartTestRunner, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Server_StartTestRunner"))))
+		{
+			TargetObject->ProcessEvent(Function, nullptr);
+		}
+		else
+		{
+			UE_LOG(LogSpatialGDKInterop, Error, TEXT("%s: Server_StartTestRunner_OnRPCPayload: Function not found. Object: %s, Function: Server_StartTestRunner."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		// Send command response.
+		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
+		Connection->SendCommandResponse<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Serverstarttestrunner>(Op.RequestId, {});
+		return {};
+	};
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+}
 void USpatialTypeBinding_TestSuiteCharacter::ServerMoveOld_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Servermoveold>& Op)
 {
 	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
@@ -5164,48 +5203,6 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMove_OnRPCPayload(const worke
 	};
 	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
 }
-void USpatialTypeBinding_TestSuiteCharacter::TestMulticast_OnRPCPayload(const worker::EntityId EntityId, const improbable::unreal::generated::testsuitecharacter::TestMulticastRequest& EventData)
-{
-	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
-	{
-		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset(), {}, {}};
-		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
-		if (!TargetNetGUID.IsValid())
-		{
-			// A legal static object reference should never be unresolved.
-			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
-			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: TestMulticast_OnRPCPayload: Target object %s is not resolved on this worker."),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ObjectRefToString(TargetObjectRef));
-			return {TargetObjectRef};
-		}
-		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
-		checkf(TargetObject, TEXT("%s: TestMulticast_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
-			*Interop->GetSpatialOS()->GetWorkerId(),
-			*ObjectRefToString(TargetObjectRef),
-			*TargetNetGUID.ToString());
-
-		// Call implementation.
-		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received RPC: TestMulticast, target: %s %s"),
-			*Interop->GetSpatialOS()->GetWorkerId(),
-			*TargetObject->GetName(),
-			*ObjectRefToString(TargetObjectRef));
-
-		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("TestMulticast"))))
-		{
-			TargetObject->ProcessEvent(Function, nullptr);
-		}
-		else
-		{
-			UE_LOG(LogSpatialGDKInterop, Error, TEXT("%s: TestMulticast_OnRPCPayload: Function not found. Object: %s, Function: TestMulticast."),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*TargetObject->GetFullName());
-		}
-
-		return {};
-	};
-	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
-}
 
 void USpatialTypeBinding_TestSuiteCharacter::RootMotionDebugClientPrintOnScreen_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs::Commands::Rootmotiondebugclientprintonscreen>& Op)
 {
@@ -5250,6 +5247,11 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAdjustPosition_OnCommandRespo
 void USpatialTypeBinding_TestSuiteCharacter::ClientAckGoodMove_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterClientRPCs::Commands::Clientackgoodmove>& Op)
 {
 	Interop->HandleCommandResponse_Internal(TEXT("ClientAckGoodMove"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
+}
+
+void USpatialTypeBinding_TestSuiteCharacter::Server_StartTestRunner_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Serverstarttestrunner>& Op)
+{
+	Interop->HandleCommandResponse_Internal(TEXT("Server_StartTestRunner"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }
 
 void USpatialTypeBinding_TestSuiteCharacter::ServerMoveOld_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterServerRPCs::Commands::Servermoveold>& Op)

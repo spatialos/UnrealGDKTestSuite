@@ -79,6 +79,7 @@ component TestSuiteCharacterClientRPCs {
 }
 component TestSuiteCharacterServerRPCs {
 	id = 100112;
+	command UnrealRPCCommandResponse serverstarttestrunner(testsuitecharacter.ServerStartTestRunnerRequest);
 	command UnrealRPCCommandResponse servermoveold(character.ServerMoveOldRequest);
 	command UnrealRPCCommandResponse servermovenobase(character.ServerMoveNoBaseRequest);
 	command UnrealRPCCommandResponse servermovedualnobase(character.ServerMoveDualNoBaseRequest);
@@ -91,5 +92,4 @@ component TestSuiteCharacterCrossServerRPCs {
 }
 component TestSuiteCharacterNetMulticastRPCs {
 	id = 100114;
-	event testsuitecharacter.TestMulticastRequest testmulticast;
 }
