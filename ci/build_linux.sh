@@ -10,7 +10,7 @@ markStartOfBlock "$0"
 
 source ci/prepare_build_environment.sh
 
-markStartOfBlock "Build the TestSuite"
+markStartOfBlock "Build the TestSuite (Linux)"
   # Build each target to ensure scripts are correct, skipping code generation on all but the first to save some time.
   Game/Scripts/BuildWorker.bat "TestSuiteEditor" "Win64" "Development" "TestSuite.uproject"
   if [[ ! -f "spatial/build/assembly/worker/UnrealEditor@Windows.zip" ]]; then
@@ -23,6 +23,6 @@ markStartOfBlock "Build the TestSuite"
     echo "Linux Server was not properly built."
     exit 1
   fi
-markEndOfBlock "Build the TestSuite"
+markEndOfBlock "Build the TestSuite (Linux)"
 
 markEndOfBlock "$0"
