@@ -18,8 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "Tests/ReplicationTestHelperClasses.h"
-
 #include "TestActorSingleClientRepDataAddComponentOp.h"
 #include "TestActorMultiClientRepDataAddComponentOp.h"
 #include "TestActorHandoverDataAddComponentOp.h"

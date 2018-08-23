@@ -18,8 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "Tests/TestEnumReplication.h"
-
 #include "TestEnumReplicationSingleClientRepDataAddComponentOp.h"
 #include "TestEnumReplicationMultiClientRepDataAddComponentOp.h"
 #include "TestEnumReplicationHandoverDataAddComponentOp.h"

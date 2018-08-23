@@ -8,10 +8,14 @@
 #include <improbable/unreal/gdk/core_types.h>
 #include <improbable/unreal/gdk/unreal_metadata.h>
 #include <improbable/unreal/generated/UnrealTestcasePropertiesC.h>
+
+#include "GameFramework/Actor.h"
+#include "GameFramework/Character.h"
+#include "TestSuiteCharacter.h"
+
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_Testcase_Properties_C.generated.h"
-
 UCLASS()
 class USpatialTypeBinding_Testcase_Properties_C : public USpatialTypeBinding
 {
@@ -66,4 +70,10 @@ private:
 	// RPC command request handler functions.
 
 	// RPC command response handler functions.
+
+	enum Testcase_enum
+	{
+		NewEnumerator0,
+		Testcase_MAX,
+	};
 };

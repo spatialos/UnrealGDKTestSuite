@@ -8,10 +8,12 @@
 #include <improbable/unreal/gdk/core_types.h>
 #include <improbable/unreal/gdk/unreal_metadata.h>
 #include <improbable/unreal/generated/UnrealTestEnumReplication.h>
+
+#include "Tests/TestEnumReplication.h"
+
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_TestEnumReplication.generated.h"
-
 UCLASS()
 class USpatialTypeBinding_TestEnumReplication : public USpatialTypeBinding
 {

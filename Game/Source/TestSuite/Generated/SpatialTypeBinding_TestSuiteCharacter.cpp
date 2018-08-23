@@ -18,9 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "Components/PrimitiveComponent.h"
-#include "TestSuiteCharacter.h"
-
 #include "TestSuiteCharacterSingleClientRepDataAddComponentOp.h"
 #include "TestSuiteCharacterMultiClientRepDataAddComponentOp.h"
 #include "TestSuiteCharacterHandoverDataAddComponentOp.h"

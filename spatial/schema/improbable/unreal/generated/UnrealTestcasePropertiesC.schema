@@ -5,10 +5,10 @@ package improbable.unreal.generated.testcasepropertiesc;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestcasePropertiesCSingleClientRepData {
-	id = 100192;
+	id = 100178;
 }
 component TestcasePropertiesCMultiClientRepData {
-	id = 100193;
+	id = 100179;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -24,20 +24,26 @@ component TestcasePropertiesCMultiClientRepData {
 	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
+	uint32 field_testenum0 = 16; // COND_None // ::Testcase_Properties_C
+	UnrealObjectRef field_testbpactor0 = 17; // COND_None // ::Testcase_Properties_C
+	bool field_testbpstruct0_internalstruct3c866974d477750e22e863d91ba350aa80_testbool15c1b5d454f54993b19d77fb6b2ef91cb0 = 18; // COND_None // Testcase_Struct_with_BP_Actor::InternalStruct_3_C866974D477750E22E863D91BA350AA8Testcase_Struct_with_BP_Struct::Test_BP_Struct::Testcase_Properties_C
+	bytes field_testbpstruct0_internalstruct3c866974d477750e22e863d91ba350aa80_teststruct40f09344d4ef4517fd0409da7f7b80e9b0 = 19; // COND_None // Testcase_Struct_with_BP_Actor::InternalStruct_3_C866974D477750E22E863D91BA350AA8Testcase_Struct_with_BP_Struct::Test_BP_Struct::Testcase_Properties_C
+	uint32 field_testbpstruct0_internalstruct3c866974d477750e22e863d91ba350aa80_testenum7dbcadacd42bccad755cab5a2e92afe320 = 20; // COND_None // Testcase_Struct_with_BP_Actor::InternalStruct_3_C866974D477750E22E863D91BA350AA8Testcase_Struct_with_BP_Struct::Test_BP_Struct::Testcase_Properties_C
+	UnrealObjectRef field_testbpstruct0_internalstruct3c866974d477750e22e863d91ba350aa80_testbpactor1044234d3f42f700435b69db9dc87f40900 = 21; // COND_None // Testcase_Struct_with_BP_Actor::InternalStruct_3_C866974D477750E22E863D91BA350AA8Testcase_Struct_with_BP_Struct::Test_BP_Struct::Testcase_Properties_C
 }
 component TestcasePropertiesCHandoverData {
-	id = 100194;
+	id = 100180;
 }
 
 component TestcasePropertiesCClientRPCs {
-	id = 100195;
+	id = 100181;
 }
 component TestcasePropertiesCServerRPCs {
-	id = 100196;
+	id = 100182;
 }
 component TestcasePropertiesCCrossServerRPCs {
-	id = 100197;
+	id = 100183;
 }
 component TestcasePropertiesCNetMulticastRPCs {
-	id = 100198;
+	id = 100184;
 }

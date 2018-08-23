@@ -18,8 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "TestSuiteTestClasses.h"
-
 #include "RepCmdConfusionSingleClientRepDataAddComponentOp.h"
 #include "RepCmdConfusionMultiClientRepDataAddComponentOp.h"
 #include "RepCmdConfusionHandoverDataAddComponentOp.h"

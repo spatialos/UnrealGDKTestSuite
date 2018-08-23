@@ -8,10 +8,12 @@
 #include <improbable/unreal/gdk/core_types.h>
 #include <improbable/unreal/gdk/unreal_metadata.h>
 #include <improbable/unreal/generated/UnrealGDKTestRunner.h>
+
+#include "Tests/GDKTestRunner.h"
+
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_GDKTestRunner.generated.h"
-
 UCLASS()
 class USpatialTypeBinding_GDKTestRunner : public USpatialTypeBinding
 {

@@ -18,8 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "GameFramework/Actor.h"
-
 #include "NoReferenceBPActorCSingleClientRepDataAddComponentOp.h"
 #include "NoReferenceBPActorCMultiClientRepDataAddComponentOp.h"
 #include "NoReferenceBPActorCHandoverDataAddComponentOp.h"

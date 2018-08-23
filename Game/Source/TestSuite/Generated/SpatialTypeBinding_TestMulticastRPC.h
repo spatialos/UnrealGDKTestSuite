@@ -8,10 +8,12 @@
 #include <improbable/unreal/gdk/core_types.h>
 #include <improbable/unreal/gdk/unreal_metadata.h>
 #include <improbable/unreal/generated/UnrealTestMulticastRPC.h>
+
+#include "Tests/TestMulticastRPC.h"
+
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_TestMulticastRPC.generated.h"
-
 UCLASS()
 class USpatialTypeBinding_TestMulticastRPC : public USpatialTypeBinding
 {

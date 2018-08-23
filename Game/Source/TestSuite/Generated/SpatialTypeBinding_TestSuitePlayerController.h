@@ -8,10 +8,24 @@
 #include <improbable/unreal/gdk/core_types.h>
 #include <improbable/unreal/gdk/unreal_metadata.h>
 #include <improbable/unreal/generated/UnrealTestSuitePlayerController.h>
+
+#include "Camera/CameraAnim.h"
+#include "Camera/CameraShake.h"
+#include "GameFramework/Actor.h"
+#include "GameFramework/ForceFeedbackEffect.h"
+#include "GameFramework/HUD.h"
+#include "GameFramework/LocalMessage.h"
+#include "GameFramework/Pawn.h"
+#include "GameFramework/PlayerState.h"
+#include "Materials/MaterialInterface.h"
+#include "Particles/EmitterCameraLensEffectBase.h"
+#include "Sound/SoundBase.h"
+#include "TestSuitePlayerController.h"
+#include "UObject/NoExportTypes.h"
+
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_TestSuitePlayerController.generated.h"
-
 UCLASS()
 class USpatialTypeBinding_TestSuitePlayerController : public USpatialTypeBinding
 {

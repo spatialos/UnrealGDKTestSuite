@@ -18,8 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "Tests/TestMulticastRPC.h"
-
 #include "TestMulticastRPCSingleClientRepDataAddComponentOp.h"
 #include "TestMulticastRPCMultiClientRepDataAddComponentOp.h"
 #include "TestMulticastRPCHandoverDataAddComponentOp.h"

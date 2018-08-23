@@ -18,8 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "TestSuiteTestClasses.h"
-
 #include "STestUnderscoreClassNameSingleClientRepDataAddComponentOp.h"
 #include "STestUnderscoreClassNameMultiClientRepDataAddComponentOp.h"
 #include "STestUnderscoreClassNameHandoverDataAddComponentOp.h"
