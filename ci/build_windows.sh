@@ -4,7 +4,6 @@ set -e -u -x -o pipefail
 
 cd "$(dirname "$0")/../"
 
-source ci/pinned-tools.sh
 source ci/profiling.sh
 
 markStartOfBlock "$0"
