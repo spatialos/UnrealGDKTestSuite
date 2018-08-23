@@ -14,6 +14,7 @@
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_TestMulticastRPC.generated.h"
+
 UCLASS()
 class USpatialTypeBinding_TestMulticastRPC : public USpatialTypeBinding
 {

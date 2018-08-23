@@ -14,6 +14,7 @@
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_TestEnumReplication.generated.h"
+
 UCLASS()
 class USpatialTypeBinding_TestEnumReplication : public USpatialTypeBinding
 {

@@ -14,6 +14,7 @@
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_TestStaticComponentReplication.generated.h"
+
 UCLASS()
 class USpatialTypeBinding_TestStaticComponentReplication : public USpatialTypeBinding
 {

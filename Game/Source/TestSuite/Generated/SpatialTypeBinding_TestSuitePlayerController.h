@@ -26,6 +26,7 @@
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_TestSuitePlayerController.generated.h"
+
 UCLASS()
 class USpatialTypeBinding_TestSuitePlayerController : public USpatialTypeBinding
 {
