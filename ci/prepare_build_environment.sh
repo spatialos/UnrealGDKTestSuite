@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-set -e -u -x -o pipefail
-
-cd "$(dirname "$0")/../"
-
 source ci/pinned-tools.sh
-source ci/profiling.sh
 
 if ! isTeamCity ; then
   echo "This script should only be run on the CI agents."
@@ -21,8 +16,6 @@ if [ -z "${UNREAL_GDK_BRANCH+x}" ]; then
   echo "The UNREAL_GDK_BRANCH variable was not set, using master as default."
   UNREAL_GDK_BRANCH="master"
 fi
-
-markStartOfBlock "$0"
 
 markStartOfBlock "Clean gdk build directory"
   rm -rf build/UnrealGDK/
@@ -53,26 +46,3 @@ markStartOfBlock "Run the GDK setup script"
   popd
   ./CreateGDKSymlinks.bat "build/UnrealGDK"
 markEndOfBlock "Run the GDK setup script"
-
-markStartOfBlock "Build the TestSuite"
-  # Build each target to ensure scripts are correct, skipping code generation on all but the first to save some time.
-  Game/Scripts/BuildWorker.bat "TestSuiteEditor" "Win64" "Development" "TestSuite.uproject"
-  if [[ ! -f "spatial/build/assembly/worker/UnrealEditor@Windows.zip" ]]; then
-    echo "Editor was not properly built."
-    exit 1
-  fi
-
-  Game/Scripts/BuildWorker.bat "TestSuiteServer" "Linux" "Development" "TestSuite.uproject" --skip-codegen
-  if [[ ! -f "spatial/build/assembly/worker/UnrealWorker@Linux.zip" ]]; then
-    echo "Linux Server was not properly built."
-    exit 1
-  fi
-
-  Game/Scripts/BuildWorker.bat "TestSuite" "Win64" "Development" "TestSuite.uproject" --skip-codegen
-  if [[ ! -f "spatial/build/assembly/worker/UnrealClient@Windows.zip" ]]; then
-     echo "Client was not properly built."
-     exit 1
-  fi
-markEndOfBlock "Build the TestSuite"
-
-markEndOfBlock "$0"
