@@ -66,7 +66,10 @@ void USpatialTypeBinding_Testcase_Properties_C::Init(USpatialInterop* InInterop,
 	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"Test_BP_Struct", "InternalStruct_3_C866974D477750E22E863D91BA350AA8", "Test_struct_4_0F09344D4EF4517FD0409DA7F7B80E9B"}, {0, 0, 0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(20, FRepHandleData(Class, {"Test_BP_Struct", "InternalStruct_3_C866974D477750E22E863D91BA350AA8", "Test_enum_7_DBCADACD42BCCAD755CAB5A2E92AFE32"}, {0, 0, 0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(21, FRepHandleData(Class, {"Test_BP_Struct", "InternalStruct_3_C866974D477750E22E863D91BA350AA8", "Test_bp_actor_10_44234D3F42F700435B69DB9DC87F4090"}, {0, 0, 0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(22, FRepHandleData(Class, {"Test_BP_Struct_Array"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
+	FTestcase_Struct_with_BP_Actor__pf3877032745_Struct = LoadObject<UStruct>(NULL, TEXT("/Game/EntityBlueprints/Testcase_Struct_with_BP_Actor.Testcase_Struct_with_BP_Actor"), NULL, LOAD_None, NULL);
+	FTestcase_Struct_with_BP_Struct__pf3877032745_Struct = LoadObject<UStruct>(NULL, TEXT("/Game/EntityBlueprints/Testcase_Struct_with_BP_Struct.Testcase_Struct_with_BP_Struct"), NULL, LOAD_None, NULL);
 }
 
 void USpatialTypeBinding_Testcase_Properties_C::BindToView(bool bIsClient)
@@ -735,6 +738,31 @@ void USpatialTypeBinding_Testcase_Properties_C::ServerSendUpdate_MultiClient(con
 			else
 			{
 				OutUpdate.set_field_testbpstruct0_internalstruct3c866974d477750e22e863d91ba350aa80_testbpactor1044234d3f42f700435b69db9dc87f40900(SpatialConstants::NULL_OBJECT_REF);
+			}
+			break;
+		}
+		case 22: // field_testbpstructarray0
+		{
+			const TArray<FTestcase_Struct_with_BP_Struct__pf3877032745>& Value = *(reinterpret_cast<TArray<FTestcase_Struct_with_BP_Struct__pf3877032745> const*>(Data));
+
+			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 22);
+			TSet<const UObject*> UnresolvedObjects;
+			::worker::List<std::string> List;
+			for(int i = 0; i < Value.Num(); i++)
+			{
+				TArray<uint8> ValueData;
+				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
+				FTestcase_Struct_with_BP_Struct__pf3877032745_Struct->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FTestcase_Struct_with_BP_Struct__pf3877032745*>(&Value[i])));
+				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
+			}
+			const ::worker::List<std::string>& Result = (List);
+			if (UnresolvedObjects.Num() == 0)
+			{
+				OutUpdate.set_field_testbpstructarray0(Result);
+			}
+			else
+			{
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 22);
 			}
 			break;
 		}
@@ -1482,6 +1510,37 @@ void USpatialTypeBinding_Testcase_Properties_C::ReceiveUpdate_MultiClient(USpati
 					*RepData->Property->GetName(),
 					Handle);
 			}
+		}
+	}
+	if (!Update.field_testbpstructarray0().empty())
+	{
+		// field_testbpstructarray0
+		uint16 Handle = 22;
+		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
+		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
+		{
+			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
+			TArray<FTestcase_Struct_with_BP_Struct__pf3877032745> Value = *(reinterpret_cast<TArray<FTestcase_Struct_with_BP_Struct__pf3877032745> *>(PropertyData));
+
+			auto& List = (*Update.field_testbpstructarray0().data());
+			Value.SetNum(List.size());
+			for(int i = 0; i < List.size(); i++)
+			{
+				auto& ValueDataStr = List[i];
+				TArray<uint8> ValueData;
+				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
+				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
+				FTestcase_Struct_with_BP_Struct__pf3877032745_Struct->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Value[i]));
+			}
+
+			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
+
+			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
+				*RepData->Property->GetName(),
+				Handle);
 		}
 	}
 	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies.Array());

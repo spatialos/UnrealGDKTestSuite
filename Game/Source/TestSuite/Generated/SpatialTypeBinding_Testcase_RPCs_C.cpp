@@ -62,8 +62,8 @@ void USpatialTypeBinding_Testcase_RPCs_C::Init(USpatialInterop* InInterop, USpat
 	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
-	FTestcase_Struct_with_BP_Struct__pf3877032745_Struct = LoadObject<UStruct>(NULL, TEXT("/Game/EntityBlueprints/Testcase_Struct_with_BP_Struct.Testcase_Struct_with_BP_Struct"), NULL, LOAD_None, NULL);
 	FTestcase_Struct_with_BP_Actor__pf3877032745_Struct = LoadObject<UStruct>(NULL, TEXT("/Game/EntityBlueprints/Testcase_Struct_with_BP_Actor.Testcase_Struct_with_BP_Actor"), NULL, LOAD_None, NULL);
+	FTestcase_Struct_with_BP_Struct__pf3877032745_Struct = LoadObject<UStruct>(NULL, TEXT("/Game/EntityBlueprints/Testcase_Struct_with_BP_Struct.Testcase_Struct_with_BP_Struct"), NULL, LOAD_None, NULL);
 }
 
 void USpatialTypeBinding_Testcase_RPCs_C::BindToView(bool bIsClient)

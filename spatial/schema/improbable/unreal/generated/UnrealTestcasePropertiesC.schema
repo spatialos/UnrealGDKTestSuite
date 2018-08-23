@@ -30,6 +30,7 @@ component TestcasePropertiesCMultiClientRepData {
 	bytes field_testbpstruct0_internalstruct3c866974d477750e22e863d91ba350aa80_teststruct40f09344d4ef4517fd0409da7f7b80e9b0 = 19; // COND_None // Testcase_Struct_with_BP_Actor::InternalStruct_3_C866974D477750E22E863D91BA350AA8Testcase_Struct_with_BP_Struct::Test_BP_Struct::Testcase_Properties_C
 	uint32 field_testbpstruct0_internalstruct3c866974d477750e22e863d91ba350aa80_testenum7dbcadacd42bccad755cab5a2e92afe320 = 20; // COND_None // Testcase_Struct_with_BP_Actor::InternalStruct_3_C866974D477750E22E863D91BA350AA8Testcase_Struct_with_BP_Struct::Test_BP_Struct::Testcase_Properties_C
 	UnrealObjectRef field_testbpstruct0_internalstruct3c866974d477750e22e863d91ba350aa80_testbpactor1044234d3f42f700435b69db9dc87f40900 = 21; // COND_None // Testcase_Struct_with_BP_Actor::InternalStruct_3_C866974D477750E22E863D91BA350AA8Testcase_Struct_with_BP_Struct::Test_BP_Struct::Testcase_Properties_C
+	list<bytes> field_testbpstructarray0 = 22; // COND_None // ::Testcase_Properties_C
 }
 component TestcasePropertiesCHandoverData {
 	id = 100180;
