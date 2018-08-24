@@ -12,6 +12,8 @@
 #include "TestSuiteGameStateBase.h"
 #include "SpatialNetDriver.h"
 
+#include "TestSuiteTestClasses.h"
+
 #include "UnrealNetwork.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,6 +63,9 @@ void ATestSuiteCharacter::BeginPlay()
 	{
 		TestRunner = World->SpawnActor<AGDKTestRunner>();
 	}
+
+	APropertyClass* TestClass = World->SpawnActor<APropertyClass>();
+    TestClass->ActorPointer_Context = nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////

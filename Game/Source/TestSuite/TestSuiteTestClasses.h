@@ -64,3 +64,36 @@ public:
 	void Client_Bar_RPC();
 };
 
+USTRUCT()
+struct FUPropertyStruct
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	UObject* BasicUObject;
+
+	UPROPERTY()
+	AS_TestUnderscoreClassName* ActorPointer;
+
+	UPROPERTY()
+    AS_TestUnderscoreClassName* ActorArray[5];
+};
+
+UCLASS()
+class APropertyClass : public AActor
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	UObject* BasicUObject;
+
+	UPROPERTY()
+	AS_TestUnderscoreClassName* ActorPointer;
+
+	UPROPERTY()
+    AS_TestUnderscoreClassName* ActorArray[6];
+
+	UPROPERTY()
+	TArray<AS_TestUnderscoreClassName*> DynamicActorArray;
+};
+
