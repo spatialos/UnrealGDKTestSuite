@@ -18,9 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "Tests/ReplicationTestHelperClasses.h"
-#include "Tests/TestUObjectReplication.h"
-
 #include "TestUObjectReplicationSingleClientRepDataAddComponentOp.h"
 #include "TestUObjectReplicationMultiClientRepDataAddComponentOp.h"
 #include "TestUObjectReplicationHandoverDataAddComponentOp.h"

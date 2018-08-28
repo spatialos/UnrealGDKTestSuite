@@ -18,8 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "Tests/GDKTestRunner.h"
-
 #include "GDKTestRunnerSingleClientRepDataAddComponentOp.h"
 #include "GDKTestRunnerMultiClientRepDataAddComponentOp.h"
 #include "GDKTestRunnerHandoverDataAddComponentOp.h"

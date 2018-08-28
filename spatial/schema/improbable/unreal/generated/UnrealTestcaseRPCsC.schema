@@ -1,14 +1,14 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.noreferencebpactorc;
+package improbable.unreal.generated.testcaserpcsc;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component NoReferenceBPActorCSingleClientRepData {
-	id = 100185;
+component TestcaseRPCsCSingleClientRepData {
+	id = 100192;
 }
-component NoReferenceBPActorCMultiClientRepData {
-	id = 100186;
+component TestcaseRPCsCMultiClientRepData {
+	id = 100193;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -24,21 +24,22 @@ component NoReferenceBPActorCMultiClientRepData {
 	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
-	bool field_mytestvariable0 = 16; // COND_None // ::NoReferenceBPActor_C
 }
-component NoReferenceBPActorCHandoverData {
-	id = 100187;
+component TestcaseRPCsCHandoverData {
+	id = 100194;
 }
+import "improbable/unreal/generated/UnrealTestcaseRPCsCTypes.schema";
 
-component NoReferenceBPActorCClientRPCs {
-	id = 100188;
+component TestcaseRPCsCClientRPCs {
+	id = 100195;
+	command UnrealRPCCommandResponse testrpc(testcaserpcsc.TestRPCRequest);
 }
-component NoReferenceBPActorCServerRPCs {
-	id = 100189;
+component TestcaseRPCsCServerRPCs {
+	id = 100196;
 }
-component NoReferenceBPActorCCrossServerRPCs {
-	id = 100190;
+component TestcaseRPCsCCrossServerRPCs {
+	id = 100197;
 }
-component NoReferenceBPActorCNetMulticastRPCs {
-	id = 100191;
+component TestcaseRPCsCNetMulticastRPCs {
+	id = 100198;
 }

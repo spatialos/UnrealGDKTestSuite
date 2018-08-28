@@ -18,8 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "Tests/TestUStructReplication.h"
-
 #include "TestUStructReplicationSingleClientRepDataAddComponentOp.h"
 #include "TestUStructReplicationMultiClientRepDataAddComponentOp.h"
 #include "TestUStructReplicationHandoverDataAddComponentOp.h"

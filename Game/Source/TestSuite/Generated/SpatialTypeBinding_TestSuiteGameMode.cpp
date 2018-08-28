@@ -18,8 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "TestSuiteGameMode.h"
-
 #include "TestSuiteGameModeSingleClientRepDataAddComponentOp.h"
 #include "TestSuiteGameModeMultiClientRepDataAddComponentOp.h"
 #include "TestSuiteGameModeHandoverDataAddComponentOp.h"

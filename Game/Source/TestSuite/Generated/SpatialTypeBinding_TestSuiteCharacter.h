@@ -8,6 +8,10 @@
 #include <improbable/unreal/gdk/core_types.h>
 #include <improbable/unreal/gdk/unreal_metadata.h>
 #include <improbable/unreal/generated/UnrealTestSuiteCharacter.h>
+
+#include "Components/PrimitiveComponent.h"
+#include "TestSuiteCharacter.h"
+
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_TestSuiteCharacter.generated.h"

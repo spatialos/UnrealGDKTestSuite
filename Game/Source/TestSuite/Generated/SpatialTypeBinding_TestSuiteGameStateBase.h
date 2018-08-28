@@ -8,6 +8,9 @@
 #include <improbable/unreal/gdk/core_types.h>
 #include <improbable/unreal/gdk/unreal_metadata.h>
 #include <improbable/unreal/generated/UnrealTestSuiteGameStateBase.h>
+
+#include "TestSuiteGameStateBase.h"
+
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_TestSuiteGameStateBase.generated.h"

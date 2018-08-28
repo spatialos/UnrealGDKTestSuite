@@ -18,8 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "Tests/TestFStringReplication.h"
-
 #include "TestFStringReplicationSingleClientRepDataAddComponentOp.h"
 #include "TestFStringReplicationMultiClientRepDataAddComponentOp.h"
 #include "TestFStringReplicationHandoverDataAddComponentOp.h"

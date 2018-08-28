@@ -18,8 +18,6 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "Tests/TestTArrayReplication.h"
-
 #include "TestTArrayReplicationSingleClientRepDataAddComponentOp.h"
 #include "TestTArrayReplicationMultiClientRepDataAddComponentOp.h"
 #include "TestTArrayReplicationHandoverDataAddComponentOp.h"

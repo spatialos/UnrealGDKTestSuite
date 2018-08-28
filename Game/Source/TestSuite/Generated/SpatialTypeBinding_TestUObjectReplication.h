@@ -8,6 +8,10 @@
 #include <improbable/unreal/gdk/core_types.h>
 #include <improbable/unreal/gdk/unreal_metadata.h>
 #include <improbable/unreal/generated/UnrealTestUObjectReplication.h>
+
+#include "Tests/ReplicationTestHelperClasses.h"
+#include "Tests/TestUObjectReplication.h"
+
 #include "ScopedViewCallbacks.h"
 #include "SpatialTypeBinding.h"
 #include "SpatialTypeBinding_TestUObjectReplication.generated.h"
