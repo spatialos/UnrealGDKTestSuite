@@ -450,7 +450,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -555,7 +555,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -587,7 +587,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -626,7 +626,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -679,7 +679,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -711,7 +711,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -743,7 +743,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -1758,7 +1758,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -1784,7 +1784,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RepUStructWithStablyNamedObject.StablyNamedObject);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepUStructWithStablyNamedObject.StablyNamedObject is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -1811,7 +1811,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RepUStructWithConstStablyNamedObject.StablyNamedObject);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepUStructWithConstStablyNamedObject.StablyNamedObject is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -1838,7 +1838,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RepUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());

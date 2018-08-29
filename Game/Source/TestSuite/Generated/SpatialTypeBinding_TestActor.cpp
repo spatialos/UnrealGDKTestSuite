@@ -434,7 +434,7 @@ void USpatialTypeBinding_TestActor::ServerSendUpdate_MultiClient(const uint8* RE
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -539,7 +539,7 @@ void USpatialTypeBinding_TestActor::ServerSendUpdate_MultiClient(const uint8* RE
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -571,7 +571,7 @@ void USpatialTypeBinding_TestActor::ServerSendUpdate_MultiClient(const uint8* RE
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -610,7 +610,7 @@ void USpatialTypeBinding_TestActor::ServerSendUpdate_MultiClient(const uint8* RE
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.

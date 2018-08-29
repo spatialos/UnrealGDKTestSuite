@@ -729,7 +729,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerSendUpdate_MultiClient
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -834,7 +834,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerSendUpdate_MultiClient
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -866,7 +866,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerSendUpdate_MultiClient
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -905,7 +905,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerSendUpdate_MultiClient
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -937,7 +937,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerSendUpdate_MultiClient
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -969,7 +969,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerSendUpdate_MultiClient
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
@@ -1011,7 +1011,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerSendUpdate_Handover(co
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					Interop->QueueOutgoingObjectHandoverUpdate_Internal(Value, Channel, 1);
@@ -1813,7 +1813,7 @@ void USpatialTypeBinding_TestSuitePlayerController::OnServerStartedVisualLogger_
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC OnServerStartedVisualLogger queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -1846,7 +1846,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientWasKicked_SendRPC(work
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientWasKicked queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -1876,7 +1876,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientVoiceHandshakeComplete
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientVoiceHandshakeComplete queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -1906,7 +1906,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientUpdateMultipleLevelsSt
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientUpdateMultipleLevelsStreamingStatus queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -1948,7 +1948,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientUpdateLevelStreamingSt
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientUpdateLevelStreamingStatus queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -1993,7 +1993,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientUnmutePlayer_SendRPC(w
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientUnmutePlayer queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2032,7 +2032,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientTravelInternal_SendRPC
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientTravelInternal queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2083,7 +2083,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientTeamMessage_SendRPC(wo
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientTeamMessage queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2103,7 +2103,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientTeamMessage_SendRPC(wo
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.SenderPlayerState);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientTeamMessage queued. StructuredParams.SenderPlayerState is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2149,7 +2149,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientStopForceFeedback_Send
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientStopForceFeedback queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2169,7 +2169,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientStopForceFeedback_Send
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ForceFeedbackEffect);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientStopForceFeedback queued. StructuredParams.ForceFeedbackEffect is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2209,7 +2209,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientStopCameraShake_SendRP
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientStopCameraShake queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2229,7 +2229,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientStopCameraShake_SendRP
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Shake);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientStopCameraShake queued. StructuredParams.Shake is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2269,7 +2269,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientStopCameraAnim_SendRPC
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientStopCameraAnim queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2289,7 +2289,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientStopCameraAnim_SendRPC
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.AnimToStop);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientStopCameraAnim queued. StructuredParams.AnimToStop is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2323,7 +2323,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientStartOnlineSession_Sen
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientStartOnlineSession queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2353,7 +2353,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSpawnCameraLensEffect_
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSpawnCameraLensEffect queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2373,7 +2373,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSpawnCameraLensEffect_
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.LensEffectEmitterClass);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSpawnCameraLensEffect queued. StructuredParams.LensEffectEmitterClass is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2410,7 +2410,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetViewTarget_SendRPC(
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetViewTarget queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2430,7 +2430,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetViewTarget_SendRPC(
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.A);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetViewTarget queued. StructuredParams.A is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2479,7 +2479,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetSpectatorWaiting_Se
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetSpectatorWaiting queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2512,7 +2512,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetHUD_SendRPC(worker:
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetHUD queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2532,7 +2532,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetHUD_SendRPC(worker:
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewHUDClass);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetHUD queued. StructuredParams.NewHUDClass is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2569,7 +2569,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetForceMipLevelsToBeR
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetForceMipLevelsToBeResident queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2589,7 +2589,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetForceMipLevelsToBeR
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Material);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetForceMipLevelsToBeResident queued. StructuredParams.Material is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2632,7 +2632,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetCinematicMode_SendR
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetCinematicMode queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2674,7 +2674,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetCameraMode_SendRPC(
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetCameraMode queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2707,7 +2707,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetCameraFade_SendRPC(
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetCameraFade queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2764,7 +2764,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetBlockOnAsyncLoading
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetBlockOnAsyncLoading queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2794,7 +2794,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientReturnToMainMenuWithTe
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientReturnToMainMenuWithTextReason queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2827,7 +2827,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientReturnToMainMenu_SendR
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientReturnToMainMenu queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2860,7 +2860,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientRetryClientRestart_Sen
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientRetryClientRestart queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2880,7 +2880,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientRetryClientRestart_Sen
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewPawn);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientRetryClientRestart queued. StructuredParams.NewPawn is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2917,7 +2917,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientRestart_SendRPC(worker
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientRestart queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2937,7 +2937,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientRestart_SendRPC(worker
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewPawn);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientRestart queued. StructuredParams.NewPawn is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2971,7 +2971,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientReset_SendRPC(worker::
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientReset queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3001,7 +3001,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientRepObjRef_SendRPC(work
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientRepObjRef queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3021,7 +3021,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientRepObjRef_SendRPC(work
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Object);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientRepObjRef queued. StructuredParams.Object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3058,7 +3058,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientReceiveLocalizedMessag
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3078,7 +3078,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientReceiveLocalizedMessag
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Message);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.Message is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3108,7 +3108,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientReceiveLocalizedMessag
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RelatedPlayerState_1);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.RelatedPlayerState_1 is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3135,7 +3135,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientReceiveLocalizedMessag
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RelatedPlayerState_2);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.RelatedPlayerState_2 is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3162,7 +3162,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientReceiveLocalizedMessag
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.OptionalObject);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientReceiveLocalizedMessage queued. StructuredParams.OptionalObject is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3199,7 +3199,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPrestreamTextures_Send
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPrestreamTextures queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3219,7 +3219,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPrestreamTextures_Send
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ForcedActor);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPrestreamTextures queued. StructuredParams.ForcedActor is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3265,7 +3265,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPrepareMapChange_SendR
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPrepareMapChange queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3304,7 +3304,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPlaySoundAtLocation_Se
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPlaySoundAtLocation queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3324,7 +3324,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPlaySoundAtLocation_Se
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Sound);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPlaySoundAtLocation queued. StructuredParams.Sound is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3376,7 +3376,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPlaySound_SendRPC(work
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPlaySound queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3396,7 +3396,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPlaySound_SendRPC(work
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Sound);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPlaySound queued. StructuredParams.Sound is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3439,7 +3439,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPlayForceFeedback_Send
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPlayForceFeedback queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3459,7 +3459,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPlayForceFeedback_Send
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ForceFeedbackEffect);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPlayForceFeedback queued. StructuredParams.ForceFeedbackEffect is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3505,7 +3505,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPlayCameraShake_SendRP
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPlayCameraShake queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3525,7 +3525,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPlayCameraShake_SendRP
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.Shake);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPlayCameraShake queued. StructuredParams.Shake is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3577,7 +3577,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPlayCameraAnim_SendRPC
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPlayCameraAnim queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3597,7 +3597,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientPlayCameraAnim_SendRPC
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.AnimToPlay);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientPlayCameraAnim queued. StructuredParams.AnimToPlay is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3664,7 +3664,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientMutePlayer_SendRPC(wor
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientMutePlayer queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3703,7 +3703,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientMessage_SendRPC(worker
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientMessage queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3742,7 +3742,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientIgnoreMoveInput_SendRP
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientIgnoreMoveInput queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3775,7 +3775,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientIgnoreLookInput_SendRP
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientIgnoreLookInput queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3808,7 +3808,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientGotoState_SendRPC(work
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientGotoState queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3841,7 +3841,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientGameEnded_SendRPC(work
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientGameEnded queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3861,7 +3861,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientGameEnded_SendRPC(work
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.EndGameFocus);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientGameEnded queued. StructuredParams.EndGameFocus is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3898,7 +3898,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientForceGarbageCollection
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientForceGarbageCollection queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3925,7 +3925,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientFlushLevelStreaming_Se
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientFlushLevelStreaming queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3952,7 +3952,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientEndOnlineSession_SendR
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientEndOnlineSession queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3982,7 +3982,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientEnableNetworkVoice_Sen
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientEnableNetworkVoice queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4012,7 +4012,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientCommitMapChange_SendRP
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientCommitMapChange queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4039,7 +4039,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientClearCameraLensEffects
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientClearCameraLensEffects queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4069,7 +4069,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientCapBandwidth_SendRPC(w
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientCapBandwidth queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4099,7 +4099,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientCancelPendingMapChange
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientCancelPendingMapChange queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4129,7 +4129,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientAddTextureStreamingLoc
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientAddTextureStreamingLoc queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4174,7 +4174,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetRotation_SendRPC(wo
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetRotation queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4216,7 +4216,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientSetLocation_SendRPC(wo
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientSetLocation queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4261,7 +4261,7 @@ void USpatialTypeBinding_TestSuitePlayerController::TestRPC_SendRPC(worker::Conn
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC TestRPC queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4291,7 +4291,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerViewSelf_SendRPC(worke
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerViewSelf queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4330,7 +4330,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerViewPrevPlayer_SendRPC
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerViewPrevPlayer queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4357,7 +4357,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerViewNextPlayer_SendRPC
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerViewNextPlayer queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4384,7 +4384,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerVerifyViewTarget_SendR
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerVerifyViewTarget queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4414,7 +4414,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerUpdateMultipleLevelsVi
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerUpdateMultipleLevelsVisibility queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4456,7 +4456,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerUpdateLevelVisibility_
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerUpdateLevelVisibility queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4492,7 +4492,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerUpdateCamera_SendRPC(w
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerUpdateCamera queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4534,7 +4534,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerUnmutePlayer_SendRPC(w
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerUnmutePlayer queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4570,7 +4570,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerToggleAILogging_SendRP
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerToggleAILogging queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4597,7 +4597,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerShortTimeout_SendRPC(w
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerShortTimeout queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4627,7 +4627,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerSetSpectatorWaiting_Se
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerSetSpectatorWaiting queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4660,7 +4660,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerSetSpectatorLocation_S
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerSetSpectatorLocation queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4705,7 +4705,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerRestartPlayer_SendRPC(
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerRestartPlayer queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4732,7 +4732,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerPause_SendRPC(worker::
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerPause queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4762,7 +4762,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerNotifyLoadedWorld_Send
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerNotifyLoadedWorld queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4795,7 +4795,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerMutePlayer_SendRPC(wor
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerMutePlayer queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4831,7 +4831,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerCheckClientPossessionR
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerCheckClientPossessionReliable queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4858,7 +4858,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerCheckClientPossession_
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerCheckClientPossession queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4888,7 +4888,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerChangeName_SendRPC(wor
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerChangeName queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4921,7 +4921,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerCamera_SendRPC(worker:
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerCamera queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4954,7 +4954,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerAcknowledgePossession_
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerAcknowledgePossession queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -4974,7 +4974,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerAcknowledgePossession_
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.P);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerAcknowledgePossession queued. StructuredParams.P is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -5008,7 +5008,7 @@ void USpatialTypeBinding_TestSuitePlayerController::TestMulticast_SendRPC(worker
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC TestMulticast queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());

@@ -1,14 +1,14 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.noreferencebpactorc;
+package improbable.unreal.generated.testuobjectcontexts;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component NoReferenceBPActorCSingleClientRepData {
-	id = 100185;
+component TestUObjectContextsSingleClientRepData {
+	id = 100164;
 }
-component NoReferenceBPActorCMultiClientRepData {
-	id = 100186;
+component TestUObjectContextsMultiClientRepData {
+	id = 100165;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -24,21 +24,26 @@ component NoReferenceBPActorCMultiClientRepData {
 	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
-	bool field_mytestvariable0 = 16; // COND_None // ::NoReferenceBPActor_C
+	UnrealObjectRef field_basicuobject0 = 16; // COND_None // ::TestUObjectContexts
+	UnrealObjectRef field_actorpointer0 = 17; // COND_None // ::TestUObjectContexts
+	UnrealObjectRef field_stablynameduobject0 = 18; // COND_None // ::TestUObjectContexts
 }
-component NoReferenceBPActorCHandoverData {
-	id = 100187;
+component TestUObjectContextsHandoverData {
+	id = 100166;
 }
+import "improbable/unreal/generated/UnrealTestUObjectContextsTypes.schema";
 
-component NoReferenceBPActorCClientRPCs {
-	id = 100188;
+component TestUObjectContextsClientRPCs {
+	id = 100167;
 }
-component NoReferenceBPActorCServerRPCs {
-	id = 100189;
+component TestUObjectContextsServerRPCs {
+	id = 100168;
+	command UnrealRPCCommandResponse serverreportresult(testuobjectcontexts.ServerReportResultRequest);
 }
-component NoReferenceBPActorCCrossServerRPCs {
-	id = 100190;
+component TestUObjectContextsCrossServerRPCs {
+	id = 100169;
 }
-component NoReferenceBPActorCNetMulticastRPCs {
-	id = 100191;
+component TestUObjectContextsNetMulticastRPCs {
+	id = 100170;
+	event testuobjectcontexts.MulticastRPCRequest multicastrpc;
 }
