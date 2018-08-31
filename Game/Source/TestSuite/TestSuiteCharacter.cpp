@@ -61,7 +61,24 @@ void ATestSuiteCharacter::BeginPlay()
 	{
 		TestRunner = World->SpawnActor<AGDKTestRunner>();
 	}
+
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickGroup = TG_PrePhysics;
 }
+
+void ATestSuiteCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	if (!HasAuthority())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("CLIENT - Game time: %ld, Game start: %ld, delta seconds: %f"), GetWorld()->GetGameState()->GetTime(), GetWorld()->GetGameState()->SpatialStart, DeltaSeconds));
+	}
+	else 
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("SERVER - Game time: %ld, Game start: %ld, delta seconds: %f"), GetWorld()->GetGameState()->GetTime(), GetWorld()->GetGameState()->SpatialStart, DeltaSeconds));
+	}
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
