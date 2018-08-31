@@ -53,9 +53,9 @@ private:
 	FRepHandlePropertyMap RepHandleToPropertyMap;
 	FHandoverHandlePropertyMap HandoverHandleToPropertyMap;
 
-	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData::Update& OutUpdate) const;
+	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_Handover(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData::Update& OutUpdate) const;
 	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCSingleClientRepData::Update& Update) const;
 	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCMultiClientRepData::Update& Update) const;
 	void ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::noreferencebpactorc::NoReferenceBPActorCHandoverData::Update& Update) const;

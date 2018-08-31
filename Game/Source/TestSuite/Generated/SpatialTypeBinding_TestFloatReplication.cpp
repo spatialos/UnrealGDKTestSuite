@@ -328,11 +328,11 @@ void USpatialTypeBinding_TestFloatReplication::BuildSpatialComponentUpdate(
 			switch (GetGroupFromCondition(PropertyMapData.Condition))
 			{
 			case GROUP_SingleClient:
-				ServerSendUpdate_SingleClient(Data, HandleIterator.Handle, Cmd.Property, Channel, SingleClientUpdate);
+				ServerSendUpdate_SingleClient(Data, Changes.SourceData, HandleIterator.Handle, Cmd.Property, Channel, SingleClientUpdate);
 				bSingleClientUpdateChanged = true;
 				break;
 			case GROUP_MultiClient:
-				ServerSendUpdate_MultiClient(Data, HandleIterator.Handle, Cmd.Property, Channel, MultiClientUpdate);
+				ServerSendUpdate_MultiClient(Data, Changes.SourceData, HandleIterator.Handle, Cmd.Property, Channel, MultiClientUpdate);
 				bMultiClientUpdateChanged = true;
 				break;
 			}
@@ -357,16 +357,16 @@ void USpatialTypeBinding_TestFloatReplication::BuildSpatialComponentUpdate(
 			Channel->GetEntityId().ToSpatialEntityId(),
 			*PropertyMapData.Property->GetName(),
 			ChangedHandle);
-		ServerSendUpdate_Handover(Data, ChangedHandle, PropertyMapData.Property, Channel, HandoverDataUpdate);
+		ServerSendUpdate_Handover(Data, Changes.SourceData, ChangedHandle, PropertyMapData.Property, Channel, HandoverDataUpdate);
 		bHandoverDataUpdateChanged = true;
 	}
 }
 
-void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfloatreplication::TestFloatReplicationSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfloatreplication::TestFloatReplicationMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -430,6 +430,7 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 		case 7: // field_attachmentreplication0_attachparent0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
+			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(SourceData + 344));
 
 			if (Value != nullptr)
 			{
@@ -441,8 +442,8 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
@@ -450,12 +451,14 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication0_attachparent0(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachparent0(*ObjectRef);
 				}
+				(const_cast<FRepAttachment&>(ParentValue)).AttachParent_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_attachmentreplication0_attachparent0(SpatialConstants::NULL_OBJECT_REF);
+				(const_cast<FRepAttachment&>(ParentValue)).AttachParent_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -535,6 +538,7 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 		case 12: // field_attachmentreplication0_attachcomponent0
 		{
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(Data));
+			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(SourceData + 344));
 
 			if (Value != nullptr)
 			{
@@ -546,8 +550,8 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
@@ -555,18 +559,21 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication0_attachcomponent0(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachcomponent0(*ObjectRef);
 				}
+				(const_cast<FRepAttachment&>(ParentValue)).AttachComponent_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_attachmentreplication0_attachcomponent0(SpatialConstants::NULL_OBJECT_REF);
+				(const_cast<FRepAttachment&>(ParentValue)).AttachComponent_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
 		case 13: // field_owner0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
+			const ATestFloatReplication& ParentValue = *(static_cast<ATestFloatReplication const*>(Channel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -578,8 +585,8 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
@@ -587,12 +594,14 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 				}
 				else
 				{
-					OutUpdate.set_field_owner0(ObjectRef);
+					OutUpdate.set_field_owner0(*ObjectRef);
 				}
+				(const_cast<ATestFloatReplication&>(ParentValue)).Owner_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_owner0(SpatialConstants::NULL_OBJECT_REF);
+				(const_cast<ATestFloatReplication&>(ParentValue)).Owner_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -606,6 +615,7 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 		case 15: // field_instigator0
 		{
 			APawn* Value = *(reinterpret_cast<APawn* const*>(Data));
+			const ATestFloatReplication& ParentValue = *(static_cast<ATestFloatReplication const*>(Channel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -617,8 +627,8 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
@@ -626,12 +636,14 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 				}
 				else
 				{
-					OutUpdate.set_field_instigator0(ObjectRef);
+					OutUpdate.set_field_instigator0(*ObjectRef);
 				}
+				(const_cast<ATestFloatReplication&>(ParentValue)).Instigator_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_instigator0(SpatialConstants::NULL_OBJECT_REF);
+				(const_cast<ATestFloatReplication&>(ParentValue)).Instigator_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -662,7 +674,7 @@ void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_MultiClient(cons
 	}
 }
 
-void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfloatreplication::TestFloatReplicationHandoverData::Update& OutUpdate) const
+void USpatialTypeBinding_TestFloatReplication::ServerSendUpdate_Handover(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testfloatreplication::TestFloatReplicationHandoverData::Update& OutUpdate) const
 {
 }
 

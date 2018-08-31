@@ -333,11 +333,11 @@ void USpatialTypeBinding_TestTArrayReplication::BuildSpatialComponentUpdate(
 			switch (GetGroupFromCondition(PropertyMapData.Condition))
 			{
 			case GROUP_SingleClient:
-				ServerSendUpdate_SingleClient(Data, HandleIterator.Handle, Cmd.Property, Channel, SingleClientUpdate);
+				ServerSendUpdate_SingleClient(Data, Changes.SourceData, HandleIterator.Handle, Cmd.Property, Channel, SingleClientUpdate);
 				bSingleClientUpdateChanged = true;
 				break;
 			case GROUP_MultiClient:
-				ServerSendUpdate_MultiClient(Data, HandleIterator.Handle, Cmd.Property, Channel, MultiClientUpdate);
+				ServerSendUpdate_MultiClient(Data, Changes.SourceData, HandleIterator.Handle, Cmd.Property, Channel, MultiClientUpdate);
 				bMultiClientUpdateChanged = true;
 				break;
 			}
@@ -362,16 +362,16 @@ void USpatialTypeBinding_TestTArrayReplication::BuildSpatialComponentUpdate(
 			Channel->GetEntityId().ToSpatialEntityId(),
 			*PropertyMapData.Property->GetName(),
 			ChangedHandle);
-		ServerSendUpdate_Handover(Data, ChangedHandle, PropertyMapData.Property, Channel, HandoverDataUpdate);
+		ServerSendUpdate_Handover(Data, Changes.SourceData, ChangedHandle, PropertyMapData.Property, Channel, HandoverDataUpdate);
 		bHandoverDataUpdateChanged = true;
 	}
 }
 
-void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -435,6 +435,7 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 		case 7: // field_attachmentreplication0_attachparent0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
+			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(SourceData + 344));
 
 			if (Value != nullptr)
 			{
@@ -446,8 +447,8 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
@@ -455,12 +456,14 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication0_attachparent0(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachparent0(*ObjectRef);
 				}
+				(const_cast<FRepAttachment&>(ParentValue)).AttachParent_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_attachmentreplication0_attachparent0(SpatialConstants::NULL_OBJECT_REF);
+				(const_cast<FRepAttachment&>(ParentValue)).AttachParent_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -540,6 +543,7 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 		case 12: // field_attachmentreplication0_attachcomponent0
 		{
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(Data));
+			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(SourceData + 344));
 
 			if (Value != nullptr)
 			{
@@ -551,8 +555,8 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
@@ -560,18 +564,21 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication0_attachcomponent0(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachcomponent0(*ObjectRef);
 				}
+				(const_cast<FRepAttachment&>(ParentValue)).AttachComponent_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_attachmentreplication0_attachcomponent0(SpatialConstants::NULL_OBJECT_REF);
+				(const_cast<FRepAttachment&>(ParentValue)).AttachComponent_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
 		case 13: // field_owner0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
+			const ATestTArrayReplication& ParentValue = *(static_cast<ATestTArrayReplication const*>(Channel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -583,8 +590,8 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
@@ -592,12 +599,14 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 				}
 				else
 				{
-					OutUpdate.set_field_owner0(ObjectRef);
+					OutUpdate.set_field_owner0(*ObjectRef);
 				}
+				(const_cast<ATestTArrayReplication&>(ParentValue)).Owner_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_owner0(SpatialConstants::NULL_OBJECT_REF);
+				(const_cast<ATestTArrayReplication&>(ParentValue)).Owner_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -611,6 +620,7 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 		case 15: // field_instigator0
 		{
 			APawn* Value = *(reinterpret_cast<APawn* const*>(Data));
+			const ATestTArrayReplication& ParentValue = *(static_cast<ATestTArrayReplication const*>(Channel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -622,8 +632,8 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
@@ -631,12 +641,14 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 				}
 				else
 				{
-					OutUpdate.set_field_instigator0(ObjectRef);
+					OutUpdate.set_field_instigator0(*ObjectRef);
 				}
+				(const_cast<ATestTArrayReplication&>(ParentValue)).Instigator_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_instigator0(SpatialConstants::NULL_OBJECT_REF);
+				(const_cast<ATestTArrayReplication&>(ParentValue)).Instigator_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -662,6 +674,7 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 		case 18: // field_stablynamedarray0
 		{
 			const TArray<UTestUObject*>& Value = *(reinterpret_cast<TArray<UTestUObject*> const*>(Data));
+			const ATestTArrayReplication& ParentValue = *(static_cast<ATestTArrayReplication const*>(Channel->Actor));
 
 			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 18);
 			TSet<const UObject*> UnresolvedObjects;
@@ -678,19 +691,21 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 							NetGUID = PackageMap->ResolveStablyNamedObject(Value[i]);
 						}
 					}
-					improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
-					if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+					const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+					if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 					{
 						UnresolvedObjects.Add(Value[i]);
 					}
 					else
 					{
-						List.emplace_back(ObjectRef);
+						List.emplace_back(*ObjectRef);
 					}
+					(const_cast<ATestTArrayReplication&>(ParentValue)).StablyNamedArray_Context.Add(ObjectRef);
 				}
 				else
 				{
 					List.emplace_back(SpatialConstants::NULL_OBJECT_REF);
+					(const_cast<ATestTArrayReplication&>(ParentValue)).StablyNamedArray_Context.Add(&SpatialConstants::NULL_OBJECT_REF);
 				}
 			}
 			const ::worker::List<improbable::unreal::UnrealObjectRef>& Result = (List);
@@ -707,6 +722,7 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 		case 19: // field_dynamicallycreatedarray0
 		{
 			const TArray<ATestActor*>& Value = *(reinterpret_cast<TArray<ATestActor*> const*>(Data));
+			const ATestTArrayReplication& ParentValue = *(static_cast<ATestTArrayReplication const*>(Channel->Actor));
 
 			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 19);
 			TSet<const UObject*> UnresolvedObjects;
@@ -723,19 +739,21 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 							NetGUID = PackageMap->ResolveStablyNamedObject(Value[i]);
 						}
 					}
-					improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
-					if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+					const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+					if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 					{
 						UnresolvedObjects.Add(Value[i]);
 					}
 					else
 					{
-						List.emplace_back(ObjectRef);
+						List.emplace_back(*ObjectRef);
 					}
+					(const_cast<ATestTArrayReplication&>(ParentValue)).DynamicallyCreatedArray_Context.Add(ObjectRef);
 				}
 				else
 				{
 					List.emplace_back(SpatialConstants::NULL_OBJECT_REF);
+					(const_cast<ATestTArrayReplication&>(ParentValue)).DynamicallyCreatedArray_Context.Add(&SpatialConstants::NULL_OBJECT_REF);
 				}
 			}
 			const ::worker::List<improbable::unreal::UnrealObjectRef>& Result = (List);
@@ -752,6 +770,7 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 		case 20: // field_arrayofstructs0
 		{
 			const TArray<FSimpleTestStruct>& Value = *(reinterpret_cast<TArray<FSimpleTestStruct> const*>(Data));
+			const ATestTArrayReplication& ParentValue = *(static_cast<ATestTArrayReplication const*>(Channel->Actor));
 
 			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 20);
 			TSet<const UObject*> UnresolvedObjects;
@@ -777,6 +796,7 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 		case 21: // field_arrayofstructnetserialize0
 		{
 			const TArray<FTestStructWithNetSerialize>& Value = *(reinterpret_cast<TArray<FTestStructWithNetSerialize> const*>(Data));
+			const ATestTArrayReplication& ParentValue = *(static_cast<ATestTArrayReplication const*>(Channel->Actor));
 
 			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 21);
 			TSet<const UObject*> UnresolvedObjects;
@@ -831,7 +851,7 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 	}
 }
 
-void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationHandoverData::Update& OutUpdate) const
+void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_Handover(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationHandoverData::Update& OutUpdate) const
 {
 }
 
@@ -1693,20 +1713,21 @@ void USpatialTypeBinding_TestTArrayReplication::Server_ReportReplication_SendRPC
 							NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RepStablyNamedArray[i]);
 						}
 					}
-					improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
-					if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+					const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+					if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 					{
 						UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepStablyNamedArray[i] is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 						return {Cast<UObject>(StructuredParams.RepStablyNamedArray[i])};
 					}
 					else
 					{
-						List.emplace_back(ObjectRef);
+						List.emplace_back(*ObjectRef);
 					}
 				}
 				else
 				{
 					List.emplace_back(SpatialConstants::NULL_OBJECT_REF);
+					
 				}
 			}
 			RPCPayload.set_field_repstablynamedarray0(List);
@@ -1725,20 +1746,21 @@ void USpatialTypeBinding_TestTArrayReplication::Server_ReportReplication_SendRPC
 							NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.RepDynamicallyCreatedActors[i]);
 						}
 					}
-					improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
-					if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+					const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+					if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 					{
 						UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_ReportReplication queued. StructuredParams.RepDynamicallyCreatedActors[i] is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 						return {Cast<UObject>(StructuredParams.RepDynamicallyCreatedActors[i])};
 					}
 					else
 					{
-						List.emplace_back(ObjectRef);
+						List.emplace_back(*ObjectRef);
 					}
 				}
 				else
 				{
 					List.emplace_back(SpatialConstants::NULL_OBJECT_REF);
+					
 				}
 			}
 			RPCPayload.set_field_repdynamicallycreatedactors0(List);

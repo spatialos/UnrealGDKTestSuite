@@ -53,9 +53,9 @@ private:
 	FRepHandlePropertyMap RepHandleToPropertyMap;
 	FHandoverHandlePropertyMap HandoverHandleToPropertyMap;
 
-	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testftextreplication::TestFTextReplicationHandoverData::Update& OutUpdate) const;
+	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_Handover(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testftextreplication::TestFTextReplicationHandoverData::Update& OutUpdate) const;
 	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testftextreplication::TestFTextReplicationSingleClientRepData::Update& Update) const;
 	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testftextreplication::TestFTextReplicationMultiClientRepData::Update& Update) const;
 	void ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testftextreplication::TestFTextReplicationHandoverData::Update& Update) const;

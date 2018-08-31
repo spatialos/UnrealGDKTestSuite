@@ -53,9 +53,9 @@ private:
 	FRepHandlePropertyMap RepHandleToPropertyMap;
 	FHandoverHandlePropertyMap HandoverHandleToPropertyMap;
 
-	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuiteplayerstate::TestSuitePlayerStateSingleClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuiteplayerstate::TestSuitePlayerStateMultiClientRepData::Update& OutUpdate) const;
-	void ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuiteplayerstate::TestSuitePlayerStateHandoverData::Update& OutUpdate) const;
+	void ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuiteplayerstate::TestSuitePlayerStateSingleClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuiteplayerstate::TestSuitePlayerStateMultiClientRepData::Update& OutUpdate) const;
+	void ServerSendUpdate_Handover(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuiteplayerstate::TestSuitePlayerStateHandoverData::Update& OutUpdate) const;
 	void ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testsuiteplayerstate::TestSuitePlayerStateSingleClientRepData::Update& Update) const;
 	void ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testsuiteplayerstate::TestSuitePlayerStateMultiClientRepData::Update& Update) const;
 	void ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testsuiteplayerstate::TestSuitePlayerStateHandoverData::Update& Update) const;

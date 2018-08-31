@@ -310,11 +310,11 @@ void USpatialTypeBinding_TestComponent::BuildSpatialComponentUpdate(
 			switch (GetGroupFromCondition(PropertyMapData.Condition))
 			{
 			case GROUP_SingleClient:
-				ServerSendUpdate_SingleClient(Data, HandleIterator.Handle, Cmd.Property, Channel, SingleClientUpdate);
+				ServerSendUpdate_SingleClient(Data, Changes.SourceData, HandleIterator.Handle, Cmd.Property, Channel, SingleClientUpdate);
 				bSingleClientUpdateChanged = true;
 				break;
 			case GROUP_MultiClient:
-				ServerSendUpdate_MultiClient(Data, HandleIterator.Handle, Cmd.Property, Channel, MultiClientUpdate);
+				ServerSendUpdate_MultiClient(Data, Changes.SourceData, HandleIterator.Handle, Cmd.Property, Channel, MultiClientUpdate);
 				bMultiClientUpdateChanged = true;
 				break;
 			}
@@ -339,16 +339,16 @@ void USpatialTypeBinding_TestComponent::BuildSpatialComponentUpdate(
 			Channel->GetEntityId().ToSpatialEntityId(),
 			*PropertyMapData.Property->GetName(),
 			ChangedHandle);
-		ServerSendUpdate_Handover(Data, ChangedHandle, PropertyMapData.Property, Channel, HandoverDataUpdate);
+		ServerSendUpdate_Handover(Data, Changes.SourceData, ChangedHandle, PropertyMapData.Property, Channel, HandoverDataUpdate);
 		bHandoverDataUpdateChanged = true;
 	}
 }
 
-void USpatialTypeBinding_TestComponent::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testcomponent::TestComponentSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestComponent::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testcomponent::TestComponentSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TestComponent::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testcomponent::TestComponentMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestComponent::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testcomponent::TestComponentMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -379,7 +379,7 @@ void USpatialTypeBinding_TestComponent::ServerSendUpdate_MultiClient(const uint8
 	}
 }
 
-void USpatialTypeBinding_TestComponent::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testcomponent::TestComponentHandoverData::Update& OutUpdate) const
+void USpatialTypeBinding_TestComponent::ServerSendUpdate_Handover(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testcomponent::TestComponentHandoverData::Update& OutUpdate) const
 {
 }
 

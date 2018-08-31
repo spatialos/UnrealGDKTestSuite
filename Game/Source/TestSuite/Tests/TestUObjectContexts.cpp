@@ -82,12 +82,14 @@ bool ATestUObjectContexts::Server_ReportResult_Validate()
 
 void ATestUObjectContexts::Server_ReportResult_Implementation()
 {
+	check(StablyNamedUObject_Context != nullptr);
+
 	USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetNetDriver());
 	USpatialPackageMapClient* PackageMap = Cast<USpatialPackageMapClient>(NetDriver->GetSpatialOSNetConnection()->PackageMap);
 	FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StablyNamedUObject);
-	const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+	improbable::unreal::UnrealObjectRef ObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID));
 
-	//check(StablyNamedUObject_Context->entity() == ObjectRef.entity());
+	check(StablyNamedUObject_Context->entity() == ObjectRef.entity());
 
 	//USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());
 	//check(NetDriver);
@@ -111,5 +113,5 @@ void ATestUObjectContexts::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 void ATestUObjectContexts::OnRep_StablyNamedUObject()
 {
-	check(StablyNamedUObject_Context != nullptr);;
+	//check(StablyNamedUObject_Context != nullptr);;
 }
