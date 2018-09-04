@@ -274,18 +274,50 @@ void USpatialTypeBinding_TestActor::ReceiveAddComponent(USpatialActorChannel* Ch
 	}
 }
 
-worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TestActor::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
+worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TestActor::GetInterestOverrideMap(bool bIsClient, bool bNetOwned) const
 {
 	worker::Map<worker::ComponentId, worker::InterestOverride> Interest;
 	if (bIsClient)
 	{
-		if (!bAutonomousProxy)
-		{
-			Interest.emplace(improbable::unreal::generated::testactor::TestActorSingleClientRepData::ComponentId, worker::InterestOverride{false});
-		}
+		Interest.emplace(improbable::unreal::generated::testactor::TestActorSingleClientRepData::ComponentId, worker::InterestOverride{bNetOwned});
 		Interest.emplace(improbable::unreal::generated::testactor::TestActorHandoverData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
+}
+
+bool USpatialTypeBinding_TestActor::UpdateEntityACL(USpatialActorChannel* Channel, bool bNetOwned) const
+{
+	TSharedPtr<worker::Connection> PinnedConnection = Interop->GetSpatialOS()->GetConnection().Pin();
+	TSharedPtr<worker::View> PinnedView = Interop->GetSpatialOS()->GetView().Pin();
+	worker::EntityId Id = Channel->GetEntityId().ToSpatialEntityId();
+
+	if (PinnedConnection.IsValid() && PinnedView.IsValid())
+	{
+		worker::Option<improbable::EntityAcl::Data &> Data = PinnedView->Entities[Id].Get<improbable::EntityAcl>();
+		if (Data.empty())
+		{
+			return false;
+		}
+		worker::Map<uint32_t, improbable::WorkerRequirementSet> WriteACL = Data->component_write_acl();
+
+		std::string PlayerWorkerId;
+		if (bNetOwned)
+		{
+			PlayerWorkerId = TCHAR_TO_UTF8(*Channel->Connection->PlayerController->PlayerState->UniqueId.ToString());
+		}
+
+		improbable::WorkerAttributeSet OwningClientAttribute{ { "workerId:" + PlayerWorkerId } };
+		improbable::WorkerRequirementSet OwningClientOnly{ { OwningClientAttribute } };
+
+		WriteACL[improbable::unreal::generated::testactor::TestActorClientRPCs::ComponentId] = OwningClientOnly;
+
+		improbable::EntityAcl::Update Update;
+		Update.set_component_write_acl(WriteACL);
+		PinnedConnection->SendComponentUpdate<improbable::EntityAcl>(Id, Update);
+		return true;
+	}
+
+	return false;
 }
 
 void USpatialTypeBinding_TestActor::BuildSpatialComponentUpdate(

@@ -9,6 +9,9 @@
 #include <improbable/unreal/gdk/unreal_metadata.h>
 #include <improbable/unreal/generated/UnrealTestTArrayReplication.h>
 
+#include "Components/SceneComponent.h"
+#include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
 #include "Tests/ReplicationTestHelperClasses.h"
 #include "Tests/TestTArrayReplication.h"
 
@@ -35,7 +38,8 @@ public:
 	void SendRPCCommand(UObject* TargetObject, const UFunction* const Function, void* Parameters) override;
 
 	void ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const override;
-	worker::Map<worker::ComponentId, worker::InterestOverride> GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const override;
+	worker::Map<worker::ComponentId, worker::InterestOverride> GetInterestOverrideMap(bool bIsClient, bool bNetOwned) const override;
+	bool UpdateEntityACL(USpatialActorChannel* Channel, bool bNetOwned) const override;
 
 	void BuildSpatialComponentUpdate(
 		const FPropertyChangeState& Changes,

@@ -286,18 +286,50 @@ void USpatialTypeBinding_TestTArrayReplication::ReceiveAddComponent(USpatialActo
 	}
 }
 
-worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TestTArrayReplication::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
+worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TestTArrayReplication::GetInterestOverrideMap(bool bIsClient, bool bNetOwned) const
 {
 	worker::Map<worker::ComponentId, worker::InterestOverride> Interest;
 	if (bIsClient)
 	{
-		if (!bAutonomousProxy)
-		{
-			Interest.emplace(improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationSingleClientRepData::ComponentId, worker::InterestOverride{false});
-		}
+		Interest.emplace(improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationSingleClientRepData::ComponentId, worker::InterestOverride{bNetOwned});
 		Interest.emplace(improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationHandoverData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
+}
+
+bool USpatialTypeBinding_TestTArrayReplication::UpdateEntityACL(USpatialActorChannel* Channel, bool bNetOwned) const
+{
+	TSharedPtr<worker::Connection> PinnedConnection = Interop->GetSpatialOS()->GetConnection().Pin();
+	TSharedPtr<worker::View> PinnedView = Interop->GetSpatialOS()->GetView().Pin();
+	worker::EntityId Id = Channel->GetEntityId().ToSpatialEntityId();
+
+	if (PinnedConnection.IsValid() && PinnedView.IsValid())
+	{
+		worker::Option<improbable::EntityAcl::Data &> Data = PinnedView->Entities[Id].Get<improbable::EntityAcl>();
+		if (Data.empty())
+		{
+			return false;
+		}
+		worker::Map<uint32_t, improbable::WorkerRequirementSet> WriteACL = Data->component_write_acl();
+
+		std::string PlayerWorkerId;
+		if (bNetOwned)
+		{
+			PlayerWorkerId = TCHAR_TO_UTF8(*Channel->Connection->PlayerController->PlayerState->UniqueId.ToString());
+		}
+
+		improbable::WorkerAttributeSet OwningClientAttribute{ { "workerId:" + PlayerWorkerId } };
+		improbable::WorkerRequirementSet OwningClientOnly{ { OwningClientAttribute } };
+
+		WriteACL[improbable::unreal::generated::testtarrayreplication::TestTArrayReplicationClientRPCs::ComponentId] = OwningClientOnly;
+
+		improbable::EntityAcl::Update Update;
+		Update.set_component_write_acl(WriteACL);
+		PinnedConnection->SendComponentUpdate<improbable::EntityAcl>(Id, Update);
+		return true;
+	}
+
+	return false;
 }
 
 void USpatialTypeBinding_TestTArrayReplication::BuildSpatialComponentUpdate(
@@ -758,7 +790,7 @@ void USpatialTypeBinding_TestTArrayReplication::ServerSendUpdate_MultiClient(con
 			{
 				TArray<uint8> ValueData;
 				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
-				FSimpleTestStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FSimpleTestStruct*>(&Value[i])));
+				SerializeStruct(FSimpleTestStruct::StaticStruct(), ValueDataWriter, reinterpret_cast<void*>(const_cast<FSimpleTestStruct*>(&Value[i])));
 				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			const ::worker::List<std::string>& Result = (List);
@@ -1542,7 +1574,7 @@ void USpatialTypeBinding_TestTArrayReplication::ReceiveUpdate_MultiClient(USpati
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
-				FSimpleTestStruct::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Value[i]));
+				SerializeStruct(FSimpleTestStruct::StaticStruct(), ValueDataReader, reinterpret_cast<void*>(&Value[i]));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
@@ -1748,7 +1780,7 @@ void USpatialTypeBinding_TestTArrayReplication::Server_ReportReplication_SendRPC
 				TSet<const UObject*> UnresolvedObjects;
 				TArray<uint8> ValueData;
 				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
-				FSimpleTestStruct::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FSimpleTestStruct*>(&StructuredParams.RepArrayOfStructs[i])));
+				SerializeStruct(FSimpleTestStruct::StaticStruct(), ValueDataWriter, reinterpret_cast<void*>(const_cast<FSimpleTestStruct*>(&StructuredParams.RepArrayOfStructs[i])));
 				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			RPCPayload.set_field_reparrayofstructs0(List);
@@ -1905,7 +1937,7 @@ void USpatialTypeBinding_TestTArrayReplication::Server_ReportReplication_OnRPCPa
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
-				FSimpleTestStruct::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Parameters.RepArrayOfStructs[i]));
+				SerializeStruct(FSimpleTestStruct::StaticStruct(), ValueDataReader, reinterpret_cast<void*>(&Parameters.RepArrayOfStructs[i]));
 			}
 		}
 		{

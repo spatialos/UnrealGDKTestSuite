@@ -282,18 +282,50 @@ void USpatialTypeBinding_Testcase_Properties_C::ReceiveAddComponent(USpatialActo
 	}
 }
 
-worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_Testcase_Properties_C::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
+worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_Testcase_Properties_C::GetInterestOverrideMap(bool bIsClient, bool bNetOwned) const
 {
 	worker::Map<worker::ComponentId, worker::InterestOverride> Interest;
 	if (bIsClient)
 	{
-		if (!bAutonomousProxy)
-		{
-			Interest.emplace(improbable::unreal::generated::testcasepropertiesc::TestcasePropertiesCSingleClientRepData::ComponentId, worker::InterestOverride{false});
-		}
+		Interest.emplace(improbable::unreal::generated::testcasepropertiesc::TestcasePropertiesCSingleClientRepData::ComponentId, worker::InterestOverride{bNetOwned});
 		Interest.emplace(improbable::unreal::generated::testcasepropertiesc::TestcasePropertiesCHandoverData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
+}
+
+bool USpatialTypeBinding_Testcase_Properties_C::UpdateEntityACL(USpatialActorChannel* Channel, bool bNetOwned) const
+{
+	TSharedPtr<worker::Connection> PinnedConnection = Interop->GetSpatialOS()->GetConnection().Pin();
+	TSharedPtr<worker::View> PinnedView = Interop->GetSpatialOS()->GetView().Pin();
+	worker::EntityId Id = Channel->GetEntityId().ToSpatialEntityId();
+
+	if (PinnedConnection.IsValid() && PinnedView.IsValid())
+	{
+		worker::Option<improbable::EntityAcl::Data &> Data = PinnedView->Entities[Id].Get<improbable::EntityAcl>();
+		if (Data.empty())
+		{
+			return false;
+		}
+		worker::Map<uint32_t, improbable::WorkerRequirementSet> WriteACL = Data->component_write_acl();
+
+		std::string PlayerWorkerId;
+		if (bNetOwned)
+		{
+			PlayerWorkerId = TCHAR_TO_UTF8(*Channel->Connection->PlayerController->PlayerState->UniqueId.ToString());
+		}
+
+		improbable::WorkerAttributeSet OwningClientAttribute{ { "workerId:" + PlayerWorkerId } };
+		improbable::WorkerRequirementSet OwningClientOnly{ { OwningClientAttribute } };
+
+		WriteACL[improbable::unreal::generated::testcasepropertiesc::TestcasePropertiesCClientRPCs::ComponentId] = OwningClientOnly;
+
+		improbable::EntityAcl::Update Update;
+		Update.set_component_write_acl(WriteACL);
+		PinnedConnection->SendComponentUpdate<improbable::EntityAcl>(Id, Update);
+		return true;
+	}
+
+	return false;
 }
 
 void USpatialTypeBinding_Testcase_Properties_C::BuildSpatialComponentUpdate(
@@ -752,7 +784,7 @@ void USpatialTypeBinding_Testcase_Properties_C::ServerSendUpdate_MultiClient(con
 			{
 				TArray<uint8> ValueData;
 				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
-				FTestcase_Struct_with_BP_Struct__pf3877032745_Struct->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FTestcase_Struct_with_BP_Struct__pf3877032745*>(&Value[i])));
+				SerializeStruct(FTestcase_Struct_with_BP_Struct__pf3877032745_Struct, ValueDataWriter, reinterpret_cast<void*>(const_cast<FTestcase_Struct_with_BP_Struct__pf3877032745*>(&Value[i])));
 				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			const ::worker::List<std::string>& Result = (List);
@@ -1530,7 +1562,7 @@ void USpatialTypeBinding_Testcase_Properties_C::ReceiveUpdate_MultiClient(USpati
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
-				FTestcase_Struct_with_BP_Struct__pf3877032745_Struct->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Value[i]));
+				SerializeStruct(FTestcase_Struct_with_BP_Struct__pf3877032745_Struct, ValueDataReader, reinterpret_cast<void*>(&Value[i]));
 			}
 
 			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);

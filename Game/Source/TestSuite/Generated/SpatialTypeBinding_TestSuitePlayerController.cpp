@@ -507,18 +507,50 @@ void USpatialTypeBinding_TestSuitePlayerController::ReceiveAddComponent(USpatial
 	}
 }
 
-worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TestSuitePlayerController::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
+worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TestSuitePlayerController::GetInterestOverrideMap(bool bIsClient, bool bNetOwned) const
 {
 	worker::Map<worker::ComponentId, worker::InterestOverride> Interest;
 	if (bIsClient)
 	{
-		if (!bAutonomousProxy)
-		{
-			Interest.emplace(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerSingleClientRepData::ComponentId, worker::InterestOverride{false});
-		}
+		Interest.emplace(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerSingleClientRepData::ComponentId, worker::InterestOverride{bNetOwned});
 		Interest.emplace(improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerHandoverData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
+}
+
+bool USpatialTypeBinding_TestSuitePlayerController::UpdateEntityACL(USpatialActorChannel* Channel, bool bNetOwned) const
+{
+	TSharedPtr<worker::Connection> PinnedConnection = Interop->GetSpatialOS()->GetConnection().Pin();
+	TSharedPtr<worker::View> PinnedView = Interop->GetSpatialOS()->GetView().Pin();
+	worker::EntityId Id = Channel->GetEntityId().ToSpatialEntityId();
+
+	if (PinnedConnection.IsValid() && PinnedView.IsValid())
+	{
+		worker::Option<improbable::EntityAcl::Data &> Data = PinnedView->Entities[Id].Get<improbable::EntityAcl>();
+		if (Data.empty())
+		{
+			return false;
+		}
+		worker::Map<uint32_t, improbable::WorkerRequirementSet> WriteACL = Data->component_write_acl();
+
+		std::string PlayerWorkerId;
+		if (bNetOwned)
+		{
+			PlayerWorkerId = TCHAR_TO_UTF8(*Channel->Connection->PlayerController->PlayerState->UniqueId.ToString());
+		}
+
+		improbable::WorkerAttributeSet OwningClientAttribute{ { "workerId:" + PlayerWorkerId } };
+		improbable::WorkerRequirementSet OwningClientOnly{ { OwningClientAttribute } };
+
+		WriteACL[improbable::unreal::generated::testsuiteplayercontroller::TestSuitePlayerControllerClientRPCs::ComponentId] = OwningClientOnly;
+
+		improbable::EntityAcl::Update Update;
+		Update.set_component_write_acl(WriteACL);
+		PinnedConnection->SendComponentUpdate<improbable::EntityAcl>(Id, Update);
+		return true;
+	}
+
+	return false;
 }
 
 void USpatialTypeBinding_TestSuitePlayerController::BuildSpatialComponentUpdate(
@@ -1908,7 +1940,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientUpdateMultipleLevelsSt
 				TSet<const UObject*> UnresolvedObjects;
 				TArray<uint8> ValueData;
 				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
-				FUpdateLevelStreamingLevelStatus::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelStreamingLevelStatus*>(&StructuredParams.LevelStatuses[i])));
+				SerializeStruct(FUpdateLevelStreamingLevelStatus::StaticStruct(), ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelStreamingLevelStatus*>(&StructuredParams.LevelStatuses[i])));
 				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			RPCPayload.set_field_levelstatuses0(List);
@@ -4416,7 +4448,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerUpdateMultipleLevelsVi
 				TSet<const UObject*> UnresolvedObjects;
 				TArray<uint8> ValueData;
 				FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
-				FUpdateLevelVisibilityLevelInfo::StaticStruct()->SerializeBin(ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelVisibilityLevelInfo*>(&StructuredParams.LevelVisibilities[i])));
+				SerializeStruct(FUpdateLevelVisibilityLevelInfo::StaticStruct(), ValueDataWriter, reinterpret_cast<void*>(const_cast<FUpdateLevelVisibilityLevelInfo*>(&StructuredParams.LevelVisibilities[i])));
 				List.emplace_back(std::string(reinterpret_cast<char*>(ValueData.GetData()), ValueData.Num()));
 			}
 			RPCPayload.set_field_levelvisibilities0(List);
@@ -5207,7 +5239,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ClientUpdateMultipleLevelsSt
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
-				FUpdateLevelStreamingLevelStatus::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Parameters.LevelStatuses[i]));
+				SerializeStruct(FUpdateLevelStreamingLevelStatus::StaticStruct(), ValueDataReader, reinterpret_cast<void*>(&Parameters.LevelStatuses[i]));
 			}
 		}
 
@@ -8832,7 +8864,7 @@ void USpatialTypeBinding_TestSuitePlayerController::ServerUpdateMultipleLevelsVi
 				TArray<uint8> ValueData;
 				ValueData.Append(reinterpret_cast<const uint8*>(ValueDataStr.data()), ValueDataStr.size());
 				FSpatialMemoryReader ValueDataReader(ValueData, PackageMap);
-				FUpdateLevelVisibilityLevelInfo::StaticStruct()->SerializeBin(ValueDataReader, reinterpret_cast<void*>(&Parameters.LevelVisibilities[i]));
+				SerializeStruct(FUpdateLevelVisibilityLevelInfo::StaticStruct(), ValueDataReader, reinterpret_cast<void*>(&Parameters.LevelVisibilities[i]));
 			}
 		}
 
