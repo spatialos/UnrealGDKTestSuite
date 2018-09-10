@@ -49,6 +49,9 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_StablyNamedUObject)
     UTestUObject* StablyNamedUObject;
 
+	UPROPERTY()
+	FUnrealObjectRefStub ObjRefStub;
+
 	// TODO:
 	// Staticly named object;
 	// Sub object test

@@ -146,7 +146,7 @@ void USpatialTypeBinding_TestUStructReplication::UnbindFromView()
 	ViewCallbacks.Reset();
 }
 
-worker::Entity USpatialTypeBinding_TestUStructReplication::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
+worker::Entity USpatialTypeBinding_TestUStructReplication::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* ActorChannel) const
 {
 	// Validate replication list.
 	const uint16 RepHandlePropertyMapCount = GetRepHandlePropertyMap().Num();
@@ -167,7 +167,7 @@ worker::Entity USpatialTypeBinding_TestUStructReplication::CreateActorEntity(con
 	improbable::unreal::generated::testustructreplication::TestUStructReplicationHandoverData::Update TestUStructReplicationHandoverDataUpdate;
 	bool bTestUStructReplicationHandoverDataUpdateChanged = false;
 
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientTestUStructReplicationUpdate, bSingleClientTestUStructReplicationUpdateChanged, MultiClientTestUStructReplicationUpdate, bMultiClientTestUStructReplicationUpdateChanged, TestUStructReplicationHandoverDataUpdate, bTestUStructReplicationHandoverDataUpdateChanged);
+	BuildSpatialComponentUpdate(InitialChanges, ActorChannel, SingleClientTestUStructReplicationUpdate, bSingleClientTestUStructReplicationUpdateChanged, MultiClientTestUStructReplicationUpdate, bMultiClientTestUStructReplicationUpdateChanged, TestUStructReplicationHandoverDataUpdate, bTestUStructReplicationHandoverDataUpdateChanged);
 	SingleClientTestUStructReplicationUpdate.ApplyTo(SingleClientTestUStructReplicationData);
 	MultiClientTestUStructReplicationUpdate.ApplyTo(MultiClientTestUStructReplicationData);
 	TestUStructReplicationHandoverDataUpdate.ApplyTo(TestUStructReplicationHandoverData);
@@ -187,9 +187,9 @@ worker::Entity USpatialTypeBinding_TestUStructReplication::CreateActorEntity(con
 
 	// Set up unreal metadata.
 	improbable::unreal::UnrealMetadata::Data UnrealMetadata;
-	if (Channel->Actor->IsFullNameStableForNetworking())
+	if (ActorChannel->Actor->IsFullNameStableForNetworking())
 	{
-		UnrealMetadata.set_static_path({std::string{TCHAR_TO_UTF8(*Channel->Actor->GetPathName(Channel->Actor->GetWorld()))}});
+		UnrealMetadata.set_static_path({std::string{TCHAR_TO_UTF8(*ActorChannel->Actor->GetPathName(ActorChannel->Actor->GetWorld()))}});
 	}
 	if (!ClientWorkerIdString.empty())
 	{
@@ -198,7 +198,7 @@ worker::Entity USpatialTypeBinding_TestUStructReplication::CreateActorEntity(con
 
 	uint32 CurrentOffset = 1;
 	worker::Map<std::string, std::uint32_t> SubobjectNameToOffset;
-	ForEachObjectWithOuter(Channel->Actor, [&UnrealMetadata, &CurrentOffset, &SubobjectNameToOffset](UObject* Object)
+	ForEachObjectWithOuter(ActorChannel->Actor, [&UnrealMetadata, &CurrentOffset, &SubobjectNameToOffset](UObject* Object)
 	{
 		// Objects can only be allocated NetGUIDs if this is true.
 		if (Object->IsSupportedForNetworking() && !Object->IsPendingKill() && !Object->IsEditorOnly())
@@ -227,7 +227,7 @@ worker::Entity USpatialTypeBinding_TestUStructReplication::CreateActorEntity(con
 		.Build();
 }
 
-void USpatialTypeBinding_TestUStructReplication::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
+void USpatialTypeBinding_TestUStructReplication::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* ActorChannel, const FEntityId& EntityId) const
 {
 	// Build SpatialOS updates.
 	improbable::unreal::generated::testustructreplication::TestUStructReplicationSingleClientRepData::Update SingleClientUpdate;
@@ -236,7 +236,7 @@ void USpatialTypeBinding_TestUStructReplication::SendComponentUpdates(const FPro
 	bool bMultiClientUpdateChanged = false;
 	improbable::unreal::generated::testustructreplication::TestUStructReplicationHandoverData::Update HandoverDataUpdate;
 	bool bHandoverDataUpdateChanged = false;
-	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, HandoverDataUpdate, bHandoverDataUpdateChanged);
+	BuildSpatialComponentUpdate(Changes, ActorChannel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, HandoverDataUpdate, bHandoverDataUpdateChanged);
 
 	// Send SpatialOS updates if anything changed.
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
@@ -267,27 +267,27 @@ void USpatialTypeBinding_TestUStructReplication::SendRPCCommand(UObject* TargetO
 	(this->*(*SenderFuncIterator))(Connection.Get(), Parameters, TargetObject);
 }
 
-void USpatialTypeBinding_TestUStructReplication::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
+void USpatialTypeBinding_TestUStructReplication::ReceiveAddComponent(USpatialActorChannel* ActorChannel, UAddComponentOpWrapperBase* AddComponentOp) const
 {
 	auto* SingleClientAddOp = Cast<UTestUStructReplicationSingleClientRepDataAddComponentOp>(AddComponentOp);
 	if (SingleClientAddOp)
 	{
 		auto Update = improbable::unreal::generated::testustructreplication::TestUStructReplicationSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
-		ReceiveUpdate_SingleClient(Channel, Update);
+		ReceiveUpdate_SingleClient(ActorChannel, Update);
 		return;
 	}
 	auto* MultiClientAddOp = Cast<UTestUStructReplicationMultiClientRepDataAddComponentOp>(AddComponentOp);
 	if (MultiClientAddOp)
 	{
 		auto Update = improbable::unreal::generated::testustructreplication::TestUStructReplicationMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
-		ReceiveUpdate_MultiClient(Channel, Update);
+		ReceiveUpdate_MultiClient(ActorChannel, Update);
 		return;
 	}
 	auto* HandoverDataAddOp = Cast<UTestUStructReplicationHandoverDataAddComponentOp>(AddComponentOp);
 	if (HandoverDataAddOp)
 	{
 		auto Update = improbable::unreal::generated::testustructreplication::TestUStructReplicationHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
-		ReceiveUpdate_Handover(Channel, Update);
+		ReceiveUpdate_Handover(ActorChannel, Update);
 		return;
 	}
 }
@@ -308,7 +308,7 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_T
 
 void USpatialTypeBinding_TestUStructReplication::BuildSpatialComponentUpdate(
 	const FPropertyChangeState& Changes,
-	USpatialActorChannel* Channel,
+	USpatialActorChannel* ActorChannel,
 	improbable::unreal::generated::testustructreplication::TestUStructReplicationSingleClientRepData::Update& SingleClientUpdate,
 	bool& bSingleClientUpdateChanged,
 	improbable::unreal::generated::testustructreplication::TestUStructReplicationMultiClientRepData::Update& MultiClientUpdate,
@@ -330,18 +330,18 @@ void USpatialTypeBinding_TestUStructReplication::BuildSpatialComponentUpdate(
 			const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData) + HandleIterator.ArrayOffset;
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
-				*Channel->Actor->GetName(),
-				Channel->GetEntityId().ToSpatialEntityId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
 				*Cmd.Property->GetName(),
 				HandleIterator.Handle);
 			switch (GetGroupFromCondition(PropertyMapData.Condition))
 			{
 			case GROUP_SingleClient:
-				ServerSendUpdate_SingleClient(Data, Changes.SourceData, HandleIterator.Handle, Cmd.Property, Channel, SingleClientUpdate);
+				ServerSendUpdate_SingleClient(Data, Changes.SourceData, HandleIterator.Handle, Cmd.Property, ActorChannel, SingleClientUpdate);
 				bSingleClientUpdateChanged = true;
 				break;
 			case GROUP_MultiClient:
-				ServerSendUpdate_MultiClient(Data, Changes.SourceData, HandleIterator.Handle, Cmd.Property, Channel, MultiClientUpdate);
+				ServerSendUpdate_MultiClient(Data, Changes.SourceData, HandleIterator.Handle, Cmd.Property, ActorChannel, MultiClientUpdate);
 				bMultiClientUpdateChanged = true;
 				break;
 			}
@@ -362,20 +362,20 @@ void USpatialTypeBinding_TestUStructReplication::BuildSpatialComponentUpdate(
 		const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData);
 		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending handover property update. actor %s (%lld), property %s (handle %d)"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
-			*Channel->Actor->GetName(),
-			Channel->GetEntityId().ToSpatialEntityId(),
+			*ActorChannel->Actor->GetName(),
+			ActorChannel->GetEntityId().ToSpatialEntityId(),
 			*PropertyMapData.Property->GetName(),
 			ChangedHandle);
-		ServerSendUpdate_Handover(Data, Changes.SourceData, ChangedHandle, PropertyMapData.Property, Channel, HandoverDataUpdate);
+		ServerSendUpdate_Handover(Data, Changes.SourceData, ChangedHandle, PropertyMapData.Property, ActorChannel, HandoverDataUpdate);
 		bHandoverDataUpdateChanged = true;
 	}
 }
 
-void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testustructreplication::TestUStructReplicationSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* ActorChannel, improbable::unreal::generated::testustructreplication::TestUStructReplicationSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testustructreplication::TestUStructReplicationMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* ActorChannel, improbable::unreal::generated::testustructreplication::TestUStructReplicationMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -418,7 +418,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 		{
 			const FRepMovement& Value = *(reinterpret_cast<FRepMovement const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 6);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 6);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -432,14 +432,14 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 6);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 6);
 			}
 			break;
 		}
 		case 7: // field_attachmentreplication0_attachparent0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
-			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(SourceData + 344));
+			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(SourceData + 280));
 
 			if (Value != nullptr)
 			{
@@ -456,18 +456,17 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 7);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 7);
 				}
 				else
 				{
 					OutUpdate.set_field_attachmentreplication0_attachparent0(*ObjectRef);
 				}
-				(const_cast<FRepAttachment&>(ParentValue)).AttachParent_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_attachmentreplication0_attachparent0(SpatialConstants::NULL_OBJECT_REF);
-				(const_cast<FRepAttachment&>(ParentValue)).AttachParent_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<FRepAttachment&>(ParentValue)).AttachParent_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -475,7 +474,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 8);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 8);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -489,7 +488,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 8);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 8);
 			}
 			break;
 		}
@@ -497,7 +496,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 9);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 9);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -511,7 +510,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 9);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 9);
 			}
 			break;
 		}
@@ -519,7 +518,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 10);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 10);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -533,7 +532,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 10);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 10);
 			}
 			break;
 		}
@@ -547,7 +546,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 		case 12: // field_attachmentreplication0_attachcomponent0
 		{
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(Data));
-			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(SourceData + 344));
+			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(SourceData + 280));
 
 			if (Value != nullptr)
 			{
@@ -564,25 +563,24 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 12);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 12);
 				}
 				else
 				{
 					OutUpdate.set_field_attachmentreplication0_attachcomponent0(*ObjectRef);
 				}
-				(const_cast<FRepAttachment&>(ParentValue)).AttachComponent_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_attachmentreplication0_attachcomponent0(SpatialConstants::NULL_OBJECT_REF);
-				(const_cast<FRepAttachment&>(ParentValue)).AttachComponent_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<FRepAttachment&>(ParentValue)).AttachComponent_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
 		case 13: // field_owner0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
-			const ATestUStructReplication& ParentValue = *(static_cast<ATestUStructReplication const*>(Channel->Actor));
+			const ATestUStructReplication& ParentValue = *(static_cast<ATestUStructReplication const*>(ActorChannel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -599,18 +597,17 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 13);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 13);
 				}
 				else
 				{
 					OutUpdate.set_field_owner0(*ObjectRef);
 				}
-				(const_cast<ATestUStructReplication&>(ParentValue)).Owner_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_owner0(SpatialConstants::NULL_OBJECT_REF);
-				(const_cast<ATestUStructReplication&>(ParentValue)).Owner_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<ATestUStructReplication&>(ParentValue)).Owner_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -624,7 +621,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 		case 15: // field_instigator0
 		{
 			APawn* Value = *(reinterpret_cast<APawn* const*>(Data));
-			const ATestUStructReplication& ParentValue = *(static_cast<ATestUStructReplication const*>(Channel->Actor));
+			const ATestUStructReplication& ParentValue = *(static_cast<ATestUStructReplication const*>(ActorChannel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -641,18 +638,17 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 15);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 15);
 				}
 				else
 				{
 					OutUpdate.set_field_instigator0(*ObjectRef);
 				}
-				(const_cast<ATestUStructReplication&>(ParentValue)).Instigator_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_instigator0(SpatialConstants::NULL_OBJECT_REF);
-				(const_cast<ATestUStructReplication&>(ParentValue)).Instigator_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<ATestUStructReplication&>(ParentValue)).Instigator_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -680,7 +676,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 		case 19: // field_ustructwithstablynamedobject0_stablynamedobject0
 		{
 			UTestUObject* Value = *(reinterpret_cast<UTestUObject* const*>(Data));
-			const FStablyNamedObjectTestStruct& ParentValue = *(reinterpret_cast<FStablyNamedObjectTestStruct const*>(SourceData + 1184));
+			const FStablyNamedObjectTestStruct& ParentValue = *(reinterpret_cast<FStablyNamedObjectTestStruct const*>(SourceData + 1104));
 
 			if (Value != nullptr)
 			{
@@ -697,25 +693,24 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 19);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 19);
 				}
 				else
 				{
 					OutUpdate.set_field_ustructwithstablynamedobject0_stablynamedobject0(*ObjectRef);
 				}
-				(const_cast<FStablyNamedObjectTestStruct&>(ParentValue)).StablyNamedObject_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_ustructwithstablynamedobject0_stablynamedobject0(SpatialConstants::NULL_OBJECT_REF);
-				(const_cast<FStablyNamedObjectTestStruct&>(ParentValue)).StablyNamedObject_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<FStablyNamedObjectTestStruct&>(ParentValue)).StablyNamedObject_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
 		case 20: // field_ustructwithconststablynamedobject0_stablynamedobject0
 		{
 			UTestUObject* Value = *(reinterpret_cast<UTestUObject* const*>(Data));
-			const FConstStablyNamedObjectTestStruct& ParentValue = *(reinterpret_cast<FConstStablyNamedObjectTestStruct const*>(SourceData + 1200));
+			const FConstStablyNamedObjectTestStruct& ParentValue = *(reinterpret_cast<FConstStablyNamedObjectTestStruct const*>(SourceData + 1112));
 
 			if (Value != nullptr)
 			{
@@ -732,25 +727,24 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 20);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 20);
 				}
 				else
 				{
 					OutUpdate.set_field_ustructwithconststablynamedobject0_stablynamedobject0(*ObjectRef);
 				}
-				(const_cast<FConstStablyNamedObjectTestStruct&>(ParentValue)).StablyNamedObject_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_ustructwithconststablynamedobject0_stablynamedobject0(SpatialConstants::NULL_OBJECT_REF);
-				(const_cast<FConstStablyNamedObjectTestStruct&>(ParentValue)).StablyNamedObject_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<FConstStablyNamedObjectTestStruct&>(ParentValue)).StablyNamedObject_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
 		case 21: // field_ustructwithdynamicallycreatedactor0_dynamicallycreatedactor0
 		{
 			ATestActor* Value = *(reinterpret_cast<ATestActor* const*>(Data));
-			const FDynamicallyCreatedActorTestStruct& ParentValue = *(reinterpret_cast<FDynamicallyCreatedActorTestStruct const*>(SourceData + 1216));
+			const FDynamicallyCreatedActorTestStruct& ParentValue = *(reinterpret_cast<FDynamicallyCreatedActorTestStruct const*>(SourceData + 1120));
 
 			if (Value != nullptr)
 			{
@@ -767,18 +761,17 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 21);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 21);
 				}
 				else
 				{
 					OutUpdate.set_field_ustructwithdynamicallycreatedactor0_dynamicallycreatedactor0(*ObjectRef);
 				}
-				(const_cast<FDynamicallyCreatedActorTestStruct&>(ParentValue)).DynamicallyCreatedActor_Context = ObjectRef;
 			}
 			else
 			{
 				OutUpdate.set_field_ustructwithdynamicallycreatedactor0_dynamicallycreatedactor0(SpatialConstants::NULL_OBJECT_REF);
-				(const_cast<FDynamicallyCreatedActorTestStruct&>(ParentValue)).DynamicallyCreatedActor_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<FDynamicallyCreatedActorTestStruct&>(ParentValue)).DynamicallyCreatedActor_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -786,7 +779,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 		{
 			const FTestStructWithNetSerialize& Value = *(reinterpret_cast<FTestStructWithNetSerialize const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 22);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 22);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -800,7 +793,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 22);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 22);
 			}
 			break;
 		}
@@ -850,7 +843,7 @@ void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_MultiClient(co
 	}
 }
 
-void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_Handover(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testustructreplication::TestUStructReplicationHandoverData::Update& OutUpdate) const
+void USpatialTypeBinding_TestUStructReplication::ServerSendUpdate_Handover(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* ActorChannel, improbable::unreal::generated::testustructreplication::TestUStructReplicationHandoverData::Update& OutUpdate) const
 {
 }
 
@@ -1035,16 +1028,19 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
+			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(reinterpret_cast<uint8*>(TargetObject) + 280));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachparent0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<FRepAttachment&>(ParentValue)).AttachParent_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<FRepAttachment&>(ParentValue)).AttachParent_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1197,16 +1193,19 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(PropertyData));
+			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(reinterpret_cast<uint8*>(TargetObject) + 280));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachcomponent0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<FRepAttachment&>(ParentValue)).AttachComponent_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<FRepAttachment&>(ParentValue)).AttachComponent_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1253,16 +1252,19 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
+			const ATestUStructReplication& ParentValue = *(static_cast<ATestUStructReplication const*>(ActorChannel->Actor));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<ATestUStructReplication&>(ParentValue)).Owner_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<ATestUStructReplication&>(ParentValue)).Owner_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1338,16 +1340,19 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
+			const ATestUStructReplication& ParentValue = *(static_cast<ATestUStructReplication const*>(ActorChannel->Actor));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<ATestUStructReplication&>(ParentValue)).Instigator_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<ATestUStructReplication&>(ParentValue)).Instigator_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1460,16 +1465,19 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			UTestUObject* Value = *(reinterpret_cast<UTestUObject* const*>(PropertyData));
+			const FStablyNamedObjectTestStruct& ParentValue = *(reinterpret_cast<FStablyNamedObjectTestStruct const*>(reinterpret_cast<uint8*>(TargetObject) + 1104));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_ustructwithstablynamedobject0_stablynamedobject0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<FStablyNamedObjectTestStruct&>(ParentValue)).StablyNamedObject_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<FStablyNamedObjectTestStruct&>(ParentValue)).StablyNamedObject_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1516,16 +1524,19 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			UTestUObject* Value = *(reinterpret_cast<UTestUObject* const*>(PropertyData));
+			const FConstStablyNamedObjectTestStruct& ParentValue = *(reinterpret_cast<FConstStablyNamedObjectTestStruct const*>(reinterpret_cast<uint8*>(TargetObject) + 1112));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_ustructwithconststablynamedobject0_stablynamedobject0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<FConstStablyNamedObjectTestStruct&>(ParentValue)).StablyNamedObject_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<FConstStablyNamedObjectTestStruct&>(ParentValue)).StablyNamedObject_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1572,16 +1583,19 @@ void USpatialTypeBinding_TestUStructReplication::ReceiveUpdate_MultiClient(USpat
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			ATestActor* Value = *(reinterpret_cast<ATestActor* const*>(PropertyData));
+			const FDynamicallyCreatedActorTestStruct& ParentValue = *(reinterpret_cast<FDynamicallyCreatedActorTestStruct const*>(reinterpret_cast<uint8*>(TargetObject) + 1120));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_ustructwithdynamicallycreatedactor0_dynamicallycreatedactor0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<FDynamicallyCreatedActorTestStruct&>(ParentValue)).DynamicallyCreatedActor_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<FDynamicallyCreatedActorTestStruct&>(ParentValue)).DynamicallyCreatedActor_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1819,7 +1833,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 			else
 			{
 				RPCPayload.set_field_repustructwithstablynamedobject0_stablynamedobject0(SpatialConstants::NULL_OBJECT_REF);
-				
+				//
 			}
 		}
 		{
@@ -1847,7 +1861,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 			else
 			{
 				RPCPayload.set_field_repustructwithconststablynamedobject0_stablynamedobject0(SpatialConstants::NULL_OBJECT_REF);
-				
+				//
 			}
 		}
 		{
@@ -1875,7 +1889,7 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_SendRP
 			else
 			{
 				RPCPayload.set_field_repustructwithdynamicallycreatedactor0_dynamicallycreatedactor0(SpatialConstants::NULL_OBJECT_REF);
-				
+				//
 			}
 		}
 		{
@@ -1959,11 +1973,13 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_OnRPCP
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//
 				Parameters.RepUStructWithStablyNamedObject.StablyNamedObject = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1987,11 +2003,13 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_OnRPCP
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//
 				Parameters.RepUStructWithConstStablyNamedObject.StablyNamedObject = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -2015,11 +2033,13 @@ void USpatialTypeBinding_TestUStructReplication::Server_ReportReplication_OnRPCP
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//
 				Parameters.RepUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
