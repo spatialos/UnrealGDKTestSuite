@@ -52,6 +52,13 @@ private:
 	UPROPERTY()
 	FUnrealObjectRefStub ObjRefStub;
 
+
+	UPROPERTY()
+	ATestActor* TestActorArray[6];
+
+	UPROPERTY()
+	TArray<ATestActor*> TestDynamicActorArray;
+
 	// TODO:
 	// Staticly named object;
 	// Sub object test
