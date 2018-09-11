@@ -175,7 +175,7 @@ void ATestSuiteCharacter::MoveRight(float Value)
 
 void ATestSuiteCharacter::OnRep_TestRunner()
 {
-	check(TestRunner)
+	check(TestRunner);
 	bTestRunnerReplicated = true;
 }
 
