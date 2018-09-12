@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 #include "SpatialNetDriver.h"
-#include "Legacy/EntityRegistry.h"
+#include "Utils/EntityRegistry.h"
 
 void ATestUStructReplication::Tick(float DeltaTime)
 {
@@ -269,8 +269,8 @@ void ATestUStructReplication::ValidateRPC_Server(const FSimpleTestStruct& TestPO
 	//Get the net driver
 	USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());
 	check(NetDriver);
-	worker::EntityId RPCEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(TestUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor).ToSpatialEntityId();
-	worker::EntityId ServerEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(UStructWithDynamicallyCreatedActor.DynamicallyCreatedActor).ToSpatialEntityId();
+	Worker_EntityId RPCEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(TestUStructWithDynamicallyCreatedActor.DynamicallyCreatedActor);
+	Worker_EntityId ServerEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(UStructWithDynamicallyCreatedActor.DynamicallyCreatedActor);
 	check(RPCEntityId == ServerEntityId);
 
 	// Validate UStruct with Netserialize
