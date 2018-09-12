@@ -5,27 +5,26 @@ package improbable.unreal.generated.testcomponent;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestComponentSingleClientRepData {
-	id = 100094;
+	id = 100101;
 }
 component TestComponentMultiClientRepData {
-	id = 100095;
+	id = 100102;
 	bool field_breplicates0 = 1; // COND_None // ::ActorComponent
 	bool field_bisactive0 = 2; // COND_None // ::ActorComponent
 	float field_testproperty0 = 3; // COND_None // ::TestComponent
 }
 component TestComponentHandoverData {
-	id = 100096;
+	id = 100103;
 }
-
 component TestComponentClientRPCs {
-	id = 100097;
+	id = 100104;
 }
 component TestComponentServerRPCs {
-	id = 100098;
+	id = 100105;
 }
 component TestComponentCrossServerRPCs {
-	id = 100099;
+	id = 100106;
 }
 component TestComponentNetMulticastRPCs {
-	id = 100100;
+	id = 100107;
 }
