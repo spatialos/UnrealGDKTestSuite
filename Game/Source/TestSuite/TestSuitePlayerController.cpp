@@ -1,9 +1,12 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "TestSuitePlayerController.h"
-#include "EntityId.h"
-#include "SpatialNetDriver.h"
+
 #include "EntityRegistry.h"
+#include "SpatialConstants.h"
+#include "SpatialNetDriver.h"
+
+#include <improbable/c_worker.h>
 
 bool ATestSuitePlayerController::TestRPC_Validate()
 {
@@ -32,8 +35,8 @@ void ATestSuitePlayerController::InitPlayerState()
 	USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(World->GetNetDriver());
 	if (NetDriver)
 	{
-		const FEntityId EntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(this);
-		UE_LOG(LogTemp, Log, TEXT("PC:InitPlayerState called with entity id %d"), EntityId.ToSpatialEntityId());
+		const Worker_EntityId EntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(this);
+		UE_LOG(LogTemp, Log, TEXT("PC:InitPlayerState called with entity id %d"), EntityId);
 		if (EntityId != 0)
 		{
 			// EntityId is not 0, which means that this PC has already been initialized.

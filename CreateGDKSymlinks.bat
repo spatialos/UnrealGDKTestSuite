@@ -1,7 +1,7 @@
 @echo off
 
 if "%~1" == "" (
-	set /p UNREALGDK_PATH=Please specify the path to the UnrealGDK directory: 
+	set /p UNREALGDK_PATH=Please specify the path to the UnrealGDK directory:
 ) else (
 	set UNREALGDK_PATH=%~1
 )
@@ -69,6 +69,10 @@ mklink /J "%~dp0%PROJECT_PATH%\Source\SpatialGDK" %UNREALGDK_MODULEPATH%
 mklink /J "%~dp0%PROJECT_PATH%\Scripts" %UNREALGDK_SCRIPTSPATH%
 mklink /J "%~dp0%PROJECT_PATH%\Binaries\ThirdParty\Improbable" %UNREALGDK_BINARIESPATH%
 mklink /J "%~dp0spatial\schema\improbable\unreal\gdk" %UNREALGDK_SCHEMAPATH%
+
+set SCHEMA_STD_COPY_DIR=%~dp0spatial\build\dependencies\schema\standard_library
+echo Copying standard library schemas to "%SCHEMA_STD_COPY_DIR%"
+xcopy /s /i /q "Game\Binaries\ThirdParty\Improbable\Programs\Schema" "%SCHEMA_STD_COPY_DIR%"
 
 echo Successfully created symlinks to "%UNREALGDK_PATH%"
 if not defined TEAMCITY_CAPTURE_ENV pause
