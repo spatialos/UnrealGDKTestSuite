@@ -5,10 +5,10 @@ package improbable.unreal.generated.testcasepropertiesc;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestcasePropertiesCSingleClientRepData {
-	id = 100178;
+	id = 100185;
 }
 component TestcasePropertiesCMultiClientRepData {
-	id = 100179;
+	id = 100186;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -33,18 +33,17 @@ component TestcasePropertiesCMultiClientRepData {
 	list<bytes> field_testbpstructarray0 = 22; // COND_None // ::Testcase_Properties_C
 }
 component TestcasePropertiesCHandoverData {
-	id = 100180;
+	id = 100187;
 }
-
 component TestcasePropertiesCClientRPCs {
-	id = 100181;
+	id = 100188;
 }
 component TestcasePropertiesCServerRPCs {
-	id = 100182;
+	id = 100189;
 }
 component TestcasePropertiesCCrossServerRPCs {
-	id = 100183;
+	id = 100190;
 }
 component TestcasePropertiesCNetMulticastRPCs {
-	id = 100184;
+	id = 100191;
 }

@@ -5,10 +5,10 @@ package improbable.unreal.generated.testtarrayreplication;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestTArrayReplicationSingleClientRepData {
-	id = 100157;
+	id = 100164;
 }
 component TestTArrayReplicationMultiClientRepData {
-	id = 100158;
+	id = 100165;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -34,20 +34,18 @@ component TestTArrayReplicationMultiClientRepData {
 	list<uint32> field_uenumtarray0 = 23; // COND_None // ::TestTArrayReplication
 }
 component TestTArrayReplicationHandoverData {
-	id = 100159;
+	id = 100166;
 }
-import "improbable/unreal/generated/UnrealTestTArrayReplicationTypes.schema";
-
 component TestTArrayReplicationClientRPCs {
-	id = 100160;
+	id = 100167;
 }
 component TestTArrayReplicationServerRPCs {
-	id = 100161;
-	command UnrealRPCCommandResponse serverreportreplication(testtarrayreplication.ServerReportReplicationRequest);
+	id = 100168;
+	command UnrealRPCCommandResponse serverreportreplication(UnrealRPCCommandRequest);
 }
 component TestTArrayReplicationCrossServerRPCs {
-	id = 100162;
+	id = 100169;
 }
 component TestTArrayReplicationNetMulticastRPCs {
-	id = 100163;
+	id = 100170;
 }

@@ -5,10 +5,10 @@ package improbable.unreal.generated.testsuitegamemode;
 import "improbable/unreal/gdk/core_types.schema";
 
 component TestSuiteGameModeSingleClientRepData {
-	id = 100115;
+	id = 100122;
 }
 component TestSuiteGameModeMultiClientRepData {
-	id = 100116;
+	id = 100123;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -26,18 +26,17 @@ component TestSuiteGameModeMultiClientRepData {
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
 }
 component TestSuiteGameModeHandoverData {
-	id = 100117;
+	id = 100124;
 }
-
 component TestSuiteGameModeClientRPCs {
-	id = 100118;
+	id = 100125;
 }
 component TestSuiteGameModeServerRPCs {
-	id = 100119;
+	id = 100126;
 }
 component TestSuiteGameModeCrossServerRPCs {
-	id = 100120;
+	id = 100127;
 }
 component TestSuiteGameModeNetMulticastRPCs {
-	id = 100121;
+	id = 100128;
 }

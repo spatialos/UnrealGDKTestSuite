@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 #include "SpatialNetDriver.h"
-#include "Legacy/EntityRegistry.h"
+#include "Utils/EntityRegistry.h"
 
 void ATestUObjectReplication::Tick(float DeltaTime)
 {
@@ -140,8 +140,8 @@ void ATestUObjectReplication::ValidateRPC_Server(ATestActor*  TestDynamicallyCre
 	//Get the net driver
 	USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());
 	check(NetDriver);
-	worker::EntityId RPCEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(TestDynamicallyCreatedActor).ToSpatialEntityId();
-	worker::EntityId ServerEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(DynamicallyCreatedActor).ToSpatialEntityId();
+	Worker_EntityId RPCEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(TestDynamicallyCreatedActor);
+	Worker_EntityId ServerEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(DynamicallyCreatedActor);
 	check(RPCEntityId == ServerEntityId);
 
 	// TODO: UNR-238 Add tests.

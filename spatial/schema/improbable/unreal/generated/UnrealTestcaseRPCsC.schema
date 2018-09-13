@@ -28,11 +28,9 @@ component TestcaseRPCsCMultiClientRepData {
 component TestcaseRPCsCHandoverData {
 	id = 100194;
 }
-import "improbable/unreal/generated/UnrealTestcaseRPCsCTypes.schema";
-
 component TestcaseRPCsCClientRPCs {
 	id = 100195;
-	command UnrealRPCCommandResponse testrpc(testcaserpcsc.TestRPCRequest);
+	command UnrealRPCCommandResponse testrpc(UnrealRPCCommandRequest);
 }
 component TestcaseRPCsCServerRPCs {
 	id = 100196;
