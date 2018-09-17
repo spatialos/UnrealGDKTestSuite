@@ -5,10 +5,10 @@ package improbable.unreal.generated.noreferencebpactorc;
 import "improbable/unreal/gdk/core_types.schema";
 
 component NoReferenceBPActorCSingleClientRepData {
-	id = 100199;
+	id = 100206;
 }
 component NoReferenceBPActorCMultiClientRepData {
-	id = 100200;
+	id = 100207;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -27,17 +27,17 @@ component NoReferenceBPActorCMultiClientRepData {
 	bool field_mytestvariable0 = 16; // COND_None // ::NoReferenceBPActor_C
 }
 component NoReferenceBPActorCHandoverData {
-	id = 100201;
+	id = 100208;
 }
 component NoReferenceBPActorCClientRPCs {
-	id = 100202;
+	id = 100209;
 }
 component NoReferenceBPActorCServerRPCs {
-	id = 100203;
+	id = 100210;
 }
 component NoReferenceBPActorCCrossServerRPCs {
-	id = 100204;
+	id = 100211;
 }
 component NoReferenceBPActorCNetMulticastRPCs {
-	id = 100205;
+	id = 100212;
 }
