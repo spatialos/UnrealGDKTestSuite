@@ -21,6 +21,5 @@ build/
 
 # SpatialGDK symlinked files
 Game/Plugins/UnrealGDK/
-Game/Scripts
 spatial/schema/improbable/unreal/gdk
 Game/Content/Spatial/SchemaDatabase.uasset
