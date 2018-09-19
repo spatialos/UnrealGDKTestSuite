@@ -215,7 +215,7 @@ void USpatialTypeBinding_TestSuiteCharacter::UnbindFromView()
 	ViewCallbacks.Reset();
 }
 
-worker::Entity USpatialTypeBinding_TestSuiteCharacter::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* Channel) const
+worker::Entity USpatialTypeBinding_TestSuiteCharacter::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* ActorChannel) const
 {
 	// Validate replication list.
 	const uint16 RepHandlePropertyMapCount = GetRepHandlePropertyMap().Num();
@@ -236,7 +236,7 @@ worker::Entity USpatialTypeBinding_TestSuiteCharacter::CreateActorEntity(const F
 	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::Update TestSuiteCharacterHandoverDataUpdate;
 	bool bTestSuiteCharacterHandoverDataUpdateChanged = false;
 
-	BuildSpatialComponentUpdate(InitialChanges, Channel, SingleClientTestSuiteCharacterUpdate, bSingleClientTestSuiteCharacterUpdateChanged, MultiClientTestSuiteCharacterUpdate, bMultiClientTestSuiteCharacterUpdateChanged, TestSuiteCharacterHandoverDataUpdate, bTestSuiteCharacterHandoverDataUpdateChanged);
+	BuildSpatialComponentUpdate(InitialChanges, ActorChannel, SingleClientTestSuiteCharacterUpdate, bSingleClientTestSuiteCharacterUpdateChanged, MultiClientTestSuiteCharacterUpdate, bMultiClientTestSuiteCharacterUpdateChanged, TestSuiteCharacterHandoverDataUpdate, bTestSuiteCharacterHandoverDataUpdateChanged);
 	SingleClientTestSuiteCharacterUpdate.ApplyTo(SingleClientTestSuiteCharacterData);
 	MultiClientTestSuiteCharacterUpdate.ApplyTo(MultiClientTestSuiteCharacterData);
 	TestSuiteCharacterHandoverDataUpdate.ApplyTo(TestSuiteCharacterHandoverData);
@@ -256,9 +256,9 @@ worker::Entity USpatialTypeBinding_TestSuiteCharacter::CreateActorEntity(const F
 
 	// Set up unreal metadata.
 	improbable::unreal::UnrealMetadata::Data UnrealMetadata;
-	if (Channel->Actor->IsFullNameStableForNetworking())
+	if (ActorChannel->Actor->IsFullNameStableForNetworking())
 	{
-		UnrealMetadata.set_static_path({std::string{TCHAR_TO_UTF8(*Channel->Actor->GetPathName(Channel->Actor->GetWorld()))}});
+		UnrealMetadata.set_static_path({std::string{TCHAR_TO_UTF8(*ActorChannel->Actor->GetPathName(ActorChannel->Actor->GetWorld()))}});
 	}
 	if (!ClientWorkerIdString.empty())
 	{
@@ -267,7 +267,7 @@ worker::Entity USpatialTypeBinding_TestSuiteCharacter::CreateActorEntity(const F
 
 	uint32 CurrentOffset = 1;
 	worker::Map<std::string, std::uint32_t> SubobjectNameToOffset;
-	ForEachObjectWithOuter(Channel->Actor, [&UnrealMetadata, &CurrentOffset, &SubobjectNameToOffset](UObject* Object)
+	ForEachObjectWithOuter(ActorChannel->Actor, [&UnrealMetadata, &CurrentOffset, &SubobjectNameToOffset](UObject* Object)
 	{
 		// Objects can only be allocated NetGUIDs if this is true.
 		if (Object->IsSupportedForNetworking() && !Object->IsPendingKill() && !Object->IsEditorOnly())
@@ -296,7 +296,7 @@ worker::Entity USpatialTypeBinding_TestSuiteCharacter::CreateActorEntity(const F
 		.Build();
 }
 
-void USpatialTypeBinding_TestSuiteCharacter::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* Channel, const FEntityId& EntityId) const
+void USpatialTypeBinding_TestSuiteCharacter::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* ActorChannel, const FEntityId& EntityId) const
 {
 	// Build SpatialOS updates.
 	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterSingleClientRepData::Update SingleClientUpdate;
@@ -305,7 +305,7 @@ void USpatialTypeBinding_TestSuiteCharacter::SendComponentUpdates(const FPropert
 	bool bMultiClientUpdateChanged = false;
 	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::Update HandoverDataUpdate;
 	bool bHandoverDataUpdateChanged = false;
-	BuildSpatialComponentUpdate(Changes, Channel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, HandoverDataUpdate, bHandoverDataUpdateChanged);
+	BuildSpatialComponentUpdate(Changes, ActorChannel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, HandoverDataUpdate, bHandoverDataUpdateChanged);
 
 	// Send SpatialOS updates if anything changed.
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
@@ -336,27 +336,27 @@ void USpatialTypeBinding_TestSuiteCharacter::SendRPCCommand(UObject* TargetObjec
 	(this->*(*SenderFuncIterator))(Connection.Get(), Parameters, TargetObject);
 }
 
-void USpatialTypeBinding_TestSuiteCharacter::ReceiveAddComponent(USpatialActorChannel* Channel, UAddComponentOpWrapperBase* AddComponentOp) const
+void USpatialTypeBinding_TestSuiteCharacter::ReceiveAddComponent(USpatialActorChannel* ActorChannel, UAddComponentOpWrapperBase* AddComponentOp) const
 {
 	auto* SingleClientAddOp = Cast<UTestSuiteCharacterSingleClientRepDataAddComponentOp>(AddComponentOp);
 	if (SingleClientAddOp)
 	{
 		auto Update = improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
-		ReceiveUpdate_SingleClient(Channel, Update);
+		ReceiveUpdate_SingleClient(ActorChannel, Update);
 		return;
 	}
 	auto* MultiClientAddOp = Cast<UTestSuiteCharacterMultiClientRepDataAddComponentOp>(AddComponentOp);
 	if (MultiClientAddOp)
 	{
 		auto Update = improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
-		ReceiveUpdate_MultiClient(Channel, Update);
+		ReceiveUpdate_MultiClient(ActorChannel, Update);
 		return;
 	}
 	auto* HandoverDataAddOp = Cast<UTestSuiteCharacterHandoverDataAddComponentOp>(AddComponentOp);
 	if (HandoverDataAddOp)
 	{
 		auto Update = improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
-		ReceiveUpdate_Handover(Channel, Update);
+		ReceiveUpdate_Handover(ActorChannel, Update);
 		return;
 	}
 }
@@ -377,7 +377,7 @@ worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_T
 
 void USpatialTypeBinding_TestSuiteCharacter::BuildSpatialComponentUpdate(
 	const FPropertyChangeState& Changes,
-	USpatialActorChannel* Channel,
+	USpatialActorChannel* ActorChannel,
 	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterSingleClientRepData::Update& SingleClientUpdate,
 	bool& bSingleClientUpdateChanged,
 	improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMultiClientRepData::Update& MultiClientUpdate,
@@ -399,18 +399,18 @@ void USpatialTypeBinding_TestSuiteCharacter::BuildSpatialComponentUpdate(
 			const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData) + HandleIterator.ArrayOffset;
 			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending property update. actor %s (%lld), property %s (handle %d)"),
 				*Interop->GetSpatialOS()->GetWorkerId(),
-				*Channel->Actor->GetName(),
-				Channel->GetEntityId().ToSpatialEntityId(),
+				*ActorChannel->Actor->GetName(),
+				ActorChannel->GetEntityId().ToSpatialEntityId(),
 				*Cmd.Property->GetName(),
 				HandleIterator.Handle);
 			switch (GetGroupFromCondition(PropertyMapData.Condition))
 			{
 			case GROUP_SingleClient:
-				ServerSendUpdate_SingleClient(Data, HandleIterator.Handle, Cmd.Property, Channel, SingleClientUpdate);
+				ServerSendUpdate_SingleClient(Data, Changes.SourceData, HandleIterator.Handle, Cmd.Property, ActorChannel, SingleClientUpdate);
 				bSingleClientUpdateChanged = true;
 				break;
 			case GROUP_MultiClient:
-				ServerSendUpdate_MultiClient(Data, HandleIterator.Handle, Cmd.Property, Channel, MultiClientUpdate);
+				ServerSendUpdate_MultiClient(Data, Changes.SourceData, HandleIterator.Handle, Cmd.Property, ActorChannel, MultiClientUpdate);
 				bMultiClientUpdateChanged = true;
 				break;
 			}
@@ -431,20 +431,20 @@ void USpatialTypeBinding_TestSuiteCharacter::BuildSpatialComponentUpdate(
 		const uint8* Data = PropertyMapData.GetPropertyData(Changes.SourceData);
 		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending handover property update. actor %s (%lld), property %s (handle %d)"),
 			*Interop->GetSpatialOS()->GetWorkerId(),
-			*Channel->Actor->GetName(),
-			Channel->GetEntityId().ToSpatialEntityId(),
+			*ActorChannel->Actor->GetName(),
+			ActorChannel->GetEntityId().ToSpatialEntityId(),
 			*PropertyMapData.Property->GetName(),
 			ChangedHandle);
-		ServerSendUpdate_Handover(Data, ChangedHandle, PropertyMapData.Property, Channel, HandoverDataUpdate);
+		ServerSendUpdate_Handover(Data, Changes.SourceData, ChangedHandle, PropertyMapData.Property, ActorChannel, HandoverDataUpdate);
 		bHandoverDataUpdateChanged = true;
 	}
 }
 
-void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* ActorChannel, improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* ActorChannel, improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -487,7 +487,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		{
 			const FRepMovement& Value = *(reinterpret_cast<FRepMovement const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 6);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 6);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -501,13 +501,14 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 6);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 6);
 			}
 			break;
 		}
 		case 7: // field_attachmentreplication0_attachparent0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
+			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(SourceData + 280));
 
 			if (Value != nullptr)
 			{
@@ -519,21 +520,22 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 7);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 7);
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication0_attachparent0(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachparent0(*ObjectRef);
 				}
 			}
 			else
 			{
 				OutUpdate.set_field_attachmentreplication0_attachparent0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<FRepAttachment&>(ParentValue)).AttachParent_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -541,7 +543,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 8);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 8);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -555,7 +557,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 8);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 8);
 			}
 			break;
 		}
@@ -563,7 +565,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 9);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 9);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -577,7 +579,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 9);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 9);
 			}
 			break;
 		}
@@ -585,7 +587,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 10);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 10);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -599,7 +601,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 10);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 10);
 			}
 			break;
 		}
@@ -613,6 +615,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		case 12: // field_attachmentreplication0_attachcomponent0
 		{
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(Data));
+			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(SourceData + 280));
 
 			if (Value != nullptr)
 			{
@@ -624,27 +627,29 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 12);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 12);
 				}
 				else
 				{
-					OutUpdate.set_field_attachmentreplication0_attachcomponent0(ObjectRef);
+					OutUpdate.set_field_attachmentreplication0_attachcomponent0(*ObjectRef);
 				}
 			}
 			else
 			{
 				OutUpdate.set_field_attachmentreplication0_attachcomponent0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<FRepAttachment&>(ParentValue)).AttachComponent_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
 		case 13: // field_owner0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
+			const ATestSuiteCharacter& ParentValue = *(static_cast<ATestSuiteCharacter const*>(ActorChannel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -656,21 +661,22 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 13);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 13);
 				}
 				else
 				{
-					OutUpdate.set_field_owner0(ObjectRef);
+					OutUpdate.set_field_owner0(*ObjectRef);
 				}
 			}
 			else
 			{
 				OutUpdate.set_field_owner0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).Owner_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -684,6 +690,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		case 15: // field_instigator0
 		{
 			APawn* Value = *(reinterpret_cast<APawn* const*>(Data));
+			const ATestSuiteCharacter& ParentValue = *(static_cast<ATestSuiteCharacter const*>(ActorChannel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -695,27 +702,29 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 15);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 15);
 				}
 				else
 				{
-					OutUpdate.set_field_instigator0(ObjectRef);
+					OutUpdate.set_field_instigator0(*ObjectRef);
 				}
 			}
 			else
 			{
 				OutUpdate.set_field_instigator0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).Instigator_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
 		case 16: // field_playerstate0
 		{
 			APlayerState* Value = *(reinterpret_cast<APlayerState* const*>(Data));
+			const ATestSuiteCharacter& ParentValue = *(static_cast<ATestSuiteCharacter const*>(ActorChannel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -727,21 +736,22 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 16);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 16);
 				}
 				else
 				{
-					OutUpdate.set_field_playerstate0(ObjectRef);
+					OutUpdate.set_field_playerstate0(*ObjectRef);
 				}
 			}
 			else
 			{
 				OutUpdate.set_field_playerstate0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).PlayerState_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -755,6 +765,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		case 18: // field_controller0
 		{
 			AController* Value = *(reinterpret_cast<AController* const*>(Data));
+			const ATestSuiteCharacter& ParentValue = *(static_cast<ATestSuiteCharacter const*>(ActorChannel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -766,27 +777,29 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 18);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 18);
 				}
 				else
 				{
-					OutUpdate.set_field_controller0(ObjectRef);
+					OutUpdate.set_field_controller0(*ObjectRef);
 				}
 			}
 			else
 			{
 				OutUpdate.set_field_controller0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).Controller_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
 		case 19: // field_replicatedbasedmovement0_movementbase0
 		{
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(Data));
+			const FBasedMovementInfo& ParentValue = *(reinterpret_cast<FBasedMovementInfo const*>(SourceData + 1296));
 
 			if (Value != nullptr)
 			{
@@ -798,21 +811,22 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 19);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 19);
 				}
 				else
 				{
-					OutUpdate.set_field_replicatedbasedmovement0_movementbase0(ObjectRef);
+					OutUpdate.set_field_replicatedbasedmovement0_movementbase0(*ObjectRef);
 				}
 			}
 			else
 			{
 				OutUpdate.set_field_replicatedbasedmovement0_movementbase0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<FBasedMovementInfo&>(ParentValue)).MovementBase_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -827,7 +841,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 21);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 21);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -841,7 +855,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 21);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 21);
 			}
 			break;
 		}
@@ -849,7 +863,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 22);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 22);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -863,7 +877,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 22);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 22);
 			}
 			break;
 		}
@@ -940,6 +954,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		case 33: // field_reprootmotion0_animmontage0
 		{
 			UAnimMontage* Value = *(reinterpret_cast<UAnimMontage* const*>(Data));
+			const FRepRootMotionMontage& ParentValue = *(reinterpret_cast<FRepRootMotionMontage const*>(SourceData + 1808));
 
 			if (Value != nullptr)
 			{
@@ -951,21 +966,22 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 33);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 33);
 				}
 				else
 				{
-					OutUpdate.set_field_reprootmotion0_animmontage0(ObjectRef);
+					OutUpdate.set_field_reprootmotion0_animmontage0(*ObjectRef);
 				}
 			}
 			else
 			{
 				OutUpdate.set_field_reprootmotion0_animmontage0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<FRepRootMotionMontage&>(ParentValue)).AnimMontage_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -980,7 +996,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		{
 			const FVector_NetQuantize100& Value = *(reinterpret_cast<FVector_NetQuantize100 const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 35);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 35);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -994,7 +1010,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 35);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 35);
 			}
 			break;
 		}
@@ -1002,7 +1018,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		{
 			const FRotator& Value = *(reinterpret_cast<FRotator const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 36);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 36);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -1016,13 +1032,14 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 36);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 36);
 			}
 			break;
 		}
 		case 37: // field_reprootmotion0_movementbase0
 		{
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(Data));
+			const FRepRootMotionMontage& ParentValue = *(reinterpret_cast<FRepRootMotionMontage const*>(SourceData + 1808));
 
 			if (Value != nullptr)
 			{
@@ -1034,21 +1051,22 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 37);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 37);
 				}
 				else
 				{
-					OutUpdate.set_field_reprootmotion0_movementbase0(ObjectRef);
+					OutUpdate.set_field_reprootmotion0_movementbase0(*ObjectRef);
 				}
 			}
 			else
 			{
 				OutUpdate.set_field_reprootmotion0_movementbase0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<FRepRootMotionMontage&>(ParentValue)).MovementBase_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -1077,7 +1095,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		{
 			const FRootMotionSourceGroup& Value = *(reinterpret_cast<FRootMotionSourceGroup const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 41);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 41);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -1091,7 +1109,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 41);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 41);
 			}
 			break;
 		}
@@ -1099,7 +1117,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		{
 			const FVector_NetQuantize10& Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 42);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 42);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -1113,7 +1131,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 42);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 42);
 			}
 			break;
 		}
@@ -1121,7 +1139,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 		{
 			const FVector_NetQuantize10& Value = *(reinterpret_cast<FVector_NetQuantize10 const*>(Data));
 
-			Interop->ResetOutgoingArrayRepUpdate_Internal(Channel, 43);
+			Interop->ResetOutgoingArrayRepUpdate_Internal(ActorChannel, 43);
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
 			FSpatialMemoryWriter ValueDataWriter(ValueData, PackageMap, UnresolvedObjects);
@@ -1135,13 +1153,14 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 			}
 			else
 			{
-				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, Channel, 43);
+				Interop->QueueOutgoingArrayRepUpdate_Internal(UnresolvedObjects, ActorChannel, 43);
 			}
 			break;
 		}
 		case 44: // field_testrunner0
 		{
 			AGDKTestRunner* Value = *(reinterpret_cast<AGDKTestRunner* const*>(Data));
+			const ATestSuiteCharacter& ParentValue = *(static_cast<ATestSuiteCharacter const*>(ActorChannel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -1153,21 +1172,22 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					// A legal static object reference should never be unresolved.
 					check(!Value->IsFullNameStableForNetworking())
-					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, Channel, 44);
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 44);
 				}
 				else
 				{
-					OutUpdate.set_field_testrunner0(ObjectRef);
+					OutUpdate.set_field_testrunner0(*ObjectRef);
 				}
 			}
 			else
 			{
 				OutUpdate.set_field_testrunner0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).TestRunner_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -1177,13 +1197,14 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_MultiClient(const 
 	}
 }
 
-void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_Handover(const uint8* RESTRICT Data, int32 Handle, UProperty* Property, USpatialActorChannel* Channel, improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::Update& OutUpdate) const
+void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_Handover(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* ActorChannel, improbable::unreal::generated::testsuitecharacter::TestSuiteCharacterHandoverData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
 		case 1: // field_charactermovement0_movementmode0
 		{
 			TEnumAsByte<EMovementMode> Value = *(reinterpret_cast<TEnumAsByte<EMovementMode> const*>(Data));
+			const UCharacterMovementComponent& ParentValue = *(reinterpret_cast<UCharacterMovementComponent const*>(SourceData + 1224));
 
 			OutUpdate.set_field_charactermovement0_movementmode0(uint32_t(Value));
 			break;
@@ -1191,6 +1212,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_Handover(const uin
 		case 2: // field_charactermovement0_custommovementmode0
 		{
 			uint8 Value = *(reinterpret_cast<uint8 const*>(Data));
+			const UCharacterMovementComponent& ParentValue = *(reinterpret_cast<UCharacterMovementComponent const*>(SourceData + 1224));
 
 			OutUpdate.set_field_charactermovement0_custommovementmode0(uint32_t(Value));
 			break;
@@ -1198,6 +1220,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_Handover(const uin
 		case 3: // field_charactermovement0_groundmovementmode0
 		{
 			TEnumAsByte<EMovementMode> Value = *(reinterpret_cast<TEnumAsByte<EMovementMode> const*>(Data));
+			const UCharacterMovementComponent& ParentValue = *(reinterpret_cast<UCharacterMovementComponent const*>(SourceData + 1224));
 
 			OutUpdate.set_field_charactermovement0_groundmovementmode0(uint32_t(Value));
 			break;
@@ -1205,6 +1228,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_Handover(const uin
 		case 4: // field_charactermovement0_predictionhandoverdata0
 		{
 			FPredictionHandoverData Value = *(reinterpret_cast<FPredictionHandoverData const*>(Data));
+			const UCharacterMovementComponent& ParentValue = *(reinterpret_cast<UCharacterMovementComponent const*>(SourceData + 1224));
 
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
@@ -1216,6 +1240,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerSendUpdate_Handover(const uin
 		case 5: // field_charactermovement0_velocity0
 		{
 			FVector Value = *(reinterpret_cast<FVector const*>(Data));
+			const UCharacterMovementComponent& ParentValue = *(reinterpret_cast<UCharacterMovementComponent const*>(SourceData + 1224));
 
 			TSet<const UObject*> UnresolvedObjects;
 			TArray<uint8> ValueData;
@@ -1413,16 +1438,19 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_MultiClient(USpatialA
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
+			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(reinterpret_cast<uint8*>(TargetObject) + 280));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachparent0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<FRepAttachment&>(ParentValue)).AttachParent_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<FRepAttachment&>(ParentValue)).AttachParent_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1575,16 +1603,19 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_MultiClient(USpatialA
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			USceneComponent* Value = *(reinterpret_cast<USceneComponent* const*>(PropertyData));
+			const FRepAttachment& ParentValue = *(reinterpret_cast<FRepAttachment const*>(reinterpret_cast<uint8*>(TargetObject) + 280));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_attachmentreplication0_attachcomponent0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<FRepAttachment&>(ParentValue)).AttachComponent_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<FRepAttachment&>(ParentValue)).AttachComponent_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1631,16 +1662,19 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_MultiClient(USpatialA
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
+			const ATestSuiteCharacter& ParentValue = *(static_cast<ATestSuiteCharacter const*>(ActorChannel->Actor));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).Owner_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).Owner_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1716,16 +1750,19 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_MultiClient(USpatialA
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
+			const ATestSuiteCharacter& ParentValue = *(static_cast<ATestSuiteCharacter const*>(ActorChannel->Actor));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).Instigator_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).Instigator_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1772,16 +1809,19 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_MultiClient(USpatialA
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			APlayerState* Value = *(reinterpret_cast<APlayerState* const*>(PropertyData));
+			const ATestSuiteCharacter& ParentValue = *(static_cast<ATestSuiteCharacter const*>(ActorChannel->Actor));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_playerstate0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).PlayerState_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).PlayerState_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1850,16 +1890,19 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_MultiClient(USpatialA
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			AController* Value = *(reinterpret_cast<AController* const*>(PropertyData));
+			const ATestSuiteCharacter& ParentValue = *(static_cast<ATestSuiteCharacter const*>(ActorChannel->Actor));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_controller0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).Controller_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).Controller_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1906,16 +1949,19 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_MultiClient(USpatialA
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(PropertyData));
+			const FBasedMovementInfo& ParentValue = *(reinterpret_cast<FBasedMovementInfo const*>(reinterpret_cast<uint8*>(TargetObject) + 1296));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_replicatedbasedmovement0_movementbase0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<FBasedMovementInfo&>(ParentValue)).MovementBase_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<FBasedMovementInfo&>(ParentValue)).MovementBase_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -2260,16 +2306,19 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_MultiClient(USpatialA
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			UAnimMontage* Value = *(reinterpret_cast<UAnimMontage* const*>(PropertyData));
+			const FRepRootMotionMontage& ParentValue = *(reinterpret_cast<FRepRootMotionMontage const*>(reinterpret_cast<uint8*>(TargetObject) + 1808));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion0_animmontage0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<FRepRootMotionMontage&>(ParentValue)).AnimMontage_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<FRepRootMotionMontage&>(ParentValue)).AnimMontage_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -2394,16 +2443,19 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_MultiClient(USpatialA
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			UPrimitiveComponent* Value = *(reinterpret_cast<UPrimitiveComponent* const*>(PropertyData));
+			const FRepRootMotionMontage& ParentValue = *(reinterpret_cast<FRepRootMotionMontage const*>(reinterpret_cast<uint8*>(TargetObject) + 1808));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_reprootmotion0_movementbase0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<FRepRootMotionMontage&>(ParentValue)).MovementBase_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<FRepRootMotionMontage&>(ParentValue)).MovementBase_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -2600,16 +2652,19 @@ void USpatialTypeBinding_TestSuiteCharacter::ReceiveUpdate_MultiClient(USpatialA
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			AGDKTestRunner* Value = *(reinterpret_cast<AGDKTestRunner* const*>(PropertyData));
+			const ATestSuiteCharacter& ParentValue = *(static_cast<ATestSuiteCharacter const*>(ActorChannel->Actor));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_testrunner0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).TestRunner_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<ATestSuiteCharacter&>(ParentValue)).TestRunner_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -2771,7 +2826,7 @@ void USpatialTypeBinding_TestSuiteCharacter::RootMotionDebugClientPrintOnScreen_
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC RootMotionDebugClientPrintOnScreen queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2804,7 +2859,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientVeryShortAdjustPosition_SendR
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientVeryShortAdjustPosition queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2836,20 +2891,21 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientVeryShortAdjustPosition_SendR
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewBase);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientVeryShortAdjustPosition queued. StructuredParams.NewBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 					return {Cast<UObject>(StructuredParams.NewBase)};
 				}
 				else
 				{
-					RPCPayload.set_field_newbase0(ObjectRef);
+					RPCPayload.set_field_newbase0(*ObjectRef);
 				}
 			}
 			else
 			{
 				RPCPayload.set_field_newbase0(SpatialConstants::NULL_OBJECT_REF);
+				//
 			}
 		}
 		{
@@ -2882,7 +2938,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientCheatWalk_SendRPC(worker::Con
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientCheatWalk queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2909,7 +2965,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientCheatGhost_SendRPC(worker::Co
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientCheatGhost queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2936,7 +2992,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientCheatFly_SendRPC(worker::Conn
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientCheatFly queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -2966,7 +3022,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAdjustRootMotionSourcePositio
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientAdjustRootMotionSourcePosition queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3025,20 +3081,21 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAdjustRootMotionSourcePositio
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ServerBase);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientAdjustRootMotionSourcePosition queued. StructuredParams.ServerBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 					return {Cast<UObject>(StructuredParams.ServerBase)};
 				}
 				else
 				{
-					RPCPayload.set_field_serverbase0(ObjectRef);
+					RPCPayload.set_field_serverbase0(*ObjectRef);
 				}
 			}
 			else
 			{
 				RPCPayload.set_field_serverbase0(SpatialConstants::NULL_OBJECT_REF);
+				//
 			}
 		}
 		{
@@ -3074,7 +3131,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAdjustRootMotionPosition_Send
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientAdjustRootMotionPosition queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3121,20 +3178,21 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAdjustRootMotionPosition_Send
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ServerBase);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientAdjustRootMotionPosition queued. StructuredParams.ServerBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 					return {Cast<UObject>(StructuredParams.ServerBase)};
 				}
 				else
 				{
-					RPCPayload.set_field_serverbase0(ObjectRef);
+					RPCPayload.set_field_serverbase0(*ObjectRef);
 				}
 			}
 			else
 			{
 				RPCPayload.set_field_serverbase0(SpatialConstants::NULL_OBJECT_REF);
+				//
 			}
 		}
 		{
@@ -3170,7 +3228,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAdjustPosition_SendRPC(worker
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientAdjustPosition queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3211,20 +3269,21 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAdjustPosition_SendRPC(worker
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.NewBase);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientAdjustPosition queued. StructuredParams.NewBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 					return {Cast<UObject>(StructuredParams.NewBase)};
 				}
 				else
 				{
-					RPCPayload.set_field_newbase0(ObjectRef);
+					RPCPayload.set_field_newbase0(*ObjectRef);
 				}
 			}
 			else
 			{
 				RPCPayload.set_field_newbase0(SpatialConstants::NULL_OBJECT_REF);
+				//
 			}
 		}
 		{
@@ -3260,7 +3319,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAckGoodMove_SendRPC(worker::C
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ClientAckGoodMove queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3290,7 +3349,7 @@ void USpatialTypeBinding_TestSuiteCharacter::Server_StartTestRunner_SendRPC(work
 	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_StartTestRunner queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3320,7 +3379,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMoveOld_SendRPC(worker::Conne
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerMoveOld queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3365,7 +3424,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMoveNoBase_SendRPC(worker::Co
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerMoveNoBase queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3428,7 +3487,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMoveDualNoBase_SendRPC(worker
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerMoveDualNoBase queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3509,7 +3568,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMoveDualHybridRootMotion_Send
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerMoveDualHybridRootMotion queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3577,20 +3636,21 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMoveDualHybridRootMotion_Send
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerMoveDualHybridRootMotion queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 					return {Cast<UObject>(StructuredParams.ClientMovementBase)};
 				}
 				else
 				{
-					RPCPayload.set_field_clientmovementbase0(ObjectRef);
+					RPCPayload.set_field_clientmovementbase0(*ObjectRef);
 				}
 			}
 			else
 			{
 				RPCPayload.set_field_clientmovementbase0(SpatialConstants::NULL_OBJECT_REF);
+				//
 			}
 		}
 		{
@@ -3620,7 +3680,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMoveDual_SendRPC(worker::Conn
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerMoveDual queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3688,20 +3748,21 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMoveDual_SendRPC(worker::Conn
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerMoveDual queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 					return {Cast<UObject>(StructuredParams.ClientMovementBase)};
 				}
 				else
 				{
-					RPCPayload.set_field_clientmovementbase0(ObjectRef);
+					RPCPayload.set_field_clientmovementbase0(*ObjectRef);
 				}
 			}
 			else
 			{
 				RPCPayload.set_field_clientmovementbase0(SpatialConstants::NULL_OBJECT_REF);
+				//
 			}
 		}
 		{
@@ -3731,7 +3792,7 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMove_SendRPC(worker::Connecti
 	auto Sender = [this, Connection, TargetObject, StructuredParams]() mutable -> FRPCCommandRequestResult
 	{
 		// Resolve TargetObject.
-		improbable::unreal::UnrealObjectRef TargetObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject));
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
 		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
 		{
 			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerMove queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
@@ -3781,20 +3842,21 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMove_SendRPC(worker::Connecti
 						NetGUID = PackageMap->ResolveStablyNamedObject(StructuredParams.ClientMovementBase);
 					}
 				}
-				improbable::unreal::UnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
-				if (ObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
 				{
 					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC ServerMove queued. StructuredParams.ClientMovementBase is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
 					return {Cast<UObject>(StructuredParams.ClientMovementBase)};
 				}
 				else
 				{
-					RPCPayload.set_field_clientmovementbase0(ObjectRef);
+					RPCPayload.set_field_clientmovementbase0(*ObjectRef);
 				}
 			}
 			else
 			{
 				RPCPayload.set_field_clientmovementbase0(SpatialConstants::NULL_OBJECT_REF);
+				//
 			}
 		}
 		{
@@ -3913,11 +3975,13 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientVeryShortAdjustPosition_OnRPC
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//
 				Parameters.NewBase = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -4178,11 +4242,13 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAdjustRootMotionSourcePositio
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//
 				Parameters.ServerBase = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -4296,11 +4362,13 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAdjustRootMotionPosition_OnRP
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//
 				Parameters.ServerBase = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -4408,11 +4476,13 @@ void USpatialTypeBinding_TestSuiteCharacter::ClientAdjustPosition_OnRPCPayload(c
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//
 				Parameters.NewBase = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -4898,11 +4968,13 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMoveDualHybridRootMotion_OnRP
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//
 				Parameters.ClientMovementBase = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -5031,11 +5103,13 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMoveDual_OnRPCPayload(const w
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//
 				Parameters.ClientMovementBase = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -5146,11 +5220,13 @@ void USpatialTypeBinding_TestSuiteCharacter::ServerMove_OnRPCPayload(const worke
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
+				//
 				Parameters.ClientMovementBase = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);

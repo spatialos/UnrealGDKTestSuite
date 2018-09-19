@@ -12,6 +12,10 @@
 #include "TestSuiteGameStateBase.h"
 #include "SpatialNetDriver.h"
 
+#include "UnrealObjectRefStub.h"
+
+#include "TestSuiteTestClasses.h"
+
 #include "UnrealNetwork.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,6 +65,11 @@ void ATestSuiteCharacter::BeginPlay()
 	{
 		TestRunner = World->SpawnActor<AGDKTestRunner>();
 	}
+
+	APropertyClass* TestClass = World->SpawnActor<APropertyClass>();
+  //  TestClass->ActorPointer_Context = nullptr;
+
+	FUnrealObjectRefStub stub;
 }
 
 //////////////////////////////////////////////////////////////////////////

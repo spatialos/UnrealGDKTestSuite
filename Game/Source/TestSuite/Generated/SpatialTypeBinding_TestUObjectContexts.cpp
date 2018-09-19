@@ -1,7 +1,7 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
 
-#include "SpatialTypeBinding_TestSuiteGameStateBase.h"
+#include "SpatialTypeBinding_TestUObjectContexts.h"
 
 #include "NetworkGuid.h"
 
@@ -18,31 +18,35 @@
 #include "SpatialNetDriver.h"
 #include "SpatialInterop.h"
 
-#include "TestSuiteGameStateBaseSingleClientRepDataAddComponentOp.h"
-#include "TestSuiteGameStateBaseMultiClientRepDataAddComponentOp.h"
-#include "TestSuiteGameStateBaseHandoverDataAddComponentOp.h"
+#include "Tests/TestUObjectContexts.h"
 
-const FRepHandlePropertyMap& USpatialTypeBinding_TestSuiteGameStateBase::GetRepHandlePropertyMap() const
+#include "TestUObjectContextsSingleClientRepDataAddComponentOp.h"
+#include "TestUObjectContextsMultiClientRepDataAddComponentOp.h"
+#include "TestUObjectContextsHandoverDataAddComponentOp.h"
+
+const FRepHandlePropertyMap& USpatialTypeBinding_TestUObjectContexts::GetRepHandlePropertyMap() const
 {
 	return RepHandleToPropertyMap;
 }
 
-const FHandoverHandlePropertyMap& USpatialTypeBinding_TestSuiteGameStateBase::GetHandoverHandlePropertyMap() const
+const FHandoverHandlePropertyMap& USpatialTypeBinding_TestUObjectContexts::GetHandoverHandlePropertyMap() const
 {
 	return HandoverHandleToPropertyMap;
 }
 
-UClass* USpatialTypeBinding_TestSuiteGameStateBase::GetBoundClass() const
+UClass* USpatialTypeBinding_TestUObjectContexts::GetBoundClass() const
 {
-	return ATestSuiteGameStateBase::StaticClass();
+	return ATestUObjectContexts::StaticClass();
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap)
+void USpatialTypeBinding_TestUObjectContexts::Init(USpatialInterop* InInterop, USpatialPackageMapClient* InPackageMap)
 {
 	Super::Init(InInterop, InPackageMap);
 
+	RPCToSenderMap.Emplace("Server_ReportResult", &USpatialTypeBinding_TestUObjectContexts::Server_ReportResult_SendRPC);
+	RPCToSenderMap.Emplace("MulticastRPC", &USpatialTypeBinding_TestUObjectContexts::MulticastRPC_SendRPC);
 
-	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("TestSuiteGameStateBase"));
+	UClass* Class = FindObject<UClass>(ANY_PACKAGE, TEXT("TestUObjectContexts"));
 
 	// Populate RepHandleToPropertyMap.
 	RepHandleToPropertyMap.Add(1, FRepHandleData(Class, {"bHidden"}, {0}, COND_None, REPNOTIFY_OnChanged));
@@ -60,25 +64,24 @@ void USpatialTypeBinding_TestSuiteGameStateBase::Init(USpatialInterop* InInterop
 	RepHandleToPropertyMap.Add(13, FRepHandleData(Class, {"Owner"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(14, FRepHandleData(Class, {"Role"}, {0}, COND_None, REPNOTIFY_OnChanged));
 	RepHandleToPropertyMap.Add(15, FRepHandleData(Class, {"Instigator"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"GameModeClass"}, {0}, COND_InitialOnly, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"SpectatorClass"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"bReplicatedHasBegunPlay"}, {0}, COND_None, REPNOTIFY_OnChanged));
-	RepHandleToPropertyMap.Add(19, FRepHandleData(Class, {"ReplicatedWorldTimeSeconds"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(16, FRepHandleData(Class, {"BasicUObject"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(17, FRepHandleData(Class, {"ActorPointer"}, {0}, COND_None, REPNOTIFY_OnChanged));
+	RepHandleToPropertyMap.Add(18, FRepHandleData(Class, {"StablyNamedUObject"}, {0}, COND_None, REPNOTIFY_OnChanged));
 
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::BindToView(bool bIsClient)
+void USpatialTypeBinding_TestUObjectContexts::BindToView(bool bIsClient)
 {
 	TSharedPtr<worker::View> View = Interop->GetSpatialOS()->GetView().Pin();
 	ViewCallbacks.Init(View);
 
 	if (Interop->GetNetDriver()->GetNetMode() == NM_Client)
 	{
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -86,11 +89,11 @@ void USpatialTypeBinding_TestSuiteGameStateBase::BindToView(bool bIsClient)
 			check(ActorChannel);
 			ReceiveUpdate_SingleClient(ActorChannel, Op.Update);
 		}));
-		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseMultiClientRepData>([this](
-			const worker::ComponentUpdateOp<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseMultiClientRepData>& Op)
+		ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsMultiClientRepData>([this](
+			const worker::ComponentUpdateOp<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsMultiClientRepData>& Op)
 		{
 			// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseMultiClientRepData::ComponentId))
+			if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsMultiClientRepData::ComponentId))
 			{
 				return;
 			}
@@ -100,11 +103,11 @@ void USpatialTypeBinding_TestSuiteGameStateBase::BindToView(bool bIsClient)
 		}));
 		if (!bIsClient)
 		{
-			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData>([this](
-				const worker::ComponentUpdateOp<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData>& Op)
+			ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData>([this](
+				const worker::ComponentUpdateOp<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData>& Op)
 			{
 				// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData::ComponentId))
+				if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData::ComponentId))
 				{
 					return;
 				}
@@ -114,24 +117,28 @@ void USpatialTypeBinding_TestSuiteGameStateBase::BindToView(bool bIsClient)
 			}));
 		}
 	}
-	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseNetMulticastRPCs>([this](
-		const worker::ComponentUpdateOp<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseNetMulticastRPCs>& Op)
+	ViewCallbacks.Add(View->OnComponentUpdate<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsNetMulticastRPCs>([this](
+		const worker::ComponentUpdateOp<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsNetMulticastRPCs>& Op)
 	{
 		// TODO: Remove this check once we can disable component update short circuiting. This will be exposed in 14.0. See TIG-137.
-		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseNetMulticastRPCs::ComponentId))
+		if (HasComponentAuthority(Interop->GetSpatialOS()->GetView(), Op.EntityId, improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsNetMulticastRPCs::ComponentId))
 		{
 			return;
 		}
 		ReceiveUpdate_NetMulticastRPCs(Op.EntityId, Op.Update);
 	}));
+
+	using ServerRPCCommandTypes = improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsServerRPCs::Commands;
+	ViewCallbacks.Add(View->OnCommandRequest<ServerRPCCommandTypes::Serverreportresult>(std::bind(&USpatialTypeBinding_TestUObjectContexts::Server_ReportResult_OnRPCPayload, this, std::placeholders::_1)));
+	ViewCallbacks.Add(View->OnCommandResponse<ServerRPCCommandTypes::Serverreportresult>(std::bind(&USpatialTypeBinding_TestUObjectContexts::Server_ReportResult_OnCommandResponse, this, std::placeholders::_1)));
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::UnbindFromView()
+void USpatialTypeBinding_TestUObjectContexts::UnbindFromView()
 {
 	ViewCallbacks.Reset();
 }
 
-worker::Entity USpatialTypeBinding_TestSuiteGameStateBase::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* ActorChannel) const
+worker::Entity USpatialTypeBinding_TestUObjectContexts::CreateActorEntity(const FString& ClientWorkerId, const FVector& Position, const FString& Metadata, const FPropertyChangeState& InitialChanges, USpatialActorChannel* ActorChannel) const
 {
 	// Validate replication list.
 	const uint16 RepHandlePropertyMapCount = GetRepHandlePropertyMap().Num();
@@ -142,20 +149,20 @@ worker::Entity USpatialTypeBinding_TestSuiteGameStateBase::CreateActorEntity(con
 
 	// Setup initial data.
 
-	improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData::Data SingleClientTestSuiteGameStateBaseData;
-	improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData::Update SingleClientTestSuiteGameStateBaseUpdate;
-	bool bSingleClientTestSuiteGameStateBaseUpdateChanged = false;
-	improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseMultiClientRepData::Data MultiClientTestSuiteGameStateBaseData;
-	improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseMultiClientRepData::Update MultiClientTestSuiteGameStateBaseUpdate;
-	bool bMultiClientTestSuiteGameStateBaseUpdateChanged = false;
-	improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData::Data TestSuiteGameStateBaseHandoverData;
-	improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData::Update TestSuiteGameStateBaseHandoverDataUpdate;
-	bool bTestSuiteGameStateBaseHandoverDataUpdateChanged = false;
+	improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData::Data SingleClientTestUObjectContextsData;
+	improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData::Update SingleClientTestUObjectContextsUpdate;
+	bool bSingleClientTestUObjectContextsUpdateChanged = false;
+	improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsMultiClientRepData::Data MultiClientTestUObjectContextsData;
+	improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsMultiClientRepData::Update MultiClientTestUObjectContextsUpdate;
+	bool bMultiClientTestUObjectContextsUpdateChanged = false;
+	improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData::Data TestUObjectContextsHandoverData;
+	improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData::Update TestUObjectContextsHandoverDataUpdate;
+	bool bTestUObjectContextsHandoverDataUpdateChanged = false;
 
-	BuildSpatialComponentUpdate(InitialChanges, ActorChannel, SingleClientTestSuiteGameStateBaseUpdate, bSingleClientTestSuiteGameStateBaseUpdateChanged, MultiClientTestSuiteGameStateBaseUpdate, bMultiClientTestSuiteGameStateBaseUpdateChanged, TestSuiteGameStateBaseHandoverDataUpdate, bTestSuiteGameStateBaseHandoverDataUpdateChanged);
-	SingleClientTestSuiteGameStateBaseUpdate.ApplyTo(SingleClientTestSuiteGameStateBaseData);
-	MultiClientTestSuiteGameStateBaseUpdate.ApplyTo(MultiClientTestSuiteGameStateBaseData);
-	TestSuiteGameStateBaseHandoverDataUpdate.ApplyTo(TestSuiteGameStateBaseHandoverData);
+	BuildSpatialComponentUpdate(InitialChanges, ActorChannel, SingleClientTestUObjectContextsUpdate, bSingleClientTestUObjectContextsUpdateChanged, MultiClientTestUObjectContextsUpdate, bMultiClientTestUObjectContextsUpdateChanged, TestUObjectContextsHandoverDataUpdate, bTestUObjectContextsHandoverDataUpdateChanged);
+	SingleClientTestUObjectContextsUpdate.ApplyTo(SingleClientTestUObjectContextsData);
+	MultiClientTestUObjectContextsUpdate.ApplyTo(MultiClientTestUObjectContextsData);
+	TestUObjectContextsHandoverDataUpdate.ApplyTo(TestUObjectContextsHandoverData);
 
 	// Create entity.
 	std::string ClientWorkerIdString = TCHAR_TO_UTF8(*ClientWorkerId);
@@ -202,24 +209,24 @@ worker::Entity USpatialTypeBinding_TestSuiteGameStateBase::CreateActorEntity(con
 		.SetPersistence(true)
 		.SetReadAcl(AnyUnrealWorkerOrClient)
 		.AddComponent<improbable::unreal::UnrealMetadata>(UnrealMetadata, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData>(SingleClientTestSuiteGameStateBaseData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseMultiClientRepData>(MultiClientTestSuiteGameStateBaseData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData>(TestSuiteGameStateBaseHandoverData, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseClientRPCs>(improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseClientRPCs::Data{}, OwningClientOnly)
-		.AddComponent<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseServerRPCs>(improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseServerRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseCrossServerRPCs>(improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseCrossServerRPCs::Data{}, WorkersOnly)
-		.AddComponent<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseNetMulticastRPCs>(improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseNetMulticastRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData>(SingleClientTestUObjectContextsData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsMultiClientRepData>(MultiClientTestUObjectContextsData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData>(TestUObjectContextsHandoverData, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsClientRPCs>(improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsClientRPCs::Data{}, OwningClientOnly)
+		.AddComponent<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsServerRPCs>(improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsCrossServerRPCs>(improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsCrossServerRPCs::Data{}, WorkersOnly)
+		.AddComponent<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsNetMulticastRPCs>(improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsNetMulticastRPCs::Data{}, WorkersOnly)
 		.Build();
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* ActorChannel, const FEntityId& EntityId) const
+void USpatialTypeBinding_TestUObjectContexts::SendComponentUpdates(const FPropertyChangeState& Changes, USpatialActorChannel* ActorChannel, const FEntityId& EntityId) const
 {
 	// Build SpatialOS updates.
-	improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData::Update SingleClientUpdate;
+	improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData::Update SingleClientUpdate;
 	bool bSingleClientUpdateChanged = false;
-	improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseMultiClientRepData::Update MultiClientUpdate;
+	improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsMultiClientRepData::Update MultiClientUpdate;
 	bool bMultiClientUpdateChanged = false;
-	improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData::Update HandoverDataUpdate;
+	improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData::Update HandoverDataUpdate;
 	bool bHandoverDataUpdateChanged = false;
 	BuildSpatialComponentUpdate(Changes, ActorChannel, SingleClientUpdate, bSingleClientUpdateChanged, MultiClientUpdate, bMultiClientUpdateChanged, HandoverDataUpdate, bHandoverDataUpdateChanged);
 
@@ -227,19 +234,19 @@ void USpatialTypeBinding_TestSuiteGameStateBase::SendComponentUpdates(const FPro
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	if (bSingleClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData>(EntityId.ToSpatialEntityId(), SingleClientUpdate);
 	}
 	if (bMultiClientUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsMultiClientRepData>(EntityId.ToSpatialEntityId(), MultiClientUpdate);
 	}
 	if (bHandoverDataUpdateChanged)
 	{
-		Connection->SendComponentUpdate<improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData>(EntityId.ToSpatialEntityId(), HandoverDataUpdate);
+		Connection->SendComponentUpdate<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData>(EntityId.ToSpatialEntityId(), HandoverDataUpdate);
 	}
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::SendRPCCommand(UObject* TargetObject, const UFunction* const Function, void* Parameters)
+void USpatialTypeBinding_TestUObjectContexts::SendRPCCommand(UObject* TargetObject, const UFunction* const Function, void* Parameters)
 {
 	TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
 	auto SenderFuncIterator = RPCToSenderMap.Find(Function->GetFName());
@@ -252,53 +259,53 @@ void USpatialTypeBinding_TestSuiteGameStateBase::SendRPCCommand(UObject* TargetO
 	(this->*(*SenderFuncIterator))(Connection.Get(), Parameters, TargetObject);
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::ReceiveAddComponent(USpatialActorChannel* ActorChannel, UAddComponentOpWrapperBase* AddComponentOp) const
+void USpatialTypeBinding_TestUObjectContexts::ReceiveAddComponent(USpatialActorChannel* ActorChannel, UAddComponentOpWrapperBase* AddComponentOp) const
 {
-	auto* SingleClientAddOp = Cast<UTestSuiteGameStateBaseSingleClientRepDataAddComponentOp>(AddComponentOp);
+	auto* SingleClientAddOp = Cast<UTestUObjectContextsSingleClientRepDataAddComponentOp>(AddComponentOp);
 	if (SingleClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData::Update::FromInitialData(*SingleClientAddOp->Data.data());
 		ReceiveUpdate_SingleClient(ActorChannel, Update);
 		return;
 	}
-	auto* MultiClientAddOp = Cast<UTestSuiteGameStateBaseMultiClientRepDataAddComponentOp>(AddComponentOp);
+	auto* MultiClientAddOp = Cast<UTestUObjectContextsMultiClientRepDataAddComponentOp>(AddComponentOp);
 	if (MultiClientAddOp)
 	{
-		auto Update = improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
+		auto Update = improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsMultiClientRepData::Update::FromInitialData(*MultiClientAddOp->Data.data());
 		ReceiveUpdate_MultiClient(ActorChannel, Update);
 		return;
 	}
-	auto* HandoverDataAddOp = Cast<UTestSuiteGameStateBaseHandoverDataAddComponentOp>(AddComponentOp);
+	auto* HandoverDataAddOp = Cast<UTestUObjectContextsHandoverDataAddComponentOp>(AddComponentOp);
 	if (HandoverDataAddOp)
 	{
-		auto Update = improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
+		auto Update = improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData::Update::FromInitialData(*HandoverDataAddOp->Data.data());
 		ReceiveUpdate_Handover(ActorChannel, Update);
 		return;
 	}
 }
 
-worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TestSuiteGameStateBase::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
+worker::Map<worker::ComponentId, worker::InterestOverride> USpatialTypeBinding_TestUObjectContexts::GetInterestOverrideMap(bool bIsClient, bool bAutonomousProxy) const
 {
 	worker::Map<worker::ComponentId, worker::InterestOverride> Interest;
 	if (bIsClient)
 	{
 		if (!bAutonomousProxy)
 		{
-			Interest.emplace(improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData::ComponentId, worker::InterestOverride{false});
+			Interest.emplace(improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData::ComponentId, worker::InterestOverride{false});
 		}
-		Interest.emplace(improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData::ComponentId, worker::InterestOverride{false});
+		Interest.emplace(improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData::ComponentId, worker::InterestOverride{false});
 	}
 	return Interest;
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::BuildSpatialComponentUpdate(
+void USpatialTypeBinding_TestUObjectContexts::BuildSpatialComponentUpdate(
 	const FPropertyChangeState& Changes,
 	USpatialActorChannel* ActorChannel,
-	improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData::Update& SingleClientUpdate,
+	improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData::Update& SingleClientUpdate,
 	bool& bSingleClientUpdateChanged,
-	improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseMultiClientRepData::Update& MultiClientUpdate,
+	improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsMultiClientRepData::Update& MultiClientUpdate,
 	bool& bMultiClientUpdateChanged,
-	improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData::Update& HandoverDataUpdate,
+	improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData::Update& HandoverDataUpdate,
 	bool& bHandoverDataUpdateChanged) const
 {
 	const FRepHandlePropertyMap& RepPropertyMap = GetRepHandlePropertyMap();
@@ -356,11 +363,11 @@ void USpatialTypeBinding_TestSuiteGameStateBase::BuildSpatialComponentUpdate(
 	}
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* ActorChannel, improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestUObjectContexts::ServerSendUpdate_SingleClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* ActorChannel, improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* ActorChannel, improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseMultiClientRepData::Update& OutUpdate) const
+void USpatialTypeBinding_TestUObjectContexts::ServerSendUpdate_MultiClient(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* ActorChannel, improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsMultiClientRepData::Update& OutUpdate) const
 {
 	switch (Handle)
 	{
@@ -565,7 +572,7 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ServerSendUpdate_MultiClient(co
 		case 13: // field_owner0
 		{
 			AActor* Value = *(reinterpret_cast<AActor* const*>(Data));
-			const ATestSuiteGameStateBase& ParentValue = *(static_cast<ATestSuiteGameStateBase const*>(ActorChannel->Actor));
+			const ATestUObjectContexts& ParentValue = *(static_cast<ATestUObjectContexts const*>(ActorChannel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -592,7 +599,7 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ServerSendUpdate_MultiClient(co
 			else
 			{
 				OutUpdate.set_field_owner0(SpatialConstants::NULL_OBJECT_REF);
-				//(const_cast<ATestSuiteGameStateBase&>(ParentValue)).Owner_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).Owner_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
@@ -606,7 +613,7 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ServerSendUpdate_MultiClient(co
 		case 15: // field_instigator0
 		{
 			APawn* Value = *(reinterpret_cast<APawn* const*>(Data));
-			const ATestSuiteGameStateBase& ParentValue = *(static_cast<ATestSuiteGameStateBase const*>(ActorChannel->Actor));
+			const ATestUObjectContexts& ParentValue = *(static_cast<ATestUObjectContexts const*>(ActorChannel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -633,14 +640,14 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ServerSendUpdate_MultiClient(co
 			else
 			{
 				OutUpdate.set_field_instigator0(SpatialConstants::NULL_OBJECT_REF);
-				//(const_cast<ATestSuiteGameStateBase&>(ParentValue)).Instigator_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).Instigator_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
-		case 16: // field_gamemodeclass0
+		case 16: // field_basicuobject0
 		{
-			UClass* Value = *(reinterpret_cast<UClass* const*>(Data));
-			const ATestSuiteGameStateBase& ParentValue = *(static_cast<ATestSuiteGameStateBase const*>(ActorChannel->Actor));
+			UObject* Value = *(reinterpret_cast<UObject* const*>(Data));
+			const ATestUObjectContexts& ParentValue = *(static_cast<ATestUObjectContexts const*>(ActorChannel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -661,20 +668,20 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ServerSendUpdate_MultiClient(co
 				}
 				else
 				{
-					OutUpdate.set_field_gamemodeclass0(*ObjectRef);
+					OutUpdate.set_field_basicuobject0(*ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_gamemodeclass0(SpatialConstants::NULL_OBJECT_REF);
-				//(const_cast<ATestSuiteGameStateBase&>(ParentValue)).GameModeClass_Context = &SpatialConstants::NULL_OBJECT_REF;
+				OutUpdate.set_field_basicuobject0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).BasicUObject_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
-		case 17: // field_spectatorclass0
+		case 17: // field_actorpointer0
 		{
-			UClass* Value = *(reinterpret_cast<UClass* const*>(Data));
-			const ATestSuiteGameStateBase& ParentValue = *(static_cast<ATestSuiteGameStateBase const*>(ActorChannel->Actor));
+			ATestActor* Value = *(reinterpret_cast<ATestActor* const*>(Data));
+			const ATestUObjectContexts& ParentValue = *(static_cast<ATestUObjectContexts const*>(ActorChannel->Actor));
 
 			if (Value != nullptr)
 			{
@@ -695,28 +702,48 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ServerSendUpdate_MultiClient(co
 				}
 				else
 				{
-					OutUpdate.set_field_spectatorclass0(*ObjectRef);
+					OutUpdate.set_field_actorpointer0(*ObjectRef);
 				}
 			}
 			else
 			{
-				OutUpdate.set_field_spectatorclass0(SpatialConstants::NULL_OBJECT_REF);
-				//(const_cast<ATestSuiteGameStateBase&>(ParentValue)).SpectatorClass_Context = &SpatialConstants::NULL_OBJECT_REF;
+				OutUpdate.set_field_actorpointer0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).ActorPointer_Context = &SpatialConstants::NULL_OBJECT_REF;
 			}
 			break;
 		}
-		case 18: // field_breplicatedhasbegunplay0
+		case 18: // field_stablynameduobject0
 		{
-			bool Value = static_cast<UBoolProperty*>(Property)->GetPropertyValue(Data);
+			UTestUObject* Value = *(reinterpret_cast<UTestUObject* const*>(Data));
+			const ATestUObjectContexts& ParentValue = *(static_cast<ATestUObjectContexts const*>(ActorChannel->Actor));
 
-			OutUpdate.set_field_breplicatedhasbegunplay0(Value);
-			break;
-		}
-		case 19: // field_replicatedworldtimeseconds0
-		{
-			float Value = *(reinterpret_cast<float const*>(Data));
-
-			OutUpdate.set_field_replicatedworldtimeseconds0(Value);
+			if (Value != nullptr)
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(Value);
+				if (!NetGUID.IsValid())
+				{
+					if (Value->IsFullNameStableForNetworking())
+					{
+						NetGUID = PackageMap->ResolveStablyNamedObject(Value);
+					}
+				}
+				const improbable::unreal::UnrealObjectRef* ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
+				if ((*ObjectRef) == SpatialConstants::UNRESOLVED_OBJECT_REF)
+				{
+					// A legal static object reference should never be unresolved.
+					check(!Value->IsFullNameStableForNetworking())
+					Interop->QueueOutgoingObjectRepUpdate_Internal(Value, ActorChannel, 18);
+				}
+				else
+				{
+					OutUpdate.set_field_stablynameduobject0(*ObjectRef);
+				}
+			}
+			else
+			{
+				OutUpdate.set_field_stablynameduobject0(SpatialConstants::NULL_OBJECT_REF);
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).StablyNamedUObject_Context = &SpatialConstants::NULL_OBJECT_REF;
+			}
 			break;
 		}
 	default:
@@ -725,11 +752,11 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ServerSendUpdate_MultiClient(co
 	}
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::ServerSendUpdate_Handover(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* ActorChannel, improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData::Update& OutUpdate) const
+void USpatialTypeBinding_TestUObjectContexts::ServerSendUpdate_Handover(const uint8* RESTRICT Data, const uint8* RESTRICT SourceData, int32 Handle, UProperty* Property, USpatialActorChannel* ActorChannel, improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData::Update& OutUpdate) const
 {
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseSingleClientRepData::Update& Update) const
+void USpatialTypeBinding_TestUObjectContexts::ReceiveUpdate_SingleClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsSingleClientRepData::Update& Update) const
 {
 	AActor* TargetObject = ActorChannel->Actor;
 	ActorChannel->PreReceiveSpatialUpdate(TargetObject);
@@ -737,14 +764,14 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ReceiveUpdate_SingleClient(USpa
 	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies);
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseMultiClientRepData::Update& Update) const
+void USpatialTypeBinding_TestUObjectContexts::ReceiveUpdate_MultiClient(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsMultiClientRepData::Update& Update) const
 {
 	AActor* TargetObject = ActorChannel->Actor;
 	ActorChannel->PreReceiveSpatialUpdate(TargetObject);
 	TSet<UProperty*> RepNotifies;
 
 	const bool bIsServer = Interop->GetNetDriver()->IsServer();
-	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseClientRPCs::ComponentId);
+	const bool bAutonomousProxy = ActorChannel->IsClientAutonomousProxy(improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsClientRPCs::ComponentId);
 	const FRepHandlePropertyMap& HandleToPropertyMap = GetRepHandlePropertyMap();
 	FSpatialConditionMapFilter ConditionMap(ActorChannel, bAutonomousProxy);
 
@@ -1134,19 +1161,19 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ReceiveUpdate_MultiClient(USpat
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			AActor* Value = *(reinterpret_cast<AActor* const*>(PropertyData));
-			const ATestSuiteGameStateBase& ParentValue = *(static_cast<ATestSuiteGameStateBase const*>(ActorChannel->Actor));
+			const ATestUObjectContexts& ParentValue = *(static_cast<ATestUObjectContexts const*>(ActorChannel->Actor));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_owner0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				//(const_cast<ATestSuiteGameStateBase&>(ParentValue)).Owner_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).Owner_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-				//(const_cast<ATestSuiteGameStateBase&>(ParentValue)).Owner_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).Owner_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1222,19 +1249,19 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ReceiveUpdate_MultiClient(USpat
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
 			APawn* Value = *(reinterpret_cast<APawn* const*>(PropertyData));
-			const ATestSuiteGameStateBase& ParentValue = *(static_cast<ATestSuiteGameStateBase const*>(ActorChannel->Actor));
+			const ATestUObjectContexts& ParentValue = *(static_cast<ATestUObjectContexts const*>(ActorChannel->Actor));
 
 			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_instigator0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				//(const_cast<ATestSuiteGameStateBase&>(ParentValue)).Instigator_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).Instigator_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-				//(const_cast<ATestSuiteGameStateBase&>(ParentValue)).Instigator_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).Instigator_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
@@ -1271,35 +1298,35 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ReceiveUpdate_MultiClient(USpat
 			}
 		}
 	}
-	if (!Update.field_gamemodeclass0().empty())
+	if (!Update.field_basicuobject0().empty())
 	{
-		// field_gamemodeclass0
+		// field_basicuobject0
 		uint16 Handle = 16;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
-			UClass* Value = *(reinterpret_cast<UClass* const*>(PropertyData));
-			const ATestSuiteGameStateBase& ParentValue = *(static_cast<ATestSuiteGameStateBase const*>(ActorChannel->Actor));
+			UObject* Value = *(reinterpret_cast<UObject* const*>(PropertyData));
+			const ATestUObjectContexts& ParentValue = *(static_cast<ATestUObjectContexts const*>(ActorChannel->Actor));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_gamemodeclass0().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_basicuobject0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				//(const_cast<ATestSuiteGameStateBase&>(ParentValue)).GameModeClass_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).BasicUObject_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-				//(const_cast<ATestSuiteGameStateBase&>(ParentValue)).GameModeClass_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).BasicUObject_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-					checkf(Cast<UClass>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-					Value = Cast<UClass>(Object_Raw);
+					checkf(Cast<UObject>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<UObject>(Object_Raw);
 				}
 				else
 				{
@@ -1330,35 +1357,35 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ReceiveUpdate_MultiClient(USpat
 			}
 		}
 	}
-	if (!Update.field_spectatorclass0().empty())
+	if (!Update.field_actorpointer0().empty())
 	{
-		// field_spectatorclass0
+		// field_actorpointer0
 		uint16 Handle = 17;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
 			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
-			UClass* Value = *(reinterpret_cast<UClass* const*>(PropertyData));
-			const ATestSuiteGameStateBase& ParentValue = *(static_cast<ATestSuiteGameStateBase const*>(ActorChannel->Actor));
+			ATestActor* Value = *(reinterpret_cast<ATestActor* const*>(PropertyData));
+			const ATestUObjectContexts& ParentValue = *(static_cast<ATestUObjectContexts const*>(ActorChannel->Actor));
 
-			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_spectatorclass0().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_actorpointer0().data());
 			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
 			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
 			{
-				//(const_cast<ATestSuiteGameStateBase&>(ParentValue)).SpectatorClass_Context = &SpatialConstants::NULL_OBJECT_REF;
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).ActorPointer_Context = &SpatialConstants::NULL_OBJECT_REF;
 				Value = nullptr;
 			}
 			else
 			{
 				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
-				//(const_cast<ATestSuiteGameStateBase&>(ParentValue)).SpectatorClass_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).ActorPointer_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
 				if (NetGUID.IsValid())
 				{
 					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
 					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
-					checkf(Cast<UClass>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
-					Value = Cast<UClass>(Object_Raw);
+					checkf(Cast<ATestActor>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<ATestActor>(Object_Raw);
 				}
 				else
 				{
@@ -1389,57 +1416,226 @@ void USpatialTypeBinding_TestSuiteGameStateBase::ReceiveUpdate_MultiClient(USpat
 			}
 		}
 	}
-	if (!Update.field_breplicatedhasbegunplay0().empty())
+	if (!Update.field_stablynameduobject0().empty())
 	{
-		// field_breplicatedhasbegunplay0
+		// field_stablynameduobject0
 		uint16 Handle = 18;
 		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
 		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
 		{
+			bool bWriteObjectProperty = true;
 			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
-			bool Value = static_cast<UBoolProperty*>(RepData->Property)->GetPropertyValue(PropertyData);
+			UTestUObject* Value = *(reinterpret_cast<UTestUObject* const*>(PropertyData));
+			const ATestUObjectContexts& ParentValue = *(static_cast<ATestUObjectContexts const*>(ActorChannel->Actor));
 
-			Value = (*Update.field_breplicatedhasbegunplay0().data());
+			improbable::unreal::UnrealObjectRef ObjectRef = (*Update.field_stablynameduobject0().data());
+			check(ObjectRef != SpatialConstants::UNRESOLVED_OBJECT_REF);
+			if (ObjectRef == SpatialConstants::NULL_OBJECT_REF)
+			{
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).StablyNamedUObject_Context = &SpatialConstants::NULL_OBJECT_REF;
+				Value = nullptr;
+			}
+			else
+			{
+				FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(ObjectRef);
+				//(const_cast<ATestUObjectContexts&>(ParentValue)).StablyNamedUObject_Context = PackageMap->GetUnrealObjectRefData(ObjectRef);
+				if (NetGUID.IsValid())
+				{
+					UObject* Object_Raw = PackageMap->GetObjectFromNetGUID(NetGUID, true);
+					checkf(Object_Raw, TEXT("An object ref %s should map to a valid object."), *ObjectRefToString(ObjectRef));
+					checkf(Cast<UTestUObject>(Object_Raw), TEXT("Object ref %s maps to object %s with the wrong class."), *ObjectRefToString(ObjectRef), *Object_Raw->GetFullName());
+					Value = Cast<UTestUObject>(Object_Raw);
+				}
+				else
+				{
+					UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Received unresolved object property. Value: %s. actor %s (%lld), property %s (handle %d)"),
+						*Interop->GetSpatialOS()->GetWorkerId(),
+						*ObjectRefToString(ObjectRef),
+						*ActorChannel->Actor->GetName(),
+						ActorChannel->GetEntityId().ToSpatialEntityId(),
+						*RepData->Property->GetName(),
+						Handle);
+					// A legal static object reference should never be unresolved.
+					check(ObjectRef.path().empty());
+					bWriteObjectProperty = false;
+					Interop->QueueIncomingObjectRepUpdate_Internal(ObjectRef, ActorChannel, TargetObject, RepData);
+				}
+			}
 
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
+			if (bWriteObjectProperty)
+			{
+				ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
 
-			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
-		}
-	}
-	if (!Update.field_replicatedworldtimeseconds0().empty())
-	{
-		// field_replicatedworldtimeseconds0
-		uint16 Handle = 19;
-		const FRepHandleData* RepData = &HandleToPropertyMap[Handle];
-		if (bIsServer || ConditionMap.IsRelevant(RepData->Condition))
-		{
-			uint8* PropertyData = RepData->GetPropertyData(reinterpret_cast<uint8*>(TargetObject));
-			float Value = *(reinterpret_cast<float const*>(PropertyData));
-
-			Value = (*Update.field_replicatedworldtimeseconds0().data());
-
-			ApplyIncomingReplicatedPropertyUpdate(*RepData, TargetObject, static_cast<const void*>(&Value), RepNotifies);
-
-			UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
-				*Interop->GetSpatialOS()->GetWorkerId(),
-				*ActorChannel->Actor->GetName(),
-				ActorChannel->GetEntityId().ToSpatialEntityId(),
-				*RepData->Property->GetName(),
-				Handle);
+				UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received replicated property update. actor %s (%lld), property %s (handle %d)"),
+					*Interop->GetSpatialOS()->GetWorkerId(),
+					*ActorChannel->Actor->GetName(),
+					ActorChannel->GetEntityId().ToSpatialEntityId(),
+					*RepData->Property->GetName(),
+					Handle);
+			}
 		}
 	}
 	ActorChannel->PostReceiveSpatialUpdate(TargetObject, RepNotifies.Array());
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseHandoverData::Update& Update) const
+void USpatialTypeBinding_TestUObjectContexts::ReceiveUpdate_Handover(USpatialActorChannel* ActorChannel, const improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsHandoverData::Update& Update) const
 {
 }
 
-void USpatialTypeBinding_TestSuiteGameStateBase::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::testsuitegamestatebase::TestSuiteGameStateBaseNetMulticastRPCs::Update& Update)
+void USpatialTypeBinding_TestUObjectContexts::ReceiveUpdate_NetMulticastRPCs(worker::EntityId EntityId, const improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsNetMulticastRPCs::Update& Update)
 {
+	for (auto& event : Update.multicastrpc())
+	{
+		MulticastRPC_OnRPCPayload(EntityId, event);
+	}
+
+}
+void USpatialTypeBinding_TestUObjectContexts::Server_ReportResult_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+{
+	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
+	{
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+		{
+			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC Server_ReportResult queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
+		}
+
+		// Build RPC Payload.
+		improbable::unreal::generated::testuobjectcontexts::ServerReportResultRequest RPCPayload;
+
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending RPC: Server_ReportResult, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+			auto RequestId = Connection->SendCommandRequest<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsServerRPCs::Commands::Serverreportresult>(TargetObjectRef.entity(), RPCPayload, 0);
+			return {RequestId.Id};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ true);
+}
+void USpatialTypeBinding_TestUObjectContexts::MulticastRPC_SendRPC(worker::Connection* const Connection, void* Parameters, UObject* TargetObject)
+{
+	auto Sender = [this, Connection, TargetObject]() mutable -> FRPCCommandRequestResult
+	{
+		// Resolve TargetObject.
+		improbable::unreal::UnrealObjectRef TargetObjectRef = *(PackageMap->GetUnrealObjectRefFromNetGUID(PackageMap->GetNetGUIDFromObject(TargetObject)));
+		if (TargetObjectRef == SpatialConstants::UNRESOLVED_OBJECT_REF)
+		{
+			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: RPC MulticastRPC queued. Target object is unresolved."), *Interop->GetSpatialOS()->GetWorkerId());
+			return {TargetObject};
+		}
+
+		// Build RPC Payload.
+		improbable::unreal::generated::testuobjectcontexts::MulticastRPCRequest RPCPayload;
+
+		// Send RPC
+		RPCPayload.set_target_subobject_offset(TargetObjectRef.offset());
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Sending RPC: MulticastRPC, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+			improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsNetMulticastRPCs::Update Update;
+			Update.add_multicastrpc(RPCPayload);
+			checkf(Update.multicastrpc().size() == 1, TEXT("MulticastRPC_SendCommand: More than one event being sent"));
+			Connection->SendComponentUpdate<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsNetMulticastRPCs>(TargetObjectRef.entity(), Update);
+			return {};
+	};
+	Interop->InvokeRPCSendHandler_Internal(Sender, /*bReliable*/ false);
+}
+void USpatialTypeBinding_TestUObjectContexts::Server_ReportResult_OnRPCPayload(const worker::CommandRequestOp<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsServerRPCs::Commands::Serverreportresult>& Op)
+{
+	auto Receiver = [this, Op]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{Op.EntityId, Op.Request.target_subobject_offset(), {}, {}};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			// A legal static object reference should never be unresolved.
+			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: Server_ReportResult_OnRPCPayload: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: Server_ReportResult_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Call implementation.
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received RPC: Server_ReportResult, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("Server_ReportResult"))))
+		{
+			TargetObject->ProcessEvent(Function, nullptr);
+		}
+		else
+		{
+			UE_LOG(LogSpatialGDKInterop, Error, TEXT("%s: Server_ReportResult_OnRPCPayload: Function not found. Object: %s, Function: Server_ReportResult."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		// Send command response.
+		TSharedPtr<worker::Connection> Connection = Interop->GetSpatialOS()->GetConnection().Pin();
+		Connection->SendCommandResponse<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsServerRPCs::Commands::Serverreportresult>(Op.RequestId, {});
+		return {};
+	};
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+}
+void USpatialTypeBinding_TestUObjectContexts::MulticastRPC_OnRPCPayload(const worker::EntityId EntityId, const improbable::unreal::generated::testuobjectcontexts::MulticastRPCRequest& EventData)
+{
+	auto Receiver = [this, EntityId, EventData]() mutable -> FRPCCommandResponseResult
+	{
+		improbable::unreal::UnrealObjectRef TargetObjectRef{EntityId, EventData.target_subobject_offset(), {}, {}};
+		FNetworkGUID TargetNetGUID = PackageMap->GetNetGUIDFromUnrealObjectRef(TargetObjectRef);
+		if (!TargetNetGUID.IsValid())
+		{
+			// A legal static object reference should never be unresolved.
+			checkf(TargetObjectRef.path().empty(), TEXT("A stably named object should not need resolution."));
+			UE_LOG(LogSpatialGDKInterop, Log, TEXT("%s: MulticastRPC_OnRPCPayload: Target object %s is not resolved on this worker."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*ObjectRefToString(TargetObjectRef));
+			return {TargetObjectRef};
+		}
+		UObject* TargetObject = PackageMap->GetObjectFromNetGUID(TargetNetGUID, false);
+		checkf(TargetObject, TEXT("%s: MulticastRPC_OnRPCPayload: Object Ref %s (NetGUID %s) does not correspond to a UObject."),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*ObjectRefToString(TargetObjectRef),
+			*TargetNetGUID.ToString());
+
+		// Call implementation.
+		UE_LOG(LogSpatialGDKInterop, Verbose, TEXT("%s: Received RPC: MulticastRPC, target: %s %s"),
+			*Interop->GetSpatialOS()->GetWorkerId(),
+			*TargetObject->GetName(),
+			*ObjectRefToString(TargetObjectRef));
+
+		if (UFunction* Function = TargetObject->FindFunction(FName(TEXT("MulticastRPC"))))
+		{
+			TargetObject->ProcessEvent(Function, nullptr);
+		}
+		else
+		{
+			UE_LOG(LogSpatialGDKInterop, Error, TEXT("%s: MulticastRPC_OnRPCPayload: Function not found. Object: %s, Function: MulticastRPC."),
+				*Interop->GetSpatialOS()->GetWorkerId(),
+				*TargetObject->GetFullName());
+		}
+
+		return {};
+	};
+	Interop->InvokeRPCReceiveHandler_Internal(Receiver);
+}
+
+void USpatialTypeBinding_TestUObjectContexts::Server_ReportResult_OnCommandResponse(const worker::CommandResponseOp<improbable::unreal::generated::testuobjectcontexts::TestUObjectContextsServerRPCs::Commands::Serverreportresult>& Op)
+{
+	Interop->HandleCommandResponse_Internal(TEXT("Server_ReportResult"), Op.RequestId.Id, Op.EntityId, Op.StatusCode, FString(UTF8_TO_TCHAR(Op.Message.c_str())));
 }

@@ -5,20 +5,21 @@
 #include "UnrealNetwork.h"
 #include "GameFramework/GameModeBase.h"
 
-#include "Tests/TestIntReplication.h"
-#include "Tests/TestFloatReplication.h"
 #include "Tests/TestBoolReplication.h"
-#include "Tests/TestCharReplication.h"
-#include "Tests/TestFStringReplication.h"
 #include "Tests/TestCArrayReplication.h"
-#include "Tests/TestTArrayReplication.h"
+#include "Tests/TestCharReplication.h"
 #include "Tests/TestEnumReplication.h"
-#include "Tests/TestFTextReplication.h"
 #include "Tests/TestFNameReplication.h"
-#include "Tests/TestUStructReplication.h"
-#include "Tests/TestUObjectReplication.h"
+#include "Tests/TestFStringReplication.h"
+#include "Tests/TestFTextReplication.h"
+#include "Tests/TestFloatReplication.h"
+#include "Tests/TestIntReplication.h"
 #include "Tests/TestMulticastRPC.h"
 #include "Tests/TestStaticComponentReplication.h"
+#include "Tests/TestTArrayReplication.h"
+#include "Tests/TestUObjectContexts.h"
+#include "Tests/TestUObjectReplication.h"
+#include "Tests/TestUStructReplication.h"
 
 DEFINE_LOG_CATEGORY(LogSpatialGDKTests);
 
@@ -154,6 +155,7 @@ void AGDKTestRunner::Server_SetupTestCases()
 	AddTestCase<ATestUStructReplication>();
 	AddTestCase<ATestMulticastRPC>();
 	AddTestCase<ATestStaticComponentReplication>();
+	AddTestCase<ATestUObjectContexts>();
 }
 
 void AGDKTestRunner::Server_TearDownTestCases()

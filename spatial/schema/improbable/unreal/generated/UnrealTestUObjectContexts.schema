@@ -1,14 +1,14 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 // Note that this file has been generated automatically
-package improbable.unreal.generated.testuobjectreplication;
+package improbable.unreal.generated.testuobjectcontexts;
 
 import "improbable/unreal/gdk/core_types.schema";
 
-component TestUObjectReplicationSingleClientRepData {
-	id = 100171;
+component TestUObjectContextsSingleClientRepData {
+	id = 100164;
 }
-component TestUObjectReplicationMultiClientRepData {
-	id = 100172;
+component TestUObjectContextsMultiClientRepData {
+	id = 100165;
 	bool field_bhidden0 = 1; // COND_None // ::Actor
 	bool field_breplicatemovement0 = 2; // COND_None // ::Actor
 	bool field_btearoff0 = 3; // COND_None // ::Actor
@@ -24,26 +24,26 @@ component TestUObjectReplicationMultiClientRepData {
 	UnrealObjectRef field_owner0 = 13; // COND_None // ::Actor
 	uint32 field_role0 = 14; // COND_None // ::Actor
 	UnrealObjectRef field_instigator0 = 15; // COND_None // ::Actor
-	int32 field_testbookend0 = 16; // COND_None // ::ReplicationTestCase
-	UnrealObjectRef field_dynamicallycreatedactor0 = 17; // COND_None // ::TestUObjectReplication
-	UnrealObjectRef field_stablynameduobject0 = 18; // COND_None // ::TestUObjectReplication
-	UnrealObjectRef field_constobj0 = 19; // COND_None // ::TestUObjectReplication
+	UnrealObjectRef field_basicuobject0 = 16; // COND_None // ::TestUObjectContexts
+	UnrealObjectRef field_actorpointer0 = 17; // COND_None // ::TestUObjectContexts
+	UnrealObjectRef field_stablynameduobject0 = 18; // COND_None // ::TestUObjectContexts
 }
-component TestUObjectReplicationHandoverData {
-	id = 100173;
+component TestUObjectContextsHandoverData {
+	id = 100166;
 }
-import "improbable/unreal/generated/UnrealTestUObjectReplicationTypes.schema";
+import "improbable/unreal/generated/UnrealTestUObjectContextsTypes.schema";
 
-component TestUObjectReplicationClientRPCs {
-	id = 100174;
+component TestUObjectContextsClientRPCs {
+	id = 100167;
 }
-component TestUObjectReplicationServerRPCs {
-	id = 100175;
-	command UnrealRPCCommandResponse serverreportreplication(testuobjectreplication.ServerReportReplicationRequest);
+component TestUObjectContextsServerRPCs {
+	id = 100168;
+	command UnrealRPCCommandResponse serverreportresult(testuobjectcontexts.ServerReportResultRequest);
 }
-component TestUObjectReplicationCrossServerRPCs {
-	id = 100176;
+component TestUObjectContextsCrossServerRPCs {
+	id = 100169;
 }
-component TestUObjectReplicationNetMulticastRPCs {
-	id = 100177;
+component TestUObjectContextsNetMulticastRPCs {
+	id = 100170;
+	event testuobjectcontexts.MulticastRPCRequest multicastrpc;
 }
