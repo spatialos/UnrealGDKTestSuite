@@ -3,10 +3,11 @@
 #include "TestUObjectContexts.h"
 
 #include "GameFramework/GameModeBase.h"
-
 #include "SpatialNetDriver.h"
 #include "SpatialNetConnection.h"
 #include "SpatialPackageMapClient.h"
+#include "Tests/GDKTestRunner.h"
+#include "UnrealNetwork.h"
 
 #include "UnrealObjectRef.h"
 
@@ -104,10 +105,10 @@ void ATestUObjectContexts::Server_ReportResult_Implementation()
 	USpatialPackageMapClient* PackageMap = Cast<USpatialPackageMapClient>(NetDriver->GetSpatialOSNetConnection()->PackageMap);
 
 	// Test basic uobject context assignment
-	FNetworkGUID BasicUobjectNetGUID = PackageMap->GetNetGUIDFromObject(BasicUobject);
+	FNetworkGUID BasicUobjectNetGUID = PackageMap->GetNetGUIDFromObject(BasicUObject);
 	FUnrealObjectRef BasicUobjectObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(BasicUobjectNetGUID);
 
-	check(BasicUobject_Context == BasicUobjectObjectRef);
+	check(BasicUObject_Context == BasicUobjectObjectRef);
 
 	// Test actor pointer context assignment
 	FNetworkGUID ActorPointerNetGUID = PackageMap->GetNetGUIDFromObject(ActorPointer);
