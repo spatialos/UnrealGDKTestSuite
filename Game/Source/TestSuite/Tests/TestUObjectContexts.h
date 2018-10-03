@@ -54,7 +54,7 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_StablyNamedUObject)
     UTestUObject* StablyNamedUObject;
 
-	// TODO UNR-???
+	// TODO UNR-633
 	// Array tests
 	//UPROPERTY()
 	//ATestActor* TestActorArray[6];
