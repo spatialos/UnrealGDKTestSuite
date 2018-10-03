@@ -126,7 +126,7 @@ void ATestUObjectContexts::Server_ReportResult_Implementation()
 
 void ATestUObjectContexts::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION(ATestUObjectContexts, BasicUObject, COND_None);
 	DOREPLIFETIME_CONDITION(ATestUObjectContexts, ActorPointer, COND_None);
 	DOREPLIFETIME_CONDITION(ATestUObjectContexts, StablyNamedUObject, COND_None);
