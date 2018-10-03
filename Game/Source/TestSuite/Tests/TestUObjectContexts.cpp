@@ -27,6 +27,21 @@ void ATestUObjectContexts::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (GetNetMode() == NM_Client)
+	{
+		if (bActorPointerReceived && bStablyNamedUObjectReceived)
+		{
+			bActorPointerReceived = false;
+			bStablyNamedUObjectReceived = false;
+
+			Validate_Client();
+
+			Server_ReportResult(/*ActorPointer_Context, StablyNamedUObject_Context*/);
+		}
+
+		return;
+	}
+
 	if (bRunning)
 	{
 		UWorld* World = GetWorld();
@@ -36,7 +51,7 @@ void ATestUObjectContexts::Tick(float DeltaTime)
 		}
 
 		AGameModeBase* GameMode = World->GetAuthGameMode();
-		if (GetNetMode() != NM_DedicatedServer || !GameMode || !(RPCResponseCount == GameMode->GetNumPlayers()))
+		if (!GameMode || !(RPCResponseCount == GameMode->GetNumPlayers()))
 		{
 			return;
 		}
@@ -55,49 +70,49 @@ void ATestUObjectContexts::Server_StartTest()
 	bRunning = true;
 	RPCResponseCount = 0;
 
-	StablyNamedUObjectC = LoadObject<UTestUObject>(nullptr, TEXT("/Script/TestSuite.Default__TestUObject"));
-	check(StablyNamedUObjectC);
+	// Test actor pointers
+	ActorPointer = GetWorld()->SpawnActor<ATestActor>();
+	ActorPointer->ActorName = ActorPointer->GetName();
+	check(ActorPointer_Context == SpatialConstants::NULL_OBJECT_REF);
 
-	UClass* TestClass = ATestUObjectContexts::StaticClass();
-	UProperty* TestProperty = TestClass->FindPropertyByName("BasicUObject_Context");
-	UE_LOG(LogSpatialGDKTests, Log, TEXT("TESTNema %s: Test started!"), *TestProperty->GetName());
-	/*FString pathname = TestProperty->GetPathName();
-	check(*BasicUObject_Context.Path == pathname);*/
-
-
-
-	MulticastRPC();
+	// Test Stably named object assignment
+	StablyNamedUObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/TestSuite.Default__TestUObject"));
+	check(StablyNamedUObject_Context == SpatialConstants::NULL_OBJECT_REF);
 }
 
 void ATestUObjectContexts::Server_TearDown()
 {
-	// No tear down required for MultiCast RPC
-}
-
-void ATestUObjectContexts::MulticastRPC_Implementation()
-{	
-	// If we are the server then all we need to do is to validate that the call has been executed correctly. 
-	if (GetNetMode() != NM_DedicatedServer)
+	if (!ActorPointer->Destroy(true))
 	{
-		Server_ReportResult();
+		UE_LOG(LogSpatialGDKTests, Log, TEXT("TestCase %s: Unable to tear down dynamically created actor"), *TestName);
 	}
+
+	StablyNamedUObject = nullptr;
 }
 
-bool ATestUObjectContexts::Server_ReportResult_Validate()
+bool ATestUObjectContexts::Server_ReportResult_Validate(/*const FUnrealObjectRef& ClientActorPointerRef, const FUnrealObjectRef& ClientStablyNamedUObjectRef*/)
 {
 	return true;
 }
 
-void ATestUObjectContexts::Server_ReportResult_Implementation()
+void ATestUObjectContexts::Server_ReportResult_Implementation(/*const FUnrealObjectRef& ClientActorPointerRef, const FUnrealObjectRef& ClientStablyNamedUObjectRef*/)
 {
-	//check(StablyNamedUObject_Context != nullptr);
-
 	USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetNetDriver());
 	USpatialPackageMapClient* PackageMap = Cast<USpatialPackageMapClient>(NetDriver->GetSpatialOSNetConnection()->PackageMap);
-	FNetworkGUID NetGUID = PackageMap->GetNetGUIDFromObject(StablyNamedUObjectC);
-	FUnrealObjectRef ObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(NetGUID);
 
-	//check(StablyNamedUObject_Context->entity() == ObjectRef.entity());
+	// Test actor pointer context assignment
+	FNetworkGUID ActorPointerNetGUID = PackageMap->GetNetGUIDFromObject(ActorPointer);
+	FUnrealObjectRef ActorPointerObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(ActorPointerNetGUID);
+
+	check(ActorPointer_Context == ActorPointerObjectRef);
+	//check(ActorPointer_Context == ClientActorPointerRef);
+
+	// Test Stably named object context assignment
+	FNetworkGUID StablyNamedUObjectNetGUID = PackageMap->GetNetGUIDFromObject(StablyNamedUObject);
+	FUnrealObjectRef StablyNamedUObjectObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(StablyNamedUObjectNetGUID);
+
+	check(StablyNamedUObject_Context == StablyNamedUObjectObjectRef);
+	//check(StablyNamedUObject_Context == ClientStablyNamedUObjectRef);
 
 	//USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());
 	//check(NetDriver);
@@ -116,10 +131,30 @@ void ATestUObjectContexts::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION(ATestUObjectContexts, BasicUObject, COND_None);
 	DOREPLIFETIME_CONDITION(ATestUObjectContexts, ActorPointer, COND_None);
-	DOREPLIFETIME_CONDITION(ATestUObjectContexts, StablyNamedUObjectC, COND_None);
+	DOREPLIFETIME_CONDITION(ATestUObjectContexts, StablyNamedUObject, COND_None);
+}
+
+void ATestUObjectContexts::Validate_Client()
+{
+	// Assert that the actor pointer context is assigned correctly
+	check(ActorPointer_Context != SpatialConstants::NULL_OBJECT_REF);
+	check(!ActorPointer_Context.Path.IsSet());
+	check(!ActorPointer_Context.Path.IsSet());
+	check(!ActorPointer_Context.Outer.IsSet());
+
+	// Assert that the stably named object context is assigned correctly
+	check(StablyNamedUObject_Context != SpatialConstants::NULL_OBJECT_REF);
+	check(StablyNamedUObject_Context.Path.IsSet());
+	check(StablyNamedUObject_Context.Path.GetValue() == TEXT("Default__TestUObject"));
+	check(StablyNamedUObject_Context.Outer.GetValue().Path.GetValue() == TEXT("/Script/TestSuite"));
+}
+
+void ATestUObjectContexts::OnRep_ActorPointer()
+{
+	bActorPointerReceived = true;
 }
 
 void ATestUObjectContexts::OnRep_StablyNamedUObject()
 {
-	check(StablyNamedUObjectC_Context != SpatialConstants::NULL_OBJECT_REF);
+	bStablyNamedUObjectReceived = true;
 }

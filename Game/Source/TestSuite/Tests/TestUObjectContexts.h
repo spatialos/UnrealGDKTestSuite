@@ -29,13 +29,15 @@ protected:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	UFUNCTION(NetMulticast, Unreliable)
-	void MulticastRPC();
-
 	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_ReportResult();
+	void Server_ReportResult(/*const FUnrealObjectRef& ClientActorPointerRef, const FUnrealObjectRef& ClientStablyNamedUObjectRef*/);
 
 private:
+
+	void Validate_Client();
+
+	UFUNCTION()
+	void OnRep_ActorPointer();
 
 	UFUNCTION()
 	void OnRep_StablyNamedUObject();
@@ -43,12 +45,11 @@ private:
 	UPROPERTY(Replicated)
 	UObject* BasicUObject;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_ActorPointer)
     ATestActor* ActorPointer;
 
 	UPROPERTY(ReplicatedUsing = OnRep_StablyNamedUObject)
-    UTestUObject* StablyNamedUObjectC;
-
+    UTestUObject* StablyNamedUObject;
 
 	UPROPERTY()
 	ATestActor* TestActorArray[6];
@@ -57,15 +58,15 @@ private:
 	TArray<ATestActor*> TestDynamicActorArray;
 
 	// TODO:
-	// Staticly named object;
 	// Sub object test
 	// Handover test
 
 	int32 BroadcastValue;
-
 	uint32 RPCResponseCount;
 
 	bool bRunning;
-
 	bool bSuccess;
+
+	bool bActorPointerReceived;
+	bool bStablyNamedUObjectReceived;
 };
