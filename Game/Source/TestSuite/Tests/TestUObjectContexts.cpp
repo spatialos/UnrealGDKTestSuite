@@ -2,9 +2,7 @@
 
 #include "TestUObjectContexts.h"
 
-#include "GDKTestRunner.h"
 #include "GameFramework/GameModeBase.h"
-#include "UnrealNetwork.h"
 
 #include "SpatialNetDriver.h"
 #include "SpatialNetConnection.h"
@@ -29,14 +27,15 @@ void ATestUObjectContexts::Tick(float DeltaTime)
 
 	if (GetNetMode() == NM_Client)
 	{
-		if (bActorPointerReceived && bStablyNamedUObjectReceived)
+		if (bBasicUObjectReceived && bActorPointerReceived && bStablyNamedUObjectReceived)
 		{
+			bBasicUObjectReceived = false;
 			bActorPointerReceived = false;
 			bStablyNamedUObjectReceived = false;
 
 			Validate_Client();
 
-			Server_ReportResult(/*ActorPointer_Context, StablyNamedUObject_Context*/);
+			Server_ReportResult();
 		}
 
 		return;
@@ -70,6 +69,10 @@ void ATestUObjectContexts::Server_StartTest()
 	bRunning = true;
 	RPCResponseCount = 0;
 
+	// Test basic uobject pointers
+	BasicUObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/TestSuite.Default__TestUObject"));
+	check(BasicUObject_Context == SpatialConstants::NULL_OBJECT_REF);
+
 	// Test actor pointers
 	ActorPointer = GetWorld()->SpawnActor<ATestActor>();
 	ActorPointer->ActorName = ActorPointer->GetName();
@@ -90,38 +93,33 @@ void ATestUObjectContexts::Server_TearDown()
 	StablyNamedUObject = nullptr;
 }
 
-bool ATestUObjectContexts::Server_ReportResult_Validate(/*const FUnrealObjectRef& ClientActorPointerRef, const FUnrealObjectRef& ClientStablyNamedUObjectRef*/)
+bool ATestUObjectContexts::Server_ReportResult_Validate()
 {
 	return true;
 }
 
-void ATestUObjectContexts::Server_ReportResult_Implementation(/*const FUnrealObjectRef& ClientActorPointerRef, const FUnrealObjectRef& ClientStablyNamedUObjectRef*/)
+void ATestUObjectContexts::Server_ReportResult_Implementation()
 {
 	USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetNetDriver());
 	USpatialPackageMapClient* PackageMap = Cast<USpatialPackageMapClient>(NetDriver->GetSpatialOSNetConnection()->PackageMap);
+
+	// Test basic uobject context assignment
+	FNetworkGUID BasicUobjectNetGUID = PackageMap->GetNetGUIDFromObject(BasicUobject);
+	FUnrealObjectRef BasicUobjectObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(BasicUobjectNetGUID);
+
+	check(BasicUobject_Context == BasicUobjectObjectRef);
 
 	// Test actor pointer context assignment
 	FNetworkGUID ActorPointerNetGUID = PackageMap->GetNetGUIDFromObject(ActorPointer);
 	FUnrealObjectRef ActorPointerObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(ActorPointerNetGUID);
 
 	check(ActorPointer_Context == ActorPointerObjectRef);
-	//check(ActorPointer_Context == ClientActorPointerRef);
 
 	// Test Stably named object context assignment
 	FNetworkGUID StablyNamedUObjectNetGUID = PackageMap->GetNetGUIDFromObject(StablyNamedUObject);
 	FUnrealObjectRef StablyNamedUObjectObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(StablyNamedUObjectNetGUID);
 
 	check(StablyNamedUObject_Context == StablyNamedUObjectObjectRef);
-	//check(StablyNamedUObject_Context == ClientStablyNamedUObjectRef);
-
-	//USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());
-	//check(NetDriver);
-	//worker::EntityId ServerEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(StablyNamedUObject).ToSpatialEntityId();
-
-	//// // Validate the stably named object
-	//check(TestStablyNamedUObject->IsA(UTestUObject::StaticClass()));
-	//check(TestStablyNamedUObject == UTestUObject::StaticClass()->GetDefaultObject());
-	//check(TestStablyNamedUObject->GetPathName() == TEXT("/Script/TestSuite.Default__TestUObject"));
 
 	RPCResponseCount++;
 }
@@ -136,6 +134,12 @@ void ATestUObjectContexts::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 void ATestUObjectContexts::Validate_Client()
 {
+	// Assert that the basic uobject context is assigned correctly
+	check(BasicUObject_Context != SpatialConstants::NULL_OBJECT_REF);
+	check(BasicUObject_Context.Path.IsSet());
+	check(BasicUObject_Context.Path.GetValue() == TEXT("Default__TestUObject"));
+	check(BasicUObject_Context.Outer.GetValue().Path.GetValue() == TEXT("/Script/TestSuite"));
+
 	// Assert that the actor pointer context is assigned correctly
 	check(ActorPointer_Context != SpatialConstants::NULL_OBJECT_REF);
 	check(!ActorPointer_Context.Path.IsSet());
@@ -147,6 +151,11 @@ void ATestUObjectContexts::Validate_Client()
 	check(StablyNamedUObject_Context.Path.IsSet());
 	check(StablyNamedUObject_Context.Path.GetValue() == TEXT("Default__TestUObject"));
 	check(StablyNamedUObject_Context.Outer.GetValue().Path.GetValue() == TEXT("/Script/TestSuite"));
+}
+
+void ATestUObjectContexts::OnRep_BasicUObject()
+{
+	bBasicUObjectReceived = true;
 }
 
 void ATestUObjectContexts::OnRep_ActorPointer()

@@ -30,11 +30,14 @@ protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_ReportResult(/*const FUnrealObjectRef& ClientActorPointerRef, const FUnrealObjectRef& ClientStablyNamedUObjectRef*/);
+	void Server_ReportResult();
 
 private:
 
 	void Validate_Client();
+
+	UFUNCTION()
+	void OnRep_BasicUObject();
 
 	UFUNCTION()
 	void OnRep_ActorPointer();
@@ -42,7 +45,7 @@ private:
 	UFUNCTION()
 	void OnRep_StablyNamedUObject();
 
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_BasicUObject)
 	UObject* BasicUObject;
 
 	UPROPERTY(ReplicatedUsing = OnRep_ActorPointer)
@@ -51,15 +54,16 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_StablyNamedUObject)
     UTestUObject* StablyNamedUObject;
 
-	UPROPERTY()
-	ATestActor* TestActorArray[6];
+	// TODO UNR-???
+	// Array tests
+	//UPROPERTY()
+	//ATestActor* TestActorArray[6];
 
-	UPROPERTY()
-	TArray<ATestActor*> TestDynamicActorArray;
+	//UPROPERTY()
+	//TArray<ATestActor*> TestDynamicActorArray;
 
-	// TODO:
-	// Sub object test
-	// Handover test
+	// TODO UNR-???
+	// Handover tests
 
 	int32 BroadcastValue;
 	uint32 RPCResponseCount;
@@ -67,6 +71,7 @@ private:
 	bool bRunning;
 	bool bSuccess;
 
+	bool bBasicUObjectReceived;
 	bool bActorPointerReceived;
 	bool bStablyNamedUObjectReceived;
 };
