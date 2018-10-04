@@ -9,7 +9,7 @@
 #include "Tests/GDKTestRunner.h"
 #include "UnrealNetwork.h"
 
-#include "UnrealObjectRef.h"
+#include "improbable/UnrealObjectRef.h"
 
 #include "ReplicationTestHelperClasses.h"
 
