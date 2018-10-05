@@ -72,16 +72,16 @@ void ATestUObjectContexts::Server_StartTest()
 
 	// Test basic uobject pointers
 	BasicUObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/TestSuite.Default__TestUObject"));
-	check(BasicUObject_Context == SpatialConstants::NULL_OBJECT_REF);
+	check(BasicUObject_SpatialOSContext == SpatialConstants::NULL_OBJECT_REF);
 
 	// Test actor pointers
 	ActorPointer = GetWorld()->SpawnActor<ATestActor>();
 	ActorPointer->ActorName = ActorPointer->GetName();
-	check(ActorPointer_Context == SpatialConstants::NULL_OBJECT_REF);
+	check(ActorPointer_SpatialOSContext == SpatialConstants::NULL_OBJECT_REF);
 
 	// Test Stably named object assignment
 	StablyNamedUObject = LoadObject<UTestUObject>(nullptr, TEXT("/Script/TestSuite.Default__TestUObject"));
-	check(StablyNamedUObject_Context == SpatialConstants::NULL_OBJECT_REF);
+	check(StablyNamedUObject_SpatialOSContext == SpatialConstants::NULL_OBJECT_REF);
 }
 
 void ATestUObjectContexts::Server_TearDown()
@@ -108,19 +108,19 @@ void ATestUObjectContexts::Server_ReportResult_Implementation()
 	FNetworkGUID BasicUobjectNetGUID = PackageMap->GetNetGUIDFromObject(BasicUObject);
 	FUnrealObjectRef BasicUobjectObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(BasicUobjectNetGUID);
 
-	check(BasicUObject_Context == BasicUobjectObjectRef);
+	check(BasicUObject_SpatialOSContext == BasicUobjectObjectRef);
 
 	// Test actor pointer context assignment
 	FNetworkGUID ActorPointerNetGUID = PackageMap->GetNetGUIDFromObject(ActorPointer);
 	FUnrealObjectRef ActorPointerObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(ActorPointerNetGUID);
 
-	check(ActorPointer_Context == ActorPointerObjectRef);
+	check(ActorPointer_SpatialOSContext == ActorPointerObjectRef);
 
 	// Test Stably named object context assignment
 	FNetworkGUID StablyNamedUObjectNetGUID = PackageMap->GetNetGUIDFromObject(StablyNamedUObject);
 	FUnrealObjectRef StablyNamedUObjectObjectRef = PackageMap->GetUnrealObjectRefFromNetGUID(StablyNamedUObjectNetGUID);
 
-	check(StablyNamedUObject_Context == StablyNamedUObjectObjectRef);
+	check(StablyNamedUObject_SpatialOSContext == StablyNamedUObjectObjectRef);
 
 	RPCResponseCount++;
 }
@@ -136,22 +136,22 @@ void ATestUObjectContexts::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 void ATestUObjectContexts::Validate_Client()
 {
 	// Assert that the basic uobject context is assigned correctly
-	check(BasicUObject_Context != SpatialConstants::NULL_OBJECT_REF);
-	check(BasicUObject_Context.Path.IsSet());
-	check(BasicUObject_Context.Path.GetValue() == TEXT("Default__TestUObject"));
-	check(BasicUObject_Context.Outer.GetValue().Path.GetValue() == TEXT("/Script/TestSuite"));
+	check(BasicUObject_SpatialOSContext != SpatialConstants::NULL_OBJECT_REF);
+	check(BasicUObject_SpatialOSContext.Path.IsSet());
+	check(BasicUObject_SpatialOSContext.Path.GetValue() == TEXT("Default__TestUObject"));
+	check(BasicUObject_SpatialOSContext.Outer.GetValue().Path.GetValue() == TEXT("/Script/TestSuite"));
 
 	// Assert that the actor pointer context is assigned correctly
-	check(ActorPointer_Context != SpatialConstants::NULL_OBJECT_REF);
-	check(!ActorPointer_Context.Path.IsSet());
-	check(!ActorPointer_Context.Path.IsSet());
-	check(!ActorPointer_Context.Outer.IsSet());
+	check(ActorPointer_SpatialOSContext != SpatialConstants::NULL_OBJECT_REF);
+	check(!ActorPointer_SpatialOSContext.Path.IsSet());
+	check(!ActorPointer_SpatialOSContext.Path.IsSet());
+	check(!ActorPointer_SpatialOSContext.Outer.IsSet());
 
 	// Assert that the stably named object context is assigned correctly
-	check(StablyNamedUObject_Context != SpatialConstants::NULL_OBJECT_REF);
-	check(StablyNamedUObject_Context.Path.IsSet());
-	check(StablyNamedUObject_Context.Path.GetValue() == TEXT("Default__TestUObject"));
-	check(StablyNamedUObject_Context.Outer.GetValue().Path.GetValue() == TEXT("/Script/TestSuite"));
+	check(StablyNamedUObject_SpatialOSContext != SpatialConstants::NULL_OBJECT_REF);
+	check(StablyNamedUObject_SpatialOSContext.Path.IsSet());
+	check(StablyNamedUObject_SpatialOSContext.Path.GetValue() == TEXT("Default__TestUObject"));
+	check(StablyNamedUObject_SpatialOSContext.Outer.GetValue().Path.GetValue() == TEXT("/Script/TestSuite"));
 }
 
 void ATestUObjectContexts::OnRep_BasicUObject()
