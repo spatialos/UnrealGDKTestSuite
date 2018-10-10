@@ -56,11 +56,6 @@ private:
 
 	// TODO UNR-633
 	// Array tests
-	//UPROPERTY()
-	//ATestActor* TestActorArray[6];
-
-	//UPROPERTY()
-	//TArray<ATestActor*> TestDynamicActorArray;
 
 	// TODO UNR-634
 	// Handover tests
