@@ -16,6 +16,7 @@
 #include "Tests/TestFTextReplication.h"
 #include "Tests/TestFNameReplication.h"
 #include "Tests/TestUStructReplication.h"
+#include "Tests/TestUObjectContexts.h"
 #include "Tests/TestUObjectReplication.h"
 #include "Tests/TestMulticastRPC.h"
 #include "Tests/TestStaticComponentReplication.h"
@@ -154,6 +155,7 @@ void AGDKTestRunner::Server_SetupTestCases()
 	AddTestCase<ATestUStructReplication>();
 	AddTestCase<ATestMulticastRPC>();
 	AddTestCase<ATestStaticComponentReplication>();
+	AddTestCase<ATestUObjectContexts>();
 }
 
 void AGDKTestRunner::Server_TearDownTestCases()
