@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "EntityRegistry.h"
 #include "GameFramework/Character.h"
+#include "Tests/ActorProxyTestActor.h"
 #include "Tests/GDKTestRunner.h"
 #include "Tests/ReplicationTestCase.h"
 #include "Tests/ReplicationTestHelperClasses.h"
@@ -38,8 +39,14 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_TestRunner)
 	AGDKTestRunner* TestRunner;
 
+	UPROPERTY(ReplicatedUsing = OnRep_ActorProxyTestActor)
+	AActorProxyTestActor* ActorProxyTestActor;
+
 	UFUNCTION()
 	void OnRep_TestRunner();
+
+	UFUNCTION()
+	void OnRep_ActorProxyTestActor();
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 

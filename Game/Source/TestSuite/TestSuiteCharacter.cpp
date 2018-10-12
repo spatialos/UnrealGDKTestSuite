@@ -60,6 +60,8 @@ void ATestSuiteCharacter::BeginPlay()
 	if (World && GetNetMode() == NM_DedicatedServer)
 	{
 		TestRunner = World->SpawnActor<AGDKTestRunner>();
+
+		ActorProxyTestActor = World->SpawnActor<AActorProxyTestActor>(FVector(-800.0f, 0.0f, 200.0f), FRotator(0.0f, 0.0f, 0.0f));
 	}
 }
 
@@ -179,9 +181,15 @@ void ATestSuiteCharacter::OnRep_TestRunner()
 	bTestRunnerReplicated = true;
 }
 
+void ATestSuiteCharacter::OnRep_ActorProxyTestActor()
+{
+	check(ActorProxyTestActor);
+}
+
 void ATestSuiteCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(ATestSuiteCharacter, TestRunner, COND_InitialOnly);
+	DOREPLIFETIME_CONDITION(ATestSuiteCharacter, ActorProxyTestActor, COND_None);
 }
