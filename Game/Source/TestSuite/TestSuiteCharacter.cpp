@@ -61,7 +61,7 @@ void ATestSuiteCharacter::BeginPlay()
 	{
 		TestRunner = World->SpawnActor<AGDKTestRunner>();
 
-		ActorProxyTestActor = World->SpawnActor<AActorProxyTestActor>(FVector(-800.0f, 0.0f, 200.0f), FRotator(0.0f, 0.0f, 0.0f));
+		ActorProxyTestActor = World->SpawnActor<AActorProxyTestActor>(FVector(-800.0f, -400.0f, 200.0f), FRotator(0.0f, 0.0f, 0.0f));
 	}
 }
 
