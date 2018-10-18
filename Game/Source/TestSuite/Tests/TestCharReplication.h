@@ -21,15 +21,11 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	UFUNCTION()
 	virtual void Server_StartTestImpl() override;
 
-	UFUNCTION()
 	virtual void Server_TearDownImpl() override;
 
-	UFUNCTION()
 	virtual void ValidateClientReplicationImpl() override;
 
-	UFUNCTION()
 	virtual void SendTestResponseRPCImpl() override;
 };

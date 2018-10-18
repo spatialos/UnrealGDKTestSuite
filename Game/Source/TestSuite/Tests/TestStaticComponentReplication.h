@@ -37,16 +37,12 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ReportReplication(float RepFloat);
 
-	UFUNCTION()
 	virtual void Server_StartTestImpl() override;
 
-	UFUNCTION()
 	virtual void Server_TearDownImpl() override;
 
-	UFUNCTION()
 	virtual void ValidateClientReplicationImpl() override;
 
-	UFUNCTION()
 	virtual void SendTestResponseRPCImpl() override;
 
 private:
