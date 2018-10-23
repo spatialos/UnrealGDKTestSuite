@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TestSuiteGameStateBase.h"
 #include "SpatialNetDriver.h"
+#include "ActorProxyRegistry.h"
 
 #include "UnrealNetwork.h"
 
@@ -62,6 +63,9 @@ void ATestSuiteCharacter::BeginPlay()
 		TestRunner = World->SpawnActor<AGDKTestRunner>();
 
 		ActorProxyTestActor = World->SpawnActor<AActorProxyTestActor>(FVector(-800.0f, -400.0f, 200.0f), FRotator(0.0f, 0.0f, 0.0f));
+
+		USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());
+		//NetDriver->ActorProxyRegistry->AddToRegistry(UnrealObjectRef, ActorProxyTestActor);
 	}
 }
 

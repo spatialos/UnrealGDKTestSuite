@@ -12,7 +12,7 @@ AActorProxyTestActor::AActorProxyTestActor()
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
 
-	NetCullDistanceSquared = 100000.0f;
+	//NetCullDistanceSquared = 100000.0f;
 
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("ROOT"));
 	RootComponent = Root;
