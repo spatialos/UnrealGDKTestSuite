@@ -1,8 +1,8 @@
 # SpatialOS GDK Test Suite
 LICENSE: Use of the contents of this repository is subject to the [Improbable license](LICENSE.md)
-REPOSITORY: github.com/spatialos/UnrealGDKTestSuite
+REPOSITORY: [github.com/spatialos/UnrealGDKTestSuite](https://github.com/spatialos/UnrealGDKTestSuite)
 
-This project contains a test suite which uses the [SpatialOS GDK for Unreal](github.com/spatialos/unrealGDK). 
+This project contains a test suite which uses the [SpatialOS GDK for Unreal](https://github.com/spatialos/UnrealGDK). 
 
 It is used to validate the functionality of the SpatialOS GDK. The test suite has tests for several key components of the GDK such as ctor replication and the execution of RPCs.  
 
@@ -19,7 +19,7 @@ This repository contains a set of helper scripts to get you started.
 | `LaunchSpatial.bat` | Starts a local SpatialOS deployment with the default launch configuration. |
 | `LaunchServer.bat` | Starts an Unreal server-worker, and connects it to the local deployment. |
 | `LaunchClient.bat` | Starts an Unreal client-worker, and connects it to the local deployment. |
-| `ProjectPaths.bat` | | Used by the `LaunchClient.bat`, `LaunchServer.bat` and `LaunchSpatial.bat` to specify the project environment when those scripts are run. |
+| `ProjectPaths.bat` | Used by the `LaunchClient.bat`, `LaunchServer.bat` and `LaunchSpatial.bat` to specify the project environment when those scripts are run. |
 
 #### Game controls
 
