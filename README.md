@@ -1,14 +1,8 @@
 # SpatialOS GDK Test Suite
 LICENSE: Use of the contents of this repository is subject to the [Improbable license](LICENSE.md)
-<<<<<<< HEAD
 REPOSITORY: [github.com/spatialos/UnrealGDKTestSuite](https://github.com/spatialos/UnrealGDKTestSuite)
 
 This project contains a test suite which uses the [SpatialOS GDK for Unreal](https://github.com/spatialos/UnrealGDK). 
-=======
-REPOSITORY: github.com/spatialos/UnrealGDKTestSuite
-
-This project contains a test suite which uses the [SpatialOS GDK for Unreal](github.com/spatialos/unrealGDK). 
->>>>>>> Updated readme
 
 It is used to validate the functionality of the SpatialOS GDK. The test suite has tests for several key components of the GDK such as ctor replication and the execution of RPCs.  
 
