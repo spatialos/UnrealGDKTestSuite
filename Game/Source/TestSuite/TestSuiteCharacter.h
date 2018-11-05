@@ -39,7 +39,7 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_TestRunner)
 	AGDKTestRunner* TestRunner;
 
-	UPROPERTY(ReplicatedUsing = OnRep_ActorProxyTestActor)
+	UPROPERTY(ActorProxy, ReplicatedUsing = OnRep_ActorProxyTestActor)
 	AActorProxyTestActor* ActorProxyTestActor;
 
 	UFUNCTION()
