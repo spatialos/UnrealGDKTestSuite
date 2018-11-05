@@ -64,7 +64,7 @@ void ATestSuiteCharacter::BeginPlay()
 
 		ActorProxyTestActor = World->SpawnActor<AActorProxyTestActor>(FVector(-800.0f, -400.0f, 200.0f), FRotator(0.0f, 0.0f, 0.0f));
 
-		USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());
+		//USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());
 		//NetDriver->ActorProxyRegistry->AddToRegistry(UnrealObjectRef, ActorProxyTestActor);
 	}
 }
