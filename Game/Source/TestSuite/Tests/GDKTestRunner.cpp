@@ -169,6 +169,7 @@ void AGDKTestRunner::Server_TearDownTestCases()
 void AGDKTestRunner::OnRep_TestCases()
 {
 	// Local workaround to allow every client to call server RPCs. This simplifies our testing suite immensely.
+	bool bReadyForTests = true;
 	if (GetNetMode() == NM_Client)
 	{
 		AActor* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(nullptr);
@@ -176,11 +177,18 @@ void AGDKTestRunner::OnRep_TestCases()
 
 		for (auto TestCase : TestCases)
 		{
-			TestCase->SetOwner(PlayerController);
+			if (TestCase != nullptr)
+			{
+				TestCase->SetOwner(PlayerController);
+			}
+			else
+			{
+				bReadyForTests = false;
+			}
 		}
 	}
 
-	if (TestCases.Num() > 0)
+	if (TestCases.Num() > 0 && bReadyForTests)
 	{
 		Server_SignalClientReady();
 	}

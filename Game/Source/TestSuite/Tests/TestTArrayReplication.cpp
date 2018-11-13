@@ -21,12 +21,16 @@ void ATestTArrayReplication::Tick(float DeltaTime)
 
 	if (bDynamicallyCreatedActorReplicated && bReplicationRecievedOnClient)
 	{
-		bDynamicallyCreatedActorReplicated = false;
-		bReplicationRecievedOnClient = false;
+		check(DynamicallyCreatedArray.Num() == 1);
+		if (DynamicallyCreatedArray[0] != nullptr)
+		{
+			bDynamicallyCreatedActorReplicated = false;
+			bReplicationRecievedOnClient = false;
 
-		ValidateReplication_Client(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
+			ValidateReplication_Client(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
 
-		Server_ReportReplication(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
+			Server_ReportReplication(PODArray, StablyNamedArray, DynamicallyCreatedArray, ArrayOfStructs, ArrayOfStructNetSerialize, EnumTArray, UEnumTArray);
+		}
 	}
 }
 
