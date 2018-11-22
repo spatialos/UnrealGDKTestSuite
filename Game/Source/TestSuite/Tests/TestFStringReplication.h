@@ -38,5 +38,5 @@ private:
 	UPROPERTY(Replicated)
 	FString TestFString;
 
-	const FString ComparisonValue;
+	FString ComparisonValue;
 };
