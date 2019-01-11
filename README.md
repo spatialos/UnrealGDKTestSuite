@@ -1,5 +1,5 @@
 # SpatialOS GDK Test Suite
-LICENSE: Use of the contents of this repository is subject to the [Improbable license](LICENSE.md)
+LICENSE: Use of the contents of this repository is subject to the [license](LICENSE.md)
 REPOSITORY: [github.com/spatialos/UnrealGDKTestSuite](https://github.com/spatialos/UnrealGDKTestSuite)
 
 This project contains a test suite which uses the [SpatialOS GDK for Unreal](https://github.com/spatialos/UnrealGDK). 
