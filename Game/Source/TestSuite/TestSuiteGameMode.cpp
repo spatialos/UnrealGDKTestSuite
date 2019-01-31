@@ -18,4 +18,6 @@ ATestSuiteGameMode::ATestSuiteGameMode()
 	PlayerControllerClass = ATestSuitePlayerController::StaticClass();
 	GameStateClass = ATestSuiteGameStateBase::StaticClass();
 	PlayerStateClass = ATestSuitePlayerState::StaticClass();
+
+	bUseSeamlessTravel = false;
 }
