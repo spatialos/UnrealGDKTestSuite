@@ -18,4 +18,7 @@ ATestSuiteGameMode::ATestSuiteGameMode()
 	PlayerControllerClass = ATestSuitePlayerController::StaticClass();
 	GameStateClass = ATestSuiteGameStateBase::StaticClass();
 	PlayerStateClass = ATestSuitePlayerState::StaticClass();
+
+	// Seamless Travel is not currently supported in SpatialOS [UNR-897]
+	bUseSeamlessTravel = false;
 }
