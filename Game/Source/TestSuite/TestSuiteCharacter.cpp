@@ -14,6 +14,15 @@
 
 #include "UnrealNetwork.h"
 
+
+UTestCharacterAttributeSet::UTestCharacterAttributeSet()
+	: Health(100.f)
+	, Mana(100.f)
+	, Power(1.f)
+{
+}
+
+
 //////////////////////////////////////////////////////////////////////////
 // ATestSuiteCharacter
 
@@ -50,6 +59,9 @@ ATestSuiteCharacter::ATestSuiteCharacter()
 
 												   // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 												   // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
+	AttributeSet = CreateDefaultSubobject<UTestCharacterAttributeSet>(TEXT("AttributeSet"));
 }
 
 void ATestSuiteCharacter::BeginPlay()
@@ -60,6 +72,20 @@ void ATestSuiteCharacter::BeginPlay()
 	if (World && GetNetMode() == NM_DedicatedServer)
 	{
 		TestRunner = World->SpawnActor<AGDKTestRunner>();
+	}
+
+	if (AbilitySystem)
+	{
+		if (HasAuthority())
+		{
+			for (auto Ability : DefaultAbilities)
+			{
+				AbilitySystem->GiveAbility(FGameplayAbilitySpec(Ability.GetDefaultObject()));
+				//AbilitySystem->GiveAbility(FGameplayAbilitySpec(Ability.GetDefaultObject(), 1, 0));
+			}
+		}
+
+		AbilitySystem->InitAbilityActorInfo(this, this);
 	}
 }
 
@@ -88,6 +114,8 @@ void ATestSuiteCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	// handle touch devices
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &ATestSuiteCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &ATestSuiteCharacter::TouchStopped);
+
+	PlayerInputComponent->BindAction("CancelAbilites", IE_Pressed, this, &ATestSuiteCharacter::CancelAbilities);
 }
 
 void ATestSuiteCharacter::Server_StartTestRunner_Implementation()
@@ -130,6 +158,31 @@ void ATestSuiteCharacter::DebugCmd()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Test runner not ready yet!"));
 	}
+}
+
+void ATestSuiteCharacter::CancelAbilities()
+{
+	if (HasAuthority() == false)
+	{
+		ServerCancelAbilities();
+	}
+}
+
+void ATestSuiteCharacter::ServerCancelAbilities_Implementation()
+{
+	if (AbilitySystem)
+	{
+		for (auto Ability : DefaultAbilities)
+		{
+			//AbilitySystem->CancelAbilitySpec(FGameplayAbilitySpec(Ability.GetDefaultObject()), nullptr);
+		}
+		//AbilitySystem->CancelAllAbilities();
+	}
+}
+
+bool ATestSuiteCharacter::ServerCancelAbilities_Validate()
+{
+	return true;
 }
 
 void ATestSuiteCharacter::TurnAtRate(float Rate)
@@ -184,4 +237,16 @@ void ATestSuiteCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(ATestSuiteCharacter, TestRunner, COND_InitialOnly);
+}
+
+void ATestSuiteCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	AbilitySystem->RefreshAbilityActorInfo();
+}
+
+void ATestSuiteCharacter::OnRep_Controller()
+{
+	Super::OnRep_Controller();
+	AbilitySystem->RefreshAbilityActorInfo();
 }

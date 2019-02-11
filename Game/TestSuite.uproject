@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{8FE842C2-4F8B-1688-DDDC-A99DE5465446}",
+	"EngineAssociation": "{3D39D748-45DE-F7CE-9C99-3995545C4E15}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -22,6 +22,10 @@
 	"Plugins": [
 		{
 			"Name": "SpatialGDK",
+			"Enabled": true
+		},
+		{
+			"Name": "GameplayAbilities",
 			"Enabled": true
 		}
 	]

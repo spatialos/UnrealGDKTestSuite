@@ -18,7 +18,10 @@ public class TestSuite : ModuleRules
 				"Sockets",
 				"OnlineSubsystemUtils",
 				"PhysXVehicles",
-				"SpatialGDK"
-			});
+				"SpatialGDK",
+                "GameplayAbilities",
+                "GameplayTags",
+                "GameplayTasks"
+            });
 	}
 }

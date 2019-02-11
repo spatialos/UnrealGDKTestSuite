@@ -8,7 +8,28 @@
 #include "Tests/GDKTestRunner.h"
 #include "Tests/ReplicationTestCase.h"
 #include "Tests/ReplicationTestHelperClasses.h"
+#include "AttributeSet.h"
+#include "AbilitySystemComponent.h"
+#include "Abilities/GameplayAbility.h"
 #include "TestSuiteCharacter.generated.h"
+
+UCLASS()
+class UTestCharacterAttributeSet : public UAttributeSet
+{
+	GENERATED_BODY()
+public:
+	
+	UTestCharacterAttributeSet();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
+	FGameplayAttributeData Health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
+	FGameplayAttributeData Mana;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
+	FGameplayAttributeData Power;
+};
 
 UCLASS(SpatialType, config = Game)
 class ATestSuiteCharacter : public ACharacter
@@ -43,6 +64,18 @@ public:
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_Controller() override;
+
+	UPROPERTY(BlueprintReadOnly)
+	UAbilitySystemComponent* AbilitySystem;
+
+	UPROPERTY()
+	UTestCharacterAttributeSet* AttributeSet;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=GameplayAbilities)
+	TArray<TSubclassOf<UGameplayAbility>> DefaultAbilities;
+
 protected:
 
 	/** Called for forwards/backward input */
@@ -70,6 +103,10 @@ protected:
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
 	void DebugCmd();
+	void CancelAbilities();
+	
+	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
+	void ServerCancelAbilities();
 
 protected:
 	// APawn interface
