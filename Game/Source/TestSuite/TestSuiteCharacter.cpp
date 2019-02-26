@@ -76,11 +76,18 @@ void ATestSuiteCharacter::BeginPlay()
 
 	if (AbilitySystem)
 	{
+		FGameplayAbilityActorInfo* ActorInfo = new FGameplayAbilityActorInfo();
+		ActorInfo->InitFromActor(this, this, AbilitySystem);
+		AbilitySystem->AbilityActorInfo = TSharedPtr<FGameplayAbilityActorInfo>(ActorInfo);
+
 		if (HasAuthority())
 		{
 			for (auto Ability : DefaultAbilities)
 			{
-				AbilitySystem->GiveAbility(FGameplayAbilitySpec(Ability.GetDefaultObject()));
+				if (Ability)
+				{
+					AbilitySystem->GiveAbility(FGameplayAbilitySpec(Ability.GetDefaultObject()));
+				}
 				//AbilitySystem->GiveAbility(FGameplayAbilitySpec(Ability.GetDefaultObject(), 1, 0));
 			}
 		}
@@ -114,8 +121,6 @@ void ATestSuiteCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	// handle touch devices
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &ATestSuiteCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &ATestSuiteCharacter::TouchStopped);
-
-	PlayerInputComponent->BindAction("CancelAbilites", IE_Pressed, this, &ATestSuiteCharacter::CancelAbilities);
 }
 
 void ATestSuiteCharacter::Server_StartTestRunner_Implementation()
@@ -160,29 +165,9 @@ void ATestSuiteCharacter::DebugCmd()
 	}
 }
 
-void ATestSuiteCharacter::CancelAbilities()
+int32 ATestSuiteCharacter::GetActiveGameplayEffectsCount()
 {
-	if (HasAuthority() == false)
-	{
-		ServerCancelAbilities();
-	}
-}
-
-void ATestSuiteCharacter::ServerCancelAbilities_Implementation()
-{
-	if (AbilitySystem)
-	{
-		for (auto Ability : DefaultAbilities)
-		{
-			//AbilitySystem->CancelAbilitySpec(FGameplayAbilitySpec(Ability.GetDefaultObject()), nullptr);
-		}
-		//AbilitySystem->CancelAllAbilities();
-	}
-}
-
-bool ATestSuiteCharacter::ServerCancelAbilities_Validate()
-{
-	return true;
+	return AbilitySystem->GetGameplayEffectCount(UGameplayEffect::StaticClass(), AbilitySystem);
 }
 
 void ATestSuiteCharacter::TurnAtRate(float Rate)

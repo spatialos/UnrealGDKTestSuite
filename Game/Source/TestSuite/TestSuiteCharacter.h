@@ -103,10 +103,9 @@ protected:
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
 	void DebugCmd();
-	void CancelAbilities();
-	
-	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
-	void ServerCancelAbilities();
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetActiveGameplayEffectsCount();
 
 protected:
 	// APawn interface
