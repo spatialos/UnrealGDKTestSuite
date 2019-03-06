@@ -76,10 +76,6 @@ void ATestSuiteCharacter::BeginPlay()
 
 	if (AbilitySystem)
 	{
-		FGameplayAbilityActorInfo* ActorInfo = new FGameplayAbilityActorInfo();
-		ActorInfo->InitFromActor(this, this, AbilitySystem);
-		AbilitySystem->AbilityActorInfo = TSharedPtr<FGameplayAbilityActorInfo>(ActorInfo);
-
 		if (HasAuthority())
 		{
 			for (auto Ability : DefaultAbilities)
@@ -88,7 +84,6 @@ void ATestSuiteCharacter::BeginPlay()
 				{
 					AbilitySystem->GiveAbility(FGameplayAbilitySpec(Ability.GetDefaultObject()));
 				}
-				//AbilitySystem->GiveAbility(FGameplayAbilitySpec(Ability.GetDefaultObject(), 1, 0));
 			}
 		}
 
