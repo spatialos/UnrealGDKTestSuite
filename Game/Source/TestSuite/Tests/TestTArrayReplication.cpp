@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "UnrealNetwork.h"
 #include "SpatialNetDriver.h"
-#include "Utils/EntityRegistry.h"
+#include "SpatialPackageMapClient.h"
 
 #include <improbable/c_worker.h>
 
@@ -229,8 +229,8 @@ void ATestTArrayReplication::ValidateRPC_Server(const TArray<int>& TestPODArray,
 	//Get the net driver
 	USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetWorld()->GetNetDriver());
 	check(NetDriver);
-	Worker_EntityId RPCEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(TestDynamicallyCreatedActors[0]);
-	Worker_EntityId ServerEntityId = NetDriver->GetEntityRegistry()->GetEntityIdFromActor(DynamicallyCreatedArray[0]);
+	Worker_EntityId RPCEntityId = NetDriver->PackageMap->GetEntityIdFromObject(TestDynamicallyCreatedActors[0]);
+	Worker_EntityId ServerEntityId = NetDriver->PackageMap->GetEntityIdFromObject(DynamicallyCreatedArray[0]);
 	check(RPCEntityId == ServerEntityId);
 
 	// Validate TArray with structs
