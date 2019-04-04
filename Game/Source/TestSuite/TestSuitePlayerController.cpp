@@ -2,7 +2,6 @@
 
 #include "TestSuitePlayerController.h"
 #include "SpatialNetDriver.h"
-#include "EntityRegistry.h"
 
 #include <improbable/c_worker.h>
 
